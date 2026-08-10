@@ -1,0 +1,22 @@
+:root,
+[data-bs-theme="light"] {
+  --body-color: #f6f8fa;
+  --text-color: #000;
+  --navbar-color: #fff;
+  --PBS-site-navbar-logo-circle: #fff;
+  --NOLA-generator: #000;
+  --horizontal-line: #000;
+  --NPS-sIX-dynamic-results: #fff;
+  --NPS-sIX-record-page: #48d3cd;
+}
+
+[data-bs-theme="dark"] {
+  --body-color: #000;
+  --text-color: #fff;
+  --navbar-color: #000;
+  --PBS-site-navbar-logo-circle: #000;
+  --NOLA-generator: #1c1c1c;
+  --horizontal-line: #fff;
+  --NPS-sIX-dynamic-results: #2b2b2b;
+  --NPS-sIX-record-page: #2b2b2b;
+}

@@ -1,0 +1,228 @@
+// @import "fonts.css";
+
+* {
+    color: #000;
+//   font-family: "PBS Sans", sans-serif;
+}
+
+// body {
+//   background-color: var(--body-color) !important;
+// }
+
+body {
+    background-color: #ebebeb !important;
+}
+
+h1 {
+  margin: 0;
+}
+
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li,
+label,
+dt,
+dd,
+li,
+select {
+    font-family: 'Open Sans', sans-serif;
+    // color: var(--text-color) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong {
+  font-family: "Open Sans", sans-serif;
+}
+
+#site-title {
+  font-family: 'Press Start 2P', monospace;
+}
+
+// #title {
+//   margin-top: 70px;
+// }
+
+.navbar {
+  background-color: #fff;
+  // background-color: var(--navbar-color);
+  border-bottom: 4px solid #152de3;
+
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        font-family: "Open Sans", sans-serif !important;
+        color: #000;
+        // color: var(--text-color);
+      }
+    }
+    // .dropdown-menu {
+    //   .dropdown-options {
+    //     text-align: center;
+
+    //     .nps-sIX-dropdown-option {
+    //       &:hover {
+    //         background-color: #486cd8;
+    //         color: #ffffff;
+    //       }
+    //     }
+    //   }
+    // }
+  }
+}
+
+// .print-text,
+// .print-container {
+//   display: none;
+// }
+
+// .divider {
+//   margin-top: -10px;
+// }
+
+hr {
+  border-bottom: 2px solid #000;
+  // border: 1px solid var(--horizontal-line) !important;
+}
+
+.navbar-brand,
+.external-link {
+  text-decoration: none;
+}
+
+.site-logo {
+  padding-left: 20px;
+  width: 100%;
+}
+
+
+#navBar {
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        margin-left: 20%;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+// #navbarNav {
+//   .nav-item {
+//     .nav-link,
+//     .dropdown-toggle {
+//       color: var(--text-color);
+//       color: #fff;
+//     }
+//   }
+// }
+
+#navbarNav {
+  .nav-item {
+    .nav-link {
+      &:hover {
+        color: #2638c4 !important;
+
+        .dropdown-toggle {
+          color: #2638c4 !important;
+        }
+      }
+    }
+  }
+}
+
+.navbar-toggler {
+  background-color: var(--bs-body-color);
+}
+
+#hub-image-desktop,
+#hub-image-mobile,
+#myPBS-image-gallery-desktop,
+#sIX-image-gallery-desktop,
+#source-image-gallery-desktop {
+  img {
+    border: 1px solid #000000;
+  }
+}
+
+.mobile-carousel-border {
+  border: 1px solid #000000;
+}
+
+.alternate-image-caption,
+.image-gallery-caption {
+  color: #2638c4 !important;
+  margin-top: 0.5rem !important;
+}
+
+.alternate-image-caption {
+  span {
+    margin-top: -10px;
+    color: #2638c4;
+  }
+}
+
+.result-heading {
+  padding-top: 10px;
+}
+
+.pagination-links {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-links {
+  a {
+    font-size: 25px;
+    text-decoration: none;
+    color: #000000;
+  }
+}
+
+.pagination-link.active {
+  background-color: #2638c4;
+  color: #ffffff;
+}
+
+.center-links {
+  text-align: center;
+  padding-bottom: 16px;
+}
+
+.total-records,
+#current-date {
+  font-family: "PBS Sans Medium", sans-serif;
+}
+
+.ellipsis-div {
+  margin-top: 5px;
+}
+
+.end-footer {
+  // background: linear-gradient(to bottom, #008a8f, #000);
+  background: #152de3;
+  padding: 20px;
+  color: #fff;
+
+  #footer-site-links {
+    border-bottom: 1px solid #fff;
+
+    p {
+      font-size: 1.2em;
+      color: #fff !important;
+    }
+  }
+}
