@@ -66,6 +66,11 @@ function exportTable(mysqli $conn, array $export): void {
     // Diff against the OLD file before it gets overwritten below.
     $rows = markNewRecords($rows, $export['outputFile'], $export['idField']);
 
+    $outputDir = dirname($export['outputFile']);
+    if (!is_dir($outputDir)) {
+        mkdir($outputDir, 0755, true);
+    }
+
     file_put_contents(
         $export['outputFile'],
         json_encode($rows, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
