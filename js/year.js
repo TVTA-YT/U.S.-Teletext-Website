@@ -8,7 +8,7 @@ async function renderYear(year) {
   const heading = document.getElementById('year-heading');
   const countEl = document.getElementById('result-count');
 
-  const response = await fetch('teletext_data.json');
+  const response = await fetch('../php/teletext_data.json');
   const allRows = await response.json();
 
   const rows = allRows
