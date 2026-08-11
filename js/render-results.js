@@ -95,7 +95,7 @@ async function renderResults(config) {
     const headerCells = columns.map(c => `<th>${escapeHtml(c.label)}</th>`).join('');
     col.innerHTML = `
     <div class="table-responsive">
-      <table class="table table-bordered table-primary table-striped justify-content-center align-middle">
+      <table class="table table-bordered table-primary table-striped justify-content-center align-middle text-nowrap">
         <thead><tr>${headerCells}</tr></thead>
           <tbody></tbody>
       </table>
@@ -114,8 +114,8 @@ function appendRow(tbody, row, columns) {
   if (row.IsNew) tr.classList.add('row-new');
   tr.innerHTML = columns.map(c => {
     if (c.renderZip) {
-      return row[c.key]
-        ? `<td><a href="../zip/${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip">${escapeHtml(row[c.key])}</i></a></td>`
+      return row.Download_Link
+        ? `<td><a href="../zip/${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip"></i></a></td>`
         : `<td><i class="bi bi-slash-circle"></i></td>`;
     }
     return `<td>${escapeHtml(row[c.key])}</td>`;
