@@ -28,10 +28,63 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>Document</title>
+    <title>U.S. Teletext Archive</title>
     <style>
+      #site-title {
+        font-family: "Contour Generator", sans-serif;
+        line-height: 110%;
+        text-shadow: 3px 3px #000;
+        animation: colorChange 4s steps(4, end) infinite;
+      }
+
       .container {
-        padding-top: 70px;
+        margin-top: 110px !important;
+      }
+
+      .teletext-page-marquee-image {
+        width: 200px !important;
+      }
+
+      .image-marquee {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        background-color: #96c5ff;
+        padding: 25px 0 25px 0;
+      }
+
+      .image-marquee-content {
+        display: flex;
+        width: max-content;
+        gap: 6rem;
+        animation: image-marquee 25s linear infinite;
+      }
+
+      @keyframes colorChange {
+        0% {
+          color: #a80000;
+        }
+        25% {
+          color: #321fff;
+        }
+        50% {
+          color: #23b6ff;
+        }
+        75% {
+          color: #00d231;
+        }
+        100% {
+          color: #ffcb20;
+        }
+      }
+
+      @keyframes image-marquee {
+        from {
+          transform: translateX(0%);
+        }
+        to {
+          transform: translateX(calc(-8 * (200px + 6rem)));
+        }
       }
     </style>
   </head>
@@ -40,23 +93,36 @@
       <div class="logo">
         <a href="index.html" class="navbar-brand">
           <!-- <?xml version="1.0" encoding="UTF-8"?> -->
+          <?xml version="1.0" encoding="UTF-8"?>
           <svg
             class="site-logo"
+            id="Layer_1"
             data-name="Layer 1"
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 600 50"
+            viewBox="0 0 363.15 91.12"
           >
             <defs>
               <style>
                 .cls-1 {
-                  fill: #1d1d1b;
-                  font-family: PressStart2P, "Press Start 2P";
-                  font-size: 50px;
+                  font-family: ContourGenerator-Regular, "Contour Generator";
+                  font-size: 43.32px;
+                }
+
+                .cls-2 {
+                  letter-spacing: -0.02em;
+                }
+
+                .cls-3 {
+                  letter-spacing: -0.03em;
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 50)">
-              <tspan x="0" y="0">U.S.TELETEXT</tspan>
+            <text class="cls-1" transform="translate(0 36.54)">
+              <tspan class="cls-2" x="0" y="0">U.S</tspan>
+              <tspan x="82.96" y="0">. TELETEXT</tspan>
+              <tspan x="62.34" y="43.32">A</tspan>
+              <tspan class="cls-3" x="102.93" y="43.32">R</tspan>
+              <tspan x="139.66" y="43.32">CHIVE</tspan>
             </text>
           </svg>
         </a>
@@ -104,72 +170,6 @@
               >Teletext Links</a
             >
           </li>
-          <!-- <li class="nav-item dropdown desktop-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Archived Programs <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/recorded-programs.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >NPS</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/sIX-downloads.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >sIX</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/other-media.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >Other</a
-                >
-              </li>
-            </ul>
-          </li> -->
-          <!-- <li class="nav-item dropdown mobile-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Archived Programs <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/recorded-programs.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >NPS</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/sIX-downloads.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >sIX</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="other-media.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >Other</a
-                >
-              </li>
-            </ul>
-          </li> -->
           <li class="nav-item desktop-link">
             <a class="nav-link" href="html/about.html">About</a>
           </li>
@@ -188,28 +188,139 @@
           </div>
           <p class="mb-0 fs-4">This site is under construction.</p>
         </div>
-        <h1 class="display-1 fw-bold text-center">Welcome To</h1>
-        <div class="text-center">
-          <span id="site-title">U.S.TELETEXT</span>
-          <p>
+        <h1 class="display-1 fw-bold text-center pb-4">Welcome to the</h1>
+        <div class="text-center pb-5">
+          <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
+          <!-- <p class="pt-5">
             On this site is an archive of captures from various U.S. teletext
             services.
-          </p>
+          </p> -->
         </div>
-        <p class="pt-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores illo
-          fugiat officia fuga, numquam alias delectus perspiciatis commodi
-          doloribus impedit esse consectetur ab sint, necessitatibus odio
-          laboriosam architecto explicabo incidunt?
+        <div class="image-marquee" id="image-marquee">
+          <div class="image-marquee-content">
+            <div>
+              <img
+                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-000-vB.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/NBC-Teletext.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-011-01-v0.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-029-01-v0.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-000198500-01-v2.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-300-vA.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-100-vA.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <!-- Start of loop -->
+            <div>
+              <img
+                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-000-vB.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/NBC-Teletext.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-011-01-v0.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-029-01-v0.png"
+                alt=""
+                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+              />
+            </div>
+          </div>
+        </div>
+        <p class="pt-4 text-center site-introduction">
+          On this website is a collection of newly decoded pages from U.S.
+          teletext from various services such as CBS's <i>ExtraVision</i>, NBC's
+          <i> NBC Teletext </i>, and <i>Electra</i>.
+        </p>
+        <p class="pt-4 text-center site-introduction">
+          <strong class="text-decoration-underline">Until now</strong>, there
+          had not been any clear, high-quality examples of these teletext
+          services. This site aims to change that by acting as a repository,
+          providing access to individual archives from these services, archives
+          provided by those who have the capacity to decode teletext.
         </p>
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
       <div id="footer-site-links">
-        <img src="images/logo-white.png" alt class="mw-100 w-25 pt-2 pb-4" />
+        <img
+          src="images/logo-white-2.png"
+          alt
+          class="mw-100 pt-2 pb-4 footer-logo"
+        />
         <p>
           Issues? &nbsp;
-          <a href="#" style="color: #fff">Report on GitHub.</a>
+          <a
+            href="https://github.com/TVTA-YT/U.S.-Teletext-Website"
+            target="_blank"
+            style="color: #fff"
+            >Report on GitHub.</a
+          >
         </p>
         <p>
           Have questions or information? &nbsp;

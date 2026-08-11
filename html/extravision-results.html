@@ -35,10 +35,22 @@
       src="https://kit.fontawesome.com/e59e914748.js"
       crossorigin="anonymous"
     ></script>
-    <title>Sitemap</title>
+    <title>ExtraVision Results</title>
     <style>
       .container {
-        padding-top: 70px;
+        padding-top: 90px;
+      }
+
+      .display-2 {
+        font-weight: bold;
+      }
+
+      .row-new {
+        background-color: #a5ffba !important;
+      }
+
+      .row-new td {
+        background-color: #a5ffba !important;
       }
 
       table {
@@ -54,21 +66,33 @@
           <!-- <?xml version="1.0" encoding="UTF-8"?> -->
           <svg
             class="site-logo"
+            id="Layer_1"
             data-name="Layer 1"
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 600 50"
+            viewBox="0 0 363.15 91.12"
           >
             <defs>
               <style>
                 .cls-1 {
-                  fill: #1d1d1b;
-                  font-family: PressStart2P, "Press Start 2P";
-                  font-size: 50px;
+                  font-family: ContourGenerator-Regular, "Contour Generator";
+                  font-size: 43.32px;
+                }
+
+                .cls-2 {
+                  letter-spacing: -0.02em;
+                }
+
+                .cls-3 {
+                  letter-spacing: -0.03em;
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 50)">
-              <tspan x="0" y="0">U.S.TELETEXT</tspan>
+            <text class="cls-1" transform="translate(0 36.54)">
+              <tspan class="cls-2" x="0" y="0">U.S</tspan>
+              <tspan x="82.96" y="0">. TELETEXT</tspan>
+              <tspan x="62.34" y="43.32">A</tspan>
+              <tspan class="cls-3" x="102.93" y="43.32">R</tspan>
+              <tspan x="139.66" y="43.32">CHIVE</tspan>
             </text>
           </svg>
         </a>
@@ -112,72 +136,6 @@
           <li class="nav-item mobile-link">
             <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
-          <!-- <li class="nav-item dropdown desktop-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Archived Programs <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/recorded-programs.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >NPS</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/sIX-downloads.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >sIX</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/other-media.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >Other</a
-                >
-              </li>
-            </ul>
-          </li> -->
-          <!-- <li class="nav-item dropdown mobile-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Archived Programs <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/recorded-programs.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >NPS</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/sIX-downloads.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >sIX</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="other-media.html"
-                  class="dropdown-item nps-sIX-dropdown-option"
-                  >Other</a
-                >
-              </li>
-            </ul>
-          </li> -->
           <li class="nav-item desktop-link">
             <a class="nav-link" href="about.html">About</a>
           </li>
@@ -197,17 +155,43 @@
         </div> -->
         <!-- <h1 class="display-1 fw-bold text-center">Sitemap</h1> -->
         <!-- <hr /> -->
-        <h2 id="year-heading"></h2>
+        <h2 class="display-2" id="year-heading"></h2>
         <p class="fs-2" id="result-count"></p>
+        <div class="alert alert-secondary" role="alert">
+          <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
+          ><span
+            >: Some pages may have imperfections, either due to corruption
+            present in the source material or imperfections with the software
+            decoders. As of August 11, 2026, the software is only a few days
+            old, so <em>some</em> imperfections are to be expected, at least for
+            now.</span
+          >
+          <br />
+          <br />
+          <span
+            >The tables below a responsive; to view more of the information,
+            simply scroll the table (if applicable).</span
+          >
+        </div>
+        <hr />
         <div id="results"></div>
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
       <div id="footer-site-links">
-        <img src="../images/logo-white.png" alt class="mw-100 w-25 pt-2 pb-4" />
+        <img
+          src="../images/logo-white-2.png"
+          alt
+          class="mw-100 pt-2 pb-4 footer-logo"
+        />
         <p>
           Issues? &nbsp;
-          <a href="#" style="color: #fff">Report on GitHub.</a>
+          <a
+            href="https://github.com/TVTA-YT/U.S.-Teletext-Website"
+            target="_blank"
+            style="color: #fff"
+            >Report on GitHub.</a
+          >
         </p>
         <p>
           Have questions or information? &nbsp;
@@ -231,6 +215,37 @@
         </small>
       </div> -->
     </footer>
-    <script src="../js/year.js"></script>
+    <script src="../js/results-renderer.js"></script>
+    <script>
+      renderResults({
+        jsonPath: "../json/extravision_data.json",
+        filterParam: "year",
+        filterField: "Year",
+        groupByField: "Month",
+        groupOrder: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        sortSecondaryField: "Date",
+        columns: [
+          { label: "Date", key: "Date" },
+          { label: "Time", key: "Time" },
+          { label: "Affiliate", key: "Affiliate" },
+          { label: "Program", key: "Program_Title" },
+          { label: "Tape", key: "Tape_Type" },
+          { label: "ZIP?", key: "ZIP", renderZip: true },
+        ],
+      });
+    </script>
   </body>
 </html>

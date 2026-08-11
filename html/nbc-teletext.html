@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Created August 10, 2026, 11:55 -->
+<!-- Created August 11, 2026, 03:35 -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,10 +17,6 @@
       rel="stylesheet"
     />
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    />
-    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
@@ -31,18 +27,14 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>Teletext Services</title>
+    <title>NBC Teletext</title>
     <style>
       .container {
-        padding-top: 90px;
+        padding-top: 100px;
       }
 
-      span:not(.alert-text) {
-        font-family: "Press Start 2P";
-      }
-
-      figure {
-        text-align: center;
+      .btn {
+        border-radius: 24px;
       }
     </style>
   </head>
@@ -133,92 +125,49 @@
       </div>
     </nav>
     <main>
-      <div class="container pb-3">
-        <div class="alert alert-danger text-center mt-3">
+      <div class="container">
+        <!-- <div class="alert alert-danger text-center mt-3">
           <div class="alert-heading">
             <h1>NOTE</h1>
           </div>
           <p class="mb-0 fs-4">This site is under construction.</p>
-        </div>
-        <h1 class="display-1 fw-bold text-center">Teletext Services</h1>
+        </div> -->
+        <figure class="text-center">
+          <img
+            src="../images/logos/NBC-Teletext.png"
+            alt=""
+            class="mw-100 w-75"
+          />
+        </figure>
         <hr />
-        <p class="fs-5">
-          While teletext was not as popular in the U.S., a few teletext service
-          were available. To view archived teletext from any of these service,
-          click on one below.
-        </p>
-        <div class="alert alert-info" role="alert">
-          <i class="bi bi-info-circle-fill"></i
-          ><span class="alert-text">
-            For now, the databases only update every day at 1600 UTC (1200
-            EDT).</span
-          >
-        </div>
-        <div class="row justify-content-center pt-5">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="extravision.html">
-              <figure>
-                <img
-                  src="../images/logos/ExtraVision.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">CBS ExtraVision</span>
-            </div>
+        <p>Use the form below to search for available pages by year.</p>
+        <form action="nbc-teletext-results.html" method="get">
+          <div class="mb-3">
+            <label for="year" class="form-label">Select a year</label>
+            <select name="year" id="year" class="form-select">
+              <option value=""></option>
+              <option value="1984">1984</option>
+              <option value="1985">1985</option>
+              <option value="1986">1986</option>
+              <option value="1987">1987</option>
+              <option value="1988" disabled>1988</option>
+              <option value="1989" disabled>1989</option>
+              <option value="1990">1990</option>
+            </select>
           </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="electra.html">
-              <figure>
-                <img
-                  src="../images/logos/Electra.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Electra</span>
-            </div>
-          </div>
-          <!-- * NOTE: There are currently no examples of Keyfax. 08/11/2026, 03:37 -->
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="keyfax.html">
-              <figure>
-                <img
-                  src="../images/logos/Keyfax.png"
-                  alt=""
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Keyfax</span>
-            </div>
-          </div> -->
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="nbc-teletext.html">
-              <figure>
-                <img
-                  src="../images/logos/NBC-Teletext.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">NBC Teletext</span>
-            </div>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary form-control">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-danger form-control my-4">
+            Reset Fields
+          </button>
+        </form>
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
       <div id="footer-site-links">
         <img
-          src="../images/logo-white.png"
+          src="../images/logo-white-2.png"
           alt
           class="mw-100 pt-2 pb-4 footer-logo"
         />

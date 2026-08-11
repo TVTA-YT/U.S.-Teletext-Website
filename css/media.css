@@ -119,25 +119,47 @@
 
 @media only screen and (min-width: 1400px) {
   #site-title {
-    font-size: 4em;
+    font-size: 5em;
+  }
+
+  .site-introduction {
+    font-size: 1.4em;
+  }
+
+  .footer-logo {
+    width: 30%;
   }
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   #site-title {
+    font-size: 4.4em;
+  }
+
+  .site-introduction {
+    font-size: 1.2em;
+  }
+
+  .footer-logo {
+    width: 35%;
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  #site-title {
     font-size: 4em;
   }
-}
 
-@media only screen and (min-width: 993px) and (max-width: 1199px) {
-  #site-title {
-    font-size: 3.5em;
-  }
-}
-
-@media only screen and (min-width: 992px) {
   .mobile-link {
     display: none;
+  }
+
+  .site-introduction {
+    font-size: 1.2em;
+  }
+
+  .footer-logo {
+    width: 40%;
   }
 }
 
@@ -149,11 +171,11 @@
   }
 
   #site-title {
-    font-size: 3em;
+    font-size: 3.5em;
   }
 
   #navbarNav .nav-item .nav-link {
-    color: #fff;
+    color: #000;
     margin-top: 10px;
     padding-top: 5px;
     font-size: 20px;
@@ -164,15 +186,27 @@
     color: #000000;
   }
 
+  .site-introduction {
+    font-size: 1.6em;
+  }
+
+  .footer-logo {
+    width: 45%;
+  }
+
+  .desktop-link a {
+    display: none;
+  }
+
   .mobile-link a {
     display: block;
   }
 }
 
 /* * QUERY FOR EXTRA SMALL AND SMALL DEVICES * */
-@media only screen and (max-width: 767px) {
+@media only screen and (min-width: 500px) and (max-width: 767px) {
   #site-title {
-    font-size: 2.5em;
+    font-size: 2.8em;
   }
 
   .desktop-link {
@@ -183,22 +217,81 @@
     display: block;
     text-align: center;
   }
+
+  .site-introduction {
+    font-size: 1em;
+  }
+
+  .footer-logo {
+    width: 50%;
+  }
 }
 
-@media only screen and (min-width: 400px) and (max-width: 500px) {
+@media only screen and (min-width: 400px) and (max-width: 499px) {
+  #site-title {
+    /* font-size: 2em; */
+    font-size: 2.5em;
+  }
+
+  #footer-site-links {
+    font-size: 0.8em;
+  }
+
+  .desktop-link {
+    display: none;
+  }
+
+  .mobile-link {
+    display: block;
+    text-align: center;
+  }
+
+  .site-introduction {
+    font-size: 0.8em;
+  }
+
+  .footer-logo {
+    width: 55%;
+  }
+
   svg {
-    height: 26.2px;
+    height: 60px;
     margin-left: -5px;
   }
 }
 
 @media only screen and (max-width: 399px) {
-  svg {
-    height: 40px;
-    margin-left: -5px;
+  #site-title {
+    font-size: 2.5em;
+  }
+
+  #footer-site-links {
+    font-size: 0.8em;
   }
 
   .navbar {
     padding-top: 100px;
+  }
+
+  .desktop-link {
+    display: none;
+  }
+
+  .mobile-link {
+    display: block;
+    text-align: center;
+  }
+
+  .site-introduction {
+    font-size: 0.8em;
+  }
+
+  .footer-logo {
+    width: 55%;
+  }
+
+  svg {
+    height: 40px;
+    margin-left: -5px;
   }
 }

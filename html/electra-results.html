@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Created August 10, 2026, 11:55 -->
+<!-- Created August 11, 2026, 14:57 -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -31,18 +31,27 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>Teletext Services</title>
+    <script
+      src="https://kit.fontawesome.com/e59e914748.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Electra Results</title>
     <style>
       .container {
         padding-top: 90px;
       }
 
-      span:not(.alert-text) {
-        font-family: "Press Start 2P";
+      .display-2 {
+        font-weight: bold;
       }
 
-      figure {
+      .row-new {
+        background-color: #a5ffba !important;
+      }
+
+      table {
         text-align: center;
+        vertical-align: middle;
       }
     </style>
   </head>
@@ -133,92 +142,41 @@
       </div>
     </nav>
     <main>
-      <div class="container pb-3">
-        <div class="alert alert-danger text-center mt-3">
+      <div class="container">
+        <!-- <div class="alert alert-danger text-center mt-3">
           <div class="alert-heading">
             <h1>NOTE</h1>
           </div>
           <p class="mb-0 fs-4">This site is under construction.</p>
-        </div>
-        <h1 class="display-1 fw-bold text-center">Teletext Services</h1>
-        <hr />
-        <p class="fs-5">
-          While teletext was not as popular in the U.S., a few teletext service
-          were available. To view archived teletext from any of these service,
-          click on one below.
-        </p>
-        <div class="alert alert-info" role="alert">
-          <i class="bi bi-info-circle-fill"></i
-          ><span class="alert-text">
-            For now, the databases only update every day at 1600 UTC (1200
-            EDT).</span
+        </div> -->
+        <!-- <h1 class="display-1 fw-bold text-center">Sitemap</h1> -->
+        <!-- <hr /> -->
+        <h2 class="display-2" id="year-heading"></h2>
+        <p class="fs-2" id="result-count"></p>
+        <div class="alert alert-secondary" role="alert">
+          <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
+          ><span
+            >: Some pages may have imperfections, either due to corruption
+            present in the source material or imperfections with the software
+            decoders. As of August 11, 2026, the software is only a few days
+            old, so <em>some</em> imperfections are to be expected, at least for
+            now.</span
+          >
+          <br />
+          <br />
+          <span
+            >The tables below a responsive; to view more of the information,
+            simply scroll the table (if applicable).</span
           >
         </div>
-        <div class="row justify-content-center pt-5">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="extravision.html">
-              <figure>
-                <img
-                  src="../images/logos/ExtraVision.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">CBS ExtraVision</span>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="electra.html">
-              <figure>
-                <img
-                  src="../images/logos/Electra.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Electra</span>
-            </div>
-          </div>
-          <!-- * NOTE: There are currently no examples of Keyfax. 08/11/2026, 03:37 -->
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="keyfax.html">
-              <figure>
-                <img
-                  src="../images/logos/Keyfax.png"
-                  alt=""
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Keyfax</span>
-            </div>
-          </div> -->
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="nbc-teletext.html">
-              <figure>
-                <img
-                  src="../images/logos/NBC-Teletext.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">NBC Teletext</span>
-            </div>
-          </div>
-        </div>
+        <hr />
+        <div id="results"></div>
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
       <div id="footer-site-links">
         <img
-          src="../images/logo-white.png"
+          src="../images/logo-white-2.png"
           alt
           class="mw-100 pt-2 pb-4 footer-logo"
         />
@@ -253,5 +211,36 @@
         </small>
       </div> -->
     </footer>
+    <script src="../js/results-renderer.js"></script>
+    <script>
+      renderResults({
+        jsonPath: "../json/electra_data.json",
+        filterParam: "year",
+        filterField: "Year",
+        groupByField: "Month",
+        groupOrder: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        sortSecondaryField: "Date",
+        columns: [
+          { label: "Date", key: "Date" },
+          { label: "Time", key: "Time" },
+          { label: "Program", key: "Program_Title" },
+          { label: "Tape", key: "Tape_Type" },
+          { label: "ZIP?", key: "ZIP", renderZip: true },
+        ],
+      });
+    </script>
   </body>
 </html>
