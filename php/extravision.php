@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Created August 10, 2026, 11:55 -->
+<!-- Created August 10, 2026, 17:46 -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,6 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -27,17 +28,15 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>Teletext Services</title>
+    <title>Available Archives</title>
     <style>
       .container {
         padding-top: 70px;
       }
 
-      span {
-        font-family: "Press Start 2P";
-      }
-
-      figure {
+      th,
+      td {
+        justify-content: center;
         text-align: center;
       }
     </style>
@@ -46,7 +45,6 @@
     <nav class="navbar navbar-expand-lg fixed-top">
       <div class="logo">
         <a href="../index.html" class="navbar-brand">
-          <!-- <?xml version="1.0" encoding="UTF-8"?> -->
           <svg
             class="site-logo"
             data-name="Layer 1"
@@ -183,78 +181,107 @@
       </div>
     </nav>
     <main>
-      <div class="container pb-3">
-        <div class="alert alert-danger text-center mt-3">
-          <div class="alert-heading">
-            <h1>NOTE</h1>
-          </div>
-          <p class="mb-0 fs-4">This site is under construction.</p>
+      <div class="container">
+        <?php
+
+        require 'database.php';
+
+        if (!isset($_GET['year']) || trim($_GET['year']) === '') {
+          die('No year specified');
+        }
+
+        $year = trim($_GET['year']);
+
+        if (!$conn) {
+          die('Connection failed.' . mysqli_connect_error());
+        }
+
+        $sql = "SELECT * FROM ExtraVision
+                WHERE `Year` LIKE CONCAT('%', ?, '%')
+                ORDER BY FIELD(`Month`,
+                'January','February','March','April',
+                'May','June','July','August',
+                'September','October','November','December'), `Date`";
+
+        $stmt = mysqli_prepare($conn, $sql);
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if (!$stmt) {
+          die('Prepare failed: ' . mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, 's', $year);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $downloadDirectory = "../zip/";
+
+        $totalResults = mysqli_num_rows($result);
+
+        echo "<h2 class='display-2 fw-bold'>" . htmlspecialchars($year, ENT_QUOTES, 'UTF-8') . "</h2>";
+        echo "<p class='fs-2'>Archived samples: " . $totalResults . "</p>";
+        echo "<div class='row'>";
+
+        if (mysqli_num_rows($result) === 0) {
+          echo "<p>No programs found for this year.</p>";
+        } else {
+          $currentMonth = null;
+
+          while ($row = mysqli_fetch_assoc($result)) {
+            $recordMonth = htmlspecialchars($row['Month'], ENT_QUOTES, 'UTF-8');
+            $recordDate = htmlspecialchars($row['Date'], ENT_QUOTES, 'UTF-8');
+            // $recordTime = htmlspecialchars($row['Time'], ENT_QUOTES, 'UTF-8');
+            $networkAffiliate = htmlspecialchars($row['Affiliate'], ENT_QUOTES, 'UTF-8');
+            $programTitle = htmlspecialchars($row['Program_Title'], ENT_QUOTES, 'UTF-8');
+            $tapeType = htmlspecialchars($row['Tape_Type'], ENT_QUOTES, 'UTF-8');
+            $availableZIP = htmlspecialchars($row['ZIP'], ENT_QUOTES, 'UTF-8');
+            $downloadLink = htmlspecialchars($row['Download_Link'], ENT_QUOTES, 'UTF-8');
+
+            if ($recordMonth !== $currentMonth) {
+              if ($currentMonth !== null) {
+                echo "</tbody></table></div>";
+              }
+
+              $currentMonth = $recordMonth;
+
+              echo <<<HTML
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <h1>{$recordMonth}</h1>
+                  <table class="table table-bordered table-primary table-striped justify-content-center align-middle">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <!-- <th>Time</th> -->
+                        <th>Affiliate</th>
+                        <th>Program</th>
+                        <th>Tape</th>
+                        <th>ZIP?</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+              HTML;
+            }
+            $zipCell = ($downloadLink === '')
+            ? "<i class='bi bi-slash-circle'></i>"
+            : "<a href='$downloadDirectory/$downloadLink'><i class='bi bi-file-zip'>$availableZIP</i></a>";
+            
+            echo <<<HTML
+            <tr>
+              <td>{$recordDate}</td>
+              <td>{$networkAffiliate}</td>
+              <td>{$programTitle}</td>
+              <td>{$tapeType}</td>
+              <td>{$zipCell}</td>
+            </tr>
+        HTML;
+          }
+          echo "</tbody></table></div></div>";
+
+          mysqli_stmt_close($stmt);
+        }
+        ?>
         </div>
-        <h1 class="display-1 fw-bold text-center">Teletext Services</h1>
-        <hr />
-        <p class="fs-5">
-          While teletext was not as popular in the U.S., a few teletext service
-          were available. To view archived teletext from any of these service,
-          click on one below.
-        </p>
-        <div class="row justify-content-center pt-5">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="extravision.html">
-              <figure>
-                <img
-                  src="../images/logos/ExtraVision.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">CBS ExtraVision</span>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
-            <a href="electra.html">
-              <figure>
-                <img
-                  src="../images/logos/Electra.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Electra</span>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="keyfax.html">
-              <figure>
-                <img
-                  src="../images/logos/Keyfax.png"
-                  alt=""
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Keyfax</span>
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <a href="nbc-teletext.html">
-              <figure>
-                <img
-                  src="../images/logos/NBC-Teletext.png"
-                  alt=""
-                  class="mw-100 w-75"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">NBC Teletext</span>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
