@@ -10,7 +10,7 @@ if (!$conn) {
 }
 
 $sql = "SELECT Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, ZIP, Download_Link
-        FROM Teletext
+        FROM ExtraVision
         ORDER BY Year,
         FIELD(Month,
         'January','February','March','April','May','June',
