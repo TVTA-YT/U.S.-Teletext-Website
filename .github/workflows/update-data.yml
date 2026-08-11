@@ -13,8 +13,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Write database.php from secrets
+        run: |
+          cat > php/database.php << 'PHP'
+          <?php
+          $conn = mysqli_connect(
+              '${{ secrets.DB_HOST }}',
+              '${{ secrets.DB_USER }}',
+              '${{ secrets.DB_PASS }}',
+              '${{ secrets.DB_NAME }}'
+          );
+          PHP
+
       - name: Export database to JSON
-        run: php php/export-json_extravision.php
+        run: php php/export_json.php
 
       - name: Commit and push if changed
         run: |
