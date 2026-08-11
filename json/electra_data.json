@@ -1,0 +1,50 @@
+[
+    {
+        "ID": "331e67b8-9524-11f1-bcc0-1a92c823833d",
+        "Year": "1988",
+        "Month": "January",
+        "Date": "1988-01-06",
+        "Time": "00:00:00",
+        "Program_Title": "The Andy Griffith Show",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "",
+        "IsNew": true
+    },
+    {
+        "ID": "320487a8-9525-11f1-bcc0-1a92c823833d",
+        "Year": "1989",
+        "Month": "January",
+        "Date": "1989-01-09",
+        "Time": "00:00:00",
+        "Program_Title": "Zardoz",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "",
+        "IsNew": true
+    },
+    {
+        "ID": "8f7d06d2-95ba-11f1-a705-0200170221f6",
+        "Year": "1989",
+        "Month": "January",
+        "Date": "1989-01-09",
+        "Time": "00:00:00",
+        "Program_Title": "N/A",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "",
+        "IsNew": true
+    },
+    {
+        "ID": "c731bd7e-9524-11f1-bcc0-1a92c823833d",
+        "Year": "1989",
+        "Month": "August",
+        "Date": "1989-08-17",
+        "Time": "00:00:00",
+        "Program_Title": "N/A",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "",
+        "IsNew": true
+    }
+]
