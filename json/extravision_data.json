@@ -10,7 +10,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "088f6e10-9525-11f1-bcc0-1a92c823833d",
@@ -21,9 +21,9 @@
         "Affiliate": "WBBM",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "Yes",
+        "ZIP": "",
         "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/ACKFNcbChfMtXd39PjyxKO0/CBS%20ExtraVision/CBS_1985-10-02_ExtraVision?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "3d6db2b2-9526-11f1-bcc0-1a92c823833d",
@@ -32,24 +32,11 @@
         "Date": "1986-06-03",
         "Time": "00:00:00",
         "Affiliate": "WCAU",
-        "Program_Title": "1986 NBA Finals: Game 4",
+        "Program_Title": "1986 NBA Finals: Game 4 (Boston Celtics vs. Houston Rockets",
         "Tape_Type": "BMAX",
-        "ZIP": "Yes",
+        "ZIP": "",
         "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/AMFpyHMF0ak9G8ZoQD50-Tk/CBS%20ExtraVision/CBS_1986-06-03_ExtraVision.zip?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
-        "IsNew": true
-    },
-    {
-        "ID": "5f4b85b8-9525-11f1-bcc0-1a92c823833d",
-        "Year": "1986",
-        "Month": "June",
-        "Date": "1986-06-03",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "1986 NBA Finals (Teams TBD)",
-        "Tape_Type": "BMAX",
-        "ZIP": "Yes",
-        "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "88776efc-9525-11f1-bcc0-1a92c823833d",
@@ -62,7 +49,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "1a642832-9526-11f1-bcc0-1a92c823833d",
@@ -75,20 +62,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "",
-        "IsNew": true
-    },
-    {
-        "ID": "bb17918a-9510-11f1-bcc0-1a92c823833d",
-        "Year": "1987",
-        "Month": "December",
-        "Date": "1987-12-20",
-        "Time": "16:21:00",
-        "Affiliate": "WXYZ",
-        "Program_Title": "A Longer Program Title: Just a Long Program Title",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "05761b8c-95ba-11f1-a705-0200170221f6",
@@ -99,9 +73,9 @@
         "Affiliate": "N/A",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "Yes",
+        "ZIP": "",
         "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/ACKFNcbChfMtXd39PjyxKO0/CBS%20ExtraVision/CBS_1985-10-02_ExtraVision?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "c76bbeba-9525-11f1-bcc0-1a92c823833d",
@@ -114,7 +88,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "f2cb9d0a-9525-11f1-bcc0-1a92c823833d",
@@ -127,6 +101,6 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "",
-        "IsNew": true
+        "IsNew": false
     }
 ]
