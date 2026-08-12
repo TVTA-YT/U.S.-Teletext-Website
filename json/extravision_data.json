@@ -10,7 +10,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "https://archive.org/download/USTT_CBS-19851002_1/CBS_1985-10-02_ExtraVision.zip",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "05761b8c-95ba-11f1-a705-0200170221f6",
@@ -36,7 +36,7 @@
         "Tape_Type": "VHS",
         "ZIP": "",
         "Download_Link": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "3d6db2b2-9526-11f1-bcc0-1a92c823833d",
