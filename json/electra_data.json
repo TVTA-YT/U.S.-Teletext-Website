@@ -1,5 +1,17 @@
 [
     {
+        "ID": "80ee8a4e-95ec-11f1-a705-0200170221f6",
+        "Year": "1987",
+        "Month": "November",
+        "Date": "1987-11-08",
+        "Time": "00:00:00",
+        "Program_Title": "Revenger for a R-pe",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip",
+        "IsNew": false
+    },
+    {
         "ID": "331e67b8-9524-11f1-bcc0-1a92c823833d",
         "Year": "1988",
         "Month": "January",
@@ -46,5 +58,17 @@
         "ZIP": "",
         "Download_Link": "",
         "IsNew": false
+    },
+    {
+        "ID": "1b77db80-9613-11f1-a705-0200170221f6",
+        "Year": "1989",
+        "Month": "December",
+        "Date": "1989-12-10",
+        "Time": "00:00:00",
+        "Program_Title": "The Spy Who Loved Me",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19891210_1/12-10-1989_WTBS_WST_SpyWhoLovedMe_6Sec_OTA0006.zip",
+        "IsNew": true
     }
 ]
