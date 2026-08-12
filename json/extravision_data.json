@@ -1,19 +1,19 @@
 [
     {
-        "ID": "a1c82f22-9525-11f1-bcc0-1a92c823833d",
-        "Year": "1984",
-        "Month": "November",
-        "Date": "1984-11-04",
+        "ID": "a71efb3b-9602-11f1-a705-0200170221f6",
+        "Year": "1985",
+        "Month": "October",
+        "Date": "1985-10-02",
         "Time": "00:00:00",
-        "Affiliate": "WCBS",
-        "Program_Title": "N/A",
+        "Affiliate": "N/A",
+        "Program_Title": "The Equalizer (S01 E03)",
         "Tape_Type": "VHS",
         "ZIP": "",
-        "Download_Link": "",
-        "IsNew": false
+        "Download_Link": "https://archive.org/download/USTT_CBS-19851002_1/CBS_1985-10-02_ExtraVision.zip",
+        "IsNew": true
     },
     {
-        "ID": "088f6e10-9525-11f1-bcc0-1a92c823833d",
+        "ID": "05761b8c-95ba-11f1-a705-0200170221f6",
         "Year": "1985",
         "Month": "December",
         "Date": "1985-12-09",
@@ -22,8 +22,21 @@
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
         "ZIP": "",
-        "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/ACKFNcbChfMtXd39PjyxKO0/CBS%20ExtraVision/CBS_1985-10-02_ExtraVision?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19851209_1/CBS_1985-12-09_ExtraVision.zip",
         "IsNew": false
+    },
+    {
+        "ID": "08aa34f6-9605-11f1-a705-0200170221f6",
+        "Year": "1985",
+        "Month": "December",
+        "Date": "1985-12-10",
+        "Time": "00:00:00",
+        "Affiliate": "N/A",
+        "Program_Title": "N/A",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip",
+        "IsNew": true
     },
     {
         "ID": "3d6db2b2-9526-11f1-bcc0-1a92c823833d",
@@ -35,72 +48,7 @@
         "Program_Title": "1986 NBA Finals: Game 4 (Boston Celtics vs. Houston Rockets",
         "Tape_Type": "BMAX",
         "ZIP": "",
-        "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/AMFpyHMF0ak9G8ZoQD50-Tk/CBS%20ExtraVision/CBS_1986-06-03_ExtraVision.zip?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
-        "IsNew": false
-    },
-    {
-        "ID": "88776efc-9525-11f1-bcc0-1a92c823833d",
-        "Year": "1987",
-        "Month": "September",
-        "Date": "1987-09-19",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "N/A",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "",
-        "IsNew": false
-    },
-    {
-        "ID": "1a642832-9526-11f1-bcc0-1a92c823833d",
-        "Year": "1987",
-        "Month": "October",
-        "Date": "1987-10-23",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "It's the Great Pumpkin, Charlie Brown | Garfield's Halloween Adventure",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "",
-        "IsNew": false
-    },
-    {
-        "ID": "05761b8c-95ba-11f1-a705-0200170221f6",
-        "Year": "1988",
-        "Month": "May",
-        "Date": "1985-10-02",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "N/A",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "https://www.dropbox.com/scl/fo/tx423o0u6vdq19thm86g1/ACKFNcbChfMtXd39PjyxKO0/CBS%20ExtraVision/CBS_1985-10-02_ExtraVision?rlkey=1a5uc4hi9nlzqjge15ouj2bfc&dl=1",
-        "IsNew": false
-    },
-    {
-        "ID": "c76bbeba-9525-11f1-bcc0-1a92c823833d",
-        "Year": "1990",
-        "Month": "February",
-        "Date": "1990-02-28",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "Garfield: His 9 Lives",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "",
-        "IsNew": false
-    },
-    {
-        "ID": "f2cb9d0a-9525-11f1-bcc0-1a92c823833d",
-        "Year": "1990",
-        "Month": "March",
-        "Date": "1990-03-16",
-        "Time": "00:00:00",
-        "Affiliate": "N/A",
-        "Program_Title": "Why, Charlie Brown, Why? | Bugs Bunny: Battle of the Video Music Stars",
-        "Tape_Type": "VHS",
-        "ZIP": "",
-        "Download_Link": "",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19860603_1/CBS_1986-06-03_ExtraVision.zip",
         "IsNew": false
     }
 ]

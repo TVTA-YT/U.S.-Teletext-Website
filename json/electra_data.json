@@ -1,5 +1,17 @@
 [
     {
+        "ID": "80ee8a4e-95ec-11f1-a705-0200170221f6",
+        "Year": "1987",
+        "Month": "November",
+        "Date": "1987-11-08",
+        "Time": "00:00:00",
+        "Program_Title": "Revenger for a Rape",
+        "Tape_Type": "VHS",
+        "ZIP": "",
+        "Download_Link": "",
+        "IsNew": true
+    },
+    {
         "ID": "331e67b8-9524-11f1-bcc0-1a92c823833d",
         "Year": "1988",
         "Month": "January",
