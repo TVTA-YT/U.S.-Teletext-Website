@@ -135,19 +135,128 @@
         </div>
         <h1 class="display-1 fw-bold text-center">Archiving Teletext</h1>
         <hr />
-        <p class="fs-4">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique
-          nihil earum quae quisquam id ducimus dignissimos eos aperiam quaerat
-          minus.
+        <p class="fs-4 text-center">
+          How is teletext recovery still possible all these years later? Have a
+          look for yourself!
         </p>
         <hr />
         <hr />
+        <h2 class="display-5">Picture This...</h2>
         <p class="dropcap">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas quasi
-          aliquam expedita amet animi nostrum soluta ipsam assumenda illo totam
-          facilis praesentium, voluptates omnis sapiente ut mollitia quos ipsa
-          qui?
+          It's 1985. You've sat down to record your favorite program from CBS,
+          NBC, or TBS onto your choice of videotape (Betamax or VHS). After your
+          program (I hope you saved the commercials), you might use that same
+          tape to record other programs, but once it's full, onto the shelf it
+          goes. What you might not have realized is that you didn't just record
+          your favorite program, you also recorded something you can't visibly
+          see, something that's long-forgotten: <strong>teletext</strong>.
         </p>
+        <h2 class="display-5">Wait... Really?</h2>
+        <p>
+          It's true! Most people have likely transferred a videotape in their
+          lives, whether it's a home movie or a TV broadcast. I (the creator of
+          this site) have done my fair share of videotape transfers going back
+          to 2011. Like most people who have transferred videotape, I only
+          assumed the only content on the tape was the programming content I was
+          transferring. It wasn't until around 2025 when I realized just how
+          much I was missing by transferring videotape the usual conventional
+          way, which for me was transferring to a DVD recorder, then importing
+          the files onto my computer.
+        </p>
+        <h2 class="display-5">How, Though?</h2>
+        <figure class="figure float-end ms-3 mb-2 w-25">
+          <img
+            src="../images/frame_ntsc_chroma_ar43_1238_vid.png"
+            alt=""
+            class="figure-img img-fluid rounded"
+            data-bs-toggle="modal"
+            data-bs-target="#imageModal"
+            data-bs-caption="A still from an NBA Finals game on CBS featuring the encoded ExtraVision teletext above the video (June 3, 1986). The teletext lines resemble analog TV static in this photo."
+          />
+          <figcaption class="figure-caption text-center">
+            A still from an NBA Finals game on CBS featuring the encoded
+            ExtraVision teletext above the video (June 3, 1986). Click on image
+            to enlarge it.
+          </figcaption>
+        </figure>
+        <p>
+          In the days of analog TV, there was an unused portion of the video
+          signal called the vertical blanking interval (VBI). TVs normally do
+          not show the VBI, so many don't know it's there. The VBI can hold
+          things such as CEA-608 closed captioning (sometimes called Line 21
+          captions since these captions were on Line 21 of the VBI), vertical
+          interval timecode (VITC), test signals, and even data. I'm not going
+          to go into the specifics of what the VBI is, so I'll link the
+          <a
+            href="https://en.wikipedia.org/wiki/Vertical_blanking_interval"
+            target="_blank"
+            >Wikipedia</a
+          >
+          article for that.
+        </p>
+        <!-- TODO: Add more. 08/11/2026, 21:13 -->
+        <p>
+          When a program was recorded to videotape, not only was the program
+          itself recorded, but the VBI was recorded as well. Whatever was
+          present in the VBI at the time of the recording was preserved in the
+          videotaped recording. This means that, if recording a program with
+          Line 21 captions, those captions remained in the recording. Moreover,
+          this means that if someone recorded a network with a teletext feed,
+          such as TBS, the teletext was also preserved in the VBI.
+        </p>
+        <h2 class="display-5">Do Capture Cards Work?</h2>
+        <p>
+          It sort of depends. Your standard, extremely cheap USB capture device,
+          such as an EZ Cap, will <strong>not</strong> work. Transferring tapes
+          via a DVD recorder will also not work. While this method does preserve
+          the closed captions, it doesn't preserve the VBI itself. There are
+          certain older Hauppauge WinTV capture cards, used with Linux, that can
+          grab the VBI, but according to someone familiar, this can be "hit or
+          miss".
+        </p>
+        <p>
+          The best way to preserve the VBI when transferring videotape is by
+          transferring videotape via the FM RF method using software tools such
+          as
+          <a href="https://github.com/oyvindln/vhs-decode" target="_blank"
+            >VHS-Decode</a
+          >. The
+          <a href="https://github.com/oyvindln/vhs-decode/wiki">wiki</a> on the
+          GitHub repository contains a section for
+          <a
+            href="https://github.com/oyvindln/vhs-decode/wiki/004-The-Tap-List"
+            target="_blank"
+            >tapping into</a
+          >
+          the FM RF test ports on various VCR models and provides steps for
+          getting started.
+        </p>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- * END IMAGE MODAL -->
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
@@ -188,5 +297,6 @@
         </small>
       </div> -->
     </footer>
+    <script src="../js/image-modal.js"></script>
   </body>
 </html>
