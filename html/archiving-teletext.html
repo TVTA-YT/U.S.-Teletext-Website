@@ -1,26 +1,28 @@
 <!doctype html>
 <!-- Created August 10, 2026, 12:50 -->
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/media.css" />
+    <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../css/color-overrides.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
     />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -34,8 +36,13 @@
       }
 
       .dropcap::first-letter {
+        -webkit-initial-letter: 3;
         initial-letter: 3;
         margin-right: 0.5rem;
+      }
+
+      code {
+        color: var(--text-color);
       }
     </style>
   </head>
@@ -143,13 +150,14 @@
         <hr />
         <h2 class="display-5">Picture This...</h2>
         <p class="dropcap">
-          It's 1985. You've sat down to record your favorite program from CBS,
-          NBC, or TBS onto your choice of videotape (Betamax or VHS). After your
-          program (I hope you saved the commercials), you might use that same
-          tape to record other programs, but once it's full, onto the shelf it
-          goes. What you might not have realized is that you didn't just record
-          your favorite program, you also recorded something you can't visibly
-          see, something that's long-forgotten: <strong>teletext</strong>.
+          Someone in the 1980s, let's say 1985, records their favorite program
+          from CBS, NBC, or TBS onto their choice of videotape (Betamax or VHS).
+          After the program, they might use that same tape to record other
+          programs, but once it's full, onto the shelf it goes. What this person
+          might not have realized is that besides recording a TV program, they
+          recorded something else that they couldn't visibly see on their TV
+          screen, something that has seemingly become forgotten here in the
+          U.S.: <strong>teletext</strong>.
         </p>
         <h2 class="display-5">Wait... Really?</h2>
         <p>
@@ -204,6 +212,56 @@
           this means that if someone recorded a network with a teletext feed,
           such as TBS, the teletext was also preserved in the VBI.
         </p>
+        <p>
+          Some high-profile teletext services include CBS's ExtraVision, NBC's
+          NBC Teletext, and Keyfax/Electra, the previous two being included in
+          TBS's VBI, with Electra replacing Keyfax in the mid-1980s. ExtraVision
+          and NBC Teletext used a standard known as the North American Broadcast
+          Teletext Standard (NABTS), while Keyfax/Electra use the pre-existing
+          World System Teletext (WST) standard.
+        </p>
+        <h2 class="display-5">Wait, What Are Those?</h2>
+        <p>
+          Those are the different standards used here in the U.S.; Europe only
+          used the WST standard. The primary difference concerned the graphical
+          capabilities of both. WST relied heavily on text, while the NABTS
+          relied on text and graphics. To that point, the graphical capabilities
+          of NABTS exceeded the WTS.
+        </p>
+        <div class="row justify-content-center">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <h4 class="text-center">WTS (Electra/Keyfax)</h4>
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/Ceefax_1991-08-01.png"
+                alt=""
+                class="figure-img mw-100 rounded"
+                data-bs-target="#imageModal"
+                data-bs-caption="A still of the index page (P100) from BBC's Ceefax service (August 1, 1991)."
+              />
+              <figcaption class="figure-caption text-center">
+                A still of the index page (P100) from BBC's Ceefax service
+                (August 1, 1991).
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <h4 class="text-center">NABTS (ExtraVision/NBC Teletext)</h4>
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/Record-000-100-vA.png"
+                alt=""
+                class="figure-img mw-100 rounded"
+                data-bs-target="#imageModal"
+                data-bs-caption="A still of a subpage within the index page (P100) from CBS's ExtraVision service (August 1, 1991)."
+              />
+              <figcaption class="figure-caption text-center">
+                A still of a subpage within the index page (P100) from CBS's
+                ExtraVision service (August 1, 1991).
+              </figcaption>
+            </figure>
+          </div>
+        </div>
         <h2 class="display-5">Do Capture Cards Work?</h2>
         <p>
           It sort of depends. Your standard, extremely cheap USB capture device,
@@ -214,6 +272,7 @@
           grab the VBI, but according to someone familiar, this can be "hit or
           miss".
         </p>
+        <h2 class="display-5">How Do I Get Started?</h2>
         <p>
           The best way to preserve the VBI when transferring videotape is by
           transferring videotape via the FM RF method using software tools such
@@ -230,6 +289,33 @@
           >
           the FM RF test ports on various VCR models and provides steps for
           getting started.
+        </p>
+        <p>
+          After the transfer, the produced file, a U8 file (sometimes compressed
+          to FLAC) will need to be decoded. These are not video files as
+          VHS-Decode does not transfer conventional video like a standard
+          capture device. Rather, it transfers the raw FM video signal on the
+          videotape. Again, refer to the VHS-Decode GitHub wiki for more
+          information.
+        </p>
+        <p>
+          During the decoding process, this will produce several files, but the
+          important one is a TBC (time base correction) file. From there, you
+          can use VHS-Decode's built-in <code>ld-analyse</code> tool to view the
+          TBC file, which will show the decoded video (though from there, the
+          video needs to be exported and merged with the separate audio file,
+          but once again, refer to the wiki). However, there is another, more
+          recent software tool called
+          <a href="https://github.com/decode-orc/decode-orc" target="_blank"
+            >Decode-Orc</a
+          >. Both software tools support decoding various data in the VBI, such
+          as Line 21 CC and VITC, but if decoding teletext,
+          <span class="text-decoration-underline"
+            >this is the software to use</span
+          >, as it supports both NABTS and WST standards. The teletext part of
+          the software, while officially released, is still under development.
+          As more members of the tape archiving community use the software and
+          discover bugs and other issues, the software will improve over time.
         </p>
         <!-- * BEGIN IMAGE MODAL -->
         <div
@@ -257,6 +343,72 @@
           </div>
         </div>
         <!-- * END IMAGE MODAL -->
+        <!-- Floating theme button, bottom-right -->
+        <button
+          id="themeFab"
+          type="button"
+          class="btn btn-outline-secondary rounded-circle shadow"
+          style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            z-index: 1050;
+          "
+          data-bs-toggle="offcanvas"
+          data-bs-target="#themeOffcanvas"
+          aria-controls="themeOffcanvas"
+          title="Theme"
+        >
+          <span class="theme-icon">
+            <i class="bi bi-circle-half"></i>
+          </span>
+        </button>
+
+        <!-- Offcanvas panel -->
+        <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          id="themeOffcanvas"
+          aria-labelledby="themeOffcanvasLabel"
+          style="width: 260px"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="d-grid gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="light"
+              >
+                <i class="bi bi-brightness-high-fill"></i> Light
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="dark"
+              >
+                <i class="bi bi-moon-fill"></i> Dark
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="auto"
+              >
+                <i class="bi bi-display-fill"></i> Match system
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <footer class="end-footer pt-4 text-center">
@@ -287,15 +439,6 @@
       <div class="pt-4">
         <small class="text-white">&copy; Copyright 2026</small>
       </div>
-      <!-- <div class="pt-4">
-        <small>
-          This website is not affiliated in any way with the Public Broadcasting
-          Service. The PBS logo, PBS Kids logo, PBS Blue color, PBS Sans fonts,
-          and all PBS graphics are registered trademarks of the Public
-          Broadcasting Service. All other logos belong to their respectful
-          owners.
-        </small>
-      </div> -->
     </footer>
     <script src="../js/image-modal.js"></script>
   </body>

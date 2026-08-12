@@ -3,20 +3,20 @@
   --body-color: #f6f8fa;
   --text-color: #000;
   --navbar-color: #fff;
-  --PBS-site-navbar-logo-circle: #fff;
-  --NOLA-generator: #000;
+  --navbar-animation-color: #0e0075;
+  --site-logo-color: #000;
+  --site-logo-hover-color: #152de3;
   --horizontal-line: #000;
-  --NPS-sIX-dynamic-results: #fff;
-  --NPS-sIX-record-page: #48d3cd;
+  --tooltip-body-text-color: #fff;
 }
 
 [data-bs-theme="dark"] {
   --body-color: #000;
   --text-color: #fff;
   --navbar-color: #000;
-  --PBS-site-navbar-logo-circle: #000;
-  --NOLA-generator: #1c1c1c;
+  --navbar-animation-color: #fff;
+  --site-logo-color: #152de3;
+  --site-logo-hover-color: #fff;
   --horizontal-line: #fff;
-  --NPS-sIX-dynamic-results: #2b2b2b;
-  --NPS-sIX-record-page: #2b2b2b;
+  --tooltip-body-text-color: #000;
 }

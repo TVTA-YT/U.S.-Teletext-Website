@@ -2,7 +2,7 @@ name: Update Teletext Data
 
 on:
   schedule:
-    - cron: '0 16 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:

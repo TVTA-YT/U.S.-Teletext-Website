@@ -1,30 +1,28 @@
 <!doctype html>
 <!-- Created August 11, 2026, 00:04 -->
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/media.css" />
+    <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../css/color-overrides.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
     />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -53,7 +51,7 @@
         background-color: #a5ffba !important;
       }
 
-      .btn {
+      .btn:not(#themeFab, .theme-choice) {
         border-radius: 24px;
         background-color: rgb(62, 134, 243);
       }
@@ -186,7 +184,7 @@
           <br />
           <span
             >If a ZIP file is available for download, look for the ZIP icon (<i
-              class="bi bi-file-zip"
+              class="bi bi-file-zip-fill"
             ></i
             >) in the ZIP column.</span
           >
@@ -199,6 +197,72 @@
               <span class="button-text">Return to Form</span>
             </button>
           </a>
+        </div>
+        <!-- Floating theme button, bottom-right -->
+        <button
+          id="themeFab"
+          type="button"
+          class="btn btn-outline-secondary rounded-circle shadow"
+          style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            z-index: 1050;
+          "
+          data-bs-toggle="offcanvas"
+          data-bs-target="#themeOffcanvas"
+          aria-controls="themeOffcanvas"
+          title="Theme"
+        >
+          <span class="theme-icon">
+            <i class="bi bi-circle-half"></i>
+          </span>
+        </button>
+
+        <!-- Offcanvas panel -->
+        <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          id="themeOffcanvas"
+          aria-labelledby="themeOffcanvasLabel"
+          style="width: 260px"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="d-grid gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="light"
+              >
+                <i class="bi bi-brightness-high-fill"></i> Light
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="dark"
+              >
+                <i class="bi bi-moon-fill"></i> Dark
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary theme-choice text-start"
+                data-theme="auto"
+              >
+                <i class="bi bi-display-fill"></i> Match system
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -230,16 +294,8 @@
       <div class="pt-4">
         <small class="text-white">&copy; Copyright 2026</small>
       </div>
-      <!-- <div class="pt-4">
-        <small>
-          This website is not affiliated in any way with the Public Broadcasting
-          Service. The PBS logo, PBS Kids logo, PBS Blue color, PBS Sans fonts,
-          and all PBS graphics are registered trademarks of the Public
-          Broadcasting Service. All other logos belong to their respectful
-          owners.
-        </small>
-      </div> -->
     </footer>
+    <script src="../js/color-modes.js"></script>
     <script src="../js/render-results.js"></script>
     <script>
       renderResults({

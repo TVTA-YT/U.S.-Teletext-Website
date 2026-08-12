@@ -115,7 +115,7 @@ function appendRow(tbody, row, columns) {
   tr.innerHTML = columns.map(c => {
     if (c.renderZip) {
       return row.Download_Link
-        ? `<td><a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip"></i></a></td>`
+        ? `<td><a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a></td>`
         : `<td><i class="bi bi-slash-circle"></i></td>`;
     }
     return `<td>${escapeHtml(row[c.key])}</td>`;

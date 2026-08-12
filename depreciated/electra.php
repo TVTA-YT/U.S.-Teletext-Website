@@ -1,11 +1,12 @@
 <!doctype html>
 <!-- Created August 10, 2026, 21:23 -->
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/styles.css" />
+     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/media.css" />
+    <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
@@ -252,15 +253,7 @@
       <div class="pt-4">
         <small class="text-white">&copy; Copyright 2026</small>
       </div>
-      <!-- <div class="pt-4">
-        <small>
-          This website is not affiliated in any way with the Public Broadcasting
-          Service. The PBS logo, PBS Kids logo, PBS Blue color, PBS Sans fonts,
-          and all PBS graphics are registered trademarks of the Public
-          Broadcasting Service. All other logos belong to their respectful
-          owners.
-        </small>
-      </div> -->
+      
     </footer>
   </body>
 </html>
