@@ -77,7 +77,7 @@ async function renderResults(config) {
         col.innerHTML = `
           <h1>${escapeHtml(groupValue)}</h1>
           <div class="table-responsive">
-            <table class="table table-bordered table-primary table-striped justify-content-center align-middle text-nowrap">
+            <table class="table table-bordered table-primary justify-content-center align-middle text-nowrap">
               <thead><tr>${headerCells}</tr></thead>
               <tbody></tbody>
             </table>
