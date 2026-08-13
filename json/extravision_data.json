@@ -10,7 +10,7 @@
         "Tape_Type": "VHS",
         "Tape_Speed": "SP",
         "Download_Link": "https://archive.org/download/USTT_CBS-19851002_1/CBS_1985-10-02_ExtraVision.zip",
-        "Thumbnail": "1985/CBS_1985-10-02_1.png",
+        "Thumbnail": "/1985/CBS_1985-10-02_1.png",
         "Service_Name": "CBS ExtraVision",
         "Notes": null,
         "IsNew": true
@@ -26,7 +26,7 @@
         "Tape_Type": "VHS",
         "Tape_Speed": null,
         "Download_Link": "https://archive.org/download/USTT_CBS-19851209_1/CBS_1985-12-09_ExtraVision.zip",
-        "Thumbnail": "1985/CBS_1985-12-09_1.png",
+        "Thumbnail": "/1985/CBS_1985-12-09_1.png",
         "Service_Name": "CBS ExtraVision",
         "Notes": null,
         "IsNew": true
@@ -42,7 +42,7 @@
         "Tape_Type": "VHS",
         "Tape_Speed": null,
         "Download_Link": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip",
-        "Thumbnail": "1985/CBS_1985-12-10_1.png",
+        "Thumbnail": "/1985/CBS_1985-12-10_1.png",
         "Service_Name": "CBS ExtraVision",
         "Notes": null,
         "IsNew": true
@@ -58,7 +58,7 @@
         "Tape_Type": "BMAX",
         "Tape_Speed": "BIII",
         "Download_Link": "https://archive.org/download/USTT_CBS-19860603_1/CBS_1986-06-03_ExtraVision.zip",
-        "Thumbnail": "1986/CBS_1986-06-03_1",
+        "Thumbnail": "/1986/CBS_1986-06-03_1",
         "Service_Name": "CBS ExtraVision",
         "Notes": null,
         "IsNew": true
