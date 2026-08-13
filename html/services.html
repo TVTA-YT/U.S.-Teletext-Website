@@ -39,7 +39,7 @@
         padding-top: 90px;
       }
 
-      span:not(.alert-text) {
+      span:not(.alert-text, #total-record-count, #available-sample-count) {
         font-family: "Press Start 2P" !important;
       }
 
@@ -161,10 +161,20 @@
             UPDATE: The database values now update every hour.</span
           >
         </div>
-        <p
-          class="fs-2 text-center fw-bold text-decoration-underline pt-4"
-          id="total-record-count"
-        ></p>
+        <div class="pt-4" id="sumbission-count">
+          <table class="table text-center" id="submission-count-table">
+            <tbody>
+              <tr>
+                <td>
+                  Total Submissions: <span id="total-record-count"></span>
+                </td>
+                <td>
+                  Samples Available: <span id="available-sample-count"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="row justify-content-center pt-5">
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
             <a href="extravision.html">

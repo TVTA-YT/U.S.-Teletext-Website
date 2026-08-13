@@ -1,6 +1,7 @@
 async function renderTotalRecordCount() {
     const countEl = document.getElementById("total-record-count");
-    if (!countEl) return;
+    const sampleCountEl = document.getElementById("available-sample-count");
+    if (!countEl && !sampleCountEl) return;
 
     const jsonFiles = [
         '../json/electra_data.json',
@@ -17,12 +18,22 @@ async function renderTotalRecordCount() {
         );
 
         const total = responses.reduce((sum, rows) => sum + rows.length, 0)
-        countEl.textContent = total.toLocaleString();
+
+        const availableSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+
+        if (countEl) {
+            countEl.textContent = total.toLocaleString();
+        }
+
+        if (sampleCountEl) {
+            sampleCountEl.textContent = availableSamples.toLocaleString();
+        }
 
 
     } catch (error) {
-        countEl.textContent = '-';
-        console.error('Could not load total record count;', err);
+        if (countEL) countEl.textContent = '-';
+        if (sampleCountEl) sampleCountEl.textContent = '-';
+        console.error('Could not load total record/sample count;', err);
     }
 }
 

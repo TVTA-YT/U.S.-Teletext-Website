@@ -125,6 +125,10 @@
     font-size: 1.5em;
   }
 
+  #submission-count-table {
+    font-size: 2em !important;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -147,6 +151,10 @@
     font-size: 1.5em;
   }
 
+  #submission-count-table {
+    font-size: 2em !important;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -167,6 +175,10 @@
 
   #submission-page-alert-text {
     font-size: 1.3em;
+  }
+
+  #submission-count-table {
+    font-size: 2em !important;
   }
 
   .mobile-link {
@@ -204,6 +216,10 @@
     font-size: 1.2em;
   }
 
+  #submission-count-table {
+    font-size: 1.6em !important;
+  }
+
   .site-introduction {
     font-size: 1.6em;
   }
@@ -229,6 +245,10 @@
 
   #submission-page-alert-text {
     font-size: 1.1em;
+  }
+
+  #submission-count-table {
+    font-size: 1.2em !important;
   }
 
   .desktop-link {
@@ -257,6 +277,10 @@
 
   #submission-page-alert-text {
     font-size: 1em;
+  }
+
+  #submission-count-table {
+    font-size: 1em !important;
   }
 
   #footer-site-links {
@@ -293,6 +317,10 @@
 
   #submission-page-alert-text {
     font-size: 1em;
+  }
+
+  #submission-count-table {
+    font-size: 0.8em !important;
   }
 
   #footer-site-links {
