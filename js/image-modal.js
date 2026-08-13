@@ -4,7 +4,7 @@ let modal = new bootstrap.Modal(document.getElementById("imageModal"));
 
 document.addEventListener("click", (event) => {
   const item = event.target.closest(
-    ".figure-img",
+    ".figure-img, .teletext-preview",
   );
   if (!item) return;
 

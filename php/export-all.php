@@ -2,46 +2,59 @@
 // Created August 11, 2026, 14:33
 
 require __DIR__ . '/database.php';
-require __DIR__ . '/new-records.php';
+require __DIR__ . '/track-first-seen.php';
 
 if (!$conn) {
     fwrite(STDERR, "Connection failed: " . mysqli_connect_error() . "\n");
     exit(1);
 }
 
+// New entires will be marked for 7 days
+const NEW_WINDOW_DAYS = 7;
+
 /* One entry per table. ExtraVision and NBC Teletext will share
 the same columns.
 */
-$sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, ZIP, Download_Link";
+$sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Service_Name, Notes";
 $sharedOrderBy = "Year, FIELD(Month,
     'January','February','March','April','May','June',
     'July','August','September','October','November','December'
 ), Date";
 
+// Published files will go here
+$jsonDirectory = dirname(__DIR__) . '/json';
+
+// This is not read by the front end, mainly bookkeeping
+$trackerDirectory = dirname(__DIR__) . '/.trackers';
+
 $exports = [
     [
-        'table'      => 'ExtraVision',
-        'idField'    => 'ID',
-        'columns'    => $sharedColumns,
-        'orderBy'    => $sharedOrderBy,
-        'outputFile' => __DIR__ . '/../json/extravision_data.json',
+        'table'      =>  'ExtraVision',
+        'idField'    =>  'ID',
+        'columns'    =>  $sharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/extravision_data.json',
+        'trackerFile' => $trackerDirectory . '/extravision_data.json',
     ],
     [
-        'table'      => 'NBC_Teletext',
-        'idField'    => 'ID',
-        'columns'    => $sharedColumns,
-        'orderBy'    => $sharedOrderBy,
-        'outputFile' => __DIR__ . '/../json/nbc_teletext_data.json',
+        'table'      =>  'NBC_Teletext',
+        'idField'    =>  'ID',
+        'columns'    =>  $sharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/nbc_teletext_data.json',
+        'trackerFile' => $trackerDirectory . '/nbc_teletext_data.json',
     ],
     [
         'table'      => 'Electra',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, ZIP, Download_Link",
+        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Service_Name, Notes",
         'orderBy'    => "Year, FIELD(Month,
             'January','February','March','April','May','June',
             'July','August','September','October','November','December'
         ), Date",
-        'outputFile' => __DIR__ . '/../json/electra_data.json',
+        'outputFile' =>  $jsonDirectory . '/electra_data.json',
+        'trackerFile' => $trackerDirectory . '/electra_data.json',
+        
     ],
 ];
 
@@ -63,8 +76,9 @@ function exportTable(mysqli $conn, array $export): void {
         $rows[] = $row;
     }
 
+    $rows = trackFirstSeen($rows, $export['trackerFile'], $export['idField'], NEW_WINDOW_DAYS);
+
     // Diff against the OLD file before it gets overwritten below.
-    $rows = markNewRecords($rows, $export['outputFile'], $export['idField']);
 
     $outputDir = dirname($export['outputFile']);
     if (!is_dir($outputDir)) {

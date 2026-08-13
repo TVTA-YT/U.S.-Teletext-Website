@@ -35,6 +35,10 @@
     ></script>
     <title>U.S. Teletext Archive</title>
     <style>
+      #primary-container {
+        margin-top: 70px !important;
+      }
+
       #site-title {
         font-family: "Contour Generator", sans-serif;
         line-height: 110%;
@@ -42,7 +46,7 @@
         animation: colorChange 4s steps(4, end) infinite;
       }
 
-      .container {
+      .container:not(#primary-container) {
         margin-top: 110px !important;
       }
 
@@ -214,7 +218,7 @@
           <a href="html/submissions.html">this</a> page.
         </p>
       </div>
-      <div class="container">
+      <div class="container" id="primary-container">
         <div class="image-marquee" id="image-marquee">
           <div class="image-marquee-content">
             <div>

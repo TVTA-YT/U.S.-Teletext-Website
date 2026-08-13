@@ -112,15 +112,43 @@ async function renderResults(config) {
 function appendRow(tbody, row, columns) {
   const tr = document.createElement('tr');
   if (row.IsNew) tr.classList.add('row-new');
+
+  const thumbnailDirectory = `../images/thumbnails/${row.Network}`;
+
   tr.innerHTML = columns.map(c => {
     if (c.renderZip) {
       return row.Download_Link
         ? `<td><a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a></td>`
-        : `<td><i class="bi bi-slash-circle"></i></td>`;
+        : `<td><i class="bi bi-slash-circle-fill"></i></td>`;
     }
-    return `<td>${escapeHtml(row[c.key])}</td>`;
+    // return `<td>${escapeHtml(row[c.key])}</td>`;
+
+    if (c.renderThumbnail) {
+      if (!row.Thumbnail) {
+        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+      }
+      const imagePath = thumbnailDirectory + row.Thumbnail;
+      return `
+      <td>
+        <img src="${escapeHtml(imagePath)}" alt="" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">
+      </td>
+      `;
+    }
+
+    if (c.key === 'Program_Title' && String(row.Notes ?? '').trim() !== '') {
+      const notes = escapeHtml(row.Notes);
+      const title = escapeHtml(row[c.key]);
+      return `<td class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>">${title} <i class="bi bi-info-circle-fill"></i></td>`;
+    }
+
+    return `<td>${escapeHtml(row[c.key])}</td>`
   }).join('');
+  
   tbody.appendChild(tr);
+
+  tr.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+    new bootstrap.Tooltip(el);
+  });
 }
 
 function escapeHtml(str) {
