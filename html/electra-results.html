@@ -200,6 +200,32 @@
             </button>
           </a>
         </div>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- * END IMAGE MODAL -->
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
