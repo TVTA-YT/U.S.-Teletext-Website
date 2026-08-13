@@ -13,6 +13,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
+        "Date_Added": "2026-08-12",
         "IsNew": true
     },
     {
@@ -29,6 +30,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
+        "Date_Added": "2026-08-11",
         "IsNew": true
     },
     {
@@ -45,6 +47,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
+        "Date_Added": "2026-08-11",
         "IsNew": true
     },
     {
@@ -61,6 +64,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
+        "Date_Added": "2026-08-11",
         "IsNew": true
     },
     {
@@ -77,6 +81,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
+        "Date_Added": "2026-08-11",
         "IsNew": true
     },
     {
@@ -93,6 +98,7 @@
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "This is 6 seconds worth of decoded data. Due to the short runtime of the content on the tape, all pages are incomplete. Only pages P236-P261 were partially recovered.",
+        "Date_Added": "2026-08-12",
         "IsNew": true
     }
 ]
