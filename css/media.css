@@ -8,99 +8,98 @@
 
 @media only screen and (min-width: 1670px) {
   .navbar-nav {
-    margin-left: 55%;
+    margin-left: 42%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1669px) {
   .navbar-nav {
-    margin-left: 50%;
+    margin-left: 42%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1613px) {
   .navbar-nav {
-    margin-left: 50%;
+    margin-left: 35%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1516px) {
   .navbar-nav {
-    margin-left: 45%;
+    margin-left: 30%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1429px) {
   .navbar-nav {
-    margin-left: 40%;
+    margin-left: 25%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1355px) {
   .navbar-nav {
-    margin-left: 35%;
+    margin-left: 20%;
     font-size: 20px;
   }
 }
 
-/* STOPPING POINT */
 @media only screen and (min-width: 1235px) and (max-width: 1291px) {
   .navbar-nav {
-    margin-left: 35%;
+    margin-left: 16%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1234px) {
   .navbar-nav {
-    margin-left: 30%;
+    margin-left: 12%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1184px) {
   .navbar-nav {
-    margin-left: 25%;
-    font-size: 20px;
+    margin-left: 15%;
+    font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 1138px) {
   .navbar-nav {
-    margin-left: 25%;
-    font-size: 20px;
+    margin-left: 12%;
+    font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 1112px) {
   .navbar-nav {
-    margin-left: 30%;
-    font-size: 20px;
+    margin-left: 18%;
+    font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 1074px) {
   .navbar-nav {
-    margin-left: 30%;
+    margin-left: 15%;
     font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 1047px) {
   .navbar-nav {
-    margin-left: 25%;
+    margin-left: 12%;
     font-size: 18px;
   }
 }
 
 @media only screen and (max-width: 1018px) {
   .navbar-nav {
-    margin-left: 22%;
+    margin-left: 10%;
     font-size: 18px;
   }
 }
@@ -122,6 +121,10 @@
     font-size: 5em;
   }
 
+  #submission-page-alert-text {
+    font-size: 1.5em;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -138,6 +141,10 @@
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   #site-title {
     font-size: 4.4em;
+  }
+
+  #submission-page-alert-text {
+    font-size: 1.5em;
   }
 
   .mobile-link {
@@ -158,6 +165,10 @@
     font-size: 4em;
   }
 
+  #submission-page-alert-text {
+    font-size: 1.3em;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -173,11 +184,6 @@
 
 /* * QUERY FOR MEDIUM DEVICES * */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  .mobile-container {
-    display: inline-flex;
-    justify-content: end;
-  }
-
   #site-title {
     font-size: 3.5em;
   }
@@ -192,6 +198,10 @@
 
   #navbarNav .nav-item .nav-link:hover {
     color: #000000;
+  }
+
+  #submission-page-alert-text {
+    font-size: 1.2em;
   }
 
   .site-introduction {
@@ -217,6 +227,10 @@
     font-size: 2.8em;
   }
 
+  #submission-page-alert-text {
+    font-size: 1.1em;
+  }
+
   .desktop-link {
     display: none;
   }
@@ -239,6 +253,10 @@
   #site-title {
     /* font-size: 2em; */
     font-size: 2.5em;
+  }
+
+  #submission-page-alert-text {
+    font-size: 1em;
   }
 
   #footer-site-links {
@@ -271,6 +289,10 @@
 @media only screen and (max-width: 399px) {
   #site-title {
     font-size: 2.5em;
+  }
+
+  #submission-page-alert-text {
+    font-size: 1em;
   }
 
   #footer-site-links {

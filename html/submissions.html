@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Created August 10, 2026, 18:07 -->
+<!-- Created August 12, 2026, 20:04 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -29,14 +29,26 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>ExtraVision</title>
+    <title>Teletext Submissions</title>
     <style>
       .container {
-        padding-top: 100px;
+        padding-top: 90px;
       }
 
       .btn {
         border-radius: 24px;
+      }
+
+      .submission-button {
+        background-color: #152de3;
+      }
+
+      .submission-button:hover {
+        background-color: #4d62ff;
+      }
+
+      figure {
+        text-align: center;
       }
     </style>
   </head>
@@ -133,43 +145,131 @@
       </div>
     </nav>
     <main>
-      <div class="container">
-        <!-- <div class="alert alert-danger text-center mt-3">
+      <div class="container pb-3">
+        <div class="alert alert-danger text-center mt-3">
           <div class="alert-heading">
             <h1>NOTE</h1>
           </div>
           <p class="mb-0 fs-4">This site is under construction.</p>
-        </div> -->
-        <figure class="text-center">
-          <img
-            src="../images/logos/ExtraVision.png"
-            alt=""
-            class="mw-100 w-75 light-mode-image"
-          />
-          <img
-            src="../images/logos/ExtraVision_white-CBS.png"
-            alt=""
-            class="mw-100 w-75 dark-mode-image"
-          />
-        </figure>
+        </div>
+        <h1 class="display-1 fw-bold text-center">Teletext Submissions</h1>
         <hr />
-        <p>Use the form below to search for available pages by year.</p>
-        <form action="extravision-results.html" method="get">
+        <p class="fs-5 text-center">
+          Got any decoded teletext you'd like added to the site? Use this form
+          to let me know.
+        </p>
+        <hr />
+        <form action="https://formspree.io/f/xoeawkye" method="post">
           <div class="mb-3">
-            <label for="year" class="form-label">Select a year</label>
-            <select name="year" id="year" class="form-select">
-              <option value=""></option>
-              <option value="1984">1984</option>
-              <option value="1985">1985</option>
-              <option value="1986">1986</option>
-              <option value="1987">1987</option>
-              <option value="1988" disabled>1988</option>
-              <option value="1989" disabled>1989</option>
-              <option value="1990">1990</option>
+            <label for="network" class="form-label">Select a network</label>
+            <select name="network" id="network" class="form-select" required>
+              <option value="" disabled selected hidden>CBS/NBC/TBS</option>
+              <option value="CBS">CBS</option>
+              <option value="NBC">NBC</option>
+              <option value="TBS">TBS</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary form-control">
-            Submit
+          <div class="mb-3">
+            <label for="service" class="form-label">Teletext service</label>
+            <select
+              name="service"
+              id="service"
+              class="form-select"
+              disabled
+              required
+            >
+              <option value="Electra">Electra</option>
+              <option value="ExtraVision">ExtraVision</option>
+              <option value="Keyfax">Keyfax</option>
+              <option value="NBCTeletext">NBC Teletext</option>
+            </select>
+            <div id="hint" class="form-text text-primary">Select a service</div>
+          </div>
+          <input type="hidden" name="service" id="serviceHidden" />
+          <div class="mb-3">
+            <label for="date" class="form-label">Select a date</label>
+            <input
+              type="date"
+              name="date"
+              id="date"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="programTitle" class="form-label"
+              >Enter program title(s)</label
+            >
+            <input
+              type="text"
+              name="programTitle"
+              id="programTitle"
+              class="form-control"
+              placeholder="Program Title"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="tapeType" class="form-label"
+              >Select a tape format</label
+            >
+            <select name="tapeType" id="tapeType" class="form-select" required>
+              <option value="" disabled selected hidden>Betamax/VHS</option>
+              <option value="Betamax">Betamax</option>
+              <option value="VHS">VHS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="tapeSpeed" class="form-label"
+              >Select a tape speed</label
+            >
+            <select
+              name="tapeSpeed"
+              id="tapeSpeed"
+              class="form-control"
+              required
+            >
+              <option value="" disabled selected hidden>e.g. SLP</option>
+              <optgroup label="Betamax">
+                <option value="BI">BI</option>
+                <option value="BII">BII</option>
+                <option value="BIII">BIII</option>
+              </optgroup>
+              <optgroup label="VHS">
+                <option value="SP">SP</option>
+                <option value="LP">LP</option>
+                <option value="EP">EP/SLP</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sumbissionLink" class="form-label"
+              >Provide your submission (links only)</label
+            >
+            <input
+              type="url"
+              name="sumbissionLink"
+              id="submissionLink"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="notes" class="form-label"
+              >Provide any additional information below (optional)</label
+            >
+            <div class="input-group">
+              <span class="input-group-text">Additional Information</span>
+              <textarea
+                name="notes"
+                id="notes"
+                class="form-control"
+                placeholder="e.g. 'Only 30 seconds of content was captured' or 'Pages are incomplete'."
+              ></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn form-control submission-button">
+            Submit Form
           </button>
           <button type="reset" class="btn btn-danger form-control my-4">
             Reset Fields
@@ -273,5 +373,6 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/form-script.js"></script>
   </body>
 </html>
