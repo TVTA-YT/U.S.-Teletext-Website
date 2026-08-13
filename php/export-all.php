@@ -47,7 +47,7 @@ $exports = [
     [
         'table'      => 'Electra',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Service_Name, Notes",
+        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes",
         'orderBy'    => "Year, FIELD(Month,
             'January','February','March','April','May','June',
             'July','August','September','October','November','December'
