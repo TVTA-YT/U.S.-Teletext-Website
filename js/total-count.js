@@ -1,5 +1,5 @@
 async function renderTotalRecordCount() {
-    const countEl = document.getElementById("total-record.count");
+    const countEl = document.getElementById("total-record-count");
     if (!countEl) return;
 
     const jsonFiles = [
