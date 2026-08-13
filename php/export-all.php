@@ -15,7 +15,7 @@ const NEW_WINDOW_DAYS = 7;
 /* One entry per table. ExtraVision and NBC Teletext will share
 the same columns.
 */
-$sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Service_Name, Notes";
+$sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes";
 $sharedOrderBy = "Year, FIELD(Month,
     'January','February','March','April','May','June',
     'July','August','September','October','November','December'

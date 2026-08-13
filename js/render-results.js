@@ -143,7 +143,7 @@ function appendRow(tbody, row, columns) {
 
     return `<td>${escapeHtml(row[c.key])}</td>`
   }).join('');
-  
+
   tbody.appendChild(tr);
 
   tr.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
