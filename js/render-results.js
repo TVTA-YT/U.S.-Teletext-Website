@@ -112,6 +112,7 @@ async function renderResults(config) {
 function appendRow(tbody, row, columns) {
   const tr = document.createElement('tr');
   if (row.IsNew) tr.classList.add('row-new');
+  if (!row.Download_Link) tr.classList.add('row-no-download-link');
 
   const thumbnailDirectory = `../images/thumbnails/${row.Network}`;
 

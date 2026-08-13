@@ -44,11 +44,33 @@
       }
 
       .row-new {
-        background-color: #a5ffba !important;
+        --bs-table-striped-bg: #a5ffba;
       }
 
-      .row-new td {
+      .row-no-download-link {
+        --bs-table-striped-bg: #ffa5a5 !important;
+      }
+
+      /* .row-new td {
         background-color: #a5ffba !important;
+      } */
+
+      .tooltip {
+        --bs-tooltip-max-width: 400px;
+      }
+
+      .tooltip-heading {
+        padding-top: 10px;
+        text-decoration: underline;
+      }
+
+      .tooltip-body {
+        color: var(--tooltip-body-text-color) !important;
+      }
+
+      .tape-notes {
+        text-decoration: none;
+        font-weight: 600;
       }
 
       .btn:not(#themeFab, .theme-choice) {
