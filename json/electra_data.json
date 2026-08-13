@@ -7,9 +7,12 @@
         "Time": "00:00:00",
         "Program_Title": "Goodbye Raggedy Ann",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "",
         "Download_Link": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip",
-        "IsNew": false
+        "Thumbnail": "Electra/WTBS_1987-11-08_1.png",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     },
     {
         "ID": "331e67b8-9524-11f1-bcc0-1a92c823833d",
@@ -19,9 +22,12 @@
         "Time": "00:00:00",
         "Program_Title": "The Battle for Peace",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "SP",
         "Download_Link": "",
-        "IsNew": false
+        "Thumbnail": "",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     },
     {
         "ID": "320487a8-9525-11f1-bcc0-1a92c823833d",
@@ -31,9 +37,12 @@
         "Time": "00:00:00",
         "Program_Title": "Zardoz",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "",
         "Download_Link": "",
-        "IsNew": false
+        "Thumbnail": "",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     },
     {
         "ID": "8f7d06d2-95ba-11f1-a705-0200170221f6",
@@ -43,9 +52,12 @@
         "Time": "00:00:00",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "",
         "Download_Link": "",
-        "IsNew": false
+        "Thumbnail": "",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     },
     {
         "ID": "c731bd7e-9524-11f1-bcc0-1a92c823833d",
@@ -55,9 +67,12 @@
         "Time": "00:00:00",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "",
         "Download_Link": "",
-        "IsNew": false
+        "Thumbnail": "",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     },
     {
         "ID": "1b77db80-9613-11f1-a705-0200170221f6",
@@ -67,8 +82,11 @@
         "Time": "00:00:00",
         "Program_Title": "The Spy Who Loved Me",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "",
         "Download_Link": "https://archive.org/download/USTT_WTBS-19891210_1/12-10-1989_WTBS_WST_SpyWhoLovedMe_6Sec_OTA0006.zip",
-        "IsNew": false
+        "Thumbnail": "",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "IsNew": true
     }
 ]

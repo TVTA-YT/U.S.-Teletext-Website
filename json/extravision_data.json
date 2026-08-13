@@ -8,9 +8,12 @@
         "Affiliate": "N/A",
         "Program_Title": "The Equalizer (S01 E03)",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": "SP",
         "Download_Link": "https://archive.org/download/USTT_CBS-19851002_1/CBS_1985-10-02_ExtraVision.zip",
-        "IsNew": false
+        "Thumbnail": "1985/CBS_1985-10-02_1.png",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": null,
+        "IsNew": true
     },
     {
         "ID": "05761b8c-95ba-11f1-a705-0200170221f6",
@@ -21,9 +24,12 @@
         "Affiliate": "WBBM",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": null,
         "Download_Link": "https://archive.org/download/USTT_CBS-19851209_1/CBS_1985-12-09_ExtraVision.zip",
-        "IsNew": false
+        "Thumbnail": "1985/CBS_1985-12-09_1.png",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": null,
+        "IsNew": true
     },
     {
         "ID": "08aa34f6-9605-11f1-a705-0200170221f6",
@@ -34,9 +40,12 @@
         "Affiliate": "N/A",
         "Program_Title": "N/A",
         "Tape_Type": "VHS",
-        "ZIP": "",
+        "Tape_Speed": null,
         "Download_Link": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip",
-        "IsNew": false
+        "Thumbnail": "1985/CBS_1985-12-10_1.png",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": null,
+        "IsNew": true
     },
     {
         "ID": "3d6db2b2-9526-11f1-bcc0-1a92c823833d",
@@ -47,8 +56,11 @@
         "Affiliate": "WCAU",
         "Program_Title": "1986 NBA Finals: Game 4 (Boston Celtics vs. Houston Rockets",
         "Tape_Type": "BMAX",
-        "ZIP": "",
+        "Tape_Speed": "BIII",
         "Download_Link": "https://archive.org/download/USTT_CBS-19860603_1/CBS_1986-06-03_ExtraVision.zip",
-        "IsNew": false
+        "Thumbnail": "1986/CBS_1986-06-03_1",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": null,
+        "IsNew": true
     }
 ]
