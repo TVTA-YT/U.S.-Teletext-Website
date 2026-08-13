@@ -10,6 +10,7 @@
         "Tape_Speed": "",
         "Download_Link": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip",
         "Thumbnail": "/Electra/1987/WTBS_1987-11-08_1.png",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
         "IsNew": true
@@ -25,6 +26,7 @@
         "Tape_Speed": "SP",
         "Download_Link": "",
         "Thumbnail": "",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
         "IsNew": true
@@ -40,6 +42,7 @@
         "Tape_Speed": "",
         "Download_Link": "",
         "Thumbnail": "",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
         "IsNew": true
@@ -55,6 +58,7 @@
         "Tape_Speed": "",
         "Download_Link": "",
         "Thumbnail": "",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
         "IsNew": true
@@ -70,6 +74,7 @@
         "Tape_Speed": "",
         "Download_Link": "",
         "Thumbnail": "",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
         "IsNew": true
@@ -85,6 +90,7 @@
         "Tape_Speed": "",
         "Download_Link": "https://archive.org/download/USTT_WTBS-19891210_1/12-10-1989_WTBS_WST_SpyWhoLovedMe_6Sec_OTA0006.zip",
         "Thumbnail": "/Electra/1989/WTBS_1989-12-10_1.png",
+        "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "This is 6 seconds worth of decoded data. Due to the short runtime of the content on the tape, all pages are incomplete. Only pages P236-P261 were partially recovered.",
         "IsNew": true
