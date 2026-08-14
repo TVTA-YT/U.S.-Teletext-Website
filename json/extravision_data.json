@@ -70,5 +70,23 @@
         "Notes": null,
         "Date_Added": "2026-08-12",
         "IsNew": true
+    },
+    {
+        "ID": "510cde07-9801-11f1-a705-0200170221f6",
+        "Year": "1987",
+        "Month": "November",
+        "Date": "1987-11-13",
+        "Time": "00:00:00",
+        "Affiliate": "N/A",
+        "Program_Title": "N/A",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "",
+        "Download_Link": "",
+        "Thumbnail": "",
+        "Network": "CBS",
+        "Service_Name": "ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-08-14",
+        "IsNew": true
     }
 ]
