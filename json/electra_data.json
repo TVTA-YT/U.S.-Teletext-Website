@@ -68,6 +68,23 @@
         "IsNew": true
     },
     {
+        "ID": "62d34959-9868-11f1-a705-0200170221f6",
+        "Year": "1989",
+        "Month": "August",
+        "Date": "1989-08-17",
+        "Time": "00:00:00",
+        "Program_Title": "The Deliberate Stranger (Ep. Unknown)",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip",
+        "Thumbnail": "/Electra/1989/WTBS_1989-08-17_1.png",
+        "Network": "TBS",
+        "Service_Name": "Electra",
+        "Notes": "This is about 2 and a half hours worth of decoded data and features many pages with stock listings.",
+        "Date_Added": "2026-08-15",
+        "IsNew": true
+    },
+    {
         "ID": "c731bd7e-9524-11f1-bcc0-1a92c823833d",
         "Year": "1989",
         "Month": "August",
