@@ -14,7 +14,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title),
+span:not(#site-title, .service-name, .letter-reveal-char),
 li,
 label,
 dt,
@@ -26,6 +26,80 @@ select {
   color: var(--text-color) !important;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th,
+strong {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+}
+
+h1 .letter-reveal-char {
+  font-family: "TU 1000x Bold", sans-serif !important;
+  line-height: 30px !important;
+  font-size: 3em;
+  padding: 30px 0 30px 0;
+  color: var(--text-color);
+  display: inline-block;
+  opacity: 0;
+}
+h1 .letter-reveal-char.is-visible {
+  opacity: 1;
+}
+h1 .letter-reveal-char.is-space {
+  width: 0.28em;
+}
+h1 .type-cursor {
+  display: inline-block;
+  width: 1.57em;
+  height: 1.8em;
+  background: var(--text-color);
+  vertical-align: -0.08em;
+  animation: cursor-blink 0.85s steps(1) infinite;
+}
+
+.service-name-div .service-name .letter-reveal-char {
+  font-family: "TU 1000x Regular", sans-serif !important;
+  line-height: 30px !important;
+  font-size: 1em;
+  color: var(--text-color);
+  display: inline-block;
+  opacity: 0;
+}
+.service-name-div .service-name .letter-reveal-char.is-visible {
+  opacity: 1;
+}
+.service-name-div .service-name .letter-reveal-char.is-space {
+  width: 0.28em;
+}
+.service-name-div .service-name .type-cursor {
+  display: inline-block;
+  width: 0.77em;
+  height: 1em;
+  background: var(--text-color);
+  vertical-align: -0.08em;
+  animation: cursor-blink 0.85s steps(1) infinite;
+}
+
+.reveal-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-cursor {
+    display: none;
+  }
+}
 .site-logo {
   fill: var(--site-logo-color);
 }

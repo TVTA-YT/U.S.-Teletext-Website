@@ -36,7 +36,7 @@
     <title>Electra Results</title>
     <style>
       .container {
-        padding-top: 90px;
+        padding-top: 100px;
       }
 
       .display-2 {
@@ -163,6 +163,16 @@
             <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
           <li class="nav-item desktop-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item mobile-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item desktop-link">
             <a class="nav-link" href="submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
@@ -179,15 +189,7 @@
     </nav>
     <main>
       <div class="container">
-        <!-- <div class="alert alert-danger text-center mt-3">
-          <div class="alert-heading">
-            <h1>NOTE</h1>
-          </div>
-          <p class="mb-0 fs-4">This site is under construction.</p>
-        </div> -->
-        <!-- <h1 class="display-1 fw-bold text-center">Sitemap</h1> -->
-        <!-- <hr /> -->
-        <h2 class="display-2" id="year-heading"></h2>
+        <h1 class="page-title data-letter-reveal" id="year-heading"></h1>
         <p class="fs-2" id="result-count"></p>
         <div class="alert alert-secondary" role="alert">
           <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
@@ -334,7 +336,7 @@
         </p>
         <p>
           Have questions or information? &nbsp;
-          <a href="#" style="color: #fff">Email me.</a>
+          <a href="contact.html" style="color: #fff">Contact us.</a>
         </p>
         <p class="pb-4">
           Looking for a specific page? &nbsp;
@@ -346,6 +348,7 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/heading-reveal.js"></script>
     <script src="../js/image-modal.js"></script>
     <script src="../js/render-results.js"></script>
     <script>
@@ -353,6 +356,7 @@
         jsonPath: "../json/electra_data.json",
         filterParam: "year",
         filterField: "Year",
+        serviceLabel: "Electra",
         groupByField: "Month",
         groupOrder: [
           "January",

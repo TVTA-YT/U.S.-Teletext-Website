@@ -12,10 +12,6 @@
     <link rel="stylesheet" href="css/media.css" />
     <link rel="stylesheet" href="css/navigation-bar-animation.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
@@ -40,7 +36,11 @@
     <title>U.S. Teletext Archive</title>
     <style>
       #primary-container {
-        margin-top: 70px !important;
+        margin-top: 70px;
+      }
+
+      #secondary-container {
+        margin-top: 20px;
       }
 
       #site-title {
@@ -50,7 +50,18 @@
         animation: colorChange 4s steps(4, end) infinite;
       }
 
-      .container:not(#primary-container) {
+      #samples-div {
+        background-color: #1c165b;
+      }
+
+      #samples-text {
+        font-family: "TU 1000x Regular", sans-serif;
+        color: #f5f4f4 !important;
+        text-shadow: 2px 2px #000;
+        animation: blink 2s step-end infinite;
+      }
+
+      .container:not(#primary-container, #secondary-container) {
         margin-top: 110px !important;
       }
 
@@ -71,6 +82,12 @@
         width: max-content;
         gap: 6rem;
         animation: image-marquee 25s linear infinite;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
       }
 
       @keyframes colorChange {
@@ -184,6 +201,16 @@
             >
           </li>
           <li class="nav-item desktop-link">
+            <a class="nav-link" href="html/news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item mobile-link">
+            <a class="nav-link" href="html/news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item desktop-link">
             <a class="nav-link" href="html/submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
@@ -201,8 +228,9 @@
     <main>
       <div class="container">
         <!-- TODO: Change container padding value after alert is removed. 08/10/2026, 14:35 -->
-
-        <h1 class="display-1 fw-bold text-center pb-4">Welcome to the</h1>
+        <h1 class="text-center pb-4 page-title data-letter-reveal">
+          Welcome to the...
+        </h1>
         <div class="text-center pb-5">
           <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
         </div>
@@ -327,6 +355,74 @@
           providing access to individual archives from these services, archives
           provided by those who have the capacity to decode teletext.
         </p>
+      </div>
+      <div class="p-3" id="samples-div">
+        <h2 class="display-1 fw-bolder text-center" id="samples-text">
+          Samples Needed!
+        </h2>
+      </div>
+      <div class="container" id="secondary-container">
+        <p class="fs-5 text-center">
+          We are currently looking for more samples to add to the site! We are
+          looking for samples from the following
+          <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three
+          CBS affiliates (especially from those colored red):
+        </p>
+        <div class="justify-content-center">
+          <table class="table text-center table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Station</th>
+                <th scope="col">City/State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="bg-danger">KCBS (O&amp;O)</td>
+                <td class="bg-danger">Los Angeles, CA</td>
+              </tr>
+              <tr>
+                <td class="bg-danger">KSL-TV</td>
+                <td class="bg-danger">Salt Lake City, UT</td>
+              </tr>
+              <tr>
+                <td>KMOX (former O&amp;O)*</td>
+                <td>St. Louis, MO</td>
+              </tr>
+              <tr>
+                <td>WBBM (O&amp;O)</td>
+                <td>Chicago, IL</td>
+              </tr>
+              <tr>
+                <td class="bg-danger">WBTV</td>
+                <td class="bg-danger">Charlotte, NC</td>
+              </tr>
+              <tr>
+                <td>WCAU (former O&amp;O)</td>
+                <td>Philadelphia, PA</td>
+              </tr>
+              <tr>
+                <td>WCBS (O&amp;O)</td>
+                <td>New York, NY</td>
+              </tr>
+              <tr>
+                <td>WFOR (O&amp;O)</td>
+                <td>Miami, FL</td>
+              </tr>
+              <tr>
+                <td class="bg-danger">WIVB</td>
+                <td class="bg-danger">Buffalo, NY</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>NOTE: KMOX samples span 1983 &ndash; 1986.</p>
+          <p class="fs-5 text-center">
+            If you have any videotapes (Betamax or VHS) from these stations that
+            date between 1983 and 1990, we'd love to hear about it! Use
+            <a href="html/contact.html">this</a>
+            form to let us know what you've got.
+          </p>
+        </div>
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -411,10 +507,7 @@
             >Report on GitHub.</a
           >
         </p>
-        <p>
-          Have questions or information? &nbsp;
-          <a href="#" style="color: #fff">Email me.</a>
-        </p>
+
         <p class="pb-4">
           Looking for a specific page? &nbsp;
           <a href="html/sitemap.html" style="color: #fff">Site map.</a>
@@ -425,5 +518,6 @@
       </div>
     </footer>
     <script src="js/color-modes.js"></script>
+    <script src="js/heading-reveal.js"></script>
   </body>
 </html>

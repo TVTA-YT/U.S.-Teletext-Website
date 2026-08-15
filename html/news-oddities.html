@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Created August 11, 2026, 03:35 -->
+<!-- Created August 13, 2026, 21:48 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
     <script
@@ -29,14 +29,54 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <title>NBC Teletext</title>
+    <title>Teletext News &amp; Oddities</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
+      .divider {
+        margin: 40px 0 20px;
+      }
+
+      .divider hr {
+        border: none;
+        border-top: 1px solid var(--text-color);
+        margin-bottom: 14px;
+      }
+
       .btn {
         border-radius: 24px;
+      }
+
+      h2.section {
+        font-weight: 600;
+        font-size: 1.7rem;
+        margin: 0;
+      }
+
+      .imgrow {
+        display: flex;
+        gap: 14px;
+        margin: 20px 0;
+      }
+
+      .imgcard {
+        flex: 1;
+      }
+
+      figcaption {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.75rem;
+        color: #c6c6c6;
+        text-align: center;
+        margin-top: 6px;
+      }
+
+      .story {
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin: 6px 0 12px;
       }
     </style>
   </head>
@@ -144,38 +184,174 @@
     </nav>
     <main>
       <div class="container">
-        <figure class="text-center">
-          <img
-            src="../images/logos/NBC-Teletext.png"
-            alt=""
-            class="mw-100 w-75 light-mode-image"
-          />
-          <img
-            src="../images/logos/NBC-Teletext_white.png"
-            alt=""
-            class="mw-100 w-75 dark-mode-image"
-          />
-        </figure>
-        <hr />
-        <p>Use the form below to search for available pages by year.</p>
-        <form action="nbc-teletext-results.html" method="get">
-          <div class="mb-3">
-            <label for="year" class="form-label">Select a year</label>
-            <select name="year" id="year" class="form-select">
-              <option value=""></option>
-              <option value="1983" disabled>1983</option>
-              <option value="1984" disabled>1984</option>
-              <option value="1985" disabled>1985</option>
-              <option value="1986" disabled>1986</option>
-            </select>
+        <h1 class="text-center page-title data-letter-reveal">
+          Teletext News &amp; Oddities
+        </h1>
+        <p class="fs-4 text-center">Unique pages and other news.</p>
+        <div class="divider">
+          <hr />
+          <h2 class="section">Teletext News</h2>
+        </div>
+        <h1 class="story">
+          BREAKING: CBS ExtraVision <em>did not</em> shut down in 1988
+        </h1>
+        <p>
+          You may have read before from various places that ExtraVision
+          <a
+            href="https://books.google.com/books?id=-8bPkkVYuOAC&dq=ExtraVision+CBS+teletext+1988+-wiki&pg=PA224#v=onepage&q=ExtraVision%20CBS%20teletext%201988%20-wiki&f=false"
+            target="_blank"
+            >shut down</a
+          >
+          in
+          <a
+            href="https://iml.jou.ufl.edu/carlson/history/extravision.htm"
+            target="_blank"
+            >1988</a
+          >. However, what if I were to say that wasn't the case? Have a look
+          for yourself...
+        </p>
+        <div class="imgrow rounded">
+          <div class="imgcard">
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/ExtraVision-1990_1.png"
+                alt=""
+                class="figure-img mw-100 rounded"
+                data-bs-target="#imageModal"
+                data-bs-caption="CBS ExtraVision 'Business News' page (February 28, 1990)"
+              />
+              <figcaption>Business news, Feb 1990</figcaption>
+            </figure>
           </div>
-          <button type="submit" class="btn btn-primary form-control">
-            Submit
-          </button>
-          <button type="reset" class="btn btn-danger form-control my-4">
-            Reset Fields
-          </button>
-        </form>
+          <div class="imgcard">
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/ExtraVision-1990_2.png"
+                alt=""
+                class="figure-img mw-100 rounded"
+                data-bs-target="#imageModal"
+                data-bs-caption="CBS ExtraVision 'Prime Time TV' page (February 28, 1990)"
+              />
+              <figcaption>Prime time TV listings</figcaption>
+            </figure>
+          </div>
+          <div class="imgcard">
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/ExtraVision-1990_3.png"
+                alt=""
+                class="figure-img mw-100 rounded"
+                data-bs-target="#imageModal"
+                data-bs-caption="CBS ExtraVision 'Today in History' page (February 28, 1990)"
+              />
+              <figcaption>"Today in History" page</figcaption>
+            </figure>
+          </div>
+        </div>
+        <p>
+          Those are recently decoded pages that come from a VHS recording from
+          February 28, 1990; you can even see the full date in one of the
+          photos. Let me add that there are a lot of decoding issues with these
+          pages. Part of that is likely due to current limitations with
+          Decode-Orc. As I've stated elsewhere, the software is still in in
+          development, so there may likely be less of those issues as
+          development progresses. Another possible issue is that the videotape
+          these pages were sourced from was recorded in EP/SLP mode, which can
+          make obtaining cleaner decodes more difficult due to the lower
+          quality.
+        </p>
+        <p>
+          Anyway, this was quite a development because, based on currently
+          available information, no source has stated that ExtraVision lasted
+          past 1988.
+        </p>
+        <h1 class="story">NBC Teletext from Late 1985</h1>
+        <p>
+          Sticking with the theme of "sources say one thing but the evidence
+          says otherwise," we have an example of NBC Teletext from October 1985.
+          Various sources have stated that NBC's service shut down in
+          <a
+            href="https://cjc.utppublishing.com/doi/pdf/10.22230/cjc.1990v15n2a549"
+            target="_blank"
+            >January 1985</a
+          >.
+        </p>
+        <div class="row">
+          <div class="col-6">
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/NBC-Teletext.png"
+                alt=""
+                class="mw-100 rounded"
+              />
+              <figcaption class="figure-caption text-center">
+                NBC Teletext page.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="col-6">
+            <figure class="figure">
+              <img
+                src="../images/decoded-pages/NBC-Teletext-Oct1985.png"
+                alt=""
+                class="mw-100 rounded border border-white"
+              />
+              <figcaption class="figure-caption text-center">
+                A page from the sports section.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        <p>
+          Again, there are some errors, but hopefully those will be resolved
+          over time.
+        </p>
+        <p>
+          NBC's service is a but of an oddity. According to someone capable of
+          transferring VHS via FM RF, a VHS tape with content recorded in
+          mid-January 1985 did not contain teletext data in thw VBI. However, as
+          you can see above, a VHS tape with content recorded in October 1985
+          <em>did</em> contain teletext. As of now, there's no clear reason as
+          to why it seems NBC shut down the service, then brought it back We
+          also don't know exactly when NBC restored the service or when they
+          shut it down for good. Hopefully, as more samples are decoded, we will
+          have a clearer answer.
+        </p>
+        <div class="divider">
+          <hr />
+          <h2 class="section">Teletext Oddities</h2>
+        </div>
+        <!-- <p>
+          Some interesting and unusual pages have been discovered recently.
+          Check them out below.
+        </p> -->
+        <p>Coming soon...</p>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- * END IMAGE MODAL -->
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -274,5 +450,7 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/heading-reveal.js"></script>
+    <script src="../js/image-modal.js"></script>
   </body>
 </html>

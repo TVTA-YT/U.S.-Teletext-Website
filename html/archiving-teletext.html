@@ -32,7 +32,7 @@
     <title>Archiving Teletext</title>
     <style>
       .container {
-        padding-top: 90px !important;
+        padding-top: 100px;
       }
 
       .dropcap::first-letter {
@@ -128,6 +128,16 @@
             <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
           <li class="nav-item desktop-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item mobile-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item desktop-link">
             <a class="nav-link" href="submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
@@ -144,13 +154,9 @@
     </nav>
     <main>
       <div class="container">
-        <div class="alert alert-danger text-center mt-3">
-          <div class="alert-heading">
-            <h1>NOTE</h1>
-          </div>
-          <p class="mb-0 fs-4">This site is under construction.</p>
-        </div>
-        <h1 class="display-1 fw-bold text-center">Archiving Teletext</h1>
+        <h1 class="text-center page-title data-letter-reveal">
+          Archiving Teletext
+        </h1>
         <hr />
         <p class="fs-4 text-center">
           How is teletext recovery still possible all these years later? Have a
@@ -182,7 +188,7 @@
           the files onto my computer.
         </p>
         <h2 class="display-5">How, Though?</h2>
-        <figure class="figure float-end ms-3 mb-2 w-25">
+        <figure class="figure mb-2" id="encoded-extravision-image">
           <img
             src="../images/frame_ntsc_chroma_ar43_1238_vid.png"
             alt=""
@@ -233,10 +239,10 @@
         <h2 class="display-5">Wait, What Are Those?</h2>
         <p>
           Those are the different standards used here in the U.S.; Europe only
-          used the WST standard. The primary difference concerned the graphical
-          capabilities of both. WST relied heavily on text, while the NABTS
-          relied on text and graphics. To that point, the graphical capabilities
-          of NABTS exceeded the WTS.
+          used the WST standard. A big difference between the two standards
+          concerned the graphical capabilities. WST relied heavily on text,
+          while the NABTS relied on both text and graphics. To that point, the
+          graphical capabilities of NABTS services exceeded WTS services.
         </p>
         <div class="row justify-content-center">
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
@@ -272,33 +278,23 @@
             </figure>
           </div>
         </div>
-        <!-- NOTE: This is a work in progress. 08/13/2026 -->
-        <!-- <p>Here are some primary differences between NABTS and WST:</p>
-        <dl>
-          <dt>NABTS</dt>
-          <dd>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit
-            illum, repellat eligendi commodi molestiae incidunt, cum optio fuga
-            ullam eos pariatur dicta quia nemo at, ratione architecto possimus
-            unde! Sit.
-          </dd>
-          <dt>WST</dt>
-          <dd>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit
-            illum, repellat eligendi commodi molestiae incidunt, cum optio fuga
-            ullam eos pariatur dicta quia nemo at, ratione architecto possimus
-            unde! Sit.
-          </dd>
-        </dl> -->
+        <p>
+          To learn more about teletext in North America, including some
+          differences between NABTS and WST, give J.B. Crawford's great
+          newsletter, "<a
+            href="https://computer.rip/2025-08-25-teletext-in-north-america.html"
+            >Teletext in North America</a
+          >" a read.
+        </p>
         <h2 class="display-5">Do Capture Cards Work?</h2>
         <p>
           It sort of depends. Your standard, extremely cheap USB capture device,
           such as an EZ Cap, will <strong>not</strong> work. Transferring tapes
           via a DVD recorder will also not work. While this method does preserve
           the closed captions, it doesn't preserve the VBI itself. There are
-          certain older Hauppauge WinTV capture cards, used with Linux, that can
-          grab the VBI, but according to someone familiar, this can be "hit or
-          miss".
+          certain older Hauppauge WinTV capture cards that, when used with
+          Linux, can grab the VBI, but according to someone familiar, this can
+          be "hit or miss".
         </p>
         <h2 class="display-5">How Do I Get Started?</h2>
         <p>
@@ -316,24 +312,30 @@
             >tapping into</a
           >
           the FM RF test ports on various VCR models and provides steps for
-          getting started.
+          getting started, including the
+          <a
+            href="https://github.com/oyvindln/vhs-decode/wiki/Workflow-Guide"
+            target="_blank"
+            >needed hardware</a
+          >.
         </p>
         <p>
-          After the transfer, the produced file, a U8 file (sometimes compressed
-          to FLAC) will need to be decoded. These are not video files as
-          VHS-Decode does not transfer conventional video like a standard
-          capture device. Rather, it transfers the raw FM video signal on the
-          videotape. Again, refer to the VHS-Decode GitHub wiki for more
-          information.
+          After the FM RF transfer, the produced file, a U8 file (sometimes
+          manually compressed to FLAC) will need to be decoded. These are not
+          video files as FM RF capture does not transfer conventional video like
+          a standard capture device. Rather, it transfers the raw FM video
+          signal on the videotape; audio is also transferred, but separately
+          from the FM signal. Again, refer to the VHS-Decode GitHub wiki for
+          more information.
         </p>
         <p>
           During the decoding process, this will produce several files, but the
           important one is a TBC (time base correction) file. From there, you
           can use VHS-Decode's built-in <code>ld-analyse</code> tool to view the
-          TBC file, which will show the decoded video (though from there, the
+          TBC file, which will show the decoded video; from there, though, the
           video needs to be exported and merged with the separate audio file,
-          but once again, refer to the wiki). However, there is another, more
-          recent software tool called
+          but once again, refer to the wiki. Additionally, there is another,
+          more recent software tool called
           <a href="https://github.com/decode-orc/decode-orc" target="_blank"
             >Decode-Orc</a
           >. Both software tools support decoding various data in the VBI, such
@@ -344,6 +346,151 @@
           the software, while officially released, is still under development.
           As more members of the tape archiving community use the software and
           discover bugs and other issues, the software will improve over time.
+        </p>
+        <h2 class="display-5">Will All My Tapes Have Teletext?</h2>
+        <p>
+          First, to note, only CBS, NBC, and TBS had teletext services, so
+          recordings from those services between 1982 and 1993
+          <em>should</em> (more on this in a bit) have teletext. The service
+          date ranges are below:
+        </p>
+        <ul>
+          <li>
+            <strong>Electra (TBS)</strong> (appx. 1985 &ndash; appx. 1993)
+          </li>
+          <li>
+            <strong>ExtraVision (CBS)</strong> (appx. 1983 &ndash; appx. 1990)
+          </li>
+          <li><strong>Keyfax (TBS)</strong> (appx. 1982 &ndash; appx. 1985)</li>
+          <li>
+            <strong>NBC Teletext (NBC)</strong> (May 16, 1983 &ndash; appx.
+            1985)
+          </li>
+        </ul>
+        <p>
+          With TBS being a national network, it's likely safe to assume that any
+          TBS recording from appx. 1982 to appx. 1993 will have teletext.
+          However, CBS and NBC are different; before assuming that any recording
+          of programming from those two networks will automatically have
+          teletext, there are a few important things to note.
+        </p>
+        <div class="row">
+          <div class="col-xl-6">
+            <h2>1.&#41; Local vs. National Programming</h2>
+            <p>
+              The national broadcast networks (ABC, CBS, FOX, NBC) do not
+              provide a 24/7 schedule of programming. To make up for time when
+              no programming from the network is being aired, affiliates fill
+              these time slots with locally-produced content, nationally
+              syndicated content, and local news coverage.
+            </p>
+            <p>
+              What this means is that the teletext services from CBS and NBC
+              were not always being broadcast 24/7 on <em>most</em> local
+              affiliates. Teletext data <em>was</em> relayed 24/7 on owned &amp;
+              operated (O&amp;O) stations, stations that the broadcast networks,
+              as the term suggests, owned and operated. We know that CBS O&amp;O
+              stations did this, but we do not yet know if NBC did the same
+              thing. CBS has a
+              <a
+                href="https://www.cbsnews.com/news/cbs-tv-stations-affiliates/"
+                target="_blank"
+                >list</a
+              >
+              of 15 current O&amp;O stations, but some of these stations were
+              purchased after ExtraVision closed. A list of O&amp;O stations
+              (plus two former O&amp;O stations and three non-O&amp;O stations)
+              that likely had consistent teletext data in their VBI can
+              currently be found on the
+              <a href="../index.html">homepage</a> as we are looking for more
+              samples from these stations.
+            </p>
+          </div>
+          <div class="col-xl-6">
+            <h2>2.&#41; Affiliate Takeover of the VBI</h2>
+            <p>
+              Not all local affiliates are alike, we all know that. In some
+              ways, that's a good thing because each station is unique. However,
+              concerning teletext, that can be a bad thing. Why? Take a look at
+              the two photos below. These are photos showing the VBI from two
+              networks: CBS (via WHAS, Louisville, KY) and TBS
+            </p>
+            <div class="row">
+              <div class="col-xl-6">
+                <figure class="figure">
+                  <img
+                    src="../images/VBI-partial-teletext.png"
+                    alt=""
+                    class="mw-100 figure-img rounded"
+                    data-bs-theme="#imageModal"
+                    data-bs-caption="The VBI from WHAS (Louisville, KY) as captured on November 24, 1987, and viewed with Decode-Orc."
+                  />
+                  <figcaption class="figure-caption text-center">
+                    WHAS (Louisville, KY) VBI with partial teletext as viewed in
+                    Decode-Orc (November 24, 1987).
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="col-xl-6">
+                <figure class="figure">
+                  <img
+                    src="../images/VBI-full-teletext.png"
+                    alt=""
+                    class="mw-100 figure-img rounded"
+                    data-bs-theme="#imageModal"
+                    data-bs-caption="The VBI from an NBC affiliate as captured on October 10, 1985, and viewed with Decode-Orc."
+                  />
+                  <figcaption class="figure-caption text-center">
+                    VBI from an NBC affiliate with full teletext as viewed in
+                    Decode-Orc (October 10, 1985).
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <p>
+              To make spotting the difference clearer, I added some red borders
+              to the VBI images. In the WHAS VBI, there are only two lines of
+              teletext in both the top and bottom portions, while the TBS VBI
+              has four lines in both portions. In a nutshell, the TBS VBI is
+              carrying the full teletext service (Electra, in that case), but
+              the WHAS VBI is not &mdash; this is not what you want to see if
+              archiving teletext.
+            </p>
+            <p>
+              Unfortunately, some affiliates would insert their own data into
+              the VBI, such as VITS (vertical interval test signals), which
+              would replace, in this case, some of the teletext VBI lines. To
+              get a clean decode of all pages in a teletext stream, the
+              <strong>full</strong> VBI must be present. Decoding teletext from
+              a partial VBI, like in the WHAS VBI photo, <em>is</em> possible.
+              In fact, you can get a few clean pages from it. However, you will
+              likely not be able to recover every page from the stream without
+              the recording having the full, untouched VBI.
+            </p>
+          </div>
+          <div class="col-12">
+            <h2>3.&#41; Late Implementation by Affiliates</h2>
+            <p>
+              If you happen to have early recordings from CBS and NBC from
+              around the time their services launched (refer above for date
+              ranges), there's a chance that your affiliate didn't pass through
+              <em>any</em> of the teletext data. Maybe they were a little too
+              late to the party. Later recordings are your best chance for
+              finding teletext, though that doesn't mean that no affiliates
+              passed teletext through the VBI early on; I'm sure some did,
+              especially the O&amp;O stations, but it's hard to say which did
+              and which didn't.
+            </p>
+          </div>
+        </div>
+        <h2 class="display-5">How Can I Find Out?</h2>
+        <p>
+          There isn't much of an easy way to find out unless you have access to
+          an old analog CRT TV that allows for adjusting of the vertical hold,
+          allowing you to see the VBI on the tape. Digital TVs do not show the
+          analog VBI and no conventional capture card will either. However, you
+          can see the VBI if you have a CX card from Conexant, such as a Bt8x8
+          card. Oscilloscopes may also work as well.
         </p>
         <!-- * BEGIN IMAGE MODAL -->
         <div
@@ -457,7 +604,7 @@
         </p>
         <p>
           Have questions or information? &nbsp;
-          <a href="#" style="color: #fff">Email me.</a>
+          <a href="contact.html" style="color: #fff">Contact us.</a>
         </p>
         <p class="pb-4">
           Looking for a specific page? &nbsp;
@@ -469,6 +616,8 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/heading-reveal.js"></script>
     <script src="../js/image-modal.js"></script>
+    <!-- <script src="../js/heading-reveal.js"></script> -->
   </body>
 </html>

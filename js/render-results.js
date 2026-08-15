@@ -6,6 +6,7 @@ async function renderResults(config) {
     groupByField = null,
     groupOrder = null,
     sortSecondaryField = null,
+    serviceLabel = null,
     columns
   } = config;
 
@@ -47,7 +48,11 @@ async function renderResults(config) {
     return 0;
   });
 
-  if (heading) heading.textContent = filterValue;
+
+  if (heading) {
+    const headingText = serviceLabel ? `${serviceLabel} - ${filterValue}` : filterValue;
+    LetterReveal.type(heading, headingText)
+  }
   if (countEl) countEl.textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} found`;
 
   container.innerHTML = '';

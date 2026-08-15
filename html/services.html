@@ -24,10 +24,6 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
@@ -36,11 +32,11 @@
     <title>Teletext Services</title>
     <style>
       .container {
-        padding-top: 90px;
+        padding-top: 100px;
       }
 
-      span:not(.alert-text, #total-record-count, #available-sample-count) {
-        font-family: "Press Start 2P" !important;
+      .service-name {
+        font-family: "TU 1000x Regular", sans-serif;
       }
 
       figure {
@@ -126,6 +122,16 @@
             <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
           <li class="nav-item desktop-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item mobile-link">
+            <a class="nav-link" href="news-oddities.html"
+              >News &amp; Oddities</a
+            >
+          </li>
+          <li class="nav-item desktop-link">
             <a class="nav-link" href="submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
@@ -142,13 +148,9 @@
     </nav>
     <main>
       <div class="container pb-3">
-        <div class="alert alert-danger text-center mt-3">
-          <div class="alert-heading">
-            <h1>NOTE</h1>
-          </div>
-          <p class="mb-0 fs-4">This site is under construction.</p>
-        </div>
-        <h1 class="display-1 fw-bold text-center">Teletext Services</h1>
+        <h1 class="text-center page-title data-letter-reveal">
+          Teletext Services
+        </h1>
         <hr />
         <p class="fs-5">
           While teletext was not as popular in the U.S., a few teletext service
@@ -191,8 +193,12 @@
                 />
               </figure>
             </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">CBS ExtraVision</span>
+            <div class="text-center pb-4 service-name-div">
+              <span
+                class="fs-3 service-name letter-reveal-char data-letter-reveal"
+              >
+                CBS ExtraVision
+              </span>
             </div>
           </div>
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
@@ -210,8 +216,11 @@
                 />
               </figure>
             </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Electra</span>
+            <div class="text-center pb-4 service-name-div">
+              <span
+                class="fs-3 service-name letter-reveal-char data-letter-reveal"
+                >Electra</span
+              >
             </div>
           </div>
           <!-- * NOTE: There are currently no samples of Keyfax. 08/11/2026, 03:37 -->
@@ -225,8 +234,8 @@
                 />
               </figure>
             </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">Keyfax</span>
+            <div class="text-center pb-4 service-name-div">
+              <span class="fs-3 service-name data-letter-reveal">Keyfax</span>
             </div>
           </div> -->
           <!--  * NOTE: There are currently no samples of NBC Teletext. 08/13/2026, 13:06 -->
@@ -245,8 +254,8 @@
                 />
               </figure>
             </a>
-            <div class="text-center pb-4">
-              <span class="fs-3">NBC Teletext</span>
+            <div class="text-center pb-4 service-name-div">
+              <span class="fs-3 service-name data-letter-reveal">NBC Teletext</span>
             </div>
           </div> -->
         </div>
@@ -336,7 +345,7 @@
         </p>
         <p>
           Have questions or information? &nbsp;
-          <a href="#" style="color: #fff">Email me.</a>
+          <a href="contact.html" style="color: #fff">Contact us.</a>
         </p>
         <p class="pb-4">
           Looking for a specific page? &nbsp;
@@ -348,6 +357,7 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/heading-reveal.js"></script>
     <script src="../js/total-count.js"></script>
   </body>
 </html>

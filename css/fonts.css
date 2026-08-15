@@ -2,3 +2,19 @@
     font-family: 'Contour Generator';
     src: url(../fonts/Contour-Generator.otf);
 }
+
+@font-face {
+    font-family: 'TU 1000x Regular';
+    src: url(../fonts/tu-1000x-normal.ttf) format("truetype");
+    src: url(../fonts/tu-1000x-normal.woff) format("woff");
+    src: url(../fonts/tu-1000x-normal.woff2) format("woff2");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'TU 1000x Bold';
+    src: url(../fonts/tu-1000x-bold.ttf) format("truetype");
+    src: url(../fonts/tu-1000x-bold.woff) format("woff");
+    src: url(../fonts/tu-1000x-bold.woff2) format("woff2");
+    font-weight: bold;
+}
