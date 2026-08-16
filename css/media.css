@@ -8,35 +8,35 @@
 
 @media only screen and (min-width: 1670px) {
   .navbar-nav {
-    margin-left: 30%;
+    margin-left: 24%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1669px) {
   .navbar-nav {
-    margin-left: 26%;
+    margin-left: 20%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1613px) {
   .navbar-nav {
-    margin-left: 20%;
+    margin-left: 14%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1516px) {
   .navbar-nav {
-    margin-left: 14%;
+    margin-left: 8%;
     font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 1429px) {
   .navbar-nav {
-    margin-left: 8%;
+    margin-left: 2%;
     font-size: 20px;
   }
 }
@@ -44,63 +44,63 @@
 @media only screen and (max-width: 1355px) {
   .navbar-nav {
     margin-left: 2%;
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
 @media only screen and (min-width: 1235px) and (max-width: 1291px) {
   .navbar-nav {
-    margin-left: 4%;
-    font-size: 18px;
+    margin-left: 0%;
+    font-size: 17px;
   }
 }
 
 @media only screen and (max-width: 1234px) {
   .navbar-nav {
-    margin-left: 6%;
+    margin-left: 0%;
     font-size: 16px;
   }
 }
 
 @media only screen and (max-width: 1184px) {
   .navbar-nav {
-    margin-left: 1%;
+    margin-left: -6%;
     font-size: 16px;
   }
 }
 
 @media only screen and (max-width: 1138px) {
   .navbar-nav {
-    margin-left: 3%;
-    font-size: 15px;
+    margin-left: 0%;
+    font-size: 14px;
   }
 }
 
 @media only screen and (max-width: 1112px) {
   .navbar-nav {
-    margin-left: 12%;
-    font-size: 15px;
+    margin-left: 10%;
+    font-size: 14px;
   }
 }
 
 @media only screen and (max-width: 1074px) {
   .navbar-nav {
     margin-left: 8%;
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 
 @media only screen and (max-width: 1047px) {
   .navbar-nav {
-    margin-left: 6%;
-    font-size: 15px;
+    margin-left: 4%;
+    font-size: 14px;
   }
 }
 
 @media only screen and (max-width: 1018px) {
   .navbar-nav {
-    margin-left: 2%;
-    font-size: 15px;
+    margin-left: 0%;
+    font-size: 14px;
   }
 }
 
@@ -125,14 +125,14 @@
     font-size: 1.5em;
   }
 
-  #submission-count-table {
-    font-size: 2em !important;
-  }
-
   #encoded-extravision-image {
     width: 30%;
     float: right;
     margin-left: 1rem;
+  }
+
+  .submission-count-table {
+    font-size: 2em !important;
   }
 
   .mobile-link {
@@ -157,14 +157,14 @@
     font-size: 1.5em;
   }
 
-  #submission-count-table {
-    font-size: 2em !important;
-  }
-
   #encoded-extravision-image {
     width: 30%;
     float: right;
     margin-left: 1rem;
+  }
+
+  .submission-count-table {
+    font-size: 2em !important;
   }
 
   .mobile-link {
@@ -189,14 +189,14 @@
     font-size: 1.3em;
   }
 
-  #submission-count-table {
-    font-size: 2em !important;
-  }
-
   #encoded-extravision-image {
     width: 30%;
     float: right;
     margin-left: 1rem;
+  }
+
+  .submission-count-table {
+    font-size: 2em !important;
   }
 
   .mobile-link {
@@ -234,12 +234,12 @@
     font-size: 1.2em;
   }
 
-  #submission-count-table {
-    font-size: 1.6em !important;
-  }
-
   #encoded-extravision-image {
     max-width: 100%;
+  }
+
+  .submission-count-table {
+    font-size: 1.6em !important;
   }
 
   .site-introduction {
@@ -269,12 +269,12 @@
     font-size: 1.1em;
   }
 
-  #submission-count-table {
-    font-size: 1.2em !important;
-  }
-
   #encoded-extravision-image {
     max-width: 100%;
+  }
+
+  .submission-count-table {
+    font-size: 1.2em !important;
   }
 
   .desktop-link {
@@ -305,16 +305,16 @@
     font-size: 1em;
   }
 
-  #submission-count-table {
-    font-size: 1em !important;
-  }
-
   #footer-site-links {
     font-size: 0.8em;
   }
 
   #encoded-extravision-image {
     max-width: 100%;
+  }
+
+  .submission-count-table {
+    font-size: 1em !important;
   }
 
   .desktop-link {
@@ -349,10 +349,6 @@
     font-size: 1em;
   }
 
-  #submission-count-table {
-    font-size: 0.8em !important;
-  }
-
   #footer-site-links {
     font-size: 0.8em;
   }
@@ -363,6 +359,10 @@
 
   .navbar {
     padding-top: 100px;
+  }
+
+  .submission-count-table {
+    font-size: 0.8em !important;
   }
 
   .desktop-link {

@@ -119,21 +119,28 @@ function appendRow(tbody, row, columns) {
   if (row.IsNew) tr.classList.add('row-new');
   if (!row.Download_Link) tr.classList.add('row-no-download-link');
 
-  const thumbnailDirectory = `../images/thumbnails/${row.Network}`;
+  const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}`;
 
   tr.innerHTML = columns.map(c => {
+    if (c.renderHTML) {
+      if (!row.HTML_Link) {
+        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+      }
+      const htmlPath = nonTeletextDirectory + row.HTML_File;
+      return `<td><a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
+    }
+
     if (c.renderZip) {
       return row.Download_Link
         ? `<td><a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a></td>`
         : `<td><i class="bi bi-slash-circle-fill"></i></td>`;
     }
-    // return `<td>${escapeHtml(row[c.key])}</td>`;
 
     if (c.renderThumbnail) {
       if (!row.Thumbnail) {
         return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
       }
-      const imagePath = thumbnailDirectory + row.Thumbnail;
+      const imagePath = row.Thumbnail;
       return `
       <td>
         <img src="${escapeHtml(imagePath)}" alt="" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">
@@ -155,6 +162,17 @@ function appendRow(tbody, row, columns) {
   tr.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
     new bootstrap.Tooltip(el);
   });
+}
+
+function renderProgramTitles(rawTitle) {
+  const titles = String(rawTitle ?? '').split("|").map(t => t.trim()).filter(t => t !== '');
+
+  if (titles.length <= 1) {
+    return escapeHtml(rawTitle);
+  }
+
+  const items = titles.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+  return `<ul class="mb-0 ps-3">${items}</ul>`
 }
 
 function escapeHtml(str) {

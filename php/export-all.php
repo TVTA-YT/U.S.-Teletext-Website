@@ -48,13 +48,19 @@ $exports = [
         'table'      => 'Electra',
         'idField'    => 'ID',
         'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added",
-        'orderBy'    => "Year, FIELD(Month,
-            'January','February','March','April','May','June',
-            'July','August','September','October','November','December'
-        ), Date",
+        'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/electra_data.json',
         'trackerFile' => $trackerDirectory . '/electra_data.json',
-        
+
+    ],
+    [
+        'table'      => 'KET_AgText',
+        'idField'    => 'ID',
+        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, HTML_File, Network, Service_Name, Notes, Date_Added",
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/ket_agtext_data.json',
+        'trackerFile' => $trackerDirectory . '/ket_agtext_file.json',
+
     ],
 ];
 

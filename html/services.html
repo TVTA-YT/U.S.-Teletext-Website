@@ -95,15 +95,57 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item desktop-link">
-            <a class="nav-link" aria-current="page" href="services.html"
-              >Services</a
-            >
+          <li class="nav-item dropdown desktop-link">
+            <a
+              class="nav-link"
+              data-bs-toggle="dropdown"
+              role="button"
+              aria-expanded="false"
+              href="#"
+              >Text Services <i class="dropdown-toggle"></i
+            ></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-options">
+                <a
+                  href="services.html"
+                  class="dropdown-item text-dropdown-option"
+                  >Teletext Services</a
+                >
+              </li>
+              <li class="dropdown-options">
+                <a
+                  href="other-text-services.html"
+                  class="dropdown-item text-dropdown-option"
+                  >Other Text Services</a
+                >
+              </li>
+            </ul>
           </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" aria-current="page" href="services.html"
-              >Teletext Services</a
-            >
+          <li class="nav-item dropdown mobile-link">
+            <a
+              class="nav-link"
+              data-bs-toggle="dropdown"
+              role="button"
+              aria-expanded="false"
+              href="#"
+              >Text Services <i class="dropdown-toggle"></i
+            ></a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-options">
+                <a
+                  href="services.html"
+                  class="dropdown-item text-dropdown-option"
+                  >Teletext Services</a
+                >
+              </li>
+              <li class="dropdown-options">
+                <a
+                  href="other-text-services.html"
+                  class="dropdown-item text-dropdown-option"
+                  >Other Text Services</a
+                >
+              </li>
+            </ul>
           </li>
           <li class="nav-item desktop-link">
             <a class="nav-link" href="archiving-teletext.html"
@@ -157,14 +199,17 @@
           were available. To view archived teletext from any of these service,
           click on one below.
         </p>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info text-center" role="alert">
           <i class="bi bi-info-circle-fill"></i
           ><span class="alert-text">
-            UPDATE: The database values now update every hour.</span
+            UPDATE: The database values now only update automatically every
+            Sunday at 1600 UTC (1200 EDT). However, I will manually update it as
+            necessary. The automatic updates are just to ensure that records
+            older than 7 days are no longer marked as being new.</span
           >
         </div>
         <div class="pt-4" id="sumbission-count">
-          <table class="table text-center" id="submission-count-table">
+          <table class="table text-center submission-count-table">
             <tbody>
               <tr>
                 <td>
@@ -183,12 +228,12 @@
               <figure>
                 <img
                   src="../images/logos/ExtraVision.png"
-                  alt=""
+                  alt="CBS ExtraVision black CBS logo"
                   class="mw-100 w-75 light-mode-image"
                 />
                 <img
                   src="../images/logos/ExtraVision_white-CBS.png"
-                  alt=""
+                  alt="CBS ExtraVision white CBS logo"
                   class="mw-100 w-75 dark-mode-image"
                 />
               </figure>
@@ -200,18 +245,21 @@
                 CBS ExtraVision
               </span>
             </div>
+            <p class="text-center fs-2 fw-bold">
+              Available Samples: <span id="extravision-count"></span>
+            </p>
           </div>
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
             <a href="electra.html">
               <figure>
                 <img
                   src="../images/logos/Electra.png"
-                  alt=""
+                  alt="Electra black logo"
                   class="mw-100 w-75 light-mode-image"
                 />
                 <img
                   src="../images/logos/Electra_white.png"
-                  alt=""
+                  alt="Electra white logo"
                   class="mw-100 w-75 dark-mode-image"
                 />
               </figure>
@@ -222,6 +270,9 @@
                 >Electra</span
               >
             </div>
+            <p class="text-center fs-2 fw-bold">
+              Available Samples: <span id="electra-count"></span>
+            </p>
           </div>
           <!-- * NOTE: There are currently no samples of Keyfax. 08/11/2026, 03:37 -->
           <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
@@ -229,7 +280,7 @@
               <figure>
                 <img
                   src="../images/logos/Keyfax.png"
-                  alt=""
+                  alt="Keyfax logo"
                   class="mw-100 w-50"
                 />
               </figure>
@@ -244,12 +295,12 @@
               <figure>
                 <img
                   src="../images/logos/NBC-Teletext.png"
-                  alt=""
+                  alt="NBC Teletext black logo"
                   class="mw-100 w-75 light-mode-image"
                 />
                 <img
                   src="../images/logos/NBC-Teletext_white.png"
-                  alt=""
+                  alt="NBC Teletext white logo"
                   class="mw-100 w-75 dark-mode-image"
                 />
               </figure>
@@ -331,7 +382,7 @@
       <div id="footer-site-links">
         <img
           src="../images/logo-white-2.png"
-          alt
+          alt="Site footer logo"
           class="mw-100 pt-2 pb-4 footer-logo"
         />
         <p>

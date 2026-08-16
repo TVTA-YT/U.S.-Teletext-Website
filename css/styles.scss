@@ -138,6 +138,21 @@ h1 {
         // color: #000;
         color: var(--text-color);
       }
+      // &.dropdown-toggle {
+      //   color: var(--text-color);
+      // }
+    }
+    .dropdown-menu {
+      .dropdown-options {
+        text-align: center;
+
+        .text-dropdown-option {
+          &:hover {
+            background-color: #152de3;
+            color: var(--text-color);
+          }
+        }
+      }
     }
   }
 }
@@ -174,6 +189,10 @@ hr {
     .nav-link {
       &:hover {
         color: #152de3 !important;
+
+        .dropdown-toggle {
+          color: #152de3 !important;
+        }
       }
     }
   }
