@@ -117,9 +117,9 @@ async function renderResults(config) {
 function appendRow(tbody, row, columns) {
   const tr = document.createElement('tr');
   if (row.IsNew) tr.classList.add('row-new');
-  if (!row.Download_Link || !row.HTML_Link) tr.classList.add('row-no-download-link');
+  if (!row.Download_Link && !row.HTML_Link) tr.classList.add('row-no-download-link');
 
-  const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}`;
+  const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}/${row.Year}`;
 
   tr.innerHTML = columns.map(c => {
     if (c.renderHTML) {
@@ -150,8 +150,12 @@ function appendRow(tbody, row, columns) {
 
     if (c.key === 'Program_Title' && String(row.Notes ?? '').trim() !== '') {
       const notes = escapeHtml(row.Notes);
-      const title = escapeHtml(row[c.key]);
+      const title = renderProgramTitles(row[c.key]);
       return `<td class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>">${title} <i class="bi bi-info-circle-fill"></i></td>`;
+    }
+
+    if (c.key === 'Program_Title') {
+      return `<td>${renderProgramTitles(row[c.key])}</td>`;
     }
 
     return `<td>${escapeHtml(row[c.key])}</td>`
@@ -171,8 +175,8 @@ function renderProgramTitles(rawTitle) {
     return escapeHtml(rawTitle);
   }
 
-  const items = titles.map(t => `<li>${escapeHtml(t)}</li>`).join('');
-  return `<ul class="mb-0 ps-3">${items}</ul>`
+  const items = titles.map(t => `<li class="text-black">${escapeHtml(t)}</li>`).join('');
+  return `<ul class="mb-0 ps-3 multiple-programs">${items}</ul>`
 }
 
 function escapeHtml(str) {

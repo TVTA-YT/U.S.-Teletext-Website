@@ -16,6 +16,7 @@ const NEW_WINDOW_DAYS = 7;
 the same columns.
 */
 $sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added";
+$nonTeletextSharedColumns = "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, HTML_Link, Network, Service_Name, Notes, Date_Added";
 $sharedOrderBy = "Year, FIELD(Month,
     'January','February','March','April','May','June',
     'July','August','September','October','November','December'
@@ -56,10 +57,19 @@ $exports = [
     [
         'table'      => 'KET_AgText',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, HTML_Link, Network, Service_Name, Notes, Date_Added",
+        'columns'    =>  $nonTeletextSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/ket_agtext_data.json',
         'trackerFile' => $trackerDirectory . '/ket_agtext_data.json',
+
+    ],
+    [
+        'table'      => 'ABC_PLUS',
+        'idField'    => 'ID',
+        'columns'    =>  $nonTeletextSharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/abc_plus_data.json',
+        'trackerFile' => $trackerDirectory . '/abc_plus_data.json',
 
     ],
 ];

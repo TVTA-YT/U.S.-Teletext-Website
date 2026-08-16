@@ -1,14 +1,20 @@
 async function renderTotalRecordCount() {
-    const countEl = document.getElementById("total-record-count");
-    const sampleCountEl = document.getElementById("available-sample-count");
+    const teletextCountEl = document.getElementById("total-record-count");
+    const nonTeletextCountEl = document.getElementById("total-record-count-non-teletext");
+    const teletextSampleCountEl = document.getElementById("available-sample-count");
+    const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
     const electraCountEl = document.getElementById("electra-count");
     const extravisionCountEl = document.getElementById("extravision-count");
-    if (!countEl && !sampleCountEl) return;
+    const abcPlusCountEl = document.getElementById("abc-plus-count");
+    const ketAgtextCountEl = document.getElementById("ket-agtext-count");
+    if (!teletextCountEl && !teletextSampleCountEl && !nonTeletextCountEl && !nonTeletextSampleCountEl) return;
 
     const jsonFiles = [
         '../json/electra_data.json',
         '../json/extravision_data.json',
-        '../json/nbc_teletext_data.json'
+        '../json/nbc_teletext_data.json',
+        '../json/abc_plus_data.json',
+        '../json/ket_agtext_data.json',
     ];
 
     try {
@@ -19,21 +25,35 @@ async function renderTotalRecordCount() {
             }))
         );
 
-        const total = responses.reduce((sum, rows) => sum + rows.length, 0)
+        const teletextResponses = responses.slice(0, 3);
+        const nonTeletextResponses = responses.slice(3, 5);
 
-        const availableSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        const teletextTotal = teletextResponses.reduce((sum, rows) => sum + rows.length, 0)
+        const teletextAvailableSamples = teletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+
+        const nonTeletextTotal = nonTeletextResponses.reduce((sum, rows) => sum + rows.length, 0);
+        const nonTeletextAvailableSamples = nonTeletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.HTML_Link != null && String(row.HTML_Link).trim() != '').length, 0);
 
         const electraSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Electra' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
+        const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
 
 
-        if (countEl) {
-            countEl.textContent = total.toLocaleString();
+        if (teletextCountEl) {
+            teletextCountEl.textContent = teletextTotal.toLocaleString();
         }
 
-        if (sampleCountEl) {
-            sampleCountEl.textContent = availableSamples.toLocaleString();
+        if (teletextSampleCountEl) {
+            teletextSampleCountEl.textContent = teletextAvailableSamples.toLocaleString();
+        }
+
+        if (nonTeletextCountEl) {
+            nonTeletextCountEl.textContent = nonTeletextTotal.toLocaleString();
+        }
+
+        if (nonTeletextSampleCountEl) {
+            nonTeletextSampleCountEl.textContent = nonTeletextAvailableSamples.toLocaleString();
         }
 
         if (electraCountEl) {
@@ -44,12 +64,25 @@ async function renderTotalRecordCount() {
             extravisionCountEl.textContent = extravisionSamples.toLocaleString();
         }
 
+        if (abcPlusCountEl) {
+            abcPlusCountEl.textContent = abcPlusSamples.toLocaleString();
+        }
+
+        if (ketAgtextCountEl) {
+            ketAgtextCountEl.textContent = ketAgtextSamples.toLocaleString();
+        }
+
 
     } catch (error) {
-        if (countEL) countEl.textContent = '-';
-        if (sampleCountEl) sampleCountEl.textContent = '-';
+        if (teletextCountEl) teletextCountEl.textContent = '-';
+        if (teletextSampleCountEl) teletextSampleCountEl.textContent = '-';
+        if (nonTeletextCountEl) nonTeletextCountEl.textContent = '-';
+        if (nonTeletextSampleCountEl) nonTeletextSampleCountEl.textContent = '-';
         if (electraCountEl) electraCountEl.textContent = '-';
-        console.error('Could not load total record/sample count;', err);
+        if (extravisionCountEl) extravisionCountEl.textContent = '-';
+        if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
+        if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
+        console.error('Could not load total record/sample count;', error);
     }
 }
 

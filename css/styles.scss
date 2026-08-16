@@ -48,7 +48,7 @@ h1 {
     color: var(--text-color);
     display: inline-block;
     opacity: 0;
-  
+
     &.is-visible {
       opacity: 1;
     }
@@ -77,7 +77,7 @@ h1 {
     color: var(--text-color);
     display: inline-block;
     opacity: 0;
-  
+
     &.is-visible {
       opacity: 1;
     }
@@ -217,6 +217,12 @@ hr {
 
 [data-bs-theme="dark"] .dark-mode-image {
   display: inline-block;
+}
+
+.multiple-programs {
+  li {
+    list-style-type: none;
+  }
 }
 
 .end-footer {

@@ -170,6 +170,10 @@ hr {
   display: inline-block;
 }
 
+.multiple-programs li {
+  list-style-type: none;
+}
+
 .end-footer {
   background: #152de3;
   padding: 20px;

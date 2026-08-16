@@ -199,6 +199,22 @@
           services. Check them out below.
         </p>
         <hr />
+        <div class="pt-4" id="sumbission-count">
+          <table class="table text-center submission-count-table">
+            <tbody>
+              <tr>
+                <td>
+                  Total Submissions:
+                  <span id="total-record-count-non-teletext"></span>
+                </td>
+                <td>
+                  Samples Available:
+                  <span id="available-sample-count-non-teletext"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="row justify-content-center pt-5">
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
             <a href="ket-agtext.html">
@@ -213,8 +229,11 @@
                 KET AgText
               </span>
             </div>
+            <p class="text-center fs-2 fw-bold">
+              Available Samples: <span id="ket-agtext-count"></span>
+            </p>
           </div>
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
             <a href="abc-plus.html">
               <figure>
                 <img
@@ -236,7 +255,10 @@
                 ABC PLUS
               </span>
             </div>
-          </div> -->
+            <p class="text-center fs-2 fw-bold">
+              Available Samples: <span id="abc-plus-count"></span>
+            </p>
+          </div>
           <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
             <a href="penntext.html">
               <figure>
@@ -361,5 +383,6 @@
     </footer>
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
+    <script src="../js/total-count.js"></script>
   </body>
 </html>
