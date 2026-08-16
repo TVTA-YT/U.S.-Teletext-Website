@@ -126,7 +126,7 @@ function appendRow(tbody, row, columns) {
       if (!row.HTML_Link) {
         return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
       }
-      const htmlPath = nonTeletextDirectory + row.HTML_File;
+      const htmlPath = nonTeletextDirectory + row.HTML_Link;
       return `<td><a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
     }
 
