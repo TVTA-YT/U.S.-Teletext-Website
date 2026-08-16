@@ -7,10 +7,10 @@
         "Program_Title": "General Hospital",
         "Tape_Type": "VHS",
         "Tape_Speed": "SP",
-        "HTML_Link": "ABC_1983-10-31_2.html",
+        "HTML_Link": "ABC_1983-10-31_T1.html",
         "Network": "ABC",
         "Service_Name": "ABC-PLUS",
-        "Notes": "This is TEXT2 data.",
+        "Notes": "This is TEXT1 data.",
         "Date_Added": "2026-08-16",
         "IsNew": true
     },
@@ -22,10 +22,10 @@
         "Program_Title": "General Hospital",
         "Tape_Type": "VHS",
         "Tape_Speed": "SP",
-        "HTML_Link": "ABC_1983-10-31_1.html",
+        "HTML_Link": "ABC_1983-10-31_T2.html",
         "Network": "ABC",
         "Service_Name": "ABC-PLUS",
-        "Notes": "This is TEXT1 data.",
+        "Notes": "This is TEXT2 data.",
         "Date_Added": "2026-08-16",
         "IsNew": true
     }
