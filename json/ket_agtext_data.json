@@ -1,0 +1,47 @@
+[
+    {
+        "ID": "585f8aa1-992b-11f1-a705-0200170221f6",
+        "Year": "1988",
+        "Month": "February",
+        "Date": "1988-02-26",
+        "Program_Title": "Washington Week in Review | Wall Street Week with Louis Rukeyser | The MacNeil/Lehrer NewsHour",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "HTML_Link": "KET-1988-02-26.html",
+        "Network": "KET",
+        "Service_Name": "AGTEXT",
+        "Notes": "",
+        "Date_Added": "2026-08-16",
+        "IsNew": true
+    },
+    {
+        "ID": "a326edca-992b-11f1-a705-0200170221f6",
+        "Year": "1990",
+        "Month": "September",
+        "Date": "1990-09-25",
+        "Program_Title": "The Civil War (0101)",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "HTML_Link": "",
+        "Network": "KET",
+        "Service_Name": "AGTEXT",
+        "Notes": "",
+        "Date_Added": "2026-08-16",
+        "IsNew": true
+    },
+    {
+        "ID": "a82b243b-992b-11f1-a705-0200170221f6",
+        "Year": "1990",
+        "Month": "September",
+        "Date": "1990-09-26",
+        "Program_Title": "The Civil War (0102)",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "HTML_Link": "",
+        "Network": "KET",
+        "Service_Name": "AGTEXT",
+        "Notes": "",
+        "Date_Added": "2026-08-16",
+        "IsNew": true
+    }
+]
