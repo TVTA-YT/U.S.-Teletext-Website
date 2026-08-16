@@ -1,0 +1,32 @@
+[
+    {
+        "ID": "0d93b18d-9996-11f1-a705-0200170221f6",
+        "Year": "1983",
+        "Month": "October",
+        "Date": "1983-10-31",
+        "Program_Title": "General Hospital",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "SP",
+        "HTML_Link": "ABC_1983-10-31_2.html",
+        "Network": "ABC",
+        "Service_Name": "ABC-PLUS",
+        "Notes": "This is TEXT2 data.",
+        "Date_Added": "2026-08-16",
+        "IsNew": true
+    },
+    {
+        "ID": "e0b3d49a-9995-11f1-a705-0200170221f6",
+        "Year": "1983",
+        "Month": "October",
+        "Date": "1983-10-31",
+        "Program_Title": "General Hospital",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "SP",
+        "HTML_Link": "ABC_1983-10-31_1.html",
+        "Network": "ABC",
+        "Service_Name": "ABC-PLUS",
+        "Notes": "This is TEXT1 data.",
+        "Date_Added": "2026-08-16",
+        "IsNew": true
+    }
+]
