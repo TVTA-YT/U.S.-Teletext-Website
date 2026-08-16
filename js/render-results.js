@@ -119,7 +119,7 @@ function appendRow(tbody, row, columns) {
   if (row.IsNew) tr.classList.add('row-new');
   if (!row.Download_Link && !row.HTML_Link) tr.classList.add('row-no-download-link');
 
-  const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}/${row.Year}`;
+  const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}/${row.Year}/`;
 
   tr.innerHTML = columns.map(c => {
     if (c.renderHTML) {
