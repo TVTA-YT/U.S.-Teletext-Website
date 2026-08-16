@@ -59,7 +59,7 @@ $exports = [
         'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, HTML_Link, Network, Service_Name, Notes, Date_Added",
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/ket_agtext_data.json',
-        'trackerFile' => $trackerDirectory . '/ket_agtext_file.json',
+        'trackerFile' => $trackerDirectory . '/ket_agtext_data.json',
 
     ],
 ];
