@@ -237,7 +237,11 @@ hr {
 
     p {
       font-size: 1.2em;
-      color: #fff !important;
+      color: #fff;
+
+      a {
+      color: #fff;
+      }
     }
   }
 }
