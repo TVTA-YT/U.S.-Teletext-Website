@@ -117,6 +117,10 @@
 } */
 
 @media only screen and (min-width: 1400px) {
+  #welcome-text {
+    font-size: 2.2em;
+  }
+
   #site-title {
     font-size: 5em;
   }
@@ -153,6 +157,10 @@
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
+  #welcome-text {
+    font-size: 2em;
+  }
+
   #site-title {
     font-size: 4.4em;
   }
@@ -189,6 +197,10 @@
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+  #welcome-text {
+    font-size: 2em;
+  }
+
   #site-title {
     font-size: 4em;
   }
@@ -226,6 +238,10 @@
 
 /* * QUERY FOR MEDIUM DEVICES * */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+  #welcome-text {
+    font-size: 1.8em;
+  }
+
   #site-title {
     font-size: 3.5em;
   }
@@ -277,6 +293,10 @@
 
 /* * QUERY FOR EXTRA SMALL AND SMALL DEVICES * */
 @media only screen and (min-width: 500px) and (max-width: 767px) {
+  #welcome-text {
+    font-size: 1.4em;
+  }
+
   #site-title {
     font-size: 2.8em;
   }
@@ -316,8 +336,11 @@
 }
 
 @media only screen and (min-width: 400px) and (max-width: 499px) {
+  #welcome-text {
+    font-size: 1.2em;
+  }
+
   #site-title {
-    /* font-size: 2em; */
     font-size: 2.5em;
   }
 
@@ -365,6 +388,10 @@
 }
 
 @media only screen and (max-width: 399px) {
+  #welcome-text {
+    font-size: 0.8em;
+  }
+
   #site-title {
     font-size: 2.5em;
   }

@@ -39,7 +39,8 @@ strong {
   font-weight: bold;
 }
 
-h1 {
+h1,
+#welcome-text {
   .letter-reveal-char {
     font-family: 'TU 1000x Bold', sans-serif !important;
     line-height: 30px !important;
