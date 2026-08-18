@@ -188,5 +188,8 @@ hr {
 }
 .end-footer #footer-site-links p {
   font-size: 1.2em;
-  color: #fff !important;
+  color: #fff;
+}
+.end-footer #footer-site-links p a {
+  color: #fff;
 }/*# sourceMappingURL=styles.css.map */
