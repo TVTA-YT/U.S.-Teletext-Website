@@ -40,19 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // * Teletext service form field auto-fill, which is tied to the network selection *
 
   const networkSelect = document.getElementById('network');
-  const teletextSelect = document.getElementById('service'); // This is the visible field
-  const teletextHiddenInput = document.getElementById('serviceHidden'); // This is what actually submits the value
+  const serviceSelect = document.getElementById('service'); // This is the visible field
+  const serviceHiddenInput = document.getElementById('serviceHidden'); // This is what actually submits the value
 
-  const allTeletextOptions = Array.from(teletextSelect.options);
+  const allTeletextOptions = Array.from(serviceSelect.options);
   const tbsServiceHint = document.getElementById("hint")
 
   const networkServices = {
+    'ABC': ['ABCPLUS'],
     'CBS': ['ExtraVision'],
+    'KET': ['KETAGTEXT'],
     'NBC': ['NBCTeletext'],
     'TBS': ['Electra', 'Keyfax']
   };
 
-  function updateTeletextService() {
+  function updateTextService() {
     const validServices = networkServices[networkSelect.value] || [];
 
     // Show only the options valid for the chosen network; hide the rest.
@@ -61,37 +63,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (validServices.length === 1) {
-      // CBS or NBC: exactly one valid service — auto-select it and lock the field.
-      teletextSelect.value = validServices[0];
-      teletextSelect.disabled = true;
+      // ABC, CBS, KET, or NBC: exactly one valid service — auto-select it and lock the field.
+      serviceSelect.value = validServices[0];
+      serviceSelect.disabled = true;
       tbsServiceHint.hidden = true;
 
     } else if (validServices.length > 1) {
       // TBS: let the visitor choose between Electra and Keyfax.
       // There is no default option since TBS used both services.
-      teletextSelect.value = '';
-      teletextSelect.disabled = false;
+      serviceSelect.value = '';
+      serviceSelect.disabled = false;
       tbsServiceHint.hidden = false;
 
     } else {
       // No network chosen yet.
-      teletextSelect.value = '';
-      teletextSelect.disabled = true;
+      serviceSelect.value = '';
+      serviceSelect.disabled = true;
       tbsServiceHint.hidden = true;
     }
 
-    teletextHiddenInput.value = teletextSelect.value;
+    serviceHiddenInput.value = serviceSelect.value;
   }
 
-  networkSelect.addEventListener('change', updateTeletextService);
+  networkSelect.addEventListener('change', updateTextService);
 
   // Keep the hidden mirror in sync whenever the visitor picks between Electra/Keyfax themselves (this is only relevant while the select is enabled).
-  teletextSelect.addEventListener('change', () => {
-    teletextHiddenInput.value = teletextSelect.value;
-    tbsServiceHint.hidden = teletextSelect.value !== '';
+  serviceSelect.addEventListener('change', () => {
+    serviceHiddenInput.value = serviceSelect.value;
+    tbsServiceHint.hidden = serviceSelect.value !== '';
   });
 
-  updateTeletextService(); // This also runs once on webpage load
+  updateTextService(); // This also runs once on webpage load
 
   // This is needed because, when resetting the form, the teletext service field doesn't clear
   const form = networkSelect.closest("form");
@@ -99,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('reset', () => {
       setTimeout(() => {
         updateTapeSpeedOptions();
-        updateTeletextService();
+        updateTextService();
       }, 0);
     })
   }
