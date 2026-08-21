@@ -32,11 +32,11 @@ async function renderTotalRecordCount() {
         const teletextAvailableSamples = teletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
 
         const nonTeletextTotal = nonTeletextResponses.reduce((sum, rows) => sum + rows.length, 0);
-        const nonTeletextAvailableSamples = nonTeletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.HTML_Link != null && String(row.HTML_Link).trim() != '').length, 0);
+        const nonTeletextAvailableSamples = nonTeletextResponses.reduce((sum, rows) => sum + rows.filter(row => (row.HTML_Link != null && String(row.HTML_Link).trim() != '') || (row.TEXT1 != null && String(row.TEXT1).trim() != '')).length, 0);
 
         const electraSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Electra' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
+        const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
 
 

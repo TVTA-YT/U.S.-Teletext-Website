@@ -289,7 +289,7 @@
         <div id="results"></div>
 
         <div class="pb-3" id="return-to-form-button">
-          <a href="ket-agtext.html">
+          <a href="abc-plus.html">
             <button type="submit" class="btn form-control">
               <span class="button-text">Return to Form</span>
             </button>
@@ -468,10 +468,12 @@
         sortSecondaryField: "Date",
         columns: [
           { label: "Date", key: "Date" },
+          { label: "Affiliate", key: "Affiliate" },
           { label: "Program", key: "Program_Title" },
           { label: "Tape", key: "Tape_Type" },
           { label: "Speed", key: "Tape_Speed" },
-          { label: "HTML", key: "HTML_Link", renderHTML: true },
+          { label: "TEXT1", key: "TEXT1", renderABCPlus: true },
+          { label: "TEXT2", key: "TEXT2", renderABCPlus: true },
           { label: "Date Added", key: "Date_Added" },
         ],
       });

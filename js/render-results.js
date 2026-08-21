@@ -117,7 +117,8 @@ async function renderResults(config) {
 function appendRow(tbody, row, columns) {
   const tr = document.createElement('tr');
   if (row.IsNew) tr.classList.add('row-new');
-  if (!row.Download_Link && !row.HTML_Link) tr.classList.add('row-no-download-link');
+  const hasAnyLink = Boolean(row.Download_Link || row.HTML_Link || row.TEXT1 || row.TEXT2);
+  if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
   const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}/${row.Year}/`;
 
@@ -128,6 +129,17 @@ function appendRow(tbody, row, columns) {
       }
       const htmlPath = nonTeletextDirectory + row.HTML_Link;
       return `<td><a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
+    }
+
+    if (c.renderABCPlus) {
+      const value = row[c.key];
+
+      if (!value) {
+        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+      }
+
+      const path = nonTeletextDirectory + value;
+      return `<td><a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
     }
 
     if (c.renderZip) {
