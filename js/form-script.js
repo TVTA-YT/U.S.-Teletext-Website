@@ -32,10 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  tapeTypeSelect.addEventListener('change', updateTapeSpeedOptions);
-
   // Run once on page load as well, in case the browser restored a previous selection (e.g. after a back-navigation) without firing 'change'.
+  // This applies to all called functions in the script
   updateTapeSpeedOptions();
+  tapeTypeSelect.addEventListener('change', updateTapeSpeedOptions);
 
   // * Teletext service form field auto-fill, which is tied to the network selection *
 
@@ -85,15 +85,32 @@ document.addEventListener('DOMContentLoaded', () => {
     serviceHiddenInput.value = serviceSelect.value;
   }
 
+  updateTextService();
   networkSelect.addEventListener('change', updateTextService);
+
+
+  // Enable station affiliate field only for ABC, CBS, and NBC options
+  const affiliateInput = document.getElementById('affiliate');
+  const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC'];
+
+  function updateAffiliateField() {
+    const isEnabled = AFFILIATE_NETWORKS.includes(networkSelect.value);
+
+    affiliateInput.disabled = !isEnabled;
+
+    if (!isEnabled) {
+      affiliateInput.value = '';
+    }
+  }
+
+  updateAffiliateField();
+  networkSelect.addEventListener('change', updateAffiliateField)
 
   // Keep the hidden mirror in sync whenever the visitor picks between Electra/Keyfax themselves (this is only relevant while the select is enabled).
   serviceSelect.addEventListener('change', () => {
     serviceHiddenInput.value = serviceSelect.value;
     tbsServiceHint.hidden = serviceSelect.value !== '';
   });
-
-  updateTextService(); // This also runs once on webpage load
 
   // This is needed because, when resetting the form, the teletext service field doesn't clear
   const form = networkSelect.closest("form");
@@ -102,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         updateTapeSpeedOptions();
         updateTextService();
+        updateAffiliateField();
       }, 0);
     })
   }

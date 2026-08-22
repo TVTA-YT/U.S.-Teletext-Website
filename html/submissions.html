@@ -10,10 +10,7 @@
     />
     <!-- Open Graph URLs -->
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="U.S. Teletext Archive - Submissions"
-    />
+    <meta property="og:title" content="U.S. Teletext Archive - Submissions" />
     <meta
       property="og:description"
       content="This page is for submitting archived teletext and non-teletext samples that will be archived on the website."
@@ -250,13 +247,11 @@
     </nav>
     <main>
       <div class="container pb-3">
-        <h1 class="text-center page-title data-letter-reveal">
-          Submissions
-        </h1>
+        <h1 class="text-center page-title data-letter-reveal">Submissions</h1>
         <hr />
         <p class="fs-5 text-center">
-          Got any decoded teletext you'd like added to the site? Use this form
-          to let me know.
+          Got any decoded teletext/non-teletext services that you'd like added
+          to the site? Use this form to let me know.
         </p>
         <hr />
         <div class="alert alert-info text-center">
@@ -267,9 +262,9 @@
             </h2>
           </div>
           <p class="mb-0">
-            This form is for submitting decoded teletext samples only. If you
-            are wanting to contact us regarding personal tapes with possible
-            teletext, use <a href="contact.html">this</a> form.
+            This form is for submitting decoded teletext/non-teletext samples
+            only. If you are wanting to contact us regarding personal tapes with
+            possible teletext, use <a href="contact.html">this</a> form.
           </p>
         </div>
         <form action="https://formspree.io/f/xoeawkye" method="post">
@@ -285,7 +280,21 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="service" class="form-label">Teletext service</label>
+            <label for="affiliate" class="form-label"
+              >Enter station affiliate</label
+            >
+            <input
+              type="text"
+              name="affiliate"
+              id="affiliate"
+              class="form-control"
+              disabled
+            />
+          </div>
+          <div class="mb-3">
+            <label for="service" class="form-label"
+              >Text/Teletext service</label
+            >
             <select
               name="service"
               id="service"
@@ -293,12 +302,12 @@
               disabled
               required
             >
-              <option value="ABCPLUS">ABC PLUS</option>
-              <option value="Electra">Electra</option>
-              <option value="ExtraVision">ExtraVision</option>
-              <option value="KETAGTEXT">KET AgText</option>
-              <option value="Keyfax">Keyfax</option>
-              <option value="NBCTeletext">NBC Teletext</option>
+              <option value="ABCPLUS">ABC PLUS (Text)</option>
+              <option value="Electra">Electra (Teletext)</option>
+              <option value="ExtraVision">ExtraVision (Teletext)</option>
+              <option value="KETAGTEXT">KET AgText (Text)</option>
+              <option value="Keyfax">Keyfax (Teletext)</option>
+              <option value="NBCTeletext">NBC Teletext (Teletext)</option>
             </select>
             <div id="hint" class="form-text text-primary">Select a service</div>
           </div>
@@ -361,15 +370,16 @@
           </div>
           <div class="mb-3">
             <label for="sumbissionLink" class="form-label"
-              >Provide your submission (links only)</label
+              >Provide your submission(s)</label
             >
-            <input
+            <textarea
               type="url"
               name="sumbissionLink"
               id="submissionLink"
               class="form-control"
+              placeholder="Shareable links only"
               required
-            />
+            ></textarea>
           </div>
           <div class="mb-4">
             <label for="notes" class="form-label"
