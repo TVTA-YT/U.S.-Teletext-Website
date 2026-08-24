@@ -71,6 +71,15 @@ $exports = [
         'trackerFile' => $trackerDirectory . '/abc_plus_data.json',
 
     ],
+    [
+        'table'      => 'Wis_Infotext',
+        'idField'    => 'ID',
+        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added",
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/wisconsin_infotext_data.json',
+        'trackerFile' => $trackerDirectory . '/wisconsin_infotext_data.json',
+
+    ],
 ];
 
 foreach ($exports as $export) {

@@ -24,7 +24,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -128,7 +128,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -249,19 +253,27 @@
         <h1 class="text-center page-title data-letter-reveal">
           Teletext Services
         </h1>
-        <hr />
+        <hr aria-hidden="true" />
         <p class="fs-5">
           While teletext was not as popular in the U.S., a few teletext service
-          were available. To view archived teletext from any of these service,
+          were available. To view archived teletext from any of these services,
           click on one below.
         </p>
         <div class="alert alert-info text-center" role="alert">
           <i class="bi bi-info-circle-fill"></i
           ><span class="alert-text">
             UPDATE: The database values now only update automatically every
-            Sunday at 1600 UTC (1200 EDT). However, I will manually update it as
-            necessary. The automatic updates are just to ensure that records
-            older than 7 days are no longer marked as being new.</span
+            Sunday at <span aria-hidden="true">1600 UTC</span
+            ><span class="sr-only"
+              >4 o'clock PM Universal Coordinated Time</span
+            >
+            (<span aria-hidden="true">1200 EDT</span
+            ><span class="sr-only">12 o'clock PM Eastern Daylight Time</span>).
+            However, I will manually update it as necessary. The automatic
+            updates are just to ensure that
+            <span aria-hidden="true">records</span
+            ><span class="sr-only">wreckerds</span> older than 7 days are no
+            longer marked as being new.</span
           >
         </div>
         <div class="pt-4" id="sumbission-count">
@@ -462,7 +474,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

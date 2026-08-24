@@ -1,3 +1,20 @@
+const SERVICE_SPOKEN_LABELS = {
+  KET: "Kentucky Educational Television",
+  AGTEXT: "AGH TEXT",
+};
+
+const TAPE_VALUE_MAPS = {
+  BMAX_Name: {
+    BMAX: "Betamax",
+  },
+
+  BMAX_Speed: {
+    BI: "B-1",
+    BII: "B-2",
+    BIII: "B-3",
+  },
+};
+
 async function renderResults(config) {
   const {
     jsonPath,
@@ -7,6 +24,7 @@ async function renderResults(config) {
     groupOrder = null,
     sortSecondaryField = null,
     serviceLabel = null,
+    stationLabel = null,
     columns
   } = config;
 
@@ -50,8 +68,24 @@ async function renderResults(config) {
 
 
   if (heading) {
-    const headingText = serviceLabel ? `${serviceLabel} - ${filterValue}` : filterValue;
-    LetterReveal.type(heading, headingText)
+    const visibleParts = [stationLabel, serviceLabel].filter(Boolean).join(' ');
+    const headingText = visibleParts ? `${visibleParts} - ${filterValue}` : filterValue;
+    const spokenText = getSpokenText(serviceLabel, stationLabel, filterValue);
+
+    heading.removeAttribute('aria-label');
+    heading.innerHTML = '';
+
+    const visualSpan = document.createElement('span');
+    visualSpan.setAttribute('aria-hidden', 'true');
+    heading.appendChild(visualSpan);
+
+    const srSpan = document.createElement('span');
+    srSpan.className = 'sr-only';
+    srSpan.textContent = spokenText;
+    heading.appendChild(srSpan);
+
+    LetterReveal.type(visualSpan, headingText)
+    visualSpan.removeAttribute('aria-label');
   }
   if (countEl) countEl.textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} found`;
 
@@ -77,12 +111,12 @@ async function renderResults(config) {
 
         const col = document.createElement('div');
         col.className = 'col-xl-6 col-lg-6 col-md-6 col-sm-12';
-        const headerCells = columns.map(c => `<th>${escapeHtml(c.label)}</th>`).join('');
+        const headerCells = columns.map(c => `<th scope="col">${escapeHtml(c.label)}</th>`).join('');
 
         col.innerHTML = `
-          <h1>${escapeHtml(groupValue)}</h1>
+          <h2 aria-label="Table row month: ${escapeHtml(groupValue)}">${escapeHtml(groupValue)}</h2>
           <div class="table-responsive">
-            <table class="table table-bordered table-primary justify-content-center align-middle text-nowrap">
+            <table class="table table-bordered table-primary justify-content-center align-middle text-nowrap results-table">
               <thead><tr>${headerCells}</tr></thead>
               <tbody></tbody>
             </table>
@@ -97,10 +131,10 @@ async function renderResults(config) {
   } else {
     const col = document.createElement('div');
     col.className = 'col-12';
-    const headerCells = columns.map(c => `<th>${escapeHtml(c.label)}</th>`).join('');
+    const headerCells = columns.map(c => `<th scope="col">${escapeHtml(c.label)}</th>`).join('');
     col.innerHTML = `
     <div class="table-responsive">
-      <table class="table table-bordered table-primary table-striped justify-content-center align-middle text-nowrap">
+      <table class="table table-bordered table-primary table-striped justify-content-center align-middle text-nowrap results-table">
         <thead><tr>${headerCells}</tr></thead>
           <tbody></tbody>
       </table>
@@ -114,6 +148,12 @@ async function renderResults(config) {
   container.appendChild(rowDiv);
 }
 
+// visibleHtml: the raw HTML that should be seen but not spoken
+// spokenText: the plain text a screen reader should say instead
+function renderAccessibleCell(visibleHtml, spokenText) {
+  return `<span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span>`;
+}
+
 function appendRow(tbody, row, columns) {
   const tr = document.createElement('tr');
   if (row.IsNew) tr.classList.add('row-new');
@@ -125,52 +165,69 @@ function appendRow(tbody, row, columns) {
   tr.innerHTML = columns.map(c => {
     if (c.renderHTML) {
       if (!row.HTML_Link) {
-        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+        const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available.`)}</td>`;
       }
       const htmlPath = nonTeletextDirectory + row.HTML_Link;
-      return `<td><a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
+      const visible = `<a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available.`)}</td>`;
     }
 
-    if (c.renderABCPlus) {
+    if (c.renderABCPlus || c.renderWisconsinInfotext) {
       const value = row[c.key];
 
       if (!value) {
-        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+        const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: No HTML file available.`)}</td>`;
       }
 
       const path = nonTeletextDirectory + value;
-      return `<td><a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a></td>`;
+      const visible = `<a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available.`)}</td>`;
     }
 
     if (c.renderZip) {
-      return row.Download_Link
-        ? `<td><a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a></td>`
-        : `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+      if (row.Download_Link) {
+        const visible = `<a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: Download link available.`)}</td>`;
+      }
+      const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available.`)}</td>`;
     }
 
     if (c.renderThumbnail) {
       if (!row.Thumbnail) {
-        return `<td><i class="bi bi-slash-circle-fill"></i></td>`;
+        const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: No thumbnail image available.`)}</td>`;
       }
       const imagePath = row.Thumbnail;
-      return `
-      <td>
-        <img src="${escapeHtml(imagePath)}" alt="" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">
-      </td>
-      `;
+      const visible = `<img src="${escapeHtml(imagePath)}" alt="" role="presentation" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}.`)}</td>`;
+    }
+
+    if (c.accessibleMap) {
+      const map = TAPE_VALUE_MAPS[c.accessibleMap];
+      const spoken = (map && map[row[c.key]]) || row[c.key];
+      const visible = escapeHtml(row[c.key]);
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${spoken}.`)}</td>`;
     }
 
     if (c.key === 'Program_Title' && String(row.Notes ?? '').trim() !== '') {
       const notes = escapeHtml(row.Notes);
       const title = renderProgramTitles(row[c.key]);
-      return `<td class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>">${title} <i class="bi bi-info-circle-fill"></i></td>`;
+      const spokenTitle = getSpokenProgramTitle(row[c.key]);
+      const visible = `${title} <i class="bi bi-info-circle-fill" aria-hidden="true"></i>`;
+      return `<td class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>">${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}. Archive note: ${row.Notes}`)}</td>`;
     }
 
     if (c.key === 'Program_Title') {
-      return `<td>${renderProgramTitles(row[c.key])}</td>`;
+      const visible = renderProgramTitles(row[c.key]);
+      const spokenTitle = getSpokenProgramTitle(row[c.key]);
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}.`)}</td>`;
     }
 
-    return `<td>${escapeHtml(row[c.key])}</td>`
+    const visible = escapeHtml(row[c.key]);
+    return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}.`)}</td>`;
   }).join('');
 
   tbody.appendChild(tr);
@@ -180,8 +237,25 @@ function appendRow(tbody, row, columns) {
   });
 }
 
+function getSpokenText(serviceLabel, stationLabel, filterValue) {
+  const serviceSpoken = serviceLabel ? (SERVICE_SPOKEN_LABELS[serviceLabel] || serviceLabel) : null;
+  const stationSpoken = stationLabel ? (SERVICE_SPOKEN_LABELS[stationLabel] || stationLabel) : null;
+
+  const combinedLabel = [stationSpoken, serviceSpoken].filter(Boolean).join(' ');
+
+  return combinedLabel ? `${combinedLabel} results from ${filterValue}` : filterValue;
+}
+
+function splitProgramTitles(rawTitle) {
+  return String(rawTitle ?? '').split("|").map(t => t.trim()).filter(t => t !== '');
+}
+
+function getSpokenProgramTitle(rawTitle) {
+  return splitProgramTitles(rawTitle).join(', ');
+}
+
 function renderProgramTitles(rawTitle) {
-  const titles = String(rawTitle ?? '').split("|").map(t => t.trim()).filter(t => t !== '');
+  const titles = splitProgramTitles(rawTitle);
 
   if (titles.length <= 1) {
     return escapeHtml(rawTitle);

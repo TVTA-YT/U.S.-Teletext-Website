@@ -21,7 +21,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -29,10 +29,6 @@
     <link
       rel="canonical"
       href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/sitemap.html"
-    />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
     />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
@@ -121,7 +117,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -240,13 +240,13 @@
     <main>
       <div class="container">
         <h1 class="text-center page-title data-letter-reveal">Sitemap</h1>
-        <hr />
+        <hr aria-hidden="true" />
         <p class="fs-4 text-center">
           Can't find something? This sitemap will point you in the right
           direction.
         </p>
-        <hr />
-        <hr />
+        <hr aria-hidden="true" />
+        <hr aria-hidden="true" />
         <div class="row justify-content-center">
           <div class="col-xl-4 col-md-4 col-sm-12 mobile-padding">
             <div>
@@ -254,7 +254,6 @@
               <ul>
                 <li><a href="../index.html">Home</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="privacy-policy.html">Privacy Policy</a></li>
                 <li><a href="privacy-policy.html">Privacy Policy</a></li>
               </ul>
             </div>
@@ -275,13 +274,18 @@
                 </ol>
               </ul>
               <ul>
-                <li><a href="services.html">Other Text Services</a></li>
+                <li>
+                  <a href="other-text-services.html">Other Text Services</a>
+                </li>
                 <ol>
                   <li>
                     <a href="abc-plus.html">ABC PLUS</a>
                   </li>
                   <li>
                     <a href="ket-agtext.html">KET AgText</a>
+                  </li>
+                  <li>
+                    <a href="wisconsin-infotext.html">Wisconsin Infotext</a>
                   </li>
                 </ol>
               </ul>
@@ -430,7 +434,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

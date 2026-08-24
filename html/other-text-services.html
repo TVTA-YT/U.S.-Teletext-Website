@@ -24,7 +24,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -120,7 +120,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -241,12 +245,12 @@
         <h1 class="text-center page-title data-letter-reveal">
           Other Text Services
         </h1>
-        <hr />
+        <hr aria-hidden="true" />
         <p class="fs-5 text-center">
           While some stations didn't have teletext, they did have other text
           services. Check them out below.
         </p>
-        <hr />
+        <hr aria-hidden="true" />
         <div class="pt-4" id="sumbission-count">
           <table class="table text-center submission-count-table">
             <tbody>
@@ -267,15 +271,22 @@
           <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
             <a href="ket-agtext.html">
               <figure>
-                <img src="../images/logos/KET.png" alt="" class="mw-100 w-50" />
+                <img
+                  src="../images/logos/KET.png"
+                  alt="KET logo"
+                  aria-label="Kentucky Educational Television logo"
+                  class="mw-100 w-50"
+                />
               </figure>
             </a>
             <div class="text-center pb-4 service-name-div">
               <span
                 class="fs-3 service-name letter-reveal-char data-letter-reveal"
+                aria-hidden="true"
               >
                 KET AgText
               </span>
+              <span class="fs-3 service-name sr-only"> K E T AgText </span>
             </div>
             <p class="text-center fs-2 fw-bold">
               Available Samples: <span id="ket-agtext-count"></span>
@@ -326,9 +337,39 @@
               <span
                 class="fs-3 service-name letter-reveal-char data-letter-reveal"
               >
-                ABC PLUS
+                PennText
               </span>
             </div>
+            <p class="text-center fs-2 fw-bold">
+              Available Samples: <span id="penntext-plus-count"></span>
+            </p>
+          </div> -->
+          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-5">
+            <a href="wisconsin-infotext.html">
+              <figure>
+                <img
+                  src="../images/logos/Wisconsin-Infotext.png"
+                  alt=""
+                  class="mw-100 w-50 light-mode-image"
+                />
+                <img
+                  src="../images/logos/Wisconsin-Infotext_white.png"
+                  alt=""
+                  class="mw-100 w-50 dark-mode-image"
+                />
+              </figure>
+            </a>
+            <div class="text-center pb-4 service-name-div">
+              <span
+                class="fs-3 service-name letter-reveal-char data-letter-reveal"
+              >
+                Wisconsin InfoText
+              </span>
+            </div>
+            <p class="text-center fs-2 fw-bold">
+              Available Samples:
+              <span id="wisconsin-infotext-count"></span>
+            </p>
           </div> -->
         </div>
 
@@ -428,7 +469,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

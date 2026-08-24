@@ -21,7 +21,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -121,7 +121,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -248,34 +252,69 @@
         </p>
         <hr />
         <hr />
-        <h1>Teletext Archives</h1>
-        <dl>
-          <dt>
-            <a href="https://al.zerostem.io/~al/teletext/" target="_blank"
-              >Al's File Dump</a
-            >
-          </dt>
-          <dd>
-            Just one of a few websites providing access to an archive of decoded
-            European teletext services, including BBC's Ceefax and services from
-            C4 (Channel 4), C5 (Channel 5), ITV, and Sky.
-          </dd>
-          <dt>
-            <a href="https://computer-legacy.com/teletext.html" target="_blank"
-              >Computer Legacy's Teletext Archive</a
-            >
-          </dt>
-          <dd>
-            Another archive of European teletext from the same channels listed
-            above.
-          </dd>
-          <dt>
-            <a href="https://archive.teletextart.co.uk" target="_blank"
-              >Teletext Art Archive</a
-            >
-          </dt>
-          <dd>One more website for archiving European teletext.</dd>
-        </dl>
+        <section id="teletext-archives">
+          <h2>Teletext Archives</h2>
+          <dl>
+            <dt>
+              <a href="https://al.zerostem.io/~al/teletext/" target="_blank"
+                >Al's File Dump</a
+              >
+            </dt>
+            <dd>
+              Just one of a few websites providing access to an archive of
+              decoded European teletext services, including BBC's Ceefax and
+              services from C4 (Channel 4), C5 (Channel 5), ITV, and Sky.
+            </dd>
+            <dt>
+              <a
+                href="https://computer-legacy.com/teletext.html"
+                target="_blank"
+                >Computer Legacy's Teletext Archive</a
+              >
+            </dt>
+            <dd>
+              Another archive of European teletext from the same channels listed
+              above.
+            </dd>
+            <dt>
+              <a href="https://archive.teletextart.co.uk" target="_blank"
+                >Teletext Art Archive</a
+              >
+            </dt>
+            <dd>One more website for archiving European teletext.</dd>
+          </dl>
+        </section>
+        <section class="pt-4" id="teletext-decoders">
+          <h2>Teletext Decoders</h2>
+          <dl>
+            <dt>
+              <a href="https://github.com/decode-orc/decode-orc" target="_blank"
+                >Decode-Orc</a
+              >
+            </dt>
+            <dd>
+              Software used for working with FM RF transfers that can decode
+              U.S. teletext standards (NABTS and WST). Thanks for the hard work,
+              Simon! We NTSC folks appreciate it. For a basic how-to of the
+              software,
+              <a
+                href="https://www.youtube.com/watch?v=mJR4Ax7eZ3c"
+                target="_blank"
+                >watch</a
+              >
+              Simon's demonstration.
+            </dd>
+            <dt>
+              <a href="https://github.com/ali1234/vhs-teletext" target="_blank"
+                >VHS-Teletext</a
+              >
+            </dt>
+            <dd>
+              Pre-existing software used to extract teletext data from European
+              WST services.
+            </dd>
+          </dl>
+        </section>
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -372,7 +411,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

@@ -14,7 +14,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, .service-name, .letter-reveal-char),
+span:not(#site-title, .service-name, .letter-reveal-char, .tape-type-speed, .table-result),
 li,
 label,
 dt,
@@ -36,6 +36,10 @@ th,
 strong {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
+}
+
+hr {
+  border: 1px solid var(--horizontal-line) !important;
 }
 
 h1 .letter-reveal-char,
@@ -120,16 +124,15 @@ h1 .type-cursor,
   font-family: "Open Sans", sans-serif !important;
   color: var(--text-color);
 }
+.navbar .navbar-nav .nav-item .nav-link:hover {
+  color: #152de3 !important;
+}
 .navbar .navbar-nav .dropdown-menu .dropdown-options {
   text-align: center;
 }
 .navbar .navbar-nav .dropdown-menu .dropdown-options .text-dropdown-option:hover {
   background-color: #152de3;
   color: var(--text-color);
-}
-
-hr {
-  border: 1px solid var(--horizontal-line) !important;
 }
 
 .navbar-brand,
@@ -140,18 +143,6 @@ hr {
 .site-logo {
   padding-left: 20px;
   width: 80%;
-}
-
-#navBar .navbar-nav .nav-item .nav-link {
-  margin-left: 20%;
-  font-size: 20px;
-}
-
-#navbarNav .nav-item .nav-link:hover {
-  color: #152de3 !important;
-}
-#navbarNav .nav-item .nav-link:hover .dropdown-toggle {
-  color: #152de3 !important;
 }
 
 .navbar-toggler {
@@ -176,6 +167,18 @@ hr {
 
 .multiple-programs li {
   list-style-type: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .end-footer {

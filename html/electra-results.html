@@ -137,7 +137,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -269,8 +273,10 @@
           <br />
           <br />
           <span
-            >The table(s) below are responsive; to view more of the information,
-            simply scroll the table (if applicable).</span
+            >The <span aria-hidden="true">table(s)</span
+            ><span class="sr-only">table or tables</span> below are responsive;
+            to view more of the information, simply scroll the table (if
+            applicable).</span
           >
           <br />
           <br />
@@ -281,7 +287,7 @@
             >) in the ZIP column.</span
           >
         </div>
-        <hr />
+        <hr aria-hidden="true" />
         <div id="results"></div>
         <div class="pb-3" id="return-to-form-button">
           <a href="electra.html">
@@ -412,7 +418,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"
@@ -466,8 +475,8 @@
           { label: "Date", key: "Date" },
           { label: "Time", key: "Time" },
           { label: "Program", key: "Program_Title" },
-          { label: "Tape", key: "Tape_Type" },
-          { label: "Speed", key: "Tape_Speed" },
+          { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
+          { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
           { label: "ZIP", key: "ZIP", renderZip: true },
           { label: "Date Added", key: "Date_Added" },
         ],

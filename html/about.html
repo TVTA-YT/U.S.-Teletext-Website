@@ -24,7 +24,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -122,7 +122,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -243,16 +247,20 @@
         <h1 class="text-center page-title data-letter-reveal">
           About the Site
         </h1>
-        <hr />
+        <hr aria-hidden="true" />
         <p class="dropcap">
-          For the last few years, there have been software tools that are able
-          to extract European (PAL) teletext, made possible, in part, thanks to
-          the agreed-upon use of a single standard called World System Teletext
-          (WST) among European broadcasters such as the BBC and ITV. In the
-          U.S., while some services used the WST standard (with some
-          modifications), such as Keyfax/Electra, there was a competing
-          standard, the North American Broadcast Teletext Standard (NABTS), used
-          by services such as CBS's ExtraVision and NBC's NBC Teletext.
+          <span aria-hidden="true">For</span
+          ><span class="sr-only">For</span> the last few years, there have been
+          software tools that are able to extract European (PAL) teletext, made
+          possible, in part, thanks to the agreed-upon use of a single standard
+          called World System Teletext (WST) among European broadcasters such as
+          the BBC and <span aria-hidden="true">ITV</span
+          ><span class="sr-only">I-TV</span>. In the U.S., while some services
+          used the WST standard (with some modifications), such as
+          Keyfax/Electra, there was a competing standard, the North American
+          Broadcast Teletext Standard (<span>NABTS</span
+          ><span class="sr-only">N A B T S</span>), used by services such as
+          CBS's ExtraVision and NBC's NBC Teletext.
         </p>
         <p>
           Unlike in the U.S., teletext was popular in Europe and lasted far
@@ -270,7 +278,7 @@
             >VHS-Teletext</a
           >, there was hope that, at some point, software would be developed to
           decode long-forgotten U.S. teletext services. However, as the years
-          began to pass, there was still no such software tools available.
+          began to pass, there were still no such software tools available.
           Besides the fact that Europe and North America used different analog
           broadcast standards (PAL and NTSC), which complicated things, not much
           was known about the specific standards used by WST and NABTS in the
@@ -296,8 +304,9 @@
           The purpose of this site is act as a repository for these newly
           decoded services, providing access to decoded files provided by the
           people who have decoded them. Teletext in the U.S. was not widely
-          known during its short-lived lifespan &ndash; it's about time that
-          changes.
+          known during its short-lived lifespan
+          <span aria-hidden="true">&ndash;</span
+          ><span class="sr-only">,</span> it's about time that changes.
         </p>
         <!-- Floating theme button, bottom-right -->
         <button
@@ -395,7 +404,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

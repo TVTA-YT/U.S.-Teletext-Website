@@ -57,7 +57,7 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>KET AgText Results</title>
+    <title>Kentucky Educational Television AgText Results</title>
     <style>
       .container {
         padding-top: 100px;
@@ -141,7 +141,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -274,9 +278,14 @@
           <br />
           <br />
           <span
-            >The table(s) below are responsive; to view more of the information,
-            simply scroll the table (if applicable).</span
-          >
+            ><span aria-hidden="true"
+              >The table(s) below are responsive; to view more of the
+              information, simply scroll the table (if applicable).</span
+            ><span class="sr-only"
+              >The table or tables below are responsive; to view more of the
+              information, simply scroll the table (if applicable).</span
+            >
+          </span>
           <br />
           <br />
           <span
@@ -284,7 +293,7 @@
             (<i class="bi bi-filetype-html"></i>) in the HTML column.</span
           >
         </div>
-        <hr />
+        <hr aria-hidden="true" />
         <div id="results"></div>
 
         <div class="pb-3" id="return-to-form-button">
@@ -416,7 +425,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"
@@ -449,6 +461,7 @@
         filterParam: "year",
         filterField: "Year",
         serviceLabel: "AGTEXT",
+        stationLabel: "KET",
         groupByField: "Month",
         groupOrder: [
           "January",
@@ -468,8 +481,8 @@
         columns: [
           { label: "Date", key: "Date" },
           { label: "Program", key: "Program_Title" },
-          { label: "Tape", key: "Tape_Type" },
-          { label: "Speed", key: "Tape_Speed" },
+          { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
+          { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
           { label: "HTML", key: "HTML_Link", renderHTML: true },
           { label: "Date Added", key: "Date_Added" },
         ],

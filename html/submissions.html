@@ -21,7 +21,7 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
@@ -129,7 +129,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -248,12 +252,12 @@
     <main>
       <div class="container pb-3">
         <h1 class="text-center page-title data-letter-reveal">Submissions</h1>
-        <hr />
+        <hr aria-hidden="true" />
         <p class="fs-5 text-center">
           Got any decoded teletext/non-teletext services that you'd like added
           to the site? Use this form to let me know.
         </p>
-        <hr />
+        <hr aria-hidden="true" />
         <div class="alert alert-info text-center">
           <div class="alert-heading">
             <h2>
@@ -324,7 +328,8 @@
           </div>
           <div class="mb-3">
             <label for="programTitle" class="form-label"
-              >Enter program title(s)</label
+              ><span aria-hidden="true">Enter program title(s)</span
+              ><span class="sr-only">Enter program title or titles</span></label
             >
             <input
               type="text"
@@ -355,11 +360,15 @@
               class="form-control"
               required
             >
-              <option value="" disabled selected hidden>e.g. SLP</option>
+              <option value="" disabled selected hidden>
+                <span aria-hidden="true" aria-label="For example, SLP"
+                  >e.g. SLP</span
+                >
+              </option>
               <optgroup label="Betamax">
-                <option value="BI">BI</option>
-                <option value="BII">BII</option>
-                <option value="BIII">BIII</option>
+                <option value="BI">B-1</option>
+                <option value="BII">B-2</option>
+                <option value="BIII">B-3</option>
               </optgroup>
               <optgroup label="VHS">
                 <option value="SP">SP</option>
@@ -370,7 +379,10 @@
           </div>
           <div class="mb-3">
             <label for="sumbissionLink" class="form-label"
-              >Provide your submission(s)</label
+              ><span aria-hidden="true">Provide your submission(s)</span
+              ><span class="sr-only"
+                >Provide your submission or submissions</span
+              ></label
             >
             <textarea
               type="url"
@@ -498,7 +510,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"

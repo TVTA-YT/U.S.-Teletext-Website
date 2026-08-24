@@ -7,6 +7,7 @@ async function renderTotalRecordCount() {
     const extravisionCountEl = document.getElementById("extravision-count");
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
+    // const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
     if (!teletextCountEl && !teletextSampleCountEl && !nonTeletextCountEl && !nonTeletextSampleCountEl) return;
 
     const jsonFiles = [
@@ -15,6 +16,7 @@ async function renderTotalRecordCount() {
         '../json/nbc_teletext_data.json',
         '../json/abc_plus_data.json',
         '../json/ket_agtext_data.json',
+        // '../json/wisconsin_infotext_data.json',
     ];
 
     try {
@@ -38,6 +40,7 @@ async function renderTotalRecordCount() {
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
+        // const wisconsinInfotextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'WISINFOTEXT' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
 
 
         if (teletextCountEl) {
@@ -72,6 +75,10 @@ async function renderTotalRecordCount() {
             ketAgtextCountEl.textContent = ketAgtextSamples.toLocaleString();
         }
 
+        // if (wisconsinInfotextCountEl) {
+        //     wisconsinInfotextCountEl.textContent = wisconsinInfotextSamples.toLocaleString();
+        // }
+
 
     } catch (error) {
         if (teletextCountEl) teletextCountEl.textContent = '-';
@@ -82,6 +89,7 @@ async function renderTotalRecordCount() {
         if (extravisionCountEl) extravisionCountEl.textContent = '-';
         if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
         if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
+        // if (wisconsinInfotextCountEl) wisconsinInfotextCountEl.textContent = '-';
         console.error('Could not load total record/sample count;', error);
     }
 }

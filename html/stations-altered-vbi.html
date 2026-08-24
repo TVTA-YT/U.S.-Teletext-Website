@@ -1,23 +1,26 @@
 <!doctype html>
-<!-- Created August 14, 2026, 01:11 -->
+<!-- Created August 22, 2026, 15:12 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Contact us if you have any questions, comments, or have videotapes with teletext data."
+      content="View a list of broadcast affiliates that either did not or partially passed teletext services through their VBI."
     />
     <!-- Open Graph URLs -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="U.S. Teletext Archive - Contact Us" />
+    <meta
+      property="og:title"
+      content="U.S. Teletext Archive - Stations That Altered VBI"
+    />
     <meta
       property="og:description"
-      content="Contact us if you have any questions, comments, or have videotapes with teletext data."
+      content="View a list of broadcast affiliates that either did not or partially passed teletext services through their VBI."
     />
     <meta
       property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/contact.html"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/stations-altered-vbi.html"
     />
     <meta
       property="og:image"
@@ -28,7 +31,7 @@
     <meta property="og:locale" content="en_US" />
     <link
       rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/contact.html"
+      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/stations-altered-vbi.html"
     />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
@@ -78,18 +81,13 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Contact Form</title>
+    <title>Affiliates That Altered VBI</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
-      .btn {
-        border-radius: 24px;
-      }
-
-      .button-text {
-        color: #fff;
+      .omitted-teletext {
         font-weight: bold;
       }
     </style>
@@ -240,107 +238,85 @@
             <a class="nav-link" href="about.html">About</a>
           </li>
         </ul>
+        xs
       </div>
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">Contact Form</h1>
+        <h1 class="text-center page-title data-letter-reveal">
+          Affiliates That Altered VBI
+        </h1>
         <hr aria-hidden="true" />
         <p class="fs-5 text-center">
-          Use the form below to contact us regarding any questions or a tape
-          transfer inquiry.
-        </p>
-        <p class="text-center">
-          <strong
-            >*Please note that I, the site owner, can only transfer
-            Betamax/SuperBetamax at this time.</strong
-          >
+          Not every affiliate appreciated teletext...
         </p>
         <hr aria-hidden="true" />
-        <form action="https://formspree.io/f/xeajzkqp" method="post">
-          <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              class="form-control"
-              placeholder="John Doe"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              class="form-control"
-              placeholder="address@domail.com"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="contactReason" class="form-label">Contact Reason</label>
-            <select
-              name="contactReason"
-              id="contactReason"
-              class="form-select"
-              required
-            >
-              <option value="" disabled selected hidden>
-                Select an option
-              </option>
-              <option value="question">General Question</option>
-              <option value="transfer">Transfer Inquiry</option>
-              <option value="other">Other Reason</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label for="notes" class="form-label">Comments</label>
-            <div class="input-group">
-              <textarea
-                name="notes"
-                id="notes"
-                class="form-control"
-                placeholder="Type your response here"
-                required
-              ></textarea>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary form-control">
-            Submit Form
-          </button>
-          <button type="reset" class="btn btn-danger form-control my-4">
-            Reset Fields
-          </button>
-        </form>
-
-        <!-- * BEGIN IMAGE MODAL -->
-        <div
-          class="modal fade"
-          id="imageModal"
-          tabindex="-1"
-          aria-labelledby="imageModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <img src alt class="img-fluid" id="modalImage" />
-                <p id="modalCaption"></p>
-              </div>
-            </div>
-          </div>
+        <p>
+          As discussed in a section in the
+          <a href="archiving-teletext.html#affiliate-vbi-takeover"
+            >Archiving Teletext</a
+          >
+          page, not every broadcast affiliate is alike. Unfortunately, this
+          meant that there were some affiliates that altered their VBI; in this
+          case, CBS's ExtraVision and NBC's NBC Teletext services were either
+          partially passed through the VBI or completely omitted from the VBI.
+          While you <span aria-hidden="true"><em>can</em></span
+          ><span class="sr-only">can</span> get some results from decoding
+          partial a teletext stream (though not the entire data), most (or all)
+          of the pages will be corrupted.
+        </p>
+        <p>
+          Below is a list of broadcast affiliates that altered their VBI, which
+          affected the teletext stream.
+        </p>
+        <div class="table-responsive-sm">
+          <table
+            class="table table-danger table-bordered table-striped text-center align-middle"
+          >
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Affiliate</th>
+                <th scope="col">City/State</th>
+                <th scope="col">Network</th>
+                <th scope="col">Status</th>
+                <th scope="col">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WHAS</td>
+                <td>Louisville, KY</td>
+                <td>CBS</td>
+                <td>Partial</td>
+                <td>Determination made based on 1988 recording.</td>
+              </tr>
+              <tr class="omitted-teletext">
+                <td>WJKB</td>
+                <td>Detroit, MI</td>
+                <td>CBS</td>
+                <td>Omitted</td>
+                <td>Based on 1980s recording.</td>
+              </tr>
+              <tr class="omitted-teletext">
+                <td>WMAR</td>
+                <td>Baltimore, MD</td>
+                <td>CBS</td>
+                <td>Omitted</td>
+                <td>Determination made based on recording from May 1983.</td>
+              </tr>
+              <tr>
+                <td>WRC-TV</td>
+                <td>Washington, D.C.</td>
+                <td>NBC</td>
+                <td>Partial</td>
+                <td>
+                  Determination made based on recording from June 16, 1983.
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <!-- * END IMAGE MODAL -->
+
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -465,6 +441,6 @@
     </footer>
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
-    <script src="../js/image-modal.js"></script>
+    <script src="../js/total-count.js"></script>
   </body>
 </html>

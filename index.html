@@ -14,7 +14,7 @@
     <meta property="og:title" content="U.S. Teletext Archive" />
     <meta
       property="og:description"
-      content="An archive of pages from U.S. NABTS and WST teletext services, such as CBS ExtraVision and Electra, and other various text-based services, such as ABC PLUS. This website also showcases various news about and images from each service as we discover them."
+      content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
     />
     <meta
       property="og:url"
@@ -22,14 +22,14 @@
     />
     <meta
       property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site.image.png"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
     />
     <meta property="og:image:alt" content="U.S. Teletext Archive" />
     <meta property="og:site_name" content="U.S. Teletext Archive" />
     <meta property="og:locale" content="en_US" />
     <meta
       name="description"
-      content="An archive of pages from U.S. WST and NABTS teletext services and other various text-based services, such as ABC PLUS. This website also showcases various news about and images from each service as we discover them."
+      content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
     />
     <link
       rel="canonical"
@@ -77,11 +77,6 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
-    ></script>
-    <script
-      data-goatcounter="https://us-teletext-archive.goatcounter.com/count"
-      async
-      src="//gc.zgo.at/count.js"
     ></script>
     <script
       data-goatcounter="https://us-teletext-archive.goatcounter.com/count"
@@ -202,7 +197,11 @@
                 }
               </style>
             </defs>
-            <text class="cls-1" transform="translate(0 36.54)">
+            <text
+              class="cls-1"
+              transform="translate(0 36.54)"
+              aria-label="US Teletext Archive"
+            >
               <tspan class="cls-2" x="0" y="0">U.S</tspan>
               <tspan x="82.96" y="0">. TELETEXT</tspan>
               <tspan x="62.34" y="43.32">A</tspan>
@@ -340,13 +339,18 @@
           <p class="fs-2 fw-bold">**NEW**</p>
         </div>
         <p id="submission-page-alert-text">
-          Decoded teletext samples can now be submitted for inclusion on the
-          site. To submit teletext samples, visit
+          Decoded teletext samples (and now non-teletext text services) can now
+          be submitted for inclusion on the site. To submit samples, visit
           <a href="html/submissions.html">this</a> page.
+          <br />
+          <br />
+          We're now also adding samples from non-teletext services such as ABC's
+          PLUS service. View these samples on the "Other Text Services" page
+          included as a dropdown option in the "Text Services" navigation link.
         </p>
       </div>
       <div class="container" id="primary-container">
-        <div class="image-marquee" id="image-marquee">
+        <div class="image-marquee" id="image-marquee" aria-hidden="true">
           <div class="image-marquee-content">
             <div>
               <img
@@ -446,14 +450,18 @@
           On this website is a collection of newly decoded pages from U.S.
           teletext from various services such as CBS's <i>ExtraVision</i>, NBC's
           <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS
-          (then SuperStation WTBS and SuperStation TBS).
+          (then SuperStation WTBS and SuperStation TBS). We're also now
+          including samples from various text-based (non-teletext) services,
+          both national (ABC PLUS) and local (Kentucky Educational Television's
+          AgText).
         </p>
         <p class="pt-4 text-center site-introduction">
           <strong class="text-decoration-underline">Until now</strong>, there
-          had not been any clear, high-quality examples of these teletext
-          services. This site aims to change that by acting as a repository,
-          providing access to individual archives from these services, archives
-          provided by those who have the capacity to decode teletext.
+          had not been any clear, high-quality examples of these services,
+          specifically the teletext services. This site aims to change that by
+          acting as a repository, providing access to individual archives from
+          these services, archives provided by those who have the capacity to
+          decode these services.
         </p>
       </div>
       <div class="p-3" id="samples-div">
@@ -463,8 +471,8 @@
       </div>
       <div class="container" id="secondary-container">
         <p class="fs-5 text-center">
-          We are currently looking for more samples to add to the site! We are
-          looking for samples from the following
+          We are currently looking for more teletext samples to add to the site!
+          We are looking for samples from the following
           <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three
           CBS affiliates (especially from those colored red):
         </p>
@@ -615,7 +623,10 @@
         </p>
       </div>
       <div class="pt-4">
-        <small class="text-white">Website &copy; Copyright 2026 - TVTA</small>
+        <small class="text-white"
+          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
+          TVTA</small
+        >
         <br />
         <br />
         <small class="text-white"
