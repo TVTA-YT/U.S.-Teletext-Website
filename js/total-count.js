@@ -5,6 +5,7 @@ async function renderTotalRecordCount() {
     const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
     const electraCountEl = document.getElementById("electra-count");
     const extravisionCountEl = document.getElementById("extravision-count");
+    const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
@@ -16,7 +17,7 @@ async function renderTotalRecordCount() {
         '../json/nbc_teletext_data.json',
         '../json/abc_plus_data.json',
         '../json/ket_agtext_data.json',
-        // '../json/wisconsin_infotext_data.json',
+        '../json/wisconsin_infotext_data.json',
     ];
 
     try {
@@ -38,6 +39,7 @@ async function renderTotalRecordCount() {
 
         const electraSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Electra' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        const nbcTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'NBC Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
         const wisconsinInfotextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'WISINFOTEXT' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
@@ -67,6 +69,10 @@ async function renderTotalRecordCount() {
             extravisionCountEl.textContent = extravisionSamples.toLocaleString();
         }
 
+        if (nbcTeletextCountEl) {
+            nbcTeletextCountEl.textContent = nbcTeletextSamples.toLocaleString();
+        }
+
         if (abcPlusCountEl) {
             abcPlusCountEl.textContent = abcPlusSamples.toLocaleString();
         }
@@ -87,6 +93,7 @@ async function renderTotalRecordCount() {
         if (nonTeletextSampleCountEl) nonTeletextSampleCountEl.textContent = '-';
         if (electraCountEl) electraCountEl.textContent = '-';
         if (extravisionCountEl) extravisionCountEl.textContent = '-';
+        if (nbcTeletextCountEl) nbcTeletextCountEl.textContent = '-';
         if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
         if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
         if (wisconsinInfotextCountEl) wisconsinInfotextCountEl.textContent = '-';
