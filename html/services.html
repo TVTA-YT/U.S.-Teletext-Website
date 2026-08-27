@@ -91,6 +91,10 @@
         padding-top: 100px;
       }
 
+      .mobile-blue-border {
+        border: 4px solid #152de3 !important;
+      }
+
       .service-name {
         font-family: "TU 1000x Regular", sans-serif;
       }
@@ -284,7 +288,9 @@
           </table>
         </div>
         <div class="row justify-content-center pt-5">
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
+          <div
+            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-bottom-padding"
+          >
             <a href="extravision.html">
               <figure>
                 <img
@@ -310,7 +316,10 @@
               Available Samples: <span id="extravision-count"></span>
             </p>
           </div>
-          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pb-4">
+          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
+          <div
+            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
+          >
             <a href="electra.html">
               <figure>
                 <img
@@ -335,14 +344,22 @@
               Available Samples: <span id="electra-count"></span>
             </p>
           </div>
+          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
           <!-- * NOTE: There are currently no samples of Keyfax. 08/11/2026, 03:37 -->
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <!-- <div
+            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding medium-plus-top-padding"
+          >
             <a href="keyfax.html">
               <figure>
                 <img
                   src="../images/logos/Keyfax.png"
                   alt="Keyfax logo"
-                  class="mw-100 w-50"
+                  class="mw-100 w-50 light-mode-image"
+                />
+                <img
+                  src="../images/logos/Keyfax_white.png"
+                  alt="Keyfax logo"
+                  class="mw-100 w-50 dark-mode-image"
                 />
               </figure>
             </a>
@@ -350,26 +367,25 @@
               <span class="fs-3 service-name data-letter-reveal">Keyfax</span>
             </div>
           </div> -->
-          <!--  * NOTE: There are currently no samples of NBC Teletext. 08/13/2026, 13:06 -->
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
+          <div
+            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding medium-plus-top-padding"
+          >
             <a href="nbc-teletext.html">
               <figure>
                 <img
                   src="../images/logos/NBC-Teletext.png"
                   alt="NBC Teletext black logo"
-                  class="mw-100 w-75 light-mode-image"
-                />
-                <img
-                  src="../images/logos/NBC-Teletext_white.png"
-                  alt="NBC Teletext white logo"
-                  class="mw-100 w-75 dark-mode-image"
+                  class="mw-100 w-50"
                 />
               </figure>
             </a>
             <div class="text-center pb-4 service-name-div">
-              <span class="fs-3 service-name data-letter-reveal">NBC Teletext</span>
+              <span class="fs-3 service-name data-letter-reveal"
+                >NBC Teletext</span
+              >
             </div>
-          </div> -->
+          </div>
         </div>
         <!-- Floating theme button, bottom-right -->
         <button

@@ -1,12 +1,12 @@
 <!doctype html>
-<!-- Created August 16, 2026, 13:15 -->
+<!-- Created August 26, 2026, 18:26 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Available samples for the ABC PLUS text service."
+      content="Available samples for the Keyfax teletext service."
     />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="../images/favicons/favicon.ico" />
@@ -22,7 +22,6 @@
       sizes="32x32"
       href="../images/favicons/favicon-32x32.png"
     />
-
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -58,7 +57,7 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>ABC PLUS Results</title>
+    <title>Keyfax Results</title>
     <style>
       .container {
         padding-top: 100px;
@@ -181,14 +180,14 @@
             <ul class="dropdown-menu">
               <li class="dropdown-options">
                 <a
-                  href="../html/services.html"
+                  href="services.html"
                   class="dropdown-item text-dropdown-option"
                   >Teletext Services</a
                 >
               </li>
               <li class="dropdown-options">
                 <a
-                  href="../html/other-text-services.html"
+                  href="other-text-services.html"
                   class="dropdown-item text-dropdown-option"
                   >Other Text Services</a
                 >
@@ -201,20 +200,20 @@
               data-bs-toggle="dropdown"
               role="button"
               aria-expanded="false"
-              href="../html/#"
+              href="#"
               >Text Services <i class="dropdown-toggle"></i
             ></a>
             <ul class="dropdown-menu">
               <li class="dropdown-options">
                 <a
-                  href="../html/services.html"
+                  href="services.html"
                   class="dropdown-item text-dropdown-option"
                   >Teletext Services</a
                 >
               </li>
               <li class="dropdown-options">
                 <a
-                  href="../html/other-text-services.html"
+                  href="other-text-services.html"
                   class="dropdown-item text-dropdown-option"
                   >Other Text Services</a
                 >
@@ -222,46 +221,42 @@
             </ul>
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="../html/archiving-teletext.html"
+            <a class="nav-link" href="archiving-teletext.html"
               >Archiving Teletext</a
             >
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="../html/archiving-teletext.html"
+            <a class="nav-link" href="archiving-teletext.html"
               >Archiving Teletext</a
             >
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="../html/teletext-links.html"
-              >Teletext Links</a
-            >
+            <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="../html/teletext-links.html"
-              >Teletext Links</a
-            >
+            <a class="nav-link" href="teletext-links.html">Teletext Links</a>
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="../html/news-oddities.html"
+            <a class="nav-link" href="news-oddities.html"
               >News &amp; Oddities</a
             >
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="../html/news-oddities.html"
+            <a class="nav-link" href="news-oddities.html"
               >News &amp; Oddities</a
             >
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="../html/submissions.html">Submissions</a>
+            <a class="nav-link" href="submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="../html/submissions.html">Submissions</a>
+            <a class="nav-link" href="submissions.html">Submissions</a>
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="../html/about.html">About</a>
+            <a class="nav-link" href="about.html">About</a>
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="../html/about.html">About</a>
+            <a class="nav-link" href="about.html">About</a>
           </li>
         </ul>
       </div>
@@ -273,8 +268,11 @@
         <div class="alert alert-secondary" role="alert">
           <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
           ><span
-            >: Some lines may have decoding issues due to imperfections with the
-            original recording.</span
+            >: Some pages may have imperfections, either due to corruption
+            present in the source material or imperfections with the software
+            decoders. As of August 11, 2026, the software is only a few days
+            old, so <em>some</em> imperfections are to be expected, at least for
+            now.</span
           >
           <br />
           <br />
@@ -290,15 +288,16 @@
           <br />
           <br />
           <span
-            >If an HTML file is available for viewing, look for the HTML icon
-            (<i class="bi bi-filetype-html"></i>) in the TEXT1 or TEXT2
-            columns.</span
+            >If a ZIP file is available for download, look for the ZIP icon (<i
+              class="bi bi-file-zip-fill"
+            ></i
+            >) in the ZIP column.</span
           >
         </div>
         <hr aria-hidden="true" />
         <div id="results"></div>
         <div class="pb-3" id="return-to-form-button">
-          <a href="abc-plus.html">
+          <a href="extravision.html">
             <button type="submit" class="btn form-control">
               <span class="button-text">Return to Form</span>
             </button>
@@ -458,10 +457,11 @@
     <script src="../js/render-results.js"></script>
     <script>
       renderResults({
-        jsonPath: "../json/abc_plus_data.json",
+        jsonPath: "../json/extravision_data.json",
         filterParam: "year",
         filterField: "Year",
-        serviceLabel: "ABC PLUS",
+        serviceLabel: "ExtraVision",
+        stationLabel: "CBS",
         groupByField: "Month",
         groupOrder: [
           "January",
@@ -479,13 +479,14 @@
         ],
         sortSecondaryField: "Date",
         columns: [
+          { label: "Thumbnail", renderThumbnail: true },
           { label: "Date", key: "Date" },
+          { label: "Time", key: "Time" },
           { label: "Affiliate", key: "Affiliate" },
           { label: "Program", key: "Program_Title" },
-          { label: "Tape", key: "Tape_Type" },
-          { label: "Speed", key: "Tape_Speed" },
-          { label: "TEXT1", key: "TEXT1", renderABCPlus: true },
-          { label: "TEXT2", key: "TEXT2", renderABCPlus: true },
+          { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
+          { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
+          { label: "ZIP", key: "ZIP", renderZip: true },
           { label: "Contributor", key: "Decoded_By" },
           { label: "Date Added", key: "Date_Added" },
         ],

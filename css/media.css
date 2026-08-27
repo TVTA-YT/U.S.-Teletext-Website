@@ -143,6 +143,10 @@
     font-size: 2em !important;
   }
 
+  .medium-plus-top-padding {
+    padding-top: 40px;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -183,6 +187,10 @@
     font-size: 2em !important;
   }
 
+  .medium-plus-top-padding {
+    padding-top: 40px;
+  }
+
   .mobile-link {
     display: none;
   }
@@ -221,6 +229,10 @@
 
   .submission-count-table {
     font-size: 2em !important;
+  }
+
+  .medium-plus-top-padding {
+    padding-top: 40px;
   }
 
   .mobile-link {
@@ -274,6 +286,10 @@
     font-size: 1.6em !important;
   }
 
+  .medium-plus-top-padding {
+    padding-top: 40px;
+  }
+
   .site-introduction {
     font-size: 1.6em;
   }
@@ -324,6 +340,14 @@
   .mobile-link {
     display: block;
     text-align: center;
+  }
+
+  .mobile-bottom-padding {
+    padding-bottom: 30px !important;
+  }
+
+  .mobile-top-padding {
+    padding-top: 30px !important;
   }
 
   .site-introduction {

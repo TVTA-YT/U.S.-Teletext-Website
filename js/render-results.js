@@ -166,11 +166,11 @@ function appendRow(tbody, row, columns) {
     if (c.renderHTML) {
       if (!row.HTML_Link) {
         const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-        return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available.`)}</td>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available`)}</td>`;
       }
       const htmlPath = nonTeletextDirectory + row.HTML_Link;
       const visible = `<a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
-      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available.`)}</td>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available`)}</td>`;
     }
 
     if (c.renderABCPlus || c.renderWisconsinInfotext) {
@@ -178,21 +178,21 @@ function appendRow(tbody, row, columns) {
 
       if (!value) {
         const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-        return `<td>${renderAccessibleCell(visible, `${c.label}: No HTML file available.`)}</td>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: No HTML file available`)}</td>`;
       }
 
       const path = nonTeletextDirectory + value;
       const visible = `<a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
-      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available.`)}</td>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available`)}</td>`;
     }
 
     if (c.renderZip) {
       if (row.Download_Link) {
         const visible = `<a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a>`;
-        return `<td>${renderAccessibleCell(visible, `${c.label}: Download link available.`)}</td>`;
+        return `<td>${renderAccessibleCell(visible, `${c.label}: Download link available`)}</td>`;
       }
       const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-      return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available.`)}</td>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available`)}</td>`;
     }
 
     if (c.renderThumbnail) {
@@ -202,7 +202,7 @@ function appendRow(tbody, row, columns) {
       }
       const imagePath = row.Thumbnail;
       const visible = `<img src="${escapeHtml(imagePath)}" alt="" role="presentation" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">`;
-      return `<td>${renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}.`)}</td>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}`)}</td>`;
     }
 
     if (c.accessibleMap) {
@@ -223,11 +223,11 @@ function appendRow(tbody, row, columns) {
     if (c.key === 'Program_Title') {
       const visible = renderProgramTitles(row[c.key]);
       const spokenTitle = getSpokenProgramTitle(row[c.key]);
-      return `<td>${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}.`)}</td>`;
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}`)}</td>`;
     }
 
     const visible = escapeHtml(row[c.key]);
-    return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}.`)}</td>`;
+    return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`)}</td>`;
   }).join('');
 
   tbody.appendChild(tr);
