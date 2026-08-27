@@ -68,18 +68,6 @@
         font-weight: bold;
       }
 
-      .row-new {
-        --bs-table-bg: #a5ffba;
-      }
-
-      .row-no-download-link {
-        --bs-table-bg: #ffa5a5;
-      }
-
-      /* .row-new td {
-        background-color: #a5ffba !important;
-      } */
-
       .tooltip {
         --bs-tooltip-max-width: 400px;
       }
@@ -296,6 +284,7 @@
           >
         </div>
         <hr aria-hidden="true" />
+        <div id="sort-controls"></div>
         <div id="results"></div>
         <div class="pb-3" id="return-to-form-button">
           <a href="abc-plus.html">
@@ -478,6 +467,12 @@
           "December",
         ],
         sortSecondaryField: "Date",
+        sortOptions: [
+          { label: "Affiliate", field: "Affiliate", type: "string" },
+          { label: "Contributor", field: "Recovered_By", type: "string" },
+          { label: "Program Title", field: "Program_Title", type: "string" },
+          { label: "Sample Date", field: "Date", type: "date" },
+        ],
         columns: [
           { label: "Date", key: "Date" },
           { label: "Affiliate", key: "Affiliate" },

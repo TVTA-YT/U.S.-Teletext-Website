@@ -67,14 +67,6 @@
         font-weight: bold;
       }
 
-      .row-new {
-        --bs-table-bg: #a5ffba;
-      }
-
-      .row-no-download-link {
-        --bs-table-bg: #ffa5a5;
-      }
-
       .tooltip {
         --bs-tooltip-max-width: 400px;
       }
@@ -288,6 +280,7 @@
           >
         </div>
         <hr aria-hidden="true" />
+        <div id="sort-controls"></div>
         <div id="results"></div>
         <div class="pb-3" id="return-to-form-button">
           <a href="electra.html">
@@ -470,6 +463,11 @@
           "December",
         ],
         sortSecondaryField: "Date",
+        sortOptions: [
+          { label: "Contributor", field: "Recovered_By", type: "string" },
+          { label: "Program Title", field: "Program_Title", type: "string" },
+          { label: "Sample Date", field: "Date", type: "date" },
+        ],
         columns: [
           { label: "Thumbnail", renderThumbnail: true },
           { label: "Date", key: "Date" },

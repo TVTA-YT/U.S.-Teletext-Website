@@ -210,6 +210,20 @@ h1,
   border: 0;
 }
 
+.row-new,
+.row-new td {
+  --bs-table-bg: #a5ffba;
+  --bs-table-striped-bg: #a5ffba;
+  background-color: #a5ffba !important;
+}
+
+.row-no-download-link,
+.row-no-download-link td {
+  --bs-table-bg: #ffa5a5;
+  --bs-table-striped-bg: #ffa5a5;
+  background-color: #ffa5a5 !important;
+}
+
 .end-footer {
   background: #152de3;
   padding: 20px;

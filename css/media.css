@@ -147,6 +147,14 @@
     padding-top: 40px;
   }
 
+  .all-records .thumbnail-column {
+    width: 100px !important;
+  }
+
+  .all-records .thumbnail-column img {
+    width: 85px !important;
+  }
+
   .mobile-link {
     display: none;
   }
