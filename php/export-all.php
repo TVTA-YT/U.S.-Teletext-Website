@@ -15,7 +15,7 @@ const NEW_WINDOW_DAYS = 7;
 /* One entry per table. ExtraVision and NBC Teletext will share
 the same columns.
 */
-$sharedColumns = "ID, Year, Month, Date, Time, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added";
+$sharedColumns = "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By";
 $sharedOrderBy = "Year, FIELD(Month,
     'January','February','March','April','May','June',
     'July','August','September','October','November','December'
@@ -47,7 +47,7 @@ $exports = [
     [
         'table'      => 'Electra',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added",
+        'columns'    => "ID, Year, Month, Date, Time, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By",
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/electra_data.json',
         'trackerFile' => $trackerDirectory . '/electra_data.json',
@@ -56,7 +56,7 @@ $exports = [
     [
         'table'      => 'KET_AgText',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, HTML_Link, Network, Service_Name, Notes, Date_Added",
+        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, HTML_Link, Network, Service_Name, Notes, Date_Added, Recovered_By",
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/ket_agtext_data.json',
         'trackerFile' => $trackerDirectory . '/ket_agtext_data.json',
@@ -65,7 +65,7 @@ $exports = [
     [
         'table'      => 'ABC_PLUS',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added",
+        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/abc_plus_data.json',
         'trackerFile' => $trackerDirectory . '/abc_plus_data.json',
@@ -74,7 +74,7 @@ $exports = [
     [
         'table'      => 'Wis_Infotext',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added",
+        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/wisconsin_infotext_data.json',
         'trackerFile' => $trackerDirectory . '/wisconsin_infotext_data.json',
