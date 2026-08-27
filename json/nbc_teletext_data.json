@@ -4,7 +4,6 @@
         "Year": "1985",
         "Month": "May",
         "Date": "1985-02-17",
-        "Time": "00:00:00",
         "Affiliate": "WNBC",
         "Program_Title": "Hitler's SS: Portrait of Evil",
         "Tape_Type": "VHS",
@@ -15,6 +14,7 @@
         "Service_Name": "NBC Teletext",
         "Notes": "",
         "Date_Added": "2026-08-26",
+        "Recovered_By": null,
         "IsNew": true
     }
 ]
