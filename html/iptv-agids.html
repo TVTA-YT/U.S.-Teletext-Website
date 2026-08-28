@@ -1,26 +1,23 @@
 <!doctype html>
-<!-- Created August 15, 2026, 01:31 -->
+<!-- Created August 27, 2026, 21:55 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
+      content="Search for archived samples from the CBS ExtraVision teletext service."
     />
     <!-- Open Graph URLs -->
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="U.S. Teletext Archive - Other Text Services"
-    />
+    <meta property="og:title" content="U.S. Teletext Archive - Electra" />
     <meta
       property="og:description"
-      content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
+      content="Search for archived samples from the CBS ExtraVision teletext service."
     />
     <meta
       property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html"
     />
     <meta
       property="og:image"
@@ -31,7 +28,7 @@
     <meta property="og:locale" content="en_US" />
     <link
       rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
+      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html"
     />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
@@ -81,18 +78,14 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Other Text Services</title>
+    <title>IPTV AGIDS</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
-      .mobile-blue-border {
-        border: 4px solid #152de3 !important;
-      }
-
-      figure {
-        text-align: center;
+      .btn {
+        border-radius: 24px;
       }
     </style>
   </head>
@@ -246,175 +239,40 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">
-          Other Text Services
-        </h1>
+        <figure class="text-center">
+          <img
+            src="../images/logos/IPTV.png"
+            alt="IPTV logo"
+            class="mw-100 w-50 light-mode-image"
+          />
+          <img
+            src="../images/logos/IPTV_white.png"
+            alt="IPTV white logo"
+            class="mw-100 w-50 dark-mode-image"
+          />
+        </figure>
         <hr aria-hidden="true" />
-        <p class="fs-5 text-center">
-          While some stations didn't have teletext, they did have other text
-          services. Check them out below.
+        <p>
+          Use the form below to view all submissions or to search for
+          submissions by year.
         </p>
-        <hr aria-hidden="true" />
-        <div class="pt-4" id="sumbission-count">
-          <table class="table text-center submission-count-table">
-            <tbody>
-              <tr>
-                <td>
-                  Total Submissions:
-                  <span id="total-record-count-non-teletext"></span>
-                </td>
-                <td>
-                  Samples Available:
-                  <span id="available-sample-count-non-teletext"></span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="row justify-content-center pt-5">
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-bottom-padding"
-          >
-            <a href="ket-agtext.html">
-              <figure>
-                <img
-                  src="../images/logos/KET.png"
-                  alt="KET logo"
-                  aria-label="Kentucky Educational Television logo"
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-                aria-hidden="true"
-              >
-                KET AgText
-              </span>
-              <span class="fs-3 service-name sr-only"> K E T AgText </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="ket-agtext-count"></span>
-            </p>
+        <form action="iptv-agids-results.html" method="get">
+          <div class="mb-3">
+            <label for="year" class="form-label"
+              >Select a year (leave blank to view all)</label
+            >
+            <select name="year" id="year" class="form-select">
+              <option value=""></option>
+              <option value="1985">1985</option>
+            </select>
           </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="abc-plus.html">
-              <figure>
-                <img
-                  src="../images/logos/ABC.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/ABC_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                ABC PLUS
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="abc-plus-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding">
-            <a href="penntext.html">
-              <figure>
-                <img
-                  src="../images/logos/PennText.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/PennText_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                PennText
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="penntext-plus-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" /> -->
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="wisconsin-infotext.html">
-              <figure>
-                <img
-                  src="../images/logos/Wisconsin-Infotext.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/Wisconsin-Infotext_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                Wisconsin InfoText
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="wisconsin-infotext-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="iptv-agids.html">
-              <figure>
-                <img
-                  src="../images/logos/IPTV.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/IPTV_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                IPTV AG Infodata Service
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="iptv-agids-count"></span>
-            </p>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary form-control">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-danger form-control my-4">
+            Reset Fields
+          </button>
+        </form>
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -538,7 +396,5 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
-    <script src="../js/heading-reveal.js"></script>
-    <script src="../js/total-count.js"></script>
   </body>
 </html>

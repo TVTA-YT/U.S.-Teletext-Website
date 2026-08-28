@@ -1,38 +1,14 @@
 <!doctype html>
-<!-- Created August 15, 2026, 01:31 -->
+<!-- Created August 27, 2026, 22:09 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
+      content="Available samples for the Kentucky Educational Television AgText text service."
     />
-    <!-- Open Graph URLs -->
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="U.S. Teletext Archive - Other Text Services"
-    />
-    <meta
-      property="og:description"
-      content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
-    />
-    <meta
-      property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
-    />
-    <meta
-      property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
-    />
-    <meta property="og:image:alt" content="U.S. Teletext Archive" />
-    <meta property="og:site_name" content="U.S. Teletext Archive" />
-    <meta property="og:locale" content="en_US" />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
-    />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
       rel="icon"
@@ -81,18 +57,47 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Other Text Services</title>
+    <title>Iowa Public Television AGIDS Results</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
-      .mobile-blue-border {
-        border: 4px solid #152de3 !important;
+      .display-2 {
+        font-weight: bold;
       }
 
-      figure {
+      .tooltip {
+        --bs-tooltip-max-width: 400px;
+      }
+
+      .tooltip-heading {
+        padding-top: 10px;
+        text-decoration: underline;
+      }
+
+      .tooltip-body {
+        color: var(--tooltip-body-text-color) !important;
+      }
+
+      .tape-notes {
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .btn:not(#themeFab, .theme-choice) {
+        border-radius: 24px;
+        background-color: rgb(62, 134, 243);
+      }
+
+      .button-text {
+        color: #fff;
+        font-weight: bold;
+      }
+
+      table {
         text-align: center;
+        vertical-align: middle;
       }
     </style>
   </head>
@@ -163,14 +168,14 @@
             <ul class="dropdown-menu">
               <li class="dropdown-options">
                 <a
-                  href="services.html"
+                  href="../html/services.html"
                   class="dropdown-item text-dropdown-option"
                   >Teletext Services</a
                 >
               </li>
               <li class="dropdown-options">
                 <a
-                  href="other-text-services.html"
+                  href="../html/other-text-services.html"
                   class="dropdown-item text-dropdown-option"
                   >Other Text Services</a
                 >
@@ -183,20 +188,20 @@
               data-bs-toggle="dropdown"
               role="button"
               aria-expanded="false"
-              href="#"
+              href="../html/#"
               >Text Services <i class="dropdown-toggle"></i
             ></a>
             <ul class="dropdown-menu">
               <li class="dropdown-options">
                 <a
-                  href="services.html"
+                  href="../html/services.html"
                   class="dropdown-item text-dropdown-option"
                   >Teletext Services</a
                 >
               </li>
               <li class="dropdown-options">
                 <a
-                  href="other-text-services.html"
+                  href="../html/other-text-services.html"
                   class="dropdown-item text-dropdown-option"
                   >Other Text Services</a
                 >
@@ -204,217 +209,114 @@
             </ul>
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="archiving-teletext.html"
+            <a class="nav-link" href="../html/archiving-teletext.html"
               >Archiving Teletext</a
             >
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="archiving-teletext.html"
+            <a class="nav-link" href="../html/archiving-teletext.html"
               >Archiving Teletext</a
             >
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="teletext-links.html">Teletext Links</a>
+            <a class="nav-link" href="../html/teletext-links.html"
+              >Teletext Links</a
+            >
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="teletext-links.html">Teletext Links</a>
+            <a class="nav-link" href="../html/teletext-links.html"
+              >Teletext Links</a
+            >
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="news-oddities.html"
+            <a class="nav-link" href="../html/news-oddities.html"
               >News &amp; Oddities</a
             >
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="news-oddities.html"
+            <a class="nav-link" href="../html/news-oddities.html"
               >News &amp; Oddities</a
             >
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="submissions.html">Submissions</a>
+            <a class="nav-link" href="../html/submissions.html">Submissions</a>
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="submissions.html">Submissions</a>
+            <a class="nav-link" href="../html/submissions.html">Submissions</a>
           </li>
           <li class="nav-item desktop-link">
-            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="../html/about.html">About</a>
           </li>
           <li class="nav-item mobile-link">
-            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="../html/about.html">About</a>
           </li>
         </ul>
       </div>
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">
-          Other Text Services
-        </h1>
-        <hr aria-hidden="true" />
-        <p class="fs-5 text-center">
-          While some stations didn't have teletext, they did have other text
-          services. Check them out below.
-        </p>
-        <hr aria-hidden="true" />
-        <div class="pt-4" id="sumbission-count">
-          <table class="table text-center submission-count-table">
-            <tbody>
-              <tr>
-                <td>
-                  Total Submissions:
-                  <span id="total-record-count-non-teletext"></span>
-                </td>
-                <td>
-                  Samples Available:
-                  <span id="available-sample-count-non-teletext"></span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <h1 class="page-title data-letter-reveal" id="year-heading"></h1>
+        <p class="fs-2" id="result-count"></p>
+        <div class="alert alert-secondary" role="alert">
+          <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
+          ><span
+            >: Some lines may have decoding issues due to imperfections with the
+            original recording</span
+          >
+          <br />
+          <br />
+          <span
+            ><span aria-hidden="true"
+              >The table(s) below are responsive; to view more of the
+              information, simply scroll the table (if applicable).</span
+            ><span class="sr-only"
+              >The table or tables below are responsive; to view more of the
+              information, simply scroll the table (if applicable).</span
+            >
+          </span>
+          <br />
+          <br />
+          <span
+            >If an HTML file is available for viewing, look for the HTML icon
+            (<i class="bi bi-filetype-html"></i>) in the HTML column.</span
+          >
         </div>
-        <div class="row justify-content-center pt-5">
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-bottom-padding"
-          >
-            <a href="ket-agtext.html">
-              <figure>
-                <img
-                  src="../images/logos/KET.png"
-                  alt="KET logo"
-                  aria-label="Kentucky Educational Television logo"
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-                aria-hidden="true"
-              >
-                KET AgText
-              </span>
-              <span class="fs-3 service-name sr-only"> K E T AgText </span>
+        <hr aria-hidden="true" />
+        <div id="sort-controls"></div>
+        <div id="results"></div>
+        <div class="pb-3" id="return-to-form-button">
+          <a href="iptv-agids.html">
+            <button type="submit" class="btn form-control">
+              <span class="button-text">Return to Form</span>
+            </button>
+          </a>
+        </div>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
             </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="ket-agtext-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="abc-plus.html">
-              <figure>
-                <img
-                  src="../images/logos/ABC.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/ABC_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                ABC PLUS
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="abc-plus-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding">
-            <a href="penntext.html">
-              <figure>
-                <img
-                  src="../images/logos/PennText.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/PennText_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                PennText
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="penntext-plus-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" /> -->
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="wisconsin-infotext.html">
-              <figure>
-                <img
-                  src="../images/logos/Wisconsin-Infotext.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/Wisconsin-Infotext_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                Wisconsin InfoText
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="wisconsin-infotext-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
-            <a href="iptv-agids.html">
-              <figure>
-                <img
-                  src="../images/logos/IPTV.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/IPTV_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                IPTV AG Infodata Service
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="iptv-agids-count"></span>
-            </p>
           </div>
         </div>
+        <!-- * END IMAGE MODAL -->
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -539,6 +441,47 @@
     </footer>
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
-    <script src="../js/total-count.js"></script>
+    <script src="../js/image-modal.js"></script>
+    <script src="../js/render-results.js"></script>
+    <script>
+      renderResults({
+        jsonPath: "../json/iptv_agids_data.json",
+        filterParam: "year",
+        filterField: "Year",
+        serviceLabel: "AGIDS",
+        stationLabel: "IPTV",
+        groupByField: "Month",
+        groupOrder: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        sortSecondaryField: "Date",
+        sortOptions: [
+          { label: "Contributor", field: "Recovered_By", type: "string" },
+          { label: "Program Title", field: "Program_Title", type: "string" },
+          { label: "Sample Date", field: "Date", type: "date" },
+        ],
+        columns: [
+          { label: "Date", key: "Date" },
+          { label: "Program", key: "Program_Title" },
+          { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
+          { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
+          { label: "TEXT1", key: "TEXT1", renderABCPlus: true },
+          { label: "TEXT2", key: "TEXT2", renderABCPlus: true },
+          { label: "Contributor", key: "Recovered_By" },
+          { label: "Date Added", key: "Date_Added" },
+        ],
+      });
+    </script>
   </body>
 </html>

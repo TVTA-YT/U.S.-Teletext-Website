@@ -80,6 +80,15 @@ $exports = [
         'trackerFile' => $trackerDirectory . '/wisconsin_infotext_data.json',
 
     ],
+    [
+        'table'      => 'IPTV_AGIDS',
+        'idField'    => 'ID',
+        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/iptv_agids_data.json',
+        'trackerFile' => $trackerDirectory . '/iptv_agids_data.json',
+
+    ],
 ];
 
 foreach ($exports as $export) {

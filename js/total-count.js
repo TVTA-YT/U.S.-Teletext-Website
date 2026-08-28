@@ -9,6 +9,7 @@ async function renderTotalRecordCount() {
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
+    const iptvAgidsCountEl = document.getElementById("iptv-agids-count");
     if (!teletextCountEl && !teletextSampleCountEl && !nonTeletextCountEl && !nonTeletextSampleCountEl) return;
 
     const jsonFiles = [
@@ -18,6 +19,7 @@ async function renderTotalRecordCount() {
         '../json/abc_plus_data.json',
         '../json/ket_agtext_data.json',
         '../json/wisconsin_infotext_data.json',
+        '../json/iptv_agids_data.json',
     ];
 
     try {
@@ -43,6 +45,7 @@ async function renderTotalRecordCount() {
         const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
         const wisconsinInfotextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'WISINFOTEXT' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
+        const iptvAgidsSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'IPTV-AGIDS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
 
 
         if (teletextCountEl) {
@@ -85,6 +88,10 @@ async function renderTotalRecordCount() {
             wisconsinInfotextCountEl.textContent = wisconsinInfotextSamples.toLocaleString();
         }
 
+        if (iptvAgidsCountEl) {
+            iptvAgidsCountEl.textContent = iptvAgidsSamples.toLocaleString();
+        }
+
 
     } catch (error) {
         if (teletextCountEl) teletextCountEl.textContent = '-';
@@ -97,6 +104,7 @@ async function renderTotalRecordCount() {
         if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
         if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
         if (wisconsinInfotextCountEl) wisconsinInfotextCountEl.textContent = '-';
+        if (iptvAgidsCountEl) iptvAgidsCountEl.textContent = '-';
         console.error('Could not load total record/sample count;', error);
     }
 }
