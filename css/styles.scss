@@ -2,10 +2,23 @@
 
 body {
   background-color: var(--body-color) !important;
+
+  &:not(#site-title, .service-name, .letter-reveal-char) {
+    font-family: 'Open Sans', sans-serif;
+  }
 }
 
 h1 {
   margin: 0;
+}
+
+.copyright,
+.button-text {
+  color: #fff;
+}
+
+.table-result {
+  color: #000 !important;
 }
 
 .display-1,
@@ -15,7 +28,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, .service-name, .letter-reveal-char, .tape-type-speed, .table-result),
+span:not(#site-title, .service-name, .table-result, .letter-reveal-char, .button-text),
 li,
 label,
 dt,
@@ -23,11 +36,10 @@ dd,
 li,
 label,
 select {
-    font-family: 'Open Sans', sans-serif;
     color: var(--text-color) !important;
 }
 
-h1,
+h1:not(#site-intro),
 h2,
 h3,
 h4,
@@ -35,7 +47,6 @@ h5,
 h6,
 th,
 strong {
-  font-family: "Open Sans", sans-serif;
   font-weight: bold;
 }
 
@@ -198,6 +209,11 @@ h1,
   }
 }
 
+#text-top-padding {
+  padding-top: 50px !important;
+  text-align: center;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -227,17 +243,17 @@ h1,
 .end-footer {
   background: #152de3;
   padding: 20px;
-  color: #fff;
 
   #footer-site-links {
     border-bottom: 1px solid #fff;
 
     p {
       font-size: 1.2em;
-      color: #fff;
+      color: #fff !important;
 
-      a {
-      color: #fff;
+      a,
+      span {
+      color: #fff !important;
       }
     }
   }

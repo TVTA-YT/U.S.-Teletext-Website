@@ -57,7 +57,7 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Iowa Public Television AGIDS Results</title>
+    <title>Iowa Public Television Agricultural InfoData Service Results</title>
     <style>
       .container {
         padding-top: 100px;
@@ -88,11 +88,6 @@
       .btn:not(#themeFab, .theme-choice) {
         border-radius: 24px;
         background-color: rgb(62, 134, 243);
-      }
-
-      .button-text {
-        color: #fff;
-        font-weight: bold;
       }
 
       table {
@@ -255,7 +250,23 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="page-title data-letter-reveal" id="year-heading"></h1>
+        <h1 class="page-title data-letter-reveal">
+          <img
+            src="../images/banners/light/IPTV-AGIDS_light.png"
+            alt=""
+            class="mw-100 light-mode-image"
+            aria-hidden="true"
+          />
+          <img
+            src="../images/banners/dark/IPTV-AGIDS.png"
+            alt=""
+            class="mw-100 dark-mode-image"
+            aria-hidden="true"
+          />
+          <div id="text-top-padding">
+            <span id="year-heading"></span>
+          </div>
+        </h1>
         <p class="fs-2" id="result-count"></p>
         <div class="alert alert-secondary" role="alert">
           <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
@@ -278,7 +289,8 @@
           <br />
           <span
             >If an HTML file is available for viewing, look for the HTML icon
-            (<i class="bi bi-filetype-html"></i>) in the HTML column.</span
+            (<i class="bi bi-filetype-html"></i>) in the TEXT1 or TEXT2
+            columns.</span
           >
         </div>
         <hr aria-hidden="true" />

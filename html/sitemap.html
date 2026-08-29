@@ -239,7 +239,16 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">Sitemap</h1>
+        <h1>
+          <span class="visually-hidden">Sitemap</span>
+          <img
+            src=""
+            alt=""
+            class="mw-100"
+            id="page-heading-image"
+            aria-hidden="true"
+          />
+        </h1>
         <hr aria-hidden="true" />
         <p class="fs-4 text-center">
           Can't find something? This sitemap will point you in the right
@@ -283,6 +292,12 @@
                   </li>
                   <li>
                     <a href="ket-agtext.html">KET AgText</a>
+                  </li>
+                  <li>
+                    <a href="iptv-agids.html">IPTV AGIDS</a>
+                  </li>
+                  <li>
+                    <a href="wisconsin-infotext.html">Wisconsin Infotext</a>
                   </li>
                 </ol>
               </ul>
@@ -466,5 +481,48 @@
     </footer>
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
+    <script>
+      // Heading banner animation
+      const pageHeadingImage = document.getElementById("page-heading-image");
+      const imageSets = {
+        light: [
+          "../images/banners/light/Sitemap_light.png",
+          "../images/banners/light/Sitemap-2_light.png",
+        ],
+        dark: [
+          "../images/banners/dark/Sitemap.png",
+          "../images/banners/dark/Sitemap-2.png",
+        ],
+      };
+
+      Object.values(imageSets)
+        .flat()
+        .forEach((src) => {
+          new Image().src = src;
+        });
+
+      function getTheme() {
+        return document.documentElement.getAttribute(
+          "data-bs-theme" || "light",
+        );
+      }
+
+      let i = 0;
+      pageHeadingImage.src = imageSets[getTheme()][0];
+
+      setInterval(() => {
+        i = (i + 1) % 2;
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      }, 1000);
+
+      const observer = new MutationObserver(() => {
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-bs-theme"],
+      });
+    </script>
   </body>
 </html>

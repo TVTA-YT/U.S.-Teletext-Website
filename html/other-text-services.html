@@ -91,6 +91,11 @@
         border: 4px solid #152de3 !important;
       }
 
+      th,
+      td {
+        background-color: transparent !important;
+      }
+
       figure {
         text-align: center;
       }
@@ -246,8 +251,15 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">
-          Other Text Services
+        <h1>
+          <span class="visually-hidden">Other Text Services</span>
+          <img
+            src=""
+            alt=""
+            class="mw-100"
+            id="page-heading-image"
+            aria-hidden="true"
+          />
         </h1>
         <hr aria-hidden="true" />
         <p class="fs-5 text-center">
@@ -271,148 +283,177 @@
             </tbody>
           </table>
         </div>
-        <div class="row justify-content-center pt-5">
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-bottom-padding"
+        <div class="pt-4 pb-4" id="sample-availability-count">
+          <p class="fs-3 text-center">Available Samples by Service</p>
+          <table
+            class="table table-bordered text-center submission-count-table sample-availability-count-table"
           >
-            <a href="ket-agtext.html">
-              <figure>
-                <img
-                  src="../images/logos/KET.png"
-                  alt="KET logo"
-                  aria-label="Kentucky Educational Television logo"
-                  class="mw-100 w-50"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-                aria-hidden="true"
-              >
-                KET AgText
-              </span>
-              <span class="fs-3 service-name sr-only"> K E T AgText </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="ket-agtext-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
+            <thead>
+              <tr>
+                <th>ABC PLUS</th>
+                <th>
+                  <span aria-hidden="true">KET AGTEXT</span
+                  ><span class="sr-only"
+                    >Kentucky Educational Television AgText</span
+                  >
+                </th>
+                <th>
+                  <span aria-hidden="true">IPTV AGIDS</span
+                  ><span class="sr-only"
+                    >Iowa Public Television Agricultural InfoData Service</span
+                  >
+                </th>
+                <th>
+                  <span aria-hidden="true">Wis. Infotext</span
+                  ><span class="sr-only"
+                    ><span class="sr-only">Wisconsin Infotext</span></span
+                  >
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row-color">
+                <td>
+                  <span class="sr-only">Available ABC PLUS samples:</span
+                  ><span class="fw-bolder" id="abc-plus-count"></span>
+                </td>
+                <td>
+                  <span class="sr-only"
+                    >Available Kentucky Educational Television AgText
+                    samples:</span
+                  ><span class="fw-bolder" id="ket-agtext-count"></span>
+                </td>
+                <td>
+                  <span class="sr-only"
+                    >Available Iowa Public Television Agricultural InfoData
+                    Service samples:</span
+                  ><span class="fw-bolder" id="iptv-agids-count"></span>
+                </td>
+                <td>
+                  <span class="sr-only"
+                    >Available Wisconsin InfoText samples:</span
+                  ><span class="fw-bolder" id="wisconsin-infotext-count"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row pb-4">
           <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
+            class="col-xl-3 col-lg-3 col-md-3 col-sm-6 service-xsmall-padding"
           >
-            <a href="abc-plus.html">
-              <figure>
-                <img
-                  src="../images/logos/ABC.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/ABC_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                ABC PLUS
-              </span>
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/ABC-PLUS_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/ABC-PLUS.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
             </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="abc-plus-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding">
-            <a href="penntext.html">
-              <figure>
-                <img
-                  src="../images/logos/PennText.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/PennText_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
+            <a href="abc-plus.html" aria-label="ABC PLUS">
+              <img
+                src="../images/ABC-PLUS-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+              />
+              <img
+                src="../images/ABC-PLUS-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+              />
             </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                PennText
-              </span>
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="penntext-plus-count"></span>
-            </p>
           </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" /> -->
           <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
+            class="col-xl-3 col-lg-3 col-md-3 col-sm-6 service-xsmall-padding"
           >
-            <a href="wisconsin-infotext.html">
-              <figure>
-                <img
-                  src="../images/logos/Wisconsin-Infotext.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/Wisconsin-Infotext_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                Wisconsin InfoText
-              </span>
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/KET_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/KET.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
             </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="wisconsin-infotext-count"></span>
-            </p>
+            <a
+              href="ket-agtext.html"
+              aria-label="Kentucky Educational Television AgText"
+            >
+              <img
+                src="../images/KET-AGTEXT-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+              />
+              <img
+                src="../images/KET-AGTEXT-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+              />
+            </a>
           </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
           <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
+            class="col-xl-3 col-lg-3 col-md-3 col-sm-6 service-padding service-xsmall-padding"
           >
-            <a href="iptv-agids.html">
-              <figure>
-                <img
-                  src="../images/logos/IPTV.png"
-                  alt=""
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/IPTV_white.png"
-                  alt=""
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                IPTV AG Infodata Service
-              </span>
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/IPTV-AGIDS_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/IPTV-AGIDS.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
             </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples:
-              <span id="iptv-agids-count"></span>
-            </p>
+            <a
+              href="iptv-agids.html"
+              aria-label="Iowa Public Television Agricultural InfoData Service"
+            >
+              <img
+                src="../images/IPTV-AGIDS-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+              />
+              <img
+                src="../images/IPTV-AGIDS-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+              />
+            </a>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 service-padding">
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/Wisconsin-Infotext_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/Wisconsin-Infotext.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
+            </div>
+            <a href="wisconsin-infotext.html" aria-label="Wisconsin InfoText">
+              <img
+                src="../images/Wisconsin-Infotext-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+              />
+              <img
+                src="../images/Wisconsin-Infotext-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+              />
+            </a>
           </div>
         </div>
         <!-- Floating theme button, bottom-right -->
@@ -540,5 +581,48 @@
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
     <script src="../js/total-count.js"></script>
+    <script>
+      // Heading banner animation
+      const pageHeadingImage = document.getElementById("page-heading-image");
+      const imageSets = {
+        light: [
+          "../images/banners/light/Other-Text-Services_light.png",
+          "../images/banners/light/Other-Text-Services-2_light.png",
+        ],
+        dark: [
+          "../images/banners/dark/Other-Text-Services.png",
+          "../images/banners/dark/Other-Text-Services-2.png",
+        ],
+      };
+
+      Object.values(imageSets)
+        .flat()
+        .forEach((src) => {
+          new Image().src = src;
+        });
+
+      function getTheme() {
+        return document.documentElement.getAttribute(
+          "data-bs-theme" || "light",
+        );
+      }
+
+      let i = 0;
+      pageHeadingImage.src = imageSets[getTheme()][0];
+
+      setInterval(() => {
+        i = (i + 1) % 2;
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      }, 1000);
+
+      const observer = new MutationObserver(() => {
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-bs-theme"],
+      });
+    </script>
   </body>
 </html>

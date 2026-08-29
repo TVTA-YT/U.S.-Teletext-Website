@@ -110,6 +110,20 @@
   }
 }
 
+/* * SERVICE TV IMAGES * */
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+  .service-padding {
+    padding-top: 100px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .service-xsmall-padding {
+    padding-bottom: 150px;
+  }
+}
+
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
 
 /* @media only screen and (max-width: 1199px) {
@@ -121,8 +135,12 @@
     font-size: 2.2em;
   }
 
-  #site-title {
-    font-size: 5em;
+  #site-intro span#site-title {
+    font-size: 2.5em !important;
+  }
+
+  #site-logo-padding {
+    padding: 50px 0 50px 0;
   }
 
   #submission-page-alert-text {
@@ -135,8 +153,8 @@
     margin-left: 1rem;
   }
 
-  #electra-1995 {
-    width: 30%;
+  .electra-images {
+    width: 50%;
   }
 
   .submission-count-table {
@@ -173,8 +191,12 @@
     font-size: 2em;
   }
 
-  #site-title {
-    font-size: 4.4em;
+  #site-intro span#site-title {
+    font-size: 2.5em !important;
+  }
+
+  #site-logo-padding {
+    padding: 50px 0 50px 0;
   }
 
   #submission-page-alert-text {
@@ -187,8 +209,8 @@
     margin-left: 1rem;
   }
 
-  #electra-1995 {
-    width: 30%;
+  .electra-images {
+    width: 50%;
   }
 
   .submission-count-table {
@@ -217,8 +239,12 @@
     font-size: 2em;
   }
 
-  #site-title {
-    font-size: 4em;
+  #site-intro span#site-title {
+    font-size: 2.2em !important;
+  }
+
+  #site-logo-padding {
+    padding: 40px 0 40px 0;
   }
 
   #submission-page-alert-text {
@@ -231,8 +257,8 @@
     margin-left: 1rem;
   }
 
-  #electra-1995 {
-    width: 30%;
+  .electra-images {
+    width: 50%;
   }
 
   .submission-count-table {
@@ -262,8 +288,12 @@
     font-size: 1.8em;
   }
 
-  #site-title {
-    font-size: 3.5em;
+  #site-intro span#site-title {
+    font-size: 2.0em !important;
+  }
+
+  #site-logo-padding {
+    padding: 40px 0 40px 0;
   }
 
   #navbarNav .nav-item .nav-link {
@@ -286,8 +316,8 @@
     max-width: 100%;
   }
 
-  #electra-1995 {
-    width: 30%;
+  .electra-images {
+    width: 50%;
   }
 
   .submission-count-table {
@@ -321,8 +351,12 @@
     font-size: 1.4em;
   }
 
-  #site-title {
-    font-size: 2.8em;
+  #site-intro span#site-title {
+    font-size: 1.8em !important;
+  }
+
+  #site-logo-padding {
+    padding: 35px 0 35px 0;
   }
 
   #submission-page-alert-text {
@@ -333,8 +367,8 @@
     max-width: 100%;
   }
 
-  #electra-1995 {
-    width: 60%;
+  .electra-images {
+    width: 70%;
   }
 
   .submission-count-table {
@@ -372,8 +406,12 @@
     font-size: 1.2em;
   }
 
-  #site-title {
-    font-size: 2.5em;
+  #site-intro span#site-title {
+    font-size: 1.4em !important;
+  }
+
+  #site-logo-padding {
+    padding: 30px 0 30px 0;
   }
 
   #submission-page-alert-text {
@@ -388,12 +426,16 @@
     max-width: 100%;
   }
 
-  #electra-1995 {
+  .electra-images {
     width: 70%;
   }
 
   .submission-count-table {
     font-size: 1em !important;
+  }
+
+  .service-padding {
+    padding-top: 100px;
   }
 
   .desktop-link {
@@ -424,8 +466,12 @@
     font-size: 0.8em;
   }
 
-  #site-title {
-    font-size: 2.5em;
+  #site-intro span#site-title {
+    font-size: 1.2em !important;
+  }
+
+  #site-logo-padding {
+    padding: 25px 0 25px 0;
   }
 
   #submission-page-alert-text {
@@ -440,7 +486,7 @@
     max-width: 100%;
   }
 
-  #electra-1995 {
+  .electra-images {
     width: 80%;
   }
 

@@ -251,7 +251,16 @@
     </nav>
     <main>
       <div class="container pb-3">
-        <h1 class="text-center page-title data-letter-reveal">Submissions</h1>
+        <h1>
+          <span class="visually-hidden">Submissions</span>
+          <img
+            src=""
+            alt=""
+            class="mw-100"
+            id="page-heading-image"
+            aria-hidden="true"
+          />
+        </h1>
         <hr aria-hidden="true" />
         <p class="fs-5 text-center">
           Got any decoded teletext/non-teletext services that you'd like added
@@ -396,12 +405,18 @@
           <div class="mb-3">
             <label for="sumbissionName" class="form-label"
               ><span aria-hidden="true">Uploader name (optional)</span
-              ><span class="sr-only"
-                >Uploader name (optional)</span
-              ></label
+              ><span class="sr-only">Uploader name (optional)</span></label
             >
-            <input type="text" name="sumbissionName" id="sumbissionName" class="form-control" placeholder="John D.">
-            <div class="form-text text-primary">You can use a moniker if you'd like</div>
+            <input
+              type="text"
+              name="sumbissionName"
+              id="sumbissionName"
+              class="form-control"
+              placeholder="John D."
+            />
+            <div class="form-text text-primary">
+              You can use a moniker if you'd like
+            </div>
           </div>
           <div class="mb-4">
             <label for="notes" class="form-label"
@@ -549,5 +564,48 @@
     <script src="../js/color-modes.js"></script>
     <script src="../js/form-script.js"></script>
     <script src="../js/heading-reveal.js"></script>
+    <script>
+      // Heading banner animation
+      const pageHeadingImage = document.getElementById("page-heading-image");
+      const imageSets = {
+        light: [
+          "../images/banners/light/Submissions_light.png",
+          "../images/banners/light/Submissions-2_light.png",
+        ],
+        dark: [
+          "../images/banners/dark/Submissions.png",
+          "../images/banners/dark/Submissions-2.png",
+        ],
+      };
+
+      Object.values(imageSets)
+        .flat()
+        .forEach((src) => {
+          new Image().src = src;
+        });
+
+      function getTheme() {
+        return document.documentElement.getAttribute(
+          "data-bs-theme" || "light",
+        );
+      }
+
+      let i = 0;
+      pageHeadingImage.src = imageSets[getTheme()][0];
+
+      setInterval(() => {
+        i = (i + 1) % 2;
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      }, 1000);
+
+      const observer = new MutationObserver(() => {
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-bs-theme"],
+      });
+    </script>
   </body>
 </html>

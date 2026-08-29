@@ -90,11 +90,6 @@
         background-color: rgb(62, 134, 243);
       }
 
-      .button-text {
-        color: #fff;
-        font-weight: bold;
-      }
-
       table {
         text-align: center;
         vertical-align: middle;
@@ -251,7 +246,23 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="page-title data-letter-reveal" id="year-heading"></h1>
+        <h1 class="page-title data-letter-reveal">
+          <img
+            src="../images/banners/light/Electra_light.png"
+            alt=""
+            class="mw-100 light-mode-image"
+            aria-hidden="true"
+          />
+          <img
+            src="../images/banners/dark/Electra.png"
+            alt=""
+            class="mw-100 dark-mode-image"
+            aria-hidden="true"
+          />
+          <div id="text-top-padding">
+            <span id="year-heading"></span>
+          </div>
+        </h1>
         <p class="fs-2" id="result-count"></p>
         <div class="alert alert-secondary" role="alert">
           <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong

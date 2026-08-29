@@ -95,6 +95,11 @@
         border: 4px solid #152de3 !important;
       }
 
+      th,
+      td {
+        background-color: transparent !important;
+      }
+
       .service-name {
         font-family: "TU 1000x Regular", sans-serif;
       }
@@ -254,8 +259,15 @@
     </nav>
     <main>
       <div class="container pb-3">
-        <h1 class="text-center page-title data-letter-reveal">
-          Teletext Services
+        <h1>
+          <span class="visually-hidden">Teletext Services</span>
+          <img
+            src=""
+            alt=""
+            class="mw-100"
+            id="page-heading-image"
+            aria-hidden="true"
+          />
         </h1>
         <hr aria-hidden="true" />
         <p class="fs-5">
@@ -287,107 +299,159 @@
             </tbody>
           </table>
         </div>
-        <div class="row justify-content-center pt-5">
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-bottom-padding"
+        <div class="pt-4 pb-4" id="sample-availability-count">
+          <p class="fs-3 text-center">Available Samples by Service</p>
+          <table
+            class="table table-bordered text-center submission-count-table sample-availability-count-table"
           >
-            <a href="extravision.html">
-              <figure>
-                <img
-                  src="../images/logos/ExtraVision.png"
-                  alt="CBS ExtraVision black CBS logo"
-                  class="mw-100 w-75 light-mode-image"
-                />
-                <img
-                  src="../images/logos/ExtraVision_white-CBS.png"
-                  alt="CBS ExtraVision white CBS logo"
-                  class="mw-100 w-75 dark-mode-image"
-                />
-              </figure>
-            </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-              >
-                CBS ExtraVision
-              </span>
+            <thead>
+              <tr>
+                <th>Electra</th>
+                <th>ExtraVision</th>
+                <th>NBC Teletext</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row-color">
+                <td>
+                  <span class="sr-only">Available Electra samples:</span
+                  ><span class="fw-bolder" id="electra-count"></span>
+                </td>
+                <td>
+                  <span class="sr-only">Available ExtraVision samples:</span
+                  ><span class="fw-bolder" id="extravision-count"></span>
+                </td>
+                <td>
+                  <span class="sr-only">Available NBC Teletext samples:</span
+                  ><span class="fw-bolder" id="nbc-teletext-count"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div
+            class="col-xl-4 col-lg-4 col-md-4 col-sm-12 service-xsmall-padding"
+          >
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/Electra_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/Electra.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
             </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="extravision-count"></span>
-            </p>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding mobile-bottom-padding"
-          >
             <a href="electra.html">
-              <figure>
-                <img
-                  src="../images/logos/Electra.png"
-                  alt="Electra black logo"
-                  class="mw-100 w-75 light-mode-image"
-                />
-                <img
-                  src="../images/logos/Electra_white.png"
-                  alt="Electra white logo"
-                  class="mw-100 w-75 dark-mode-image"
-                />
-              </figure>
+              <span class="visually-hidden">Electra</span>
+              <img
+                src="../images/Electra-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+                aria-hidden="true"
+              />
+              <img
+                src="../images/Electra-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+                aria-hidden="true"
+              />
             </a>
-            <div class="text-center pb-4 service-name-div">
-              <span
-                class="fs-3 service-name letter-reveal-char data-letter-reveal"
-                >Electra</span
-              >
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="electra-count"></span>
-            </p>
           </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" />
+          <div
+            class="col-xl-4 col-lg-4 col-md-4 col-sm-12 service-xsmall-padding"
+          >
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/ExtraVision_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/ExtraVision.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
+            </div>
+            <a href="extravision.html">
+              <span class="visually-hidden">ExtraVision</span>
+              <img
+                src="../images/ExtraVision-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+                aria-hidden="true"
+              />
+              <img
+                src="../images/ExtraVision-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+                aria-hidden="true"
+              />
+            </a>
+          </div>
           <!-- * NOTE: There are currently no samples of Keyfax. 08/11/2026, 03:37 -->
           <!-- <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding medium-plus-top-padding"
+            class="col-xl-4 col-lg-4 col-md-4 col-sm-12 service-xsmall-padding"
           >
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/Keyfax_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/Keyfax.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+              />
+            </div>
             <a href="keyfax.html">
-              <figure>
-                <img
-                  src="../images/logos/Keyfax.png"
-                  alt="Keyfax logo"
-                  class="mw-100 w-50 light-mode-image"
-                />
-                <img
-                  src="../images/logos/Keyfax_white.png"
-                  alt="Keyfax logo"
-                  class="mw-100 w-50 dark-mode-image"
-                />
-              </figure>
+              <span class="visually-hidden">Keyfax</span>
+              <img
+                src="../images/Keyfax-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+                aria-hidden="true"
+              />
+              <img
+                src="../images/Keyfax-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+                aria-hidden="true"
+              />
             </a>
-            <div class="text-center pb-4 service-name-div">
-              <span class="fs-3 service-name data-letter-reveal">Keyfax</span>
+          </div> -->
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/NBC-Teletext_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/NBC-Teletext.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
             </div>
-          </div>
-          <hr aria-hidden="true" class="d-md-none mobile-blue-border" /> -->
-          <div
-            class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mobile-top-padding medium-plus-top-padding"
-          >
             <a href="nbc-teletext.html">
-              <figure>
-                <img
-                  src="../images/logos/NBC-Teletext.png"
-                  alt="NBC Teletext black logo"
-                  class="mw-100 w-50"
-                />
-              </figure>
+              <span class="visually-hidden">NBC Teletext</span>
+              <img
+                src="../images/NBC-Teletext-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+                aria-hidden="true"
+              />
+              <img
+                src="../images/NBC-Teletext-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+                aria-hidden="true"
+              />
             </a>
-            <div class="text-center pb-4 service-name-div">
-              <span class="fs-3 service-name data-letter-reveal"
-                >NBC Teletext</span
-              >
-            </div>
-            <p class="text-center fs-2 fw-bold">
-              Available Samples: <span id="nbc-teletext-count"></span>
-            </p>
           </div>
         </div>
         <!-- Floating theme button, bottom-right -->
@@ -515,5 +579,48 @@
     <script src="../js/color-modes.js"></script>
     <script src="../js/heading-reveal.js"></script>
     <script src="../js/total-count.js"></script>
+    <script>
+      // Heading banner animation
+      const pageHeadingImage = document.getElementById("page-heading-image");
+      const imageSets = {
+        light: [
+          "../images/banners/light/Teletext-Services_light.png",
+          "../images/banners/light/Teletext-Services-2_light.png",
+        ],
+        dark: [
+          "../images/banners/dark/Teletext-Services.png",
+          "../images/banners/dark/Teletext-Services-2.png",
+        ],
+      };
+
+      Object.values(imageSets)
+        .flat()
+        .forEach((src) => {
+          new Image().src = src;
+        });
+
+      function getTheme() {
+        return document.documentElement.getAttribute(
+          "data-bs-theme" || "light",
+        );
+      }
+
+      let i = 0;
+      pageHeadingImage.src = imageSets[getTheme()][0];
+
+      setInterval(() => {
+        i = (i + 1) % 2;
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      }, 1000);
+
+      const observer = new MutationObserver(() => {
+        pageHeadingImage.src = imageSets[getTheme()][i];
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-bs-theme"],
+      });
+    </script>
   </body>
 </html>

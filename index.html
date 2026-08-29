@@ -85,6 +85,10 @@
     ></script>
     <title>U.S. Teletext Archive</title>
     <style>
+      #site-intro-container {
+        margin-top: 90px;
+      }
+
       #primary-container {
         margin-top: 70px;
       }
@@ -322,17 +326,26 @@
       </div>
     </nav>
     <main>
-      <div class="container">
-        <!-- TODO: Change container padding value after alert is removed. 08/10/2026, 14:35 -->
-        <p
-          class="text-center pb-4 page-title data-letter-reveal"
-          id="welcome-text"
-        >
-          Welcome to the...
-        </p>
-        <div class="text-center pb-5">
-          <h1 id="site-title">U.S. TELETEXT<br />ARCHIVE</h1>
-        </div>
+      <!-- TODO: Change container padding value after alert is removed. 08/10/2026, 14:35 -->
+      <div class="container-fluid" id="site-intro-container">
+        <h1 id="site-intro">
+          <span class="visually-hidden"
+            >Welcome to the U.S Teletext Archive</span
+          >
+          <img
+            src="images/banners/light/Welcome_light.png"
+            alt=""
+            class="mw-100 light-mode-image"
+          />
+          <img
+            src="images/banners/dark/Welcome.png"
+            alt=""
+            class="mw-100 dark-mode-image"
+          />
+          <div class="text-center" id="site-logo-padding" aria-hidden="true">
+            <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
+          </div>
+        </h1>
       </div>
       <div class="alert alert-primary text-center" id="submissions-page-alert">
         <div class="alert-heading">

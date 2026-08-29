@@ -57,7 +57,7 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Wisconsin Infotext Results</title>
+    <title>Wisconsin InfoText Results</title>
     <style>
       .container {
         padding-top: 100px;
@@ -96,11 +96,6 @@
       .btn:not(#themeFab, .theme-choice) {
         border-radius: 24px;
         background-color: rgb(62, 134, 243);
-      }
-
-      .button-text {
-        color: #fff;
-        font-weight: bold;
       }
 
       table {
@@ -259,7 +254,23 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="page-title data-letter-reveal" id="year-heading"></h1>
+        <h1 class="page-title data-letter-reveal">
+          <img
+            src="../images/banners/light/Wisconsin-Infotext_light.png"
+            alt=""
+            class="mw-100 light-mode-image"
+            aria-hidden="true"
+          />
+          <img
+            src="../images/banners/dark/Wisconsin-Infotext.png"
+            alt=""
+            class="mw-100 dark-mode-image"
+            aria-hidden="true"
+          />
+          <div id="text-top-padding">
+            <span id="year-heading"></span>
+          </div>
+        </h1>
         <p class="fs-2" id="result-count"></p>
         <div class="alert alert-secondary" role="alert">
           <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
@@ -419,8 +430,9 @@
       </div>
       <div class="pt-4">
         <small class="text-white"
-          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
-          TVTA</small
+          >Website
+          <span aria-hidden="true" class="copyright">&copy;</span> Copyright
+          2026 - TVTA</small
         >
         <br />
         <br />
@@ -453,7 +465,7 @@
         jsonPath: "../json/wisconsin_infotext_data.json",
         filterParam: "year",
         filterField: "Year",
-        serviceLabel: "Wisconsin Infotext",
+        serviceLabel: "Wisconsin InfoText",
         groupByField: "Month",
         groupOrder: [
           "January",

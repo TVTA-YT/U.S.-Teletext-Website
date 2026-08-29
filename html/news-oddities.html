@@ -87,16 +87,6 @@
         padding-top: 100px;
       }
 
-      .divider {
-        margin: 40px 0 20px;
-      }
-
-      .divider hr {
-        border: none;
-        border-top: 1px solid var(--text-color);
-        margin-bottom: 14px;
-      }
-
       .btn {
         border-radius: 24px;
       }
@@ -286,336 +276,395 @@
     </nav>
     <main>
       <div class="container">
-        <h1 class="text-center page-title data-letter-reveal">
-          Teletext News &amp; Oddities
+        <h1>
+          <span class="visually-hidden">Teletext News and Oddities</span>
+          <img
+            src="../images/banners/light/News-Oddities_light.png"
+            alt=""
+            class="mw-100 light-mode-image"
+            aria-hidden="true"
+          />
+          <img
+            src="../images/banners/dark/News-Oddities.png"
+            alt=""
+            class="mw-100 dark-mode-image"
+            aria-hidden="true"
+          />
         </h1>
         <p class="fs-4 text-center">Unique pages and other news.</p>
-        <div class="divider">
-          <hr aria-hidden="true" />
-          <h2 class="section">Teletext News</h2>
-        </div>
-
-        <!-- * THE SECTION BELOW NEEDS UPDATED. REMOVE COMMENT WHEN DONE. -->
-        <!-- <p>August 18, 2026</p>
-        <h1 class="story">
-          BREAKING: Electra (TBS) data from December 1995 found
-        </h1>
-        <p>
-          <a
-            href="https://www.google.com/books/edition/On_the_Way_to_the_Web/DcV1qYrg6ekC?hl=en&gbpv=1&dq=%22Electra%22+teletext+1993&pg=PA83&printsec=frontcover"
-            target="_blank"
-            >Previously</a
+        <hr aria-hidden="true" />
+        <ul class="nav nav-tabs nav-fill" id="teletext-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="teletext-news-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#teletext-news"
+              type="button"
+              role="tab"
+              aria-controls="news"
+              aria-selected="true"
+            >
+              Teletext News
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="teletext-oddities-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#teletext-oddities"
+              type="button"
+              role="tab"
+              aria-controls="oddities"
+              aria-selected="true"
+            >
+              Teletext Oddities
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <section
+            class="tab-pane fade show active"
+            id="teletext-news"
+            role="tabpanel"
           >
-          <a
-            href="https://www.google.com/books/edition/Homo_Conexus/61cqDQAAQBAJ?hl=en&gbpv=1&dq=%22Electra%22+teletext+1993&pg=PA29&printsec=frontcover"
-            target="_blank"
-            >published</a
+            <h2 class="section pt-4">Teletext News</h2>
+            <p>August 29, 2026</p>
+            <h1 class="story">
+              JUST IN: WST teletext discovered on 1984 WGN (Chicago, IL) content
+            </h1>
+            <p>
+              We've just received images of WST teletext on WGN-TV in Chicago
+              (note that this is unrelated to the superstation feed of WGN).
+              This service was called <span aria-hidden="true">Virtext</span
+              ><span class="sr-only">VirText</span>. We don't known anything
+              else about this service, mainly because we had never heard of this
+              service until we saw these photos.
+            </p>
+            <div class="imgrow rounded">
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/VirText_Page-115-0000.png"
+                    alt="Zenith presents VirText page"
+                    class="figure-img mw-100 rounded border border-white"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="Zenith Virtext page (March 1984)."
+                  />
+                  <figcaption aria-hidden="true">
+                    Zenith Virtext page
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/VirText_Page-213-0000.png"
+                    alt="This is a test of VirText for Zenith page"
+                    class="figure-img mw-100 rounded border border-white"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="Zenith Virtext test page featuring character set (March 1984)."
+                  />
+                  <figcaption aria-hidden="true">
+                    Virtext test page featuring character set
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/VirText_Page-215-0000.png"
+                    alt="WGN VirText System page"
+                    class="figure-img mw-100 rounded border border-white"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="WGN Television Virtext System page (March 1984)"
+                  />
+                  <figcaption aria-hidden="true">
+                    WGN Television Virtext System page
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <p>If we find out anything else, this page will be updated.</p>
+            <hr aria-hidden="true" />
+            <p>August 28, 2026</p>
+            <h1 class="story">
+              Electra shutdown date confirmed; TEMPO stock pages continued
+              through 1995
+            </h1>
+            <p>
+              We can now confirm the definitive shutdown date for Electra:
+              <strong>June 11, 1993</strong>. This news was discovered from a
+              decoded Electra page found on a TBS broadcast of an episode of
+              <i>Perry Mason</i> from March 22, 1993.
+            </p>
+            <p>
+              While Electra ceased operations in 1993, stock listings provided
+              by TEMPO, however, did not. TEMPO data was broadcast alongside
+              Electra, and even after Electra's shutdown, TEMPO data continued
+              to be transmitted as late as December 1995.
+            </p>
+            <div class="row justify-content-center text-center">
+              <div class="col-6">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/Electra_shutdown-page.png"
+                    alt="Electra shutdown notice page"
+                    class="figure-img mw-100 rounded border border-white electra-images"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="A page alerting to Electra's shutdown of operations on June 11, 1993 (March 23, 1994)."
+                  />
+                  <figcaption class="figure-caption">
+                    A page alerting to Electra's shutdown of operations on June
+                    11, 1993 (March 23, 1994).
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="col-6">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/Electra_1995-12-10.png"
+                    alt="Electra shutdown notice page"
+                    class="figure-img mw-100 rounded border border-white electra-images"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="A page from the TEMPO 'Stocks' section (December 10, 1995)"
+                  />
+                  <figcaption class="figure-caption">
+                    A page from the TEMPO 'Stocks' section (December 10, 1995)
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <hr aria-hidden="true" />
+            <p>August 18, 2026</p>
+            <h1 class="story">
+              NEW: CBS ExtraVision from late 1991 discovered
+            </h1>
+            <p>
+              This story just seems to keep developing. On August 17, 2026,
+              screenshots were uploaded to the <i>Teletext</i> Discord group
+              showing exported pages from ExtraVision dated November 26,
+              <span aria-hidden="true"><strong>1991</strong></span
+              ><span class="sr-only">1991</span>. To reiterate, various sources
+              have reported that ExtraVision was shut down in
+              <span aria-hidden="true"><strong>1988</strong></span
+              ><span class="sr-only">1988</span>, and now we have an example
+              from three years after that date. See some examples below.
+            </p>
+            <div class="imgrow rounded">
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1991_1.png"
+                    alt="CBS ExtraVision Business News page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision index page (November 26, 1991)"
+                  />
+                  <figcaption aria-hidden="true">
+                    Index page, Nov 1991
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1991_2.png"
+                    alt="CBS ExtraVision Prime Time TV page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision 'News Highlights' page (November 26, 1991)"
+                  />
+                  <figcaption aria-hidden="true">
+                    News highlights page
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1991_3.png"
+                    alt="CBS ExtraVision Today in History page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision 'Closed Caption Guide' page (November 26, 1991)"
+                  />
+                  <figcaption aria-hidden="true">
+                    Closed caption guide page
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <p>
+              How much longer did ExtraVision last? For now, we don't know. As
+              more samples are decoded and submitted, we should have a better
+              idea as to when ExtraVision actually shut down. For now, we can
+              confirm it lasted through late 1991.
+            </p>
+            <p>Stay tuned to this page for more updates as we get them.</p>
+            <hr aria-hidden="true" />
+            <p>August 13, 2026</p>
+            <h1 class="story">
+              BREAKING: CBS ExtraVision
+              <span aria-hidden="true"><em>did not</em></span
+              ><span class="sr-only">did not</span> shut down in 1988
+            </h1>
+            <p>
+              You may have read before from various places that ExtraVision
+              <a
+                href="https://books.google.com/books?id=-8bPkkVYuOAC&dq=ExtraVision+CBS+teletext+1988+-wiki&pg=PA224#v=onepage&q=ExtraVision%20CBS%20teletext%201988%20-wiki&f=false"
+                target="_blank"
+                >shut down</a
+              >
+              in
+              <a
+                href="https://iml.jou.ufl.edu/carlson/history/extravision.htm"
+                target="_blank"
+                >1988</a
+              >. However, what if I were to say that wasn't the case? Have a
+              look for yourself...
+            </p>
+            <div class="imgrow rounded">
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1990_1.png"
+                    alt="CBS ExtraVision Business News page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision 'Business News' page (February 28, 1990)"
+                  />
+                  <figcaption aria-hidden="true">
+                    Business news, Feb 1990
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1990_2.png"
+                    alt="CBS ExtraVision Prime Time TV page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision 'Prime Time TV' page (February 28, 1990)"
+                  />
+                  <figcaption aria-hidden="true">
+                    Prime time TV listings
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="imgcard">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/ExtraVision-1990_3.png"
+                    alt="CBS ExtraVision Today in History page"
+                    class="figure-img mw-100 rounded"
+                    data-bs-target="#imageModal"
+                    data-bs-caption="CBS ExtraVision 'Today in History' page (February 28, 1990)"
+                  />
+                  <figcaption aria-hidden="true">
+                    "Today in History" page
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <p>
+              Those are recently decoded pages that come from a VHS recording
+              from February 28, 1990; you can even see the full date in one of
+              the photos. Let me add that there are a lot of decoding issues
+              with these pages. Part of that is likely due to current
+              limitations with Decode-Orc. As I've stated elsewhere, the
+              software is still in development, so there may likely be less of
+              those issues as development progresses. Another possible issue is
+              that the videotape these pages were sourced from was recorded in
+              EP/SLP mode, which can make obtaining cleaner decodes more
+              difficult due to the lower quality.
+            </p>
+            <p>
+              Anyway, this was quite a development because, based on currently
+              available information, no source has stated that ExtraVision
+              lasted past 1988.
+            </p>
+            <hr aria-hidden="true" />
+            <p>August 13, 2026</p>
+            <h1 class="story">NBC Teletext from Late 1985</h1>
+            <p>
+              Sticking with the theme of "sources say one thing but the evidence
+              says otherwise," we have an example of NBC Teletext from October
+              1985. Various sources have stated that NBC's service shut down in
+              <a
+                href="https://cjc.utppublishing.com/doi/pdf/10.22230/cjc.1990v15n2a549"
+                target="_blank"
+                >January 1985</a
+              >.
+            </p>
+            <div class="row justify-content-center text-center">
+              <div class="col-6">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/NBC-Teletext.png"
+                    alt="NBC Teletext logo page"
+                    class="mw-100 rounded electra-images"
+                  />
+                  <figcaption
+                    aria-hidden="true"
+                    class="figure-caption text-center"
+                  >
+                    NBC Teletext page.
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="col-6">
+                <figure class="figure">
+                  <img
+                    src="../images/decoded-pages/NBC-Teletext-Oct1985.png"
+                    alt="CBS Teletext sports page"
+                    class="mw-100 rounded border border-white electra-images"
+                  />
+                  <figcaption
+                    aria-hidden="true"
+                    class="figure-caption text-center"
+                  >
+                    A page from the sports section.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <p>
+              Again, there are some errors, but hopefully those will be resolved
+              over time.
+            </p>
+            <p>
+              NBC's service is a bit of an oddity. According to someone capable
+              of transferring VHS via FM RF, a VHS tape with content recorded in
+              <span aria-hidden="true">mid-January 1985</span
+              ><span class="sr-only">mid January 1985</span> did not contain
+              teletext data in the VBI. However, as you can see above, a VHS
+              tape with content recorded in October 1985
+              <span aria-hidden="true"><em>did</em></span
+              ><span class="sr-only">did</span> contain teletext. As of now,
+              there's no clear reason as to why it seems NBC shut down the
+              service, then brought it back. We also don't know exactly when NBC
+              restored the service or when they shut it down for good.
+              Hopefully, as more samples are decoded, we will have a clearer
+              answer.
+            </p>
+          </section>
+          <section
+            class="tab-pane fade"
+            id="teletext-oddities"
+            role="tabpanel"
+            aria-labelledby="update-tab-1"
           >
-          <a
-            href="https://www.google.com/books/edition/Superstations/82NT1nDUQ1oC?hl=en&gbpv=1&dq=%22Electra%22+teletext+1993&pg=PA91&printsec=frontcover"
-            target="_blank"
-            >reports</a
-          >
-          have stated that Electra was shut down in 1993, primarily due to a
-          "lack of funding". However, like the previously reports about
-          ExtraVision, this may have been incorrect.
-        </p>
-        <p>
-          It has recently been discovered that a recent decode of six-second
-          sample Electra from TBS, originally thought to be from December 10,
-          1989, is actually from December 10, <strong>1995</strong>.
-        </p>
-        <div class="text-center">
-          <figure class="figure">
-            <img
-              src="../images/decoded-pages/Electra_1995-12-10.png"
-              alt="Electra 1995 stocks page"
-              class="figure-img mw-100 rounded border border-white"
-              id="electra-1995"
-              data-bs-target="#imageModal"
-              data-bs-caption="A page from the Electra 'Stocks' section (December 10, 1995)."
-            />
-            <figcaption class="figure-caption">
-              A page from the Electra 'Stocks' section (December 10, 1995).
-            </figcaption>
-          </figure>
+            <h2 class="section pt-4">Teletext Oddities</h2>
+            <p>
+              Some interesting and unusual pages have been discovered recently.
+              Check them out below.
+            </p>
+            <p>Coming soon...</p>
+          </section>
         </div>
-        <p>
-          Notice the date in the image, "Sun Dec 10". As it turns out, both
-          dates in 1989 and 1995 fall on a Sunday, so it was assumed that the
-          recording this samples came from was during that time; granted; we
-          didn't even bother checking years on and after 1993 because we assumed
-          Electra didn't extend past 1993. What settled this was local newspaper
-          clipping featuring TV schedules. According to a newspaper clipping
-          from December 10, 1989, the film this sample was purported to come
-          from, <i>The Spy Who Loved Me</i>, did not air on that day. However,
-          schedules from December 10, 1995, <em>do</em> show this film. Below
-          are recreations of the 6-8pm time frame from both days.
-        </p>
-        <div class="row justify-content-center">
-          <div class="col-6">
-            <p class="text-center fw-bold">December 10, 1989</p>
-            <table class="table-bordered m-auto">
-              <caption>
-                Source: ProQuest
-              </caption>
-              <tr>
-                <td style="font-size: 3em">6</td>
-                <td>
-                  WCW Main Event <br />
-                  Wrestling
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size: 3em">7</td>
-                <td>
-                  Movie <br />
-                  Monta <br />
-                  Walsh
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size: 3em">8</td>
-                <td></td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-6">
-            <p class="text-center fw-bold">December 10, 1995</p>
-            <table class="table-bordered m-auto">
-              <caption>
-                Source: ProQuest
-              </caption>
-              <tr>
-                <td style="font-size: 3em">6</td>
-                <td>
-                  WCW Main Event <br />
-                  Wrestling
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size: 3em">7</td>
-                <td>
-                  Movie <br />
-                  The Spy Who <br />
-                  Loved Me
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size: 3em">8</td>
-                <td></td>
-              </tr>
-            </table>
-          </div>
-        </div> -->
-        <!-- * THE SECTION ABOVE NEEDS UPDATED. REMOVE COMMENT WHEN DONE. -->
-        <p>August 18, 2026</p>
-        <h1 class="story">NEW: CBS ExtraVision from late 1991 discovered</h1>
-        <p>
-          This story just seems to keep developing. On August 17, 2026,
-          screenshots were uploaded to the <i>Teletext</i> Discord group showing
-          exported pages from ExtraVision dated November 26,
-          <span aria-hidden="true"><strong>1991</strong></span
-          ><span class="sr-only">1991</span>. To reiterate, various sources have
-          reported that ExtraVision was shut down in
-          <span aria-hidden="true"><strong>1988</strong></span
-          ><span class="sr-only">1988</span>, and now we have an example from
-          three years after that date. See some examples below.
-        </p>
-        <div class="imgrow rounded">
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1991_1.png"
-                alt="CBS ExtraVision Business News page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision index page (November 26, 1991)"
-              />
-              <figcaption aria-hidden="true">Index page, Nov 1991</figcaption>
-            </figure>
-          </div>
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1991_2.png"
-                alt="CBS ExtraVision Prime Time TV page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision 'News Highlights' page (November 26, 1991)"
-              />
-              <figcaption aria-hidden="true">News highlights page</figcaption>
-            </figure>
-          </div>
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1991_3.png"
-                alt="CBS ExtraVision Today in History page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision 'Closed Caption Guide' page (November 26, 1991)"
-              />
-              <figcaption aria-hidden="true">
-                Closed caption guide page
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-        <p>
-          How much longer did ExtraVision last? For now, we don't know. As more
-          samples are decoded and submitted, we should have a better idea as to
-          when ExtraVision actually shut down. For now, we can confirm it lasted
-          through late 1991.
-        </p>
-        <p>Stay tuned to this page for more updates as we get them.</p>
-        <br />
-        <p>August 13, 2026</p>
-        <h1 class="story">
-          BREAKING: CBS ExtraVision
-          <span aria-hidden="true"><em>did not</em></span
-          ><span class="sr-only">did not</span> shut down in 1988
-        </h1>
-        <p>
-          You may have read before from various places that ExtraVision
-          <a
-            href="https://books.google.com/books?id=-8bPkkVYuOAC&dq=ExtraVision+CBS+teletext+1988+-wiki&pg=PA224#v=onepage&q=ExtraVision%20CBS%20teletext%201988%20-wiki&f=false"
-            target="_blank"
-            >shut down</a
-          >
-          in
-          <a
-            href="https://iml.jou.ufl.edu/carlson/history/extravision.htm"
-            target="_blank"
-            >1988</a
-          >. However, what if I were to say that wasn't the case? Have a look
-          for yourself...
-        </p>
-        <div class="imgrow rounded">
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1990_1.png"
-                alt="CBS ExtraVision Business News page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision 'Business News' page (February 28, 1990)"
-              />
-              <figcaption aria-hidden="true">
-                Business news, Feb 1990
-              </figcaption>
-            </figure>
-          </div>
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1990_2.png"
-                alt="CBS ExtraVision Prime Time TV page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision 'Prime Time TV' page (February 28, 1990)"
-              />
-              <figcaption aria-hidden="true">Prime time TV listings</figcaption>
-            </figure>
-          </div>
-          <div class="imgcard">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/ExtraVision-1990_3.png"
-                alt="CBS ExtraVision Today in History page"
-                class="figure-img mw-100 rounded"
-                data-bs-target="#imageModal"
-                data-bs-caption="CBS ExtraVision 'Today in History' page (February 28, 1990)"
-              />
-              <figcaption aria-hidden="true">
-                "Today in History" page
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-        <p>
-          Those are recently decoded pages that come from a VHS recording from
-          February 28, 1990; you can even see the full date in one of the
-          photos. Let me add that there are a lot of decoding issues with these
-          pages. Part of that is likely due to current limitations with
-          Decode-Orc. As I've stated elsewhere, the software is still in
-          development, so there may likely be less of those issues as
-          development progresses. Another possible issue is that the videotape
-          these pages were sourced from was recorded in EP/SLP mode, which can
-          make obtaining cleaner decodes more difficult due to the lower
-          quality.
-        </p>
-        <p>
-          Anyway, this was quite a development because, based on currently
-          available information, no source has stated that ExtraVision lasted
-          past 1988.
-        </p>
-        <br />
-        <p>August 13, 2026</p>
-        <h1 class="story">NBC Teletext from Late 1985</h1>
-        <p>
-          Sticking with the theme of "sources say one thing but the evidence
-          says otherwise," we have an example of NBC Teletext from October 1985.
-          Various sources have stated that NBC's service shut down in
-          <a
-            href="https://cjc.utppublishing.com/doi/pdf/10.22230/cjc.1990v15n2a549"
-            target="_blank"
-            >January 1985</a
-          >.
-        </p>
-        <div class="row">
-          <div class="col-6">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/NBC-Teletext.png"
-                alt="NBC Teletext logo page"
-                class="mw-100 rounded"
-              />
-              <figcaption aria-hidden="true" class="figure-caption text-center">
-                NBC Teletext page.
-              </figcaption>
-            </figure>
-          </div>
-          <div class="col-6">
-            <figure class="figure">
-              <img
-                src="../images/decoded-pages/NBC-Teletext-Oct1985.png"
-                alt="CBS Teletext sports page"
-                class="mw-100 rounded border border-white"
-              />
-              <figcaption aria-hidden="true" class="figure-caption text-center">
-                A page from the sports section.
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-        <p>
-          Again, there are some errors, but hopefully those will be resolved
-          over time.
-        </p>
-        <p>
-          NBC's service is a bit of an oddity. According to someone capable of
-          transferring VHS via FM RF, a VHS tape with content recorded in
-          <span aria-hidden="true">mid-January 1985</span
-          ><span class="sr-only">mid January 1985</span> did not contain
-          teletext data in the VBI. However, as you can see above, a VHS tape
-          with content recorded in October 1985
-          <span aria-hidden="true"><em>did</em></span
-          ><span class="sr-only">did</span> contain teletext. As of now, there's
-          no clear reason as to why it seems NBC shut down the service, then
-          brought it back. We also don't know exactly when NBC restored the
-          service or when they shut it down for good. Hopefully, as more samples
-          are decoded, we will have a clearer answer.
-        </p>
-        <div class="divider">
-          <hr aria-hidden="true" />
-          <h2 class="section">Teletext Oddities</h2>
-        </div>
-        <!-- <p>
-          Some interesting and unusual pages have been discovered recently.
-          Check them out below.
-        </p> -->
-        <p>Coming soon...</p>
         <!-- * BEGIN IMAGE MODAL -->
         <div
           class="modal fade"

@@ -4,98 +4,110 @@
 
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>1.0000</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/services.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
        <priority>0.8000</priority>
   </url>
   <url>
-       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/services.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
-  </url>
-  <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/archiving-teletext.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/teletext-links.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/news-oddities.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/submissions.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/about.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/contact.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/sitemap.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.6400</priority>
+       <priority>0.8000</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/privacy-policy.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8000</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
        <priority>0.6400</priority>
   </url>
   <url>
-       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
-  </url>
-  <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/electra.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
-  </url>
-  <url>
-       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/ket-agtext.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
-  </url>
-  <url>
-       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/abc-plus.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
-  </url>
-  <url>
-       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/stations-altered-vbi.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
-       <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
+       <priority>0.6400</priority>
   </url>
   <url>
        <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/nbc-teletext.html</loc>
-       <lastmod>2026-08-24T00:07:22+00:00</lastmod>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
        <changefreq>daily</changefreq>
-       <priority>0.5120</priority>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/ket-agtext.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/abc-plus.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/wisconsin-infotext.html</loc>
+       <lastmod>2026-08-28T18:10:21+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://tvta-yt.github.io/U.S.-Teletext-Website/html/stations-altered-vbi.html</loc>
+       <lastmod>2026-08-28T18:10:20+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.6400</priority>
   </url>
 </urlset>

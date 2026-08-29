@@ -1,6 +1,9 @@
 const SERVICE_SPOKEN_LABELS = {
   KET: "Kentucky Educational Television",
   AGTEXT: "AGH TEXT",
+  IPTV: "Iowa Public Television",
+  AGIDS: "Agricultural InfoData Service",
+  Infotext: "InfoText",
 };
 
 const TAPE_VALUE_MAPS = {
@@ -77,8 +80,8 @@ async function renderResults(config) {
   if (heading) {
     const visibleParts = [stationLabel, serviceLabel].filter(Boolean).join(' ');
     const headingText = showAllRows
-      ? (visibleParts ? `${visibleParts} - All Records` : 'All Records')
-      : (visibleParts ? `${visibleParts} - ${filterValue}` : filterValue);
+      ? (visibleParts ? `All Records` : 'All Records')
+      : (visibleParts ? `${filterValue}` : filterValue);
     const spokenText = showAllRows
       ? getSpokenText(serviceLabel, stationLabel, 'all records')
       : getSpokenText(serviceLabel, stationLabel, filterValue);
@@ -312,7 +315,9 @@ function getSpokenText(serviceLabel, stationLabel, filterValue) {
 
   const combinedLabel = [stationSpoken, serviceSpoken].filter(Boolean).join(' ');
 
-  return combinedLabel ? `${combinedLabel} results from ${filterValue}` : filterValue;
+  const rawText = combinedLabel ? `${combinedLabel} results: ${filterValue}` : filterValue;
+
+  return rawText.replace(/\bRecords\b/gi, 'Wreckerds');
 }
 
 function splitProgramTitles(rawTitle) {
