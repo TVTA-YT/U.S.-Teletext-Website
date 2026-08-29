@@ -15,7 +15,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "0cb341f2-9df0-11f1-a705-0200170221f6",
@@ -69,7 +69,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "0d93b18d-9996-11f1-a705-0200170221f6",
@@ -87,7 +87,7 @@
         "Notes": "",
         "Date_Added": "2026-08-16",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "020ef2ec-9bef-11f1-a705-0200170221f6",
@@ -105,7 +105,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "09df390f-9bef-11f1-a705-0200170221f6",
@@ -123,7 +123,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "60690cd9-9bf5-11f1-a705-0200170221f6",
@@ -141,7 +141,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "771c7376-9bf5-11f1-a705-0200170221f6",
@@ -159,7 +159,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a95f62a0-a26e-11f1-a705-0200170221f6",
@@ -195,7 +195,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Ashton M.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "26343bfe-9bef-11f1-a705-0200170221f6",
@@ -213,7 +213,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "870da497-9bf4-11f1-a705-0200170221f6",
@@ -231,7 +231,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "3532cfdf-9bef-11f1-a705-0200170221f6",
@@ -249,7 +249,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Ashton M.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "baaf91bd-9bf4-11f1-a705-0200170221f6",
@@ -267,7 +267,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Sebastian T.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "2ea5e3ff-a0ed-11f1-a705-0200170221f6",
@@ -321,7 +321,7 @@
         "Notes": "",
         "Date_Added": "2026-08-21",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "6b1ea90a-a0ed-11f1-a705-0200170221f6",
@@ -375,7 +375,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "e59c7b70-9e52-11f1-a705-0200170221f6",
@@ -447,7 +447,7 @@
         "Notes": "",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "64c46975-9d9b-11f1-a705-0200170221f6",
@@ -465,7 +465,7 @@
         "Notes": "",
         "Date_Added": "2026-08-21",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "9b7ff729-a050-11f1-a705-0200170221f6",
@@ -519,7 +519,7 @@
         "Notes": "TEXT2 is not available.",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4c4a8145-9bf5-11f1-a705-0200170221f6",
@@ -537,7 +537,7 @@
         "Notes": "TEXT2 is not available.",
         "Date_Added": "2026-08-19",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a2f1d42c-a0ef-11f1-a705-0200170221f6",
@@ -573,6 +573,6 @@
         "Notes": "There is no PLUS data, only looped messages about captions being found on the C1 service.",
         "Date_Added": "2026-08-21",
         "Recovered_By": "Fry L.",
-        "IsNew": true
+        "IsNew": false
     }
 ]

@@ -13,7 +13,7 @@
         "Notes": "",
         "Date_Added": "2026-08-16",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "64589f4e-9a81-11f1-a705-0200170221f6",
@@ -29,7 +29,7 @@
         "Notes": null,
         "Date_Added": "2026-08-17",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a326edca-992b-11f1-a705-0200170221f6",
@@ -45,7 +45,7 @@
         "Notes": "",
         "Date_Added": "2026-08-16",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a82b243b-992b-11f1-a705-0200170221f6",
@@ -61,7 +61,7 @@
         "Notes": "",
         "Date_Added": "2026-08-16",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "fd7345fe-9990-11f1-a705-0200170221f6",
@@ -77,6 +77,6 @@
         "Notes": "",
         "Date_Added": "2026-08-16",
         "Recovered_By": "Zaroff's Video Archives",
-        "IsNew": true
+        "IsNew": false
     }
 ]
