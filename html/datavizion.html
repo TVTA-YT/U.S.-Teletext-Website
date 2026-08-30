@@ -1,26 +1,23 @@
 <!doctype html>
-<!-- Created August 10, 2026, 11:55 -->
+<!-- Created August 29, 2026, 18:20 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Search for archived samples from U.S. teletext services, including CBS ExtraVision, Electra, and NBC Teletext."
+      content="Search for archived samples from the DaTaVizion teletext service."
     />
     <!-- Open Graph URLs -->
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="U.S. Teletext Archive - Teletext Services"
-    />
+    <meta property="og:title" content="U.S. Teletext Archive - DaTaVizion" />
     <meta
       property="og:description"
-      content="Search for archived samples from U.S. teletext services."
+      content="Search for archived samples from the DaTaVizion teletext service."
     />
     <meta
       property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/services.html"
+      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/datavizion.html"
     />
     <meta
       property="og:image"
@@ -31,11 +28,7 @@
     <meta property="og:locale" content="en_US" />
     <link
       rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/services.html"
-    />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/other-text-services.html"
+      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/datavizion.html"
     />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
@@ -85,27 +78,14 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Teletext Services</title>
+    <title>Electra</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
-      .mobile-blue-border {
-        border: 4px solid #152de3 !important;
-      }
-
-      th,
-      td {
-        background-color: transparent !important;
-      }
-
-      .service-name {
-        font-family: "TU 1000x Regular", sans-serif;
-      }
-
-      figure {
-        text-align: center;
+      .btn {
+        border-radius: 24px;
       }
     </style>
   </head>
@@ -258,246 +238,44 @@
       </div>
     </nav>
     <main>
-      <div class="container pb-3">
+      <div class="container">
         <h1>
-          <span class="visually-hidden">Teletext Services</span>
+          <span class="visually-hidden">Electra</span>
           <img
-            src=""
+            src="../images/banners/light/DaTaVizion_light.png"
             alt=""
-            class="mw-100"
-            id="page-heading-image"
+            class="mw-100 light-mode-image"
+            aria-hidden="true"
+          />
+          <img
+            src="../images/banners/dark/DaTaVizion-Banner.png"
+            alt=""
+            class="mw-100 dark-mode-image"
             aria-hidden="true"
           />
         </h1>
         <hr aria-hidden="true" />
-        <p class="fs-5">
-          While teletext was not as popular in the U.S., a few teletext service
-          were available. To view archived teletext from any of these services,
-          click on one below.
+        <p>
+          Use the form below to view all submissions or to search for
+          submissions by year.
         </p>
-        <div class="alert alert-primary text-center" role="alert">
-          <div class="alert-heading">
-            <p class="fs-2 fw-bold">UPDATE</p>
-          </div>
-          <p id="submission-page-alert-text">
-            I am now able to transfer VHS via the FM RF method, meaning I can
-            now add samples from my own collection to the site. Expect these to
-            be uploaded over the next few weeks.
-          </p>
-        </div>
-        <div class="pt-4" id="sumbission-count">
-          <table class="table text-center submission-count-table">
-            <tbody>
-              <tr>
-                <td>
-                  Total Submissions: <span id="total-record-count"></span>
-                </td>
-                <td>
-                  Samples Available: <span id="available-sample-count"></span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="pt-4 pb-4" id="sample-availability-count">
-          <p class="fs-3 text-center">Available Samples by Service</p>
-          <div class="table-responsive">
-            <table
-              class="table table-bordered text-center submission-count-table sample-availability-count-table"
+        <form action="datavizion-results.html" method="get">
+          <div class="mb-3">
+            <label for="year" class="form-label"
+              >Select a year (leave blank to view all)</label
             >
-              <thead>
-                <tr class="align-middle">
-                  <th>DaTaVizion</th>
-                  <th>Electra</th>
-                  <th>ExtraVision</th>
-                  <th>Keyfax</th>
-                  <th>NBC Teletext</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="table-row-color">
-                  <td>
-                    <span class="sr-only">Available DataVision samples:</span
-                    ><span class="fw-bolder" id="datavizion-count"></span>
-                  </td>
-                  <td>
-                    <span class="sr-only">Available Electra samples:</span
-                    ><span class="fw-bolder" id="electra-count"></span>
-                  </td>
-                  <td>
-                    <span class="sr-only">Available ExtraVision samples:</span
-                    ><span class="fw-bolder" id="extravision-count"></span>
-                  </td>
-                  <td>
-                    <span class="sr-only">Available Keyfax samples:</span
-                    ><span class="fw-bolder" id="keyfax-count"></span>
-                  </td>
-                  <td>
-                    <span class="sr-only">Available NBC Teletext samples:</span
-                    ><span class="fw-bolder" id="nbc-teletext-count"></span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <select name="year" id="year" class="form-select">
+              <option value=""></option>
+              <option value="1987">1987</option>
+            </select>
           </div>
-        </div>
-        <div class="row justify-content-center pb-4">
-          <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
-            <div class="heading-images" aria-hidden="true">
-              <img
-                src="../images/banners/light/DaTaVizion_light.png"
-                alt=""
-                class="mw-100 pb-4 light-mode-image"
-              />
-              <img
-                src="../images/banners/dark/DaTaVizion-Banner.png"
-                alt=""
-                class="mw-100 pb-4 dark-mode-image"
-              />
-            </div>
-            <a href="datavizion.html">
-              <span class="visually-hidden">DaTaVizion</span>
-              <img
-                src="../images/DaTaVizion-TV_light.png"
-                alt=""
-                class="mw-100 light-mode-image"
-                aria-hidden="true"
-              />
-              <img
-                src="../images/DaTaVizion-TV.png"
-                alt=""
-                class="mw-100 dark-mode-image"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-          <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding"
-          >
-            <div class="heading-images" aria-hidden="true">
-              <img
-                src="../images/banners/light/Electra_light.png"
-                alt=""
-                class="mw-100 pb-4 light-mode-image"
-              />
-              <img
-                src="../images/banners/dark/Electra.png"
-                alt=""
-                class="mw-100 pb-4 dark-mode-image"
-              />
-            </div>
-            <a href="electra.html">
-              <span class="visually-hidden">Electra</span>
-              <img
-                src="../images/Electra-TV_light.png"
-                alt=""
-                class="mw-100 light-mode-image"
-                aria-hidden="true"
-              />
-              <img
-                src="../images/Electra-TV.png"
-                alt=""
-                class="mw-100 dark-mode-image"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-          <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding"
-          >
-            <div class="heading-images" aria-hidden="true">
-              <img
-                src="../images/banners/light/ExtraVision_light.png"
-                alt=""
-                class="mw-100 pb-4 light-mode-image"
-              />
-              <img
-                src="../images/banners/dark/ExtraVision.png"
-                alt=""
-                class="mw-100 pb-4 dark-mode-image"
-              />
-            </div>
-            <a href="extravision.html">
-              <span class="visually-hidden">ExtraVision</span>
-              <img
-                src="../images/ExtraVision-TV_light.png"
-                alt=""
-                class="mw-100 light-mode-image"
-                aria-hidden="true"
-              />
-              <img
-                src="../images/ExtraVision-TV.png"
-                alt=""
-                class="mw-100 dark-mode-image"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-          <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding"
-            id="keyfax"
-          >
-            <div class="heading-images" aria-hidden="true">
-              <img
-                src="../images/banners/light/Keyfax_light.png"
-                alt=""
-                class="mw-100 pb-4 light-mode-image"
-              />
-              <img
-                src="../images/banners/dark/Keyfax.png"
-                alt=""
-                class="mw-100 pb-4 dark-mode-image"
-              />
-            </div>
-            <a href="keyfax.html">
-              <span class="visually-hidden">Keyfax</span>
-              <img
-                src="../images/Keyfax-TV_light.png"
-                alt=""
-                class="mw-100 light-mode-image"
-                aria-hidden="true"
-              />
-              <img
-                src="../images/Keyfax-TV.png"
-                alt=""
-                class="mw-100 dark-mode-image"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-          <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding"
-            id="nbc-teletext"
-          >
-            <div class="heading-images" aria-hidden="true">
-              <img
-                src="../images/banners/light/NBC-Teletext_light.png"
-                alt=""
-                class="mw-100 pb-4 light-mode-image"
-              />
-              <img
-                src="../images/banners/dark/NBC-Teletext.png"
-                alt=""
-                class="mw-100 pb-4 dark-mode-image"
-              />
-            </div>
-            <a href="nbc-teletext.html">
-              <span class="visually-hidden">NBC Teletext</span>
-              <img
-                src="../images/NBC-Teletext-TV_light.png"
-                alt=""
-                class="mw-100 light-mode-image"
-                aria-hidden="true"
-              />
-              <img
-                src="../images/NBC-Teletext-TV.png"
-                alt=""
-                class="mw-100 dark-mode-image"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary form-control">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-danger form-control my-4">
+            Reset Fields
+          </button>
+        </form>
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -621,50 +399,5 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
-    <script src="../js/heading-reveal.js"></script>
-    <script src="../js/total-count.js"></script>
-    <script>
-      // Heading banner animation
-      const pageHeadingImage = document.getElementById("page-heading-image");
-      const imageSets = {
-        light: [
-          "../images/banners/light/Teletext-Services_light.png",
-          "../images/banners/light/Teletext-Services-2_light.png",
-        ],
-        dark: [
-          "../images/banners/dark/Teletext-Services.png",
-          "../images/banners/dark/Teletext-Services-2.png",
-        ],
-      };
-
-      Object.values(imageSets)
-        .flat()
-        .forEach((src) => {
-          new Image().src = src;
-        });
-
-      function getTheme() {
-        return document.documentElement.getAttribute(
-          "data-bs-theme" || "light",
-        );
-      }
-
-      let i = 0;
-      pageHeadingImage.src = imageSets[getTheme()][0];
-
-      setInterval(() => {
-        i = (i + 1) % 2;
-        pageHeadingImage.src = imageSets[getTheme()][i];
-      }, 1000);
-
-      const observer = new MutationObserver(() => {
-        pageHeadingImage.src = imageSets[getTheme()][i];
-      });
-
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["data-bs-theme"],
-      });
-    </script>
   </body>
 </html>

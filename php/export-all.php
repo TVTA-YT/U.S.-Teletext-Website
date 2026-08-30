@@ -15,7 +15,9 @@ const NEW_WINDOW_DAYS = 7;
 /* One entry per table. ExtraVision and NBC Teletext will share
 the same columns.
 */
-$sharedColumns = "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By";
+$broadcastNetworkSharedColumns = "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By";
+$textSharedColumns = "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By";
+$otherSharedColumns = "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By";
 $sharedOrderBy = "Year, FIELD(Month,
     'January','February','March','April','May','June',
     'July','August','September','October','November','December'
@@ -28,29 +30,56 @@ $jsonDirectory = dirname(__DIR__) . '/json';
 $trackerDirectory = dirname(__DIR__) . '/.trackers';
 
 $exports = [
+    // Teletext services
     [
-        'table'      =>  'ExtraVision',
+        'table'      =>  'DaTaVizion',
         'idField'    =>  'ID',
-        'columns'    =>  $sharedColumns,
+        'columns'    =>  $broadcastNetworkSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/extravision_data.json',
         'trackerFile' => $trackerDirectory . '/extravision_data.json',
     ],
     [
-        'table'      =>  'NBC_Teletext',
+        'table'      =>  'ExtraVision',
         'idField'    =>  'ID',
-        'columns'    =>  $sharedColumns,
+        'columns'    =>  $broadcastNetworkSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
-        'outputFile' =>  $jsonDirectory . '/nbc_teletext_data.json',
-        'trackerFile' => $trackerDirectory . '/nbc_teletext_data.json',
+        'outputFile' =>  $jsonDirectory . '/extravision_data.json',
+        'trackerFile' => $trackerDirectory . '/extravision_data.json',
+    ],
+    [
+        'table'      =>  'DaTaVizion',
+        'idField'    =>  'ID',
+        'columns'    =>  $broadcastNetworkSharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/datavizion_data.json',
+        'trackerFile' => $trackerDirectory . '/datavizion_data.json',
     ],
     [
         'table'      => 'Electra',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By",
+        'columns'    =>  $otherSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/electra_data.json',
         'trackerFile' => $trackerDirectory . '/electra_data.json',
+
+    ],
+    [
+        'table'      =>  'Keyfax',
+        'idField'    =>  'ID',
+        'columns'    =>  $otherSharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/keyfax_data.json',
+        'trackerFile' => $trackerDirectory . '/keyfax_data.json',
+    ],
+    // Text service
+    [
+        'table'      => 'ABC_PLUS',
+        'idField'    => 'ID',
+        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/abc_plus_data.json',
+        'trackerFile' => $trackerDirectory . '/abc_plus_data.json',
 
     ],
     [
@@ -63,30 +92,21 @@ $exports = [
 
     ],
     [
-        'table'      => 'ABC_PLUS',
+        'table'      => 'IPTV_AGIDS',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
+        'columns'    =>  $textSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
-        'outputFile' =>  $jsonDirectory . '/abc_plus_data.json',
-        'trackerFile' => $trackerDirectory . '/abc_plus_data.json',
+        'outputFile' =>  $jsonDirectory . '/iptv_agids_data.json',
+        'trackerFile' => $trackerDirectory . '/iptv_agids_data.json',
 
     ],
     [
         'table'      => 'Wis_Infotext',
         'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
+        'columns'    =>  $textSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/wisconsin_infotext_data.json',
         'trackerFile' => $trackerDirectory . '/wisconsin_infotext_data.json',
-
-    ],
-    [
-        'table'      => 'IPTV_AGIDS',
-        'idField'    => 'ID',
-        'columns'    => "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By",
-        'orderBy'    =>  $sharedOrderBy,
-        'outputFile' =>  $jsonDirectory . '/iptv_agids_data.json',
-        'trackerFile' => $trackerDirectory . '/iptv_agids_data.json',
 
     ],
 ];

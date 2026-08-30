@@ -4,7 +4,9 @@ async function renderTotalRecordCount() {
     const teletextSampleCountEl = document.getElementById("available-sample-count");
     const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
     const electraCountEl = document.getElementById("electra-count");
+    const datavizionCountEl = document.getElementById("datavizion-count");
     const extravisionCountEl = document.getElementById("extravision-count");
+    const keyfaxCountEl = document.getElementById("keyfax-count");
     const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
@@ -20,6 +22,8 @@ async function renderTotalRecordCount() {
         '../json/ket_agtext_data.json',
         '../json/wisconsin_infotext_data.json',
         '../json/iptv_agids_data.json',
+        '../json/datavizion_data.json',
+        '../json/keyfax_data.json',
     ];
 
     try {
@@ -39,8 +43,10 @@ async function renderTotalRecordCount() {
         const nonTeletextTotal = nonTeletextResponses.reduce((sum, rows) => sum + rows.length, 0);
         const nonTeletextAvailableSamples = nonTeletextResponses.reduce((sum, rows) => sum + rows.filter(row => (row.HTML_Link != null && String(row.HTML_Link).trim() != '') || (row.TEXT1 != null && String(row.TEXT1).trim() != '')).length, 0);
 
+        const datavizionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'DaTaVizion' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const electraSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Electra' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        const keyfaxSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Keyfax' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const nbcTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'NBC Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
@@ -64,12 +70,20 @@ async function renderTotalRecordCount() {
             nonTeletextSampleCountEl.textContent = nonTeletextAvailableSamples.toLocaleString();
         }
 
+        if (datavizionCountEl) {
+            datavizionCountEl.textContent = datavizionSamples.toLocaleString();
+        }
+
         if (electraCountEl) {
             electraCountEl.textContent = electraSamples.toLocaleString();
         }
 
         if (extravisionCountEl) {
             extravisionCountEl.textContent = extravisionSamples.toLocaleString();
+        }
+
+        if (keyfaxCountEl) {
+            keyfaxCountEl.textContent = keyfaxSamples.toLocaleString();
         }
 
         if (nbcTeletextCountEl) {
@@ -98,8 +112,10 @@ async function renderTotalRecordCount() {
         if (teletextSampleCountEl) teletextSampleCountEl.textContent = '-';
         if (nonTeletextCountEl) nonTeletextCountEl.textContent = '-';
         if (nonTeletextSampleCountEl) nonTeletextSampleCountEl.textContent = '-';
+        if (datavizionCountEl) datavizionCountEl.textContent = '-';
         if (electraCountEl) electraCountEl.textContent = '-';
         if (extravisionCountEl) extravisionCountEl.textContent = '-';
+        if (keyfaxCountEl) keyfaxCountEl.textContent = '-';
         if (nbcTeletextCountEl) nbcTeletextCountEl.textContent = '-';
         if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
         if (abcPlusCountEl) abcPlusCountEl.textContent = '-';

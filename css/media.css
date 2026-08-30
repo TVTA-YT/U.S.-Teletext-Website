@@ -108,19 +108,28 @@
   .navbar-nav {
     margin-left: 0% !important;
   }
+
+
 }
 
 /* * SERVICE TV IMAGES * */
 
-@media only screen and (min-width: 576px) and (max-width: 767px) {
-  .service-padding {
-    padding-top: 100px;
+@media only screen and (min-width: 992px) {
+  #nbc-teletext.service-top-padding {
+    padding-top: 100px !important;
   }
 }
 
-@media only screen and (max-width: 575px) {
-  .service-xsmall-padding {
-    padding-bottom: 150px;
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .service-top-padding {
+    padding-top: 100px !important;
+  }
+}
+
+
+@media only screen and (max-width: 767px) {
+  .service-xsmall-bottom-padding {
+    padding-top: 150px !important;
   }
 }
 
@@ -328,6 +337,10 @@
     padding-top: 40px;
   }
 
+  .service-medium-top-padding {
+    padding-top: 100px !important;
+  }
+
   .site-introduction {
     font-size: 1.6em;
   }
@@ -434,7 +447,7 @@
     font-size: 1em !important;
   }
 
-  .service-padding {
+  .service-xsmall-viewport-padding {
     padding-top: 100px;
   }
 

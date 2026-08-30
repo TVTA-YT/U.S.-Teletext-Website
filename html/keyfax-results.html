@@ -297,7 +297,7 @@
         <div id="sort-controls"></div>
         <div id="results"></div>
         <div class="pb-3" id="return-to-form-button">
-          <a href="extravision.html">
+          <a href="keyfax.html">
             <button type="submit" class="btn form-control">
               <span class="button-text">Return to Form</span>
             </button>
@@ -457,11 +457,10 @@
     <script src="../js/render-results.js"></script>
     <script>
       renderResults({
-        jsonPath: "../json/extravision_data.json",
+        jsonPath: "../json/keyfax_data.json",
         filterParam: "year",
         filterField: "Year",
-        serviceLabel: "ExtraVision",
-        stationLabel: "CBS",
+        serviceLabel: "Keyfax",
         groupByField: "Month",
         groupOrder: [
           "January",
@@ -486,8 +485,6 @@
         columns: [
           { label: "Thumbnail", renderThumbnail: true },
           { label: "Date", key: "Date" },
-          { label: "Time", key: "Time" },
-          { label: "Affiliate", key: "Affiliate" },
           { label: "Program", key: "Program_Title" },
           { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
           { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
