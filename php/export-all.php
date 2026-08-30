@@ -48,14 +48,6 @@ $exports = [
         'trackerFile' => $trackerDirectory . '/extravision_data.json',
     ],
     [
-        'table'      =>  'DaTaVizion',
-        'idField'    =>  'ID',
-        'columns'    =>  $broadcastNetworkSharedColumns,
-        'orderBy'    =>  $sharedOrderBy,
-        'outputFile' =>  $jsonDirectory . '/datavizion_data.json',
-        'trackerFile' => $trackerDirectory . '/datavizion_data.json',
-    ],
-    [
         'table'      => 'Electra',
         'idField'    => 'ID',
         'columns'    =>  $otherSharedColumns,
