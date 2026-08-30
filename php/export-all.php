@@ -34,7 +34,7 @@ $exports = [
     [
         'table'      =>  'DaTaVizion',
         'idField'    =>  'ID',
-        'columns'    =>  $broadcastNetworkSharedColumns,
+        'columns'    =>  $otherSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
         'outputFile' =>  $jsonDirectory . '/datavizion_data.json',
         'trackerFile' => $trackerDirectory . '/datavizion_data.json',
