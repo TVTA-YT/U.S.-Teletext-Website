@@ -36,8 +36,8 @@ $exports = [
         'idField'    =>  'ID',
         'columns'    =>  $broadcastNetworkSharedColumns,
         'orderBy'    =>  $sharedOrderBy,
-        'outputFile' =>  $jsonDirectory . '/extravision_data.json',
-        'trackerFile' => $trackerDirectory . '/extravision_data.json',
+        'outputFile' =>  $jsonDirectory . '/datavizion_data.json',
+        'trackerFile' => $trackerDirectory . '/datavizion_data.json',
     ],
     [
         'table'      =>  'ExtraVision',
