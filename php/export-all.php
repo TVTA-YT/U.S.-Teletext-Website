@@ -64,6 +64,14 @@ $exports = [
         'outputFile' =>  $jsonDirectory . '/keyfax_data.json',
         'trackerFile' => $trackerDirectory . '/keyfax_data.json',
     ],
+    [
+        'table'      =>  'NBC_Teletext',
+        'idField'    =>  'ID',
+        'columns'    =>  $broadcastNetworkSharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/nbc_teletext_data.json',
+        'trackerFile' => $trackerDirectory . '/nbc_teletext_data.json',
+    ],
     // Text service
     [
         'table'      => 'ABC_PLUS',
