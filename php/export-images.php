@@ -152,14 +152,8 @@ function buildImageList(string $identifier, array $files): array {
             continue;
         }
 
-        if (!preg_match(FILENAME_PATTERN, $filename)) {
-            continue;
-        }
-
-        $images[] = [
-            'filename' => $filename,
-            'url' => 'https://archive.org/download/' . rawurlencode($identifier) . '/' . rawurlencode($filename),
-        ];
+        // Do not include standalone image files. The gallery should only contain images exported from ZIP files.
+        continue;
     }
 
     return $images;
