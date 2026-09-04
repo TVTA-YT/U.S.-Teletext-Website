@@ -1,35 +1,14 @@
 <!doctype html>
-<!-- Created August 10, 2026, 18:07 -->
+<!-- Created September 3, 2026, 03:33 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Search for archived samples from the CBS ExtraVision teletext service."
+      content="View all images from each available teletext sample."
     />
-    <!-- Open Graph URLs -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="U.S. Teletext Archive - Electra" />
-    <meta
-      property="og:description"
-      content="Search for archived samples from the CBS ExtraVision teletext service."
-    />
-    <meta
-      property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html"
-    />
-    <meta
-      property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
-    />
-    <meta property="og:image:alt" content="U.S. Teletext Archive" />
-    <meta property="og:site_name" content="U.S. Teletext Archive" />
-    <meta property="og:locale" content="en_US" />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/extravision.html"
-    />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
       rel="icon"
@@ -78,7 +57,7 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>ExtraVision</title>
+    <title></title>
     <style>
       .container {
         padding-top: 100px;
@@ -86,6 +65,21 @@
 
       .btn {
         border-radius: 24px;
+      }
+
+      .spinner-border {
+        width: 2rem !important;
+        height: 2rem !important;
+      }
+
+      #spinner-container {
+        position: absolute;
+        top: 47%;
+        left: 49.5%;
+      }
+
+      input {
+        width: 10% !important;
       }
     </style>
   </head>
@@ -237,51 +231,150 @@
         </ul>
       </div>
     </nav>
-    <main>
+    <main id="teletext-image-gallery">
       <div class="container">
+        <!-- Service image heading -->
         <h1>
-          <span class="visually-hidden">ExtraVision</span>
+          <span
+            class="visually-hidden"
+            id="visually-hidden-service-name"
+          ></span>
           <img
-            src="../images/banners/light/CBS-ExtraVision_light.png"
+            src=""
             alt=""
             class="mw-100 light-mode-image"
+            id="light-image-banner"
             aria-hidden="true"
           />
           <img
-            src="../images/banners/dark/CBS-ExtraVision.png"
+            src=""
             alt=""
             class="mw-100 dark-mode-image"
+            id="dark-image-banner"
             aria-hidden="true"
           />
         </h1>
         <hr aria-hidden="true" />
-        <p>
-          Use the form below to view all submissions or to search for
-          submissions by year.
+
+        <!-- Sample name and date -->
+        <h2 class="text-center display-4" id="sample-title"></h2>
+
+        <!-- Contributor name -->
+        <p class="text-center fs-4">
+          Submitted by: <span id="contributor-name"></span>
         </p>
-        <form action="extravision-results.html" method="get">
-          <div class="mb-3">
-            <label for="year" class="form-label"
-              >Select a year (leave blank to view all)</label
+
+        <!-- Page number input -->
+        <div class="text-center">
+          <form id="page-form-input">
+            <div class="mb-3">
+              <label for="input-number" class="form-label"
+                >Go to page number</label
+              >
+              <input
+                type="number"
+                name="input-number"
+                id="input-number"
+                class="form-control m-auto"
+              />
+              <button type="submit" class="btn btn-primary mt-3">
+                Go to Page
+              </button>
+              <p id="page-form-error" role="alert"></p>
+            </div>
+          </form>
+        </div>
+        <div class="teletext-image-view">
+          <!-- Spinner -->
+          <!-- <div class="d-flex justify-content-center">
+            <div
+              class="spinner-border"
+              id="spinner"
+              role="status"
+              aria-hidden="true"
             >
-            <select name="year" id="year" class="form-select">
-              <option value=""></option>
-              <option value="1985">1985</option>
-              <option value="1986">1986</option>
-              <option value="1987">1987</option>
-              <option value="1988">1988</option>
-              <option value="1989">1989</option>
-              <option value="1990" disabled>1990</option>
-              <option value="1991">1991</option>
-            </select>
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div> -->
+
+          <!-- Images -->
+          <div class="text-center">
+            <div class="position-relative mx-auto">
+              <figure class="figure mb-0">
+                <img
+                  src=""
+                  alt=""
+                  class="figure-img mw-100 w-50 border border-white rounded-2"
+                  id="teletext-image"
+                  data-bs-target="#imageModal"
+                  data-bs-caption=""
+                />
+              </figure>
+              <div id="spinner-container">
+                <div
+                  class="spinner-border text-white"
+                  id="spinner"
+                  role="status"
+                  aria-hidden="true"
+                >
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary form-control">
-            Submit
-          </button>
-          <button type="reset" class="btn btn-danger form-control my-4">
-            Reset Fields
-          </button>
-        </form>
+
+          <!-- Page count -->
+          <p class="display-6 text-center" id="page-count"></p>
+          <p class="text-center fs-4 fst-italic">
+            Page Number: <span id="actual-page-number"></span>
+          </p>
+
+          <!-- Navigation buttons -->
+          <div class="text-center pb-3">
+            <button type="button" class="btn btn-info me-4" id="previous-image">
+              <span
+                ><i
+                  class="bi bi-arrow-left-circle-fill fs-2"
+                  style="width: 50% !important"
+                ></i
+              ></span>
+            </button>
+            <button type="button" class="btn btn-info fs-2" id="next-image">
+              <span><i class="bi bi-arrow-right-circle-fill"></i></span>
+            </button>
+          </div>
+        </div>
+        <p id="loading">Loading gallery&hellip;</p>
+        <p id="loading-error" hidden>
+          Could not load this gallery. The stream may not exist or the manifest
+          failed to load.
+        </p>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- * END IMAGE MODAL -->
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -405,5 +498,7 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/image-modal.js"></script>
+    <script src="../js/teletext-gallery.js"></script>
   </body>
 </html>

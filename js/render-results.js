@@ -298,6 +298,22 @@ function appendRow(tbody, row, columns) {
       return `<td>${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}`)}</td>`;
     }
 
+    if (c.key === 'Date') {
+      const stream = row.IA_ID;
+      console.log('IA_ID:', row.IA_ID);
+
+      if (hasRealValue(stream)) {
+        const galleryPath = `teletext-sample-image-gallery.html?stream=${encodeURIComponent(stream)}`;
+        console.log('Gallery URL:', galleryPath);
+
+        const visible = `<a href="${escapeHtml(galleryPath)}" class="text-black fw-bold">${escapeHtml(row[c.key])}</a>`;
+
+        return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}. View teletext images.`)}</td>`;
+      }
+      const visible = escapeHtml(row[c.key]);
+      return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`)}</td>`;
+    }
+
     const visible = escapeHtml(row[c.key]);
     return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`)}</td>`;
   }).join('');
