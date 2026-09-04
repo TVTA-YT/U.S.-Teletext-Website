@@ -55,7 +55,7 @@ $OUTPUT_DIR = __DIR__ . '/../json/teletext-image-data/';
 $CACHE_TTL_SECONDS = 24 * 60 * 60;
 
 // Filenames must match one of these to be included:
-const FILENAME_PATTERN = '/^(?:Record-\d+-\d+-v\d+|Page-\d+-\d+)\.(png|jpg|jpeg|gif)$/i';
+const FILENAME_PATTERN = '/^(?:Record-\d+-\d+-v[A-Za-z0-9]+|Page-\d+-\d+)\.(png|jpg|jpeg|gif)$/i';
 
 const ZIP_FILENAME_PATTERN = '/\.zip$/i';
 
