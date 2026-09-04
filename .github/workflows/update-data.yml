@@ -31,10 +31,13 @@ jobs:
       - name: Export databases to JSON
         run: php php/export-all.php
 
+      - name: Export image data to JSON
+        run: php php/export-images.php
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add json/extravision_data.json json/nbc_teletext_data.json json/electra_data.json json/ket_agtext_data.json json/abc_plus_data.json json/wisconsin_infotext_data.json json/iptv_agids_data.json json/datavizion_data.json json/keyfax_data.json .trackers/
+          git add json/extravision_data.json json/nbc_teletext_data.json json/electra_data.json json/ket_agtext_data.json json/abc_plus_data.json json/wisconsin_infotext_data.json json/iptv_agids_data.json json/datavizion_data.json json/keyfax_data.json json/teletext-image-data/ .trackers/
           git diff --staged --quiet || git commit -m "Update site data [automated]"
           git push
