@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19881221_1",
-    "generated_at": "2026-09-04T07:20:07+00:00",
+    "generated_at": "2026-09-04T07:30:01+00:00",
     "recovered_by": "TVTA",
     "program_title": "Christmas as Pee-Wee's Playhouse",
     "date": "1988-12-21",
@@ -166,6 +166,10 @@
         {
             "filename": "Record-000-000198600-v6.png",
             "url": "https://archive.org/download/USTT_CBS-19881221_1/1988-12-21_WCAX_CBS_ExtraVision.zip/1988-12-21_WCAX_CBS_ExtraVision/Record-000-000198600-v6.png"
+        },
+        {
+            "filename": "Record-000-000198600-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19881221_1/1988-12-21_WCAX_CBS_ExtraVision.zip/1988-12-21_WCAX_CBS_ExtraVision/Record-000-000198600-vA.png"
         },
         {
             "filename": "Record-000-060-v2.png",

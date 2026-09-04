@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19850217_1",
-    "generated_at": "2026-09-04T07:20:25+00:00",
+    "generated_at": "2026-09-04T07:30:18+00:00",
     "recovered_by": "TVTA",
     "program_title": "60 Minutes (closing credits) | Murder, She Wrote (intro)",
     "date": "1985-02-17",
@@ -48,6 +48,10 @@
             "url": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip/1985-02-17_WCBS_CBS_ExtraVision/Record-000-100-v3.png"
         },
         {
+            "filename": "Record-000-100-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip/1985-02-17_WCBS_CBS_ExtraVision/Record-000-100-vE.png"
+        },
+        {
             "filename": "Record-000-100-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip/1985-02-17_WCBS_CBS_ExtraVision/Record-000-100-v2.png"
         },
@@ -58,6 +62,10 @@
         {
             "filename": "Record-000-100-v6.png",
             "url": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip/1985-02-17_WCBS_CBS_ExtraVision/Record-000-100-v6.png"
+        },
+        {
+            "filename": "Record-000-100-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip/1985-02-17_WCBS_CBS_ExtraVision/Record-000-100-vA.png"
         },
         {
             "filename": "Record-000-026-v3.png",

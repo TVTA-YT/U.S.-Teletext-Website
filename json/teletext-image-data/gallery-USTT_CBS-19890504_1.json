@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19890504_1",
-    "generated_at": "2026-09-04T07:20:13+00:00",
+    "generated_at": "2026-09-04T07:30:08+00:00",
     "recovered_by": "TVTA",
     "program_title": "The Smothers Brothers Comedy Hour",
     "date": "1989-05-04",
@@ -10,6 +10,14 @@
         {
             "filename": "Record-000-100-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-v0.png"
+        },
+        {
+            "filename": "Record-000-100-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vF.png"
+        },
+        {
+            "filename": "Record-000-002-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-002-vC.png"
         },
         {
             "filename": "Record-000-012-v1.png",
@@ -32,6 +40,10 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-v3.png"
         },
         {
+            "filename": "Record-000-100-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vE.png"
+        },
+        {
             "filename": "Record-000-000500100-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-000500100-v0.png"
         },
@@ -44,12 +56,32 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-038-v6.png"
         },
         {
+            "filename": "Record-000-100-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vD.png"
+        },
+        {
             "filename": "Record-000-100-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-v2.png"
         },
         {
+            "filename": "Record-000-028-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-028-vE.png"
+        },
+        {
             "filename": "Record-000-000100200-v1.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-000100200-v1.png"
+        },
+        {
+            "filename": "Record-000-100-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vA.png"
+        },
+        {
+            "filename": "Record-000-026-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-026-vE.png"
+        },
+        {
+            "filename": "Record-000-100-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vC.png"
         },
         {
             "filename": "Record-000-100-v5.png",
@@ -58,6 +90,10 @@
         {
             "filename": "Record-000-100-v4.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-v4.png"
+        },
+        {
+            "filename": "Record-000-100-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-100-vB.png"
         },
         {
             "filename": "Record-000-021-v9.png",
@@ -80,8 +116,16 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-v7.png"
         },
         {
+            "filename": "Record-000-051-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vA.png"
+        },
+        {
             "filename": "Record-000-025-v9.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-025-v9.png"
+        },
+        {
+            "filename": "Record-000-051-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vC.png"
         },
         {
             "filename": "Record-000-051-v5.png",
@@ -92,8 +136,16 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-v4.png"
         },
         {
+            "filename": "Record-000-051-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vB.png"
+        },
+        {
             "filename": "Record-000-051-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-v0.png"
+        },
+        {
+            "filename": "Record-000-051-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vF.png"
         },
         {
             "filename": "Record-000-011-v8.png",
@@ -116,8 +168,24 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-022-v4.png"
         },
         {
+            "filename": "Record-000-032-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-032-vE.png"
+        },
+        {
             "filename": "Record-000-051-v3.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-v3.png"
+        },
+        {
+            "filename": "Record-000-051-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vE.png"
+        },
+        {
+            "filename": "Record-000-006-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-006-vA.png"
+        },
+        {
+            "filename": "Record-000-008-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-008-vE.png"
         },
         {
             "filename": "Record-000-000500600-v0.png",
@@ -128,8 +196,16 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-000500700-v0.png"
         },
         {
+            "filename": "Record-000-051-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-vD.png"
+        },
+        {
             "filename": "Record-000-051-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-051-v2.png"
+        },
+        {
+            "filename": "Record-000-032-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-032-vD.png"
         },
         {
             "filename": "Record-000-062-v2.png",
@@ -138,6 +214,14 @@
         {
             "filename": "Record-000-000100000-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-000100000-v2.png"
+        },
+        {
+            "filename": "Record-000-003-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-003-vB.png"
+        },
+        {
+            "filename": "Record-000-027-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-027-vC.png"
         },
         {
             "filename": "Record-000-054-v0.png",
@@ -228,6 +312,10 @@
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-031-v2.png"
         },
         {
+            "filename": "Record-000-005-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-005-vE.png"
+        },
+        {
             "filename": "Record-000-000001101-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-000001101-v0.png"
         },
@@ -242,6 +330,10 @@
         {
             "filename": "Record-000-034-v8.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-034-v8.png"
+        },
+        {
+            "filename": "Record-000-023-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-023-vC.png"
         }
     ]
 }

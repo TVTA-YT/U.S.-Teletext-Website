@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19850414_1",
-    "generated_at": "2026-09-04T07:19:51+00:00",
+    "generated_at": "2026-09-04T07:29:45+00:00",
     "recovered_by": "TVTA",
     "program_title": "The Smothers Brothers Comedy Hour",
     "date": "1989-02-18",
@@ -12,8 +12,20 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v0.png"
         },
         {
+            "filename": "Record-000-100-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-vF.png"
+        },
+        {
+            "filename": "Record-000-038-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-038-vB.png"
+        },
+        {
             "filename": "Record-000-201-v7.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-v7.png"
+        },
+        {
+            "filename": "Record-000-201-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vA.png"
         },
         {
             "filename": "Record-000-000500100-v2.png",
@@ -22,6 +34,18 @@
         {
             "filename": "Record-000-000500000-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-v2.png"
+        },
+        {
+            "filename": "Record-000-000500000-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-vD.png"
+        },
+        {
+            "filename": "Record-000-000500000-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-vE.png"
+        },
+        {
+            "filename": "Record-000-000500100-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-vE.png"
         },
         {
             "filename": "Record-000-000500000-v3.png",
@@ -52,6 +76,10 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-063-v1.png"
         },
         {
+            "filename": "Record-000-038-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-038-vC.png"
+        },
+        {
             "filename": "Record-000-055-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-055-v0.png"
         },
@@ -60,12 +88,24 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v1.png"
         },
         {
+            "filename": "Record-000-028-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-028-vD.png"
+        },
+        {
             "filename": "Record-000-100-v3.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v3.png"
         },
         {
+            "filename": "Record-000-038-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-038-vA.png"
+        },
+        {
             "filename": "Record-000-201-v4.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-v4.png"
+        },
+        {
+            "filename": "Record-000-201-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vB.png"
         },
         {
             "filename": "Record-000-000500000-v1.png",
@@ -80,12 +120,24 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-v1.png"
         },
         {
+            "filename": "Record-000-000500100-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-vF.png"
+        },
+        {
+            "filename": "Record-000-000500000-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-vF.png"
+        },
+        {
             "filename": "Record-000-000500100-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-v0.png"
         },
         {
             "filename": "Record-000-012-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-012-v2.png"
+        },
+        {
+            "filename": "Record-000-201-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vC.png"
         },
         {
             "filename": "Record-000-201-v5.png",
@@ -96,16 +148,32 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-036-v3.png"
         },
         {
+            "filename": "Record-000-100-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-vD.png"
+        },
+        {
             "filename": "Record-000-100-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v2.png"
+        },
+        {
+            "filename": "Record-000-028-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-028-vE.png"
         },
         {
             "filename": "Record-000-100-v6.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v6.png"
         },
         {
+            "filename": "Record-000-038-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-038-vD.png"
+        },
+        {
             "filename": "Record-000-049-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-049-v2.png"
+        },
+        {
+            "filename": "Record-000-000500100-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-vB.png"
         },
         {
             "filename": "Record-000-000500000-v4.png",
@@ -120,6 +188,14 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-v5.png"
         },
         {
+            "filename": "Record-000-000500100-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-vC.png"
+        },
+        {
+            "filename": "Record-000-000500000-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-vC.png"
+        },
+        {
             "filename": "Record-000-034-v3.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-034-v3.png"
         },
@@ -128,16 +204,52 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-v0.png"
         },
         {
+            "filename": "Record-000-201-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vF.png"
+        },
+        {
+            "filename": "Record-000-038-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-038-vE.png"
+        },
+        {
             "filename": "Record-000-100-v7.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-v7.png"
+        },
+        {
+            "filename": "Record-000-100-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-vA.png"
+        },
+        {
+            "filename": "Record-000-000-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000-vA.png"
+        },
+        {
+            "filename": "Record-000-026-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-026-vE.png"
+        },
+        {
+            "filename": "Record-000-100-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-vC.png"
         },
         {
             "filename": "Record-000-045-v1.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-045-v1.png"
         },
         {
+            "filename": "Record-000-201-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vD.png"
+        },
+        {
             "filename": "Record-000-201-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-v2.png"
+        },
+        {
+            "filename": "Record-000-000500100-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500100-vA.png"
+        },
+        {
+            "filename": "Record-000-000500000-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-000500000-vA.png"
         },
         {
             "filename": "Record-000-000500100-v7.png",
@@ -168,6 +280,14 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-061-v1.png"
         },
         {
+            "filename": "Record-000-201-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-201-vE.png"
+        },
+        {
+            "filename": "Record-000-100-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-100-vB.png"
+        },
+        {
             "filename": "Record-000-051-v6.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-051-v6.png"
         },
@@ -188,6 +308,10 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-004-v6.png"
         },
         {
+            "filename": "Record-000-051-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-051-vA.png"
+        },
+        {
             "filename": "Record-000-014-v1.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-014-v1.png"
         },
@@ -206,6 +330,10 @@
         {
             "filename": "Record-000-051-v4.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-051-v4.png"
+        },
+        {
+            "filename": "Record-000-051-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-051-vB.png"
         },
         {
             "filename": "Record-000-022-v1.png",
@@ -248,6 +376,10 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-013-v2.png"
         },
         {
+            "filename": "Record-000-202-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vF.png"
+        },
+        {
             "filename": "Record-000-202-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-v0.png"
         },
@@ -268,12 +400,20 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-062-v1.png"
         },
         {
+            "filename": "Record-000-202-vE.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vE.png"
+        },
+        {
             "filename": "Record-000-202-v3.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-v3.png"
         },
         {
             "filename": "Record-000-202-v2.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-v2.png"
+        },
+        {
+            "filename": "Record-000-202-vD.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vD.png"
         },
         {
             "filename": "Record-000-027-v4.png",
@@ -316,6 +456,10 @@
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-011-v0.png"
         },
         {
+            "filename": "Record-000-202-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vA.png"
+        },
+        {
             "filename": "Record-000-029-v4.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-029-v4.png"
         },
@@ -330,6 +474,14 @@
         {
             "filename": "Record-000-202-v5.png",
             "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-v5.png"
+        },
+        {
+            "filename": "Record-000-202-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vC.png"
+        },
+        {
+            "filename": "Record-000-202-vB.png",
+            "url": "https://archive.org/download/USTT_CBS-19850414_1/1985-04-14_WCBS_CBS_ExtraVision.zip/1985-04-14_WCBS_CBS_ExtraVision/Record-000-202-vB.png"
         },
         {
             "filename": "Record-000-202-v4.png",

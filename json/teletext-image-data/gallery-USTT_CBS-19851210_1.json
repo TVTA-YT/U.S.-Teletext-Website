@@ -1,12 +1,16 @@
 {
     "identifier": "USTT_CBS-19851210_1",
-    "generated_at": "2026-09-04T07:19:47+00:00",
+    "generated_at": "2026-09-04T07:29:41+00:00",
     "recovered_by": "Zaroff's Video Archives",
     "program_title": "N/A",
     "date": "1985-12-10",
     "service": "CBS ExtraVision",
     "network": "CBS",
     "images": [
+        {
+            "filename": "Record-000-000198500-vC.png",
+            "url": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip/CBS_1985-12-10_ExtraVision/Record-000-000198500-vC.png"
+        },
         {
             "filename": "Record-000-080-v6.png",
             "url": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip/CBS_1985-12-10_ExtraVision/Record-000-080-v6.png"
@@ -18,6 +22,10 @@
         {
             "filename": "Record-000-080-v4.png",
             "url": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip/CBS_1985-12-10_ExtraVision/Record-000-080-v4.png"
+        },
+        {
+            "filename": "Record-000-000198500-vA.png",
+            "url": "https://archive.org/download/USTT_CBS-19851210_1/CBS_1985-12-10_ExtraVision.zip/CBS_1985-12-10_ExtraVision/Record-000-000198500-vA.png"
         },
         {
             "filename": "Record-000-026-v2.png",
