@@ -1,0 +1,2191 @@
+{
+    "identifier": "USTT_WTBS-19890817_1",
+    "generated_at": "2026-09-04T05:56:44+00:00",
+    "recovered_by": "UniArchives",
+    "program_title": "The Deliberate Stranger (Ep. Unknown)",
+    "date": "1989-08-17",
+    "service": "Electra",
+    "network": "TBS",
+    "images": [
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/Page-100-0000.png"
+        },
+        {
+            "filename": "Page-152-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0000.png"
+        },
+        {
+            "filename": "Page-202-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-202-0001.png"
+        },
+        {
+            "filename": "Page-291-0203.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0203.png"
+        },
+        {
+            "filename": "Page-272-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-272-0071.png"
+        },
+        {
+            "filename": "Page-273-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-273-0071.png"
+        },
+        {
+            "filename": "Page-241-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-241-0002.png"
+        },
+        {
+            "filename": "Page-240-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-240-0002.png"
+        },
+        {
+            "filename": "Page-188-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-188-0000.png"
+        },
+        {
+            "filename": "Page-291-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0001.png"
+        },
+        {
+            "filename": "Page-290-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0001.png"
+        },
+        {
+            "filename": "Page-291-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0000.png"
+        },
+        {
+            "filename": "Page-274-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-274-0001.png"
+        },
+        {
+            "filename": "Page-275-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-275-0001.png"
+        },
+        {
+            "filename": "Page-236-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-236-0002.png"
+        },
+        {
+            "filename": "Page-237-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-237-0002.png"
+        },
+        {
+            "filename": "Page-214-0172.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0172.png"
+        },
+        {
+            "filename": "Page-203-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-203-0000.png"
+        },
+        {
+            "filename": "Page-125-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-125-0000.png"
+        },
+        {
+            "filename": "Page-124-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-124-0000.png"
+        },
+        {
+            "filename": "Page-181-3000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-181-3000.png"
+        },
+        {
+            "filename": "Page-111-0770.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-111-0770.png"
+        },
+        {
+            "filename": "Page-152-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0001.png"
+        },
+        {
+            "filename": "Page-279-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-279-0271.png"
+        },
+        {
+            "filename": "Page-164-0050.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-164-0050.png"
+        },
+        {
+            "filename": "Page-218-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0102.png"
+        },
+        {
+            "filename": "Page-183-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-183-0000.png"
+        },
+        {
+            "filename": "Page-219-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0102.png"
+        },
+        {
+            "filename": "Page-182-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-182-0000.png"
+        },
+        {
+            "filename": "Page-111-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-111-0000.png"
+        },
+        {
+            "filename": "Page-110-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-110-0000.png"
+        },
+        {
+            "filename": "Page-278-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-278-0071.png"
+        },
+        {
+            "filename": "Page-152-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0201.png"
+        },
+        {
+            "filename": "Page-279-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-279-0071.png"
+        },
+        {
+            "filename": "Page-209-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-209-0001.png"
+        },
+        {
+            "filename": "Page-202-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-202-0002.png"
+        },
+        {
+            "filename": "Page-133-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0004.png"
+        },
+        {
+            "filename": "Page-275-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-275-0201.png"
+        },
+        {
+            "filename": "Page-236-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-236-0000.png"
+        },
+        {
+            "filename": "Page-240-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-240-0001.png"
+        },
+        {
+            "filename": "Page-231-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-231-0071.png"
+        },
+        {
+            "filename": "Page-290-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0002.png"
+        },
+        {
+            "filename": "Page-236-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-236-0202.png"
+        },
+        {
+            "filename": "Page-291-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0002.png"
+        },
+        {
+            "filename": "Page-291-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0003.png"
+        },
+        {
+            "filename": "Page-290-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0003.png"
+        },
+        {
+            "filename": "Page-275-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-275-0002.png"
+        },
+        {
+            "filename": "Page-274-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-274-0002.png"
+        },
+        {
+            "filename": "Page-144-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-144-0004.png"
+        },
+        {
+            "filename": "Page-240-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-240-0000.png"
+        },
+        {
+            "filename": "Page-237-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-237-0001.png"
+        },
+        {
+            "filename": "Page-236-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-236-0001.png"
+        },
+        {
+            "filename": "Page-247-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0071.png"
+        },
+        {
+            "filename": "Page-152-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0200.png"
+        },
+        {
+            "filename": "Page-256-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-256-0002.png"
+        },
+        {
+            "filename": "Page-257-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0002.png"
+        },
+        {
+            "filename": "Page-220-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0201.png"
+        },
+        {
+            "filename": "Page-226-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-226-0072.png"
+        },
+        {
+            "filename": "Page-214-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0001.png"
+        },
+        {
+            "filename": "Page-215-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0001.png"
+        },
+        {
+            "filename": "Page-213-0272.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0272.png"
+        },
+        {
+            "filename": "Page-111-0777.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-111-0777.png"
+        },
+        {
+            "filename": "Page-139-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-139-0002.png"
+        },
+        {
+            "filename": "Page-265-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-265-0071.png"
+        },
+        {
+            "filename": "Page-264-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0071.png"
+        },
+        {
+            "filename": "Page-262-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-262-0202.png"
+        },
+        {
+            "filename": "Page-269-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-269-0201.png"
+        },
+        {
+            "filename": "Page-218-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0271.png"
+        },
+        {
+            "filename": "Page-145-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-145-0000.png"
+        },
+        {
+            "filename": "Page-100-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-100-0700.png"
+        },
+        {
+            "filename": "Page-144-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-144-0000.png"
+        },
+        {
+            "filename": "Page-134-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0070.png"
+        },
+        {
+            "filename": "Page-219-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0072.png"
+        },
+        {
+            "filename": "Page-268-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-268-0002.png"
+        },
+        {
+            "filename": "Page-269-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-269-0002.png"
+        },
+        {
+            "filename": "Page-144-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-144-0001.png"
+        },
+        {
+            "filename": "Page-132-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-132-0000.png"
+        },
+        {
+            "filename": "Page-133-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0000.png"
+        },
+        {
+            "filename": "Page-143-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-143-0070.png"
+        },
+        {
+            "filename": "Page-281-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-281-0071.png"
+        },
+        {
+            "filename": "Page-221-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-221-0002.png"
+        },
+        {
+            "filename": "Page-220-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0002.png"
+        },
+        {
+            "filename": "Page-273-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-273-0102.png"
+        },
+        {
+            "filename": "Page-257-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0201.png"
+        },
+        {
+            "filename": "Page-250-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-250-0072.png"
+        },
+        {
+            "filename": "Page-215-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0000.png"
+        },
+        {
+            "filename": "Page-214-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0000.png"
+        },
+        {
+            "filename": "Page-251-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-251-0072.png"
+        },
+        {
+            "filename": "Page-199-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0070.png"
+        },
+        {
+            "filename": "Page-263-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-263-0001.png"
+        },
+        {
+            "filename": "Page-262-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-262-0001.png"
+        },
+        {
+            "filename": "Page-264-0272.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0272.png"
+        },
+        {
+            "filename": "Page-212-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0071.png"
+        },
+        {
+            "filename": "Page-213-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0071.png"
+        },
+        {
+            "filename": "Page-270-1071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-1071.png"
+        },
+        {
+            "filename": "Page-214-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0202.png"
+        },
+        {
+            "filename": "Page-257-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0001.png"
+        },
+        {
+            "filename": "Page-256-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-256-0001.png"
+        },
+        {
+            "filename": "Page-220-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0202.png"
+        },
+        {
+            "filename": "Page-226-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-226-0071.png"
+        },
+        {
+            "filename": "Page-227-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-227-0071.png"
+        },
+        {
+            "filename": "Page-199-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0700.png"
+        },
+        {
+            "filename": "Page-215-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0002.png"
+        },
+        {
+            "filename": "Page-251-0702.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-251-0702.png"
+        },
+        {
+            "filename": "Page-214-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0002.png"
+        },
+        {
+            "filename": "Page-213-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0271.png"
+        },
+        {
+            "filename": "Page-138-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-138-0001.png"
+        },
+        {
+            "filename": "Page-264-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0072.png"
+        },
+        {
+            "filename": "Page-221-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-221-0000.png"
+        },
+        {
+            "filename": "Page-220-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0000.png"
+        },
+        {
+            "filename": "Page-262-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-262-0201.png"
+        },
+        {
+            "filename": "Page-258-0008.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-258-0008.png"
+        },
+        {
+            "filename": "Page-106-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-106-0000.png"
+        },
+        {
+            "filename": "Page-142-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-142-0700.png"
+        },
+        {
+            "filename": "Page-107-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-107-0000.png"
+        },
+        {
+            "filename": "Page-143-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-143-0700.png"
+        },
+        {
+            "filename": "Page-177-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-177-0070.png"
+        },
+        {
+            "filename": "Page-269-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-269-0000.png"
+        },
+        {
+            "filename": "Page-290-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0004.png"
+        },
+        {
+            "filename": "Page-132-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-132-0200.png"
+        },
+        {
+            "filename": "Page-133-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0200.png"
+        },
+        {
+            "filename": "Page-218-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0071.png"
+        },
+        {
+            "filename": "Page-219-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0071.png"
+        },
+        {
+            "filename": "Page-171-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-171-0000.png"
+        },
+        {
+            "filename": "Page-135-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-135-0700.png"
+        },
+        {
+            "filename": "Page-290-0005.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0005.png"
+        },
+        {
+            "filename": "Page-170-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-170-0000.png"
+        },
+        {
+            "filename": "Page-134-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0700.png"
+        },
+        {
+            "filename": "Page-269-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-269-0001.png"
+        },
+        {
+            "filename": "Page-268-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-268-0001.png"
+        },
+        {
+            "filename": "Page-134-0270.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0270.png"
+        },
+        {
+            "filename": "Page-149-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0070.png"
+        },
+        {
+            "filename": "Page-148-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-148-0070.png"
+        },
+        {
+            "filename": "Page-220-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0001.png"
+        },
+        {
+            "filename": "Page-221-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-221-0001.png"
+        },
+        {
+            "filename": "Page-138-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-138-0000.png"
+        },
+        {
+            "filename": "Page-257-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0202.png"
+        },
+        {
+            "filename": "Page-139-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-139-0000.png"
+        },
+        {
+            "filename": "Page-250-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-250-0071.png"
+        },
+        {
+            "filename": "Page-262-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-262-0002.png"
+        },
+        {
+            "filename": "Page-263-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-263-0002.png"
+        },
+        {
+            "filename": "Page-213-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0072.png"
+        },
+        {
+            "filename": "Page-212-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0072.png"
+        },
+        {
+            "filename": "Page-214-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0201.png"
+        },
+        {
+            "filename": "Page-215-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0201.png"
+        },
+        {
+            "filename": "Page-213-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0001.png"
+        },
+        {
+            "filename": "Page-212-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0001.png"
+        },
+        {
+            "filename": "Page-215-0272.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0272.png"
+        },
+        {
+            "filename": "Page-149-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0201.png"
+        },
+        {
+            "filename": "Page-263-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-263-0071.png"
+        },
+        {
+            "filename": "Page-251-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-251-0002.png"
+        },
+        {
+            "filename": "Page-199-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0000.png"
+        },
+        {
+            "filename": "Page-250-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-250-0002.png"
+        },
+        {
+            "filename": "Page-198-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-198-0000.png"
+        },
+        {
+            "filename": "Page-281-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-281-0001.png"
+        },
+        {
+            "filename": "Page-280-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-280-0001.png"
+        },
+        {
+            "filename": "Page-220-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0072.png"
+        },
+        {
+            "filename": "Page-142-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-142-0000.png"
+        },
+        {
+            "filename": "Page-143-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-143-0000.png"
+        },
+        {
+            "filename": "Page-133-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0070.png"
+        },
+        {
+            "filename": "Page-269-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-269-0072.png"
+        },
+        {
+            "filename": "Page-218-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0002.png"
+        },
+        {
+            "filename": "Page-219-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0002.png"
+        },
+        {
+            "filename": "Page-135-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-135-0000.png"
+        },
+        {
+            "filename": "Page-134-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0000.png"
+        },
+        {
+            "filename": "Page-219-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0201.png"
+        },
+        {
+            "filename": "Page-218-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0201.png"
+        },
+        {
+            "filename": "Page-143-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-143-0001.png"
+        },
+        {
+            "filename": "Page-142-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-142-0001.png"
+        },
+        {
+            "filename": "Page-264-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0001.png"
+        },
+        {
+            "filename": "Page-265-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-265-0001.png"
+        },
+        {
+            "filename": "Page-149-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0002.png"
+        },
+        {
+            "filename": "Page-215-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0071.png"
+        },
+        {
+            "filename": "Page-199-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0001.png"
+        },
+        {
+            "filename": "Page-212-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0202.png"
+        },
+        {
+            "filename": "Page-139-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-139-0700.png"
+        },
+        {
+            "filename": "Page-213-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0202.png"
+        },
+        {
+            "filename": "Page-226-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-226-0002.png"
+        },
+        {
+            "filename": "Page-149-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0200.png"
+        },
+        {
+            "filename": "Page-227-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-227-0002.png"
+        },
+        {
+            "filename": "Page-281-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-281-0202.png"
+        },
+        {
+            "filename": "Page-257-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0072.png"
+        },
+        {
+            "filename": "Page-256-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-256-0072.png"
+        },
+        {
+            "filename": "Page-213-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0000.png"
+        },
+        {
+            "filename": "Page-241-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-241-0102.png"
+        },
+        {
+            "filename": "Page-212-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0002.png"
+        },
+        {
+            "filename": "Page-213-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0002.png"
+        },
+        {
+            "filename": "Page-214-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0271.png"
+        },
+        {
+            "filename": "Page-264-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0201.png"
+        },
+        {
+            "filename": "Page-139-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-139-0070.png"
+        },
+        {
+            "filename": "Page-250-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-250-0001.png"
+        },
+        {
+            "filename": "Page-251-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-251-0001.png"
+        },
+        {
+            "filename": "Page-148-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-148-0000.png"
+        },
+        {
+            "filename": "Page-280-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-280-0002.png"
+        },
+        {
+            "filename": "Page-149-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0000.png"
+        },
+        {
+            "filename": "Page-227-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-227-0202.png"
+        },
+        {
+            "filename": "Page-281-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-281-0002.png"
+        },
+        {
+            "filename": "Page-221-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-221-0071.png"
+        },
+        {
+            "filename": "Page-220-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0071.png"
+        },
+        {
+            "filename": "Page-296-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-296-0004.png"
+        },
+        {
+            "filename": "Page-134-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0200.png"
+        },
+        {
+            "filename": "Page-101-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-101-0000.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-100-0000.png"
+        },
+        {
+            "filename": "Page-219-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0001.png"
+        },
+        {
+            "filename": "Page-218-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-218-0001.png"
+        },
+        {
+            "filename": "Page-134-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-0002.png"
+        },
+        {
+            "filename": "Page-133-0270.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0270.png"
+        },
+        {
+            "filename": "Page-132-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-132-0700.png"
+        },
+        {
+            "filename": "Page-176-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-176-0000.png"
+        },
+        {
+            "filename": "Page-133-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-133-0700.png"
+        },
+        {
+            "filename": "Page-177-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-177-0000.png"
+        },
+        {
+            "filename": "Page-143-0770.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-143-0770.png"
+        },
+        {
+            "filename": "Page-265-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-265-0002.png"
+        },
+        {
+            "filename": "Page-264-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-264-0002.png"
+        },
+        {
+            "filename": "Page-149-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-149-0001.png"
+        },
+        {
+            "filename": "Page-148-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-148-0001.png"
+        },
+        {
+            "filename": "Page-198-0770.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-198-0770.png"
+        },
+        {
+            "filename": "Page-199-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0002.png"
+        },
+        {
+            "filename": "Page-214-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-214-0072.png"
+        },
+        {
+            "filename": "Page-251-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-251-0000.png"
+        },
+        {
+            "filename": "Page-215-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-215-0072.png"
+        },
+        {
+            "filename": "Page-213-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0201.png"
+        },
+        {
+            "filename": "Page-212-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-212-0201.png"
+        },
+        {
+            "filename": "Page-227-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-227-0001.png"
+        },
+        {
+            "filename": "Page-281-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-281-0201.png"
+        },
+        {
+            "filename": "Page-280-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-280-0201.png"
+        },
+        {
+            "filename": "Page-226-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-226-0001.png"
+        },
+        {
+            "filename": "Page-250-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-250-0202.png"
+        },
+        {
+            "filename": "Page-198-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-198-0200.png"
+        },
+        {
+            "filename": "Page-256-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-256-0071.png"
+        },
+        {
+            "filename": "Page-257-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-257-0071.png"
+        },
+        {
+            "filename": "Page-152-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0071.png"
+        },
+        {
+            "filename": "Page-290-0104.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-290-0104.png"
+        },
+        {
+            "filename": "Page-401-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-401-0000.png"
+        },
+        {
+            "filename": "Page-400-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-400-0000.png"
+        },
+        {
+            "filename": "Page-246-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-246-0002.png"
+        },
+        {
+            "filename": "Page-247-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0002.png"
+        },
+        {
+            "filename": "Page-199-0172.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-199-0172.png"
+        },
+        {
+            "filename": "Page-237-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-237-0072.png"
+        },
+        {
+            "filename": "Page-296-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-296-0001.png"
+        },
+        {
+            "filename": "Page-297-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-297-0001.png"
+        },
+        {
+            "filename": "Page-231-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-231-0201.png"
+        },
+        {
+            "filename": "Page-274-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-274-0071.png"
+        },
+        {
+            "filename": "Page-231-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-231-0002.png"
+        },
+        {
+            "filename": "Page-230-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-230-0002.png"
+        },
+        {
+            "filename": "Page-291-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-291-0071.png"
+        },
+        {
+            "filename": "Page-205-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-205-0000.png"
+        },
+        {
+            "filename": "Page-213-0172.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-213-0172.png"
+        },
+        {
+            "filename": "Page-240-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-240-0072.png"
+        },
+        {
+            "filename": "Page-241-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-241-0072.png"
+        },
+        {
+            "filename": "Page-247-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0201.png"
+        },
+        {
+            "filename": "Page-297-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-297-0000.png"
+        },
+        {
+            "filename": "Page-280-0172.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-280-0172.png"
+        },
+        {
+            "filename": "Page-220-0101.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-220-0101.png"
+        },
+        {
+            "filename": "Page-272-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-272-0001.png"
+        },
+        {
+            "filename": "Page-148-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-148-0004.png"
+        },
+        {
+            "filename": "Page-279-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-279-0002.png"
+        },
+        {
+            "filename": "Page-219-0171.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-219-0171.png"
+        },
+        {
+            "filename": "Page-141-1000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-1000.png"
+        },
+        {
+            "filename": "Page-122-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-122-0000.png"
+        },
+        {
+            "filename": "Page-123-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-123-0000.png"
+        },
+        {
+            "filename": "Page-152-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-152-0070.png"
+        },
+        {
+            "filename": "Page-116-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-116-0000.png"
+        },
+        {
+            "filename": "Page-117-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-117-0000.png"
+        },
+        {
+            "filename": "Page-184-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-184-0000.png"
+        },
+        {
+            "filename": "Page-185-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-185-0000.png"
+        },
+        {
+            "filename": "Page-247-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0001.png"
+        },
+        {
+            "filename": "Page-246-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-246-0001.png"
+        },
+        {
+            "filename": "Page-236-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-236-0071.png"
+        },
+        {
+            "filename": "Page-237-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-237-0071.png"
+        },
+        {
+            "filename": "Page-231-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-231-0202.png"
+        },
+        {
+            "filename": "Page-230-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-230-0202.png"
+        },
+        {
+            "filename": "Page-296-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-296-0002.png"
+        },
+        {
+            "filename": "Page-129-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-129-0001.png"
+        },
+        {
+            "filename": "Page-273-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-273-0201.png"
+        },
+        {
+            "filename": "Page-808-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-808-0000.png"
+        },
+        {
+            "filename": "Page-231-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-231-0001.png"
+        },
+        {
+            "filename": "Page-241-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-241-0071.png"
+        },
+        {
+            "filename": "Page-128-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-128-0000.png"
+        },
+        {
+            "filename": "Page-247-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0202.png"
+        },
+        {
+            "filename": "Page-129-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-129-0000.png"
+        },
+        {
+            "filename": "Page-296-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-296-0003.png"
+        },
+        {
+            "filename": "Page-272-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-272-0002.png"
+        },
+        {
+            "filename": "Page-273-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-273-0002.png"
+        },
+        {
+            "filename": "Page-246-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-246-0000.png"
+        },
+        {
+            "filename": "Page-247-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-247-0000.png"
+        },
+        {
+            "filename": "Page-279-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-279-0001.png"
+        },
+        {
+            "filename": "Page-284-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-284-0002.png"
+        },
+        {
+            "filename": "Page-285-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-285-0002.png"
+        },
+        {
+            "filename": "Page-224-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-224-0071.png"
+        },
+        {
+            "filename": "Page-254-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0001.png"
+        },
+        {
+            "filename": "Page-255-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0001.png"
+        },
+        {
+            "filename": "Page-260-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-260-0201.png"
+        },
+        {
+            "filename": "Page-261-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-261-0201.png"
+        },
+        {
+            "filename": "Page-216-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0002.png"
+        },
+        {
+            "filename": "Page-217-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0002.png"
+        },
+        {
+            "filename": "Page-174-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-174-0070.png"
+        },
+        {
+            "filename": "Page-105-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-105-0000.png"
+        },
+        {
+            "filename": "Page-141-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-0700.png"
+        },
+        {
+            "filename": "Page-104-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-104-0000.png"
+        },
+        {
+            "filename": "Page-228-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-228-0201.png"
+        },
+        {
+            "filename": "Page-146-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0002.png"
+        },
+        {
+            "filename": "Page-248-0171.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-248-0171.png"
+        },
+        {
+            "filename": "Page-172-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-172-0000.png"
+        },
+        {
+            "filename": "Page-136-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-136-0700.png"
+        },
+        {
+            "filename": "Page-173-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-173-0000.png"
+        },
+        {
+            "filename": "Page-137-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0700.png"
+        },
+        {
+            "filename": "Page-228-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-228-0002.png"
+        },
+        {
+            "filename": "Page-229-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-229-0002.png"
+        },
+        {
+            "filename": "Page-137-0270.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0270.png"
+        },
+        {
+            "filename": "Page-259-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-259-0072.png"
+        },
+        {
+            "filename": "Page-255-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0202.png"
+        },
+        {
+            "filename": "Page-254-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0202.png"
+        },
+        {
+            "filename": "Page-252-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-252-0071.png"
+        },
+        {
+            "filename": "Page-253-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-253-0071.png"
+        },
+        {
+            "filename": "Page-223-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-223-0001.png"
+        },
+        {
+            "filename": "Page-222-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-222-0001.png"
+        },
+        {
+            "filename": "Page-254-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0000.png"
+        },
+        {
+            "filename": "Page-216-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0201.png"
+        },
+        {
+            "filename": "Page-261-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-261-0002.png"
+        },
+        {
+            "filename": "Page-260-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-260-0002.png"
+        },
+        {
+            "filename": "Page-285-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-285-0001.png"
+        },
+        {
+            "filename": "Page-223-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-223-0201.png"
+        },
+        {
+            "filename": "Page-284-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-284-0001.png"
+        },
+        {
+            "filename": "Page-261-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-261-0000.png"
+        },
+        {
+            "filename": "Page-225-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-225-0072.png"
+        },
+        {
+            "filename": "Page-210-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-210-0070.png"
+        },
+        {
+            "filename": "Page-255-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0002.png"
+        },
+        {
+            "filename": "Page-254-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0002.png"
+        },
+        {
+            "filename": "Page-266-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-266-0071.png"
+        },
+        {
+            "filename": "Page-267-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-267-0071.png"
+        },
+        {
+            "filename": "Page-217-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0001.png"
+        },
+        {
+            "filename": "Page-216-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0001.png"
+        },
+        {
+            "filename": "Page-173-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-173-0200.png"
+        },
+        {
+            "filename": "Page-137-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0070.png"
+        },
+        {
+            "filename": "Page-146-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0000.png"
+        },
+        {
+            "filename": "Page-147-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-147-0000.png"
+        },
+        {
+            "filename": "Page-238-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-238-0102.png"
+        },
+        {
+            "filename": "Page-147-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-147-0001.png"
+        },
+        {
+            "filename": "Page-146-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0001.png"
+        },
+        {
+            "filename": "Page-141-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-0070.png"
+        },
+        {
+            "filename": "Page-229-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-229-0001.png"
+        },
+        {
+            "filename": "Page-228-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-228-0001.png"
+        },
+        {
+            "filename": "Page-131-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-131-0000.png"
+        },
+        {
+            "filename": "Page-130-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-130-0000.png"
+        },
+        {
+            "filename": "Page-255-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0201.png"
+        },
+        {
+            "filename": "Page-217-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0000.png"
+        },
+        {
+            "filename": "Page-282-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-282-0071.png"
+        },
+        {
+            "filename": "Page-222-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-222-0002.png"
+        },
+        {
+            "filename": "Page-284-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-284-0202.png"
+        },
+        {
+            "filename": "Page-223-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-223-0002.png"
+        },
+        {
+            "filename": "Page-211-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-211-0071.png"
+        },
+        {
+            "filename": "Page-217-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0202.png"
+        },
+        {
+            "filename": "Page-179-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-179-0000.png"
+        },
+        {
+            "filename": "Page-260-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-260-0001.png"
+        },
+        {
+            "filename": "Page-285-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-285-0000.png"
+        },
+        {
+            "filename": "Page-248-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-248-0002.png"
+        },
+        {
+            "filename": "Page-249-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-249-0002.png"
+        },
+        {
+            "filename": "Page-298-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-298-0001.png"
+        },
+        {
+            "filename": "Page-299-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-299-0001.png"
+        },
+        {
+            "filename": "Page-112-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-112-0000.png"
+        },
+        {
+            "filename": "Page-113-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-113-0000.png"
+        },
+        {
+            "filename": "Page-293-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-293-0200.png"
+        },
+        {
+            "filename": "Page-201-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-201-0002.png"
+        },
+        {
+            "filename": "Page-200-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-200-0002.png"
+        },
+        {
+            "filename": "Page-232-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-232-0071.png"
+        },
+        {
+            "filename": "Page-235-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-235-0202.png"
+        },
+        {
+            "filename": "Page-243-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-243-0001.png"
+        },
+        {
+            "filename": "Page-242-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-242-0001.png"
+        },
+        {
+            "filename": "Page-146-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0004.png"
+        },
+        {
+            "filename": "Page-242-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-242-0000.png"
+        },
+        {
+            "filename": "Page-243-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-243-0000.png"
+        },
+        {
+            "filename": "Page-276-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-276-0002.png"
+        },
+        {
+            "filename": "Page-277-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-277-0002.png"
+        },
+        {
+            "filename": "Page-216-0171.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0171.png"
+        },
+        {
+            "filename": "Page-245-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-245-0071.png"
+        },
+        {
+            "filename": "Page-217-0171.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0171.png"
+        },
+        {
+            "filename": "Page-242-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-242-0202.png"
+        },
+        {
+            "filename": "Page-243-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-243-0202.png"
+        },
+        {
+            "filename": "Page-292-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-292-0201.png"
+        },
+        {
+            "filename": "Page-234-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-234-0001.png"
+        },
+        {
+            "filename": "Page-235-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-235-0001.png"
+        },
+        {
+            "filename": "Page-186-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-186-0070.png"
+        },
+        {
+            "filename": "Page-114-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-114-0070.png"
+        },
+        {
+            "filename": "Page-299-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-299-0000.png"
+        },
+        {
+            "filename": "Page-298-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-298-0000.png"
+        },
+        {
+            "filename": "Page-121-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-121-0700.png"
+        },
+        {
+            "filename": "Page-120-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-120-0072.png"
+        },
+        {
+            "filename": "Page-249-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-249-0001.png"
+        },
+        {
+            "filename": "Page-248-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-248-0001.png"
+        },
+        {
+            "filename": "Page-120-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-120-0070.png"
+        },
+        {
+            "filename": "Page-121-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-121-0070.png"
+        },
+        {
+            "filename": "Page-238-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-238-0071.png"
+        },
+        {
+            "filename": "Page-239-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-239-0071.png"
+        },
+        {
+            "filename": "Page-151-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-151-0000.png"
+        },
+        {
+            "filename": "Page-115-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-115-0700.png"
+        },
+        {
+            "filename": "Page-150-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-150-0000.png"
+        },
+        {
+            "filename": "Page-118-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-118-0000.png"
+        },
+        {
+            "filename": "Page-119-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-119-0000.png"
+        },
+        {
+            "filename": "Page-270-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-0071.png"
+        },
+        {
+            "filename": "Page-200-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-200-0001.png"
+        },
+        {
+            "filename": "Page-201-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-201-0001.png"
+        },
+        {
+            "filename": "Page-292-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-292-0001.png"
+        },
+        {
+            "filename": "Page-293-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-293-0001.png"
+        },
+        {
+            "filename": "Page-243-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-243-0002.png"
+        },
+        {
+            "filename": "Page-178-0601.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-178-0601.png"
+        },
+        {
+            "filename": "Page-207-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-207-0071.png"
+        },
+        {
+            "filename": "Page-293-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-293-0000.png"
+        },
+        {
+            "filename": "Page-292-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-292-0000.png"
+        },
+        {
+            "filename": "Page-276-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-276-0001.png"
+        },
+        {
+            "filename": "Page-201-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-201-0000.png"
+        },
+        {
+            "filename": "Page-200-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-200-0000.png"
+        },
+        {
+            "filename": "Page-245-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-245-0072.png"
+        },
+        {
+            "filename": "Page-235-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-235-0002.png"
+        },
+        {
+            "filename": "Page-234-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-234-0002.png"
+        },
+        {
+            "filename": "Page-295-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-295-0071.png"
+        },
+        {
+            "filename": "Page-126-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-126-0000.png"
+        },
+        {
+            "filename": "Page-127-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-127-0000.png"
+        },
+        {
+            "filename": "Page-150-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-150-0001.png"
+        },
+        {
+            "filename": "Page-151-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-151-0001.png"
+        },
+        {
+            "filename": "Page-146-0100.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0100.png"
+        },
+        {
+            "filename": "Page-115-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-115-0000.png"
+        },
+        {
+            "filename": "Page-114-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-114-0000.png"
+        },
+        {
+            "filename": "Page-120-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-120-0200.png"
+        },
+        {
+            "filename": "Page-186-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-186-0000.png"
+        },
+        {
+            "filename": "Page-235-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-235-0071.png"
+        },
+        {
+            "filename": "Page-234-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-234-0071.png"
+        },
+        {
+            "filename": "Page-294-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-294-0002.png"
+        },
+        {
+            "filename": "Page-244-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-244-0001.png"
+        },
+        {
+            "filename": "Page-270-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-0201.png"
+        },
+        {
+            "filename": "Page-277-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-277-0072.png"
+        },
+        {
+            "filename": "Page-206-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-206-0002.png"
+        },
+        {
+            "filename": "Page-207-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-207-0002.png"
+        },
+        {
+            "filename": "Page-243-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-243-0071.png"
+        },
+        {
+            "filename": "Page-245-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-245-0202.png"
+        },
+        {
+            "filename": "Page-233-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-233-0001.png"
+        },
+        {
+            "filename": "Page-232-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-232-0001.png"
+        },
+        {
+            "filename": "Page-244-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-244-0000.png"
+        },
+        {
+            "filename": "Page-294-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-294-0003.png"
+        },
+        {
+            "filename": "Page-271-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-271-0002.png"
+        },
+        {
+            "filename": "Page-270-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-0002.png"
+        },
+        {
+            "filename": "Page-112-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-112-0070.png"
+        },
+        {
+            "filename": "Page-238-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-238-0002.png"
+        },
+        {
+            "filename": "Page-239-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-239-0002.png"
+        },
+        {
+            "filename": "Page-249-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-249-0072.png"
+        },
+        {
+            "filename": "Page-248-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-248-0072.png"
+        },
+        {
+            "filename": "Page-120-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-120-0001.png"
+        },
+        {
+            "filename": "Page-121-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-121-0001.png"
+        },
+        {
+            "filename": "Page-490-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-490-0000.png"
+        },
+        {
+            "filename": "Page-402-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-402-0000.png"
+        },
+        {
+            "filename": "Page-403-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-403-0000.png"
+        },
+        {
+            "filename": "Page-126-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-126-0070.png"
+        },
+        {
+            "filename": "Page-134-1000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-134-1000.png"
+        },
+        {
+            "filename": "Page-270-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-0000.png"
+        },
+        {
+            "filename": "Page-235-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-235-0072.png"
+        },
+        {
+            "filename": "Page-295-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-295-0001.png"
+        },
+        {
+            "filename": "Page-848-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-848-0000.png"
+        },
+        {
+            "filename": "Page-232-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-232-0201.png"
+        },
+        {
+            "filename": "Page-294-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-294-0001.png"
+        },
+        {
+            "filename": "Page-245-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-245-0002.png"
+        },
+        {
+            "filename": "Page-244-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-244-0002.png"
+        },
+        {
+            "filename": "Page-271-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-271-0202.png"
+        },
+        {
+            "filename": "Page-276-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-276-0071.png"
+        },
+        {
+            "filename": "Page-277-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-277-0071.png"
+        },
+        {
+            "filename": "Page-207-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-207-0000.png"
+        },
+        {
+            "filename": "Page-245-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-245-0201.png"
+        },
+        {
+            "filename": "Page-232-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-232-0002.png"
+        },
+        {
+            "filename": "Page-294-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-294-0202.png"
+        },
+        {
+            "filename": "Page-233-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-233-0002.png"
+        },
+        {
+            "filename": "Page-292-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-292-0071.png"
+        },
+        {
+            "filename": "Page-200-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-200-0071.png"
+        },
+        {
+            "filename": "Page-270-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-270-0001.png"
+        },
+        {
+            "filename": "Page-271-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-271-0001.png"
+        },
+        {
+            "filename": "Page-157-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-157-0001.png"
+        },
+        {
+            "filename": "Page-239-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-239-0001.png"
+        },
+        {
+            "filename": "Page-238-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-238-0001.png"
+        },
+        {
+            "filename": "Page-249-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-249-0071.png"
+        },
+        {
+            "filename": "Page-121-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-121-0000.png"
+        },
+        {
+            "filename": "Page-120-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-120-0000.png"
+        },
+        {
+            "filename": "Page-211-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-211-0002.png"
+        },
+        {
+            "filename": "Page-210-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-210-0002.png"
+        },
+        {
+            "filename": "Page-216-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0271.png"
+        },
+        {
+            "filename": "Page-217-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0271.png"
+        },
+        {
+            "filename": "Page-225-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-225-0202.png"
+        },
+        {
+            "filename": "Page-283-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-283-0002.png"
+        },
+        {
+            "filename": "Page-282-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-282-0002.png"
+        },
+        {
+            "filename": "Page-223-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-223-0071.png"
+        },
+        {
+            "filename": "Page-253-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-253-0001.png"
+        },
+        {
+            "filename": "Page-252-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-252-0001.png"
+        },
+        {
+            "filename": "Page-137-0200.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0200.png"
+        },
+        {
+            "filename": "Page-259-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-259-0002.png"
+        },
+        {
+            "filename": "Page-748-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-748-0070.png"
+        },
+        {
+            "filename": "Page-173-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-173-0070.png"
+        },
+        {
+            "filename": "Page-137-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0002.png"
+        },
+        {
+            "filename": "Page-102-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-102-0000.png"
+        },
+        {
+            "filename": "Page-103-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-103-0000.png"
+        },
+        {
+            "filename": "Page-259-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-259-0201.png"
+        },
+        {
+            "filename": "Page-141-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-0002.png"
+        },
+        {
+            "filename": "Page-175-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-175-0000.png"
+        },
+        {
+            "filename": "Page-174-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-174-0000.png"
+        },
+        {
+            "filename": "Page-216-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0072.png"
+        },
+        {
+            "filename": "Page-211-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-211-0201.png"
+        },
+        {
+            "filename": "Page-266-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-266-0002.png"
+        },
+        {
+            "filename": "Page-267-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-267-0002.png"
+        },
+        {
+            "filename": "Page-252-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-252-0202.png"
+        },
+        {
+            "filename": "Page-253-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-253-0202.png"
+        },
+        {
+            "filename": "Page-255-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0071.png"
+        },
+        {
+            "filename": "Page-254-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0071.png"
+        },
+        {
+            "filename": "Page-224-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-224-0001.png"
+        },
+        {
+            "filename": "Page-225-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-225-0001.png"
+        },
+        {
+            "filename": "Page-261-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-261-0071.png"
+        },
+        {
+            "filename": "Page-260-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-260-0071.png"
+        },
+        {
+            "filename": "Page-108-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-108-0000.png"
+        },
+        {
+            "filename": "Page-109-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-109-0000.png"
+        },
+        {
+            "filename": "Page-211-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-211-0001.png"
+        },
+        {
+            "filename": "Page-217-0272.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-217-0272.png"
+        },
+        {
+            "filename": "Page-282-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-282-0001.png"
+        },
+        {
+            "filename": "Page-283-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-283-0001.png"
+        },
+        {
+            "filename": "Page-255-0271.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-255-0271.png"
+        },
+        {
+            "filename": "Page-252-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-252-0002.png"
+        },
+        {
+            "filename": "Page-253-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-253-0002.png"
+        },
+        {
+            "filename": "Page-258-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-258-0001.png"
+        },
+        {
+            "filename": "Page-141-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-0000.png"
+        },
+        {
+            "filename": "Page-140-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-140-0000.png"
+        },
+        {
+            "filename": "Page-104-0700.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-104-0700.png"
+        },
+        {
+            "filename": "Page-228-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-228-0071.png"
+        },
+        {
+            "filename": "Page-147-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-147-0070.png"
+        },
+        {
+            "filename": "Page-146-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-146-0070.png"
+        },
+        {
+            "filename": "Page-136-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-136-0000.png"
+        },
+        {
+            "filename": "Page-137-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-137-0000.png"
+        },
+        {
+            "filename": "Page-114-0400.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-114-0400.png"
+        },
+        {
+            "filename": "Page-140-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-140-0001.png"
+        },
+        {
+            "filename": "Page-141-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-141-0001.png"
+        },
+        {
+            "filename": "Page-259-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-259-0000.png"
+        },
+        {
+            "filename": "Page-216-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-216-0071.png"
+        },
+        {
+            "filename": "Page-267-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-267-0001.png"
+        },
+        {
+            "filename": "Page-283-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-283-0000.png"
+        },
+        {
+            "filename": "Page-282-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-282-0000.png"
+        },
+        {
+            "filename": "Page-252-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-252-0201.png"
+        },
+        {
+            "filename": "Page-828-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-828-0000.png"
+        },
+        {
+            "filename": "Page-254-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-254-0072.png"
+        },
+        {
+            "filename": "Page-210-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-210-0000.png"
+        },
+        {
+            "filename": "Page-284-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-284-0071.png"
+        },
+        {
+            "filename": "Page-282-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-282-0202.png"
+        },
+        {
+            "filename": "Page-224-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19890817_1/UniArchives_08-17-1989_TBS_TheDeliberateStranger.zip/UniArchives_08-17-1989_TBS_TheDeliberateStranger/Page-224-0002.png"
+        }
+    ]
+}

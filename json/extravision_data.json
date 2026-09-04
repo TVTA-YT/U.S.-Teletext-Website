@@ -1,5 +1,23 @@
 [
     {
+        "ID": "fa73ffcd-a7f6-11f1-a705-0200170221f6",
+        "Year": "1985",
+        "Month": "February",
+        "Date": "1985-02-17",
+        "Affiliate": "KDFW",
+        "Program_Title": "60 Minutes (closing credits) | Murder, She Wrote (intro)",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19850217_1/1985-02-17_WCBS_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia601803.us.archive.org/6/items/USTT_CBS-19850217_1/Record-000-000-v2.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "This is only about 4 minutes worth of decoded data.",
+        "Date_Added": "2026-09-03",
+        "Recovered_By": "TVTA",
+        "IsNew": true
+    },
+    {
         "ID": "6cd637ce-a525-11f1-a705-0200170221f6",
         "Year": "1985",
         "Month": "April",
@@ -33,7 +51,7 @@
         "Notes": "",
         "Date_Added": "2026-08-26",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "84d38c31-a1dd-11f1-a705-0200170221f6",
@@ -51,7 +69,7 @@
         "Notes": "",
         "Date_Added": "2026-08-27",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a71efb3b-9602-11f1-a705-0200170221f6",
@@ -231,7 +249,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "8c1aaa62-a03f-11f1-a705-0200170221f6",
@@ -249,7 +267,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "1efd2ff9-a0e5-11f1-a705-0200170221f6",
@@ -267,7 +285,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "60b9d9aa-a665-11f1-a705-0200170221f6",

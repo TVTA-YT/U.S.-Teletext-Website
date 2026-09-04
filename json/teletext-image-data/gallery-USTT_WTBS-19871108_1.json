@@ -1,0 +1,531 @@
+{
+    "identifier": "USTT_WTBS-19871108_1",
+    "generated_at": "2026-09-04T05:56:53+00:00",
+    "recovered_by": "UniArchives",
+    "program_title": "Goodbye Raggedy Ann",
+    "date": "1987-11-08",
+    "service": "Electra",
+    "network": "TBS",
+    "images": [
+        {
+            "filename": "Page-152-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-152-0000.png"
+        },
+        {
+            "filename": "Page-153-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-153-0000.png"
+        },
+        {
+            "filename": "Page-236-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-236-0003.png"
+        },
+        {
+            "filename": "Page-240-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-240-0003.png"
+        },
+        {
+            "filename": "Page-401-0070.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-401-0070.png"
+        },
+        {
+            "filename": "Page-125-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-125-0000.png"
+        },
+        {
+            "filename": "Page-124-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-124-0000.png"
+        },
+        {
+            "filename": "Page-111-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-111-0000.png"
+        },
+        {
+            "filename": "Page-110-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-110-0000.png"
+        },
+        {
+            "filename": "Page-241-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-241-0001.png"
+        },
+        {
+            "filename": "Page-237-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-237-0001.png"
+        },
+        {
+            "filename": "Page-208-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-208-0000.png"
+        },
+        {
+            "filename": "Page-209-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-209-0000.png"
+        },
+        {
+            "filename": "Page-312-0140.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-312-0140.png"
+        },
+        {
+            "filename": "Page-145-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-145-0000.png"
+        },
+        {
+            "filename": "Page-144-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-144-0000.png"
+        },
+        {
+            "filename": "Page-132-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-132-0000.png"
+        },
+        {
+            "filename": "Page-133-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-133-0000.png"
+        },
+        {
+            "filename": "Page-257-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-257-0001.png"
+        },
+        {
+            "filename": "Page-256-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-256-0001.png"
+        },
+        {
+            "filename": "Page-221-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-221-0000.png"
+        },
+        {
+            "filename": "Page-220-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-220-0000.png"
+        },
+        {
+            "filename": "Page-106-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-106-0000.png"
+        },
+        {
+            "filename": "Page-107-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-107-0000.png"
+        },
+        {
+            "filename": "Page-138-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-138-0000.png"
+        },
+        {
+            "filename": "Page-139-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-139-0000.png"
+        },
+        {
+            "filename": "Page-199-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-199-0000.png"
+        },
+        {
+            "filename": "Page-250-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-250-0002.png"
+        },
+        {
+            "filename": "Page-280-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-280-0001.png"
+        },
+        {
+            "filename": "Page-142-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-142-0000.png"
+        },
+        {
+            "filename": "Page-143-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-143-0000.png"
+        },
+        {
+            "filename": "Page-325-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-325-0000.png"
+        },
+        {
+            "filename": "Page-247-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-247-0004.png"
+        },
+        {
+            "filename": "Page-135-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-135-0000.png"
+        },
+        {
+            "filename": "Page-134-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-134-0000.png"
+        },
+        {
+            "filename": "Page-278-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-278-0004.png"
+        },
+        {
+            "filename": "Page-251-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-251-0003.png"
+        },
+        {
+            "filename": "Page-148-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-148-0000.png"
+        },
+        {
+            "filename": "Page-149-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-149-0000.png"
+        },
+        {
+            "filename": "Page-101-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-101-0000.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-100-0000.png"
+        },
+        {
+            "filename": "Page-218-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-218-0000.png"
+        },
+        {
+            "filename": "Page-219-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-219-0000.png"
+        },
+        {
+            "filename": "Page-310-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-310-0000.png"
+        },
+        {
+            "filename": "Page-311-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-311-0000.png"
+        },
+        {
+            "filename": "Page-212-0013.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-212-0013.png"
+        },
+        {
+            "filename": "Page-401-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-401-0000.png"
+        },
+        {
+            "filename": "Page-400-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-400-0000.png"
+        },
+        {
+            "filename": "Page-246-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-246-0002.png"
+        },
+        {
+            "filename": "Page-205-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-205-0000.png"
+        },
+        {
+            "filename": "Page-204-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-204-0000.png"
+        },
+        {
+            "filename": "Page-227-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-227-0004.png"
+        },
+        {
+            "filename": "Page-226-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-226-0004.png"
+        },
+        {
+            "filename": "Page-122-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-122-0000.png"
+        },
+        {
+            "filename": "Page-123-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-123-0000.png"
+        },
+        {
+            "filename": "Page-116-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-116-0000.png"
+        },
+        {
+            "filename": "Page-117-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-117-0000.png"
+        },
+        {
+            "filename": "Page-499-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-499-0000.png"
+        },
+        {
+            "filename": "Page-274-0701.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-274-0701.png"
+        },
+        {
+            "filename": "Page-230-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-230-0001.png"
+        },
+        {
+            "filename": "Page-231-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-231-0001.png"
+        },
+        {
+            "filename": "Page-128-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-128-0000.png"
+        },
+        {
+            "filename": "Page-129-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-129-0000.png"
+        },
+        {
+            "filename": "Page-212-0011.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-212-0011.png"
+        },
+        {
+            "filename": "Page-254-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-254-0001.png"
+        },
+        {
+            "filename": "Page-229-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-229-0003.png"
+        },
+        {
+            "filename": "Page-105-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-105-0000.png"
+        },
+        {
+            "filename": "Page-104-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-104-0000.png"
+        },
+        {
+            "filename": "Page-277-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-277-0004.png"
+        },
+        {
+            "filename": "Page-314-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-314-0000.png"
+        },
+        {
+            "filename": "Page-315-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-315-0000.png"
+        },
+        {
+            "filename": "Page-222-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-222-0003.png"
+        },
+        {
+            "filename": "Page-360-0050.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-360-0050.png"
+        },
+        {
+            "filename": "Page-146-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-146-0000.png"
+        },
+        {
+            "filename": "Page-147-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-147-0000.png"
+        },
+        {
+            "filename": "Page-228-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-228-0001.png"
+        },
+        {
+            "filename": "Page-131-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-131-0000.png"
+        },
+        {
+            "filename": "Page-130-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-130-0000.png"
+        },
+        {
+            "filename": "Page-112-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-112-0000.png"
+        },
+        {
+            "filename": "Page-113-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-113-0000.png"
+        },
+        {
+            "filename": "Page-360-0055.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-360-0055.png"
+        },
+        {
+            "filename": "Page-234-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-234-0001.png"
+        },
+        {
+            "filename": "Page-249-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-249-0003.png"
+        },
+        {
+            "filename": "Page-248-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-248-0003.png"
+        },
+        {
+            "filename": "Page-255-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-255-0004.png"
+        },
+        {
+            "filename": "Page-151-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-151-0000.png"
+        },
+        {
+            "filename": "Page-150-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-150-0000.png"
+        },
+        {
+            "filename": "Page-118-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-118-0000.png"
+        },
+        {
+            "filename": "Page-119-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-119-0000.png"
+        },
+        {
+            "filename": "Page-235-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-235-0003.png"
+        },
+        {
+            "filename": "Page-242-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-242-0002.png"
+        },
+        {
+            "filename": "Page-243-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-243-0003.png"
+        },
+        {
+            "filename": "Page-276-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-276-0001.png"
+        },
+        {
+            "filename": "Page-223-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-223-0004.png"
+        },
+        {
+            "filename": "Page-126-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-126-0000.png"
+        },
+        {
+            "filename": "Page-127-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-127-0000.png"
+        },
+        {
+            "filename": "Page-115-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-115-0000.png"
+        },
+        {
+            "filename": "Page-114-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-114-0000.png"
+        },
+        {
+            "filename": "Page-245-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-245-0001.png"
+        },
+        {
+            "filename": "Page-238-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-238-0002.png"
+        },
+        {
+            "filename": "Page-239-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-239-0002.png"
+        },
+        {
+            "filename": "Page-402-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-402-0000.png"
+        },
+        {
+            "filename": "Page-403-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-403-0000.png"
+        },
+        {
+            "filename": "Page-232-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-232-0003.png"
+        },
+        {
+            "filename": "Page-206-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-206-0000.png"
+        },
+        {
+            "filename": "Page-207-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-207-0000.png"
+        },
+        {
+            "filename": "Page-233-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-233-0002.png"
+        },
+        {
+            "filename": "Page-239-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-239-0001.png"
+        },
+        {
+            "filename": "Page-121-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-121-0000.png"
+        },
+        {
+            "filename": "Page-120-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-120-0000.png"
+        },
+        {
+            "filename": "Page-258-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-258-0002.png"
+        },
+        {
+            "filename": "Page-102-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-102-0000.png"
+        },
+        {
+            "filename": "Page-103-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-103-0000.png"
+        },
+        {
+            "filename": "Page-313-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-313-0000.png"
+        },
+        {
+            "filename": "Page-312-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-312-0000.png"
+        },
+        {
+            "filename": "Page-224-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-224-0001.png"
+        },
+        {
+            "filename": "Page-225-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-225-0001.png"
+        },
+        {
+            "filename": "Page-108-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-108-0000.png"
+        },
+        {
+            "filename": "Page-252-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-252-0002.png"
+        },
+        {
+            "filename": "Page-253-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-253-0002.png"
+        },
+        {
+            "filename": "Page-259-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-259-0001.png"
+        },
+        {
+            "filename": "Page-141-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-141-0000.png"
+        },
+        {
+            "filename": "Page-288-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-288-0002.png"
+        },
+        {
+            "filename": "Page-140-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-140-0000.png"
+        },
+        {
+            "filename": "Page-244-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-244-0004.png"
+        },
+        {
+            "filename": "Page-136-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-136-0000.png"
+        },
+        {
+            "filename": "Page-137-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-137-0000.png"
+        },
+        {
+            "filename": "Page-211-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-211-0000.png"
+        },
+        {
+            "filename": "Page-210-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/11-8-1987_WTBS_40sec_OTA0002.zip/11-8-1987_WTBS_40sec_OTA0002/Page-210-0000.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19871108_1/Page-100-0000.png"
+        }
+    ]
+}

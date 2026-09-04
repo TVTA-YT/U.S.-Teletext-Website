@@ -1,0 +1,1379 @@
+{
+    "identifier": "USTT_WTBS-19920103_1",
+    "generated_at": "2026-09-04T05:57:14+00:00",
+    "recovered_by": "TVTA",
+    "program_title": "To Kill a Clown | Tom & Jerry's Funhouse",
+    "date": "1992-01-03",
+    "service": "Electra",
+    "network": "TBS",
+    "images": [
+        {
+            "filename": "Page-152-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-152-0000.png"
+        },
+        {
+            "filename": "Page-153-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-153-0000.png"
+        },
+        {
+            "filename": "Page-287-0007.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0007.png"
+        },
+        {
+            "filename": "Page-228-1001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-228-1001.png"
+        },
+        {
+            "filename": "Page-209-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-209-0002.png"
+        },
+        {
+            "filename": "Page-241-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-241-0002.png"
+        },
+        {
+            "filename": "Page-240-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-240-0002.png"
+        },
+        {
+            "filename": "Page-274-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-274-0001.png"
+        },
+        {
+            "filename": "Page-275-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-275-0001.png"
+        },
+        {
+            "filename": "Page-236-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-236-0002.png"
+        },
+        {
+            "filename": "Page-298-1010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-1010.png"
+        },
+        {
+            "filename": "Page-237-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-237-0002.png"
+        },
+        {
+            "filename": "Page-125-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-125-0000.png"
+        },
+        {
+            "filename": "Page-124-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-124-0000.png"
+        },
+        {
+            "filename": "Page-287-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0006.png"
+        },
+        {
+            "filename": "Page-153-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-153-0001.png"
+        },
+        {
+            "filename": "Page-287-0010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0010.png"
+        },
+        {
+            "filename": "Page-873-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-873-0002.png"
+        },
+        {
+            "filename": "Page-286-0010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0010.png"
+        },
+        {
+            "filename": "Page-287-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0004.png"
+        },
+        {
+            "filename": "Page-111-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-111-0000.png"
+        },
+        {
+            "filename": "Page-110-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-110-0000.png"
+        },
+        {
+            "filename": "Page-209-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-209-0001.png"
+        },
+        {
+            "filename": "Page-208-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-208-0001.png"
+        },
+        {
+            "filename": "Page-240-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-240-0001.png"
+        },
+        {
+            "filename": "Page-269-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-269-0006.png"
+        },
+        {
+            "filename": "Page-241-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-241-0001.png"
+        },
+        {
+            "filename": "Page-158-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-158-0000.png"
+        },
+        {
+            "filename": "Page-159-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-159-0000.png"
+        },
+        {
+            "filename": "Page-275-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-275-0002.png"
+        },
+        {
+            "filename": "Page-274-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-274-0002.png"
+        },
+        {
+            "filename": "Page-240-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-240-0000.png"
+        },
+        {
+            "filename": "Page-237-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-237-0001.png"
+        },
+        {
+            "filename": "Page-221-2002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-221-2002.png"
+        },
+        {
+            "filename": "Page-236-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-236-0001.png"
+        },
+        {
+            "filename": "Page-287-0005.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0005.png"
+        },
+        {
+            "filename": "Page-301-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-301-0000.png"
+        },
+        {
+            "filename": "Page-256-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-256-0002.png"
+        },
+        {
+            "filename": "Page-257-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-257-0002.png"
+        },
+        {
+            "filename": "Page-286-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0001.png"
+        },
+        {
+            "filename": "Page-287-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0001.png"
+        },
+        {
+            "filename": "Page-214-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-214-0001.png"
+        },
+        {
+            "filename": "Page-215-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-215-0001.png"
+        },
+        {
+            "filename": "Page-139-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-139-0002.png"
+        },
+        {
+            "filename": "Page-268-0201.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-268-0201.png"
+        },
+        {
+            "filename": "Page-133-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-133-0001.png"
+        },
+        {
+            "filename": "Page-145-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-145-0000.png"
+        },
+        {
+            "filename": "Page-144-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-144-0000.png"
+        },
+        {
+            "filename": "Page-268-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-268-0002.png"
+        },
+        {
+            "filename": "Page-269-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-269-0002.png"
+        },
+        {
+            "filename": "Page-132-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-132-0000.png"
+        },
+        {
+            "filename": "Page-133-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-133-0000.png"
+        },
+        {
+            "filename": "Page-221-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-221-0002.png"
+        },
+        {
+            "filename": "Page-220-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-220-0002.png"
+        },
+        {
+            "filename": "Page-215-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-215-0000.png"
+        },
+        {
+            "filename": "Page-263-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-263-0001.png"
+        },
+        {
+            "filename": "Page-262-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-262-0001.png"
+        },
+        {
+            "filename": "Page-226-0701.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-226-0701.png"
+        },
+        {
+            "filename": "Page-287-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0000.png"
+        },
+        {
+            "filename": "Page-286-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0000.png"
+        },
+        {
+            "filename": "Page-257-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-257-0001.png"
+        },
+        {
+            "filename": "Page-256-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-256-0001.png"
+        },
+        {
+            "filename": "Page-287-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0002.png"
+        },
+        {
+            "filename": "Page-220-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-220-0202.png"
+        },
+        {
+            "filename": "Page-286-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0002.png"
+        },
+        {
+            "filename": "Page-215-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-215-0002.png"
+        },
+        {
+            "filename": "Page-214-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-214-0002.png"
+        },
+        {
+            "filename": "Page-139-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-139-0001.png"
+        },
+        {
+            "filename": "Page-260-3001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-260-3001.png"
+        },
+        {
+            "filename": "Page-138-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-138-0001.png"
+        },
+        {
+            "filename": "Page-221-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-221-0000.png"
+        },
+        {
+            "filename": "Page-106-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-106-0000.png"
+        },
+        {
+            "filename": "Page-107-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-107-0000.png"
+        },
+        {
+            "filename": "Page-269-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-269-0001.png"
+        },
+        {
+            "filename": "Page-268-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-268-0001.png"
+        },
+        {
+            "filename": "Page-220-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-220-0001.png"
+        },
+        {
+            "filename": "Page-221-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-221-0001.png"
+        },
+        {
+            "filename": "Page-138-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-138-0000.png"
+        },
+        {
+            "filename": "Page-139-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-139-0000.png"
+        },
+        {
+            "filename": "Page-262-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-262-0002.png"
+        },
+        {
+            "filename": "Page-263-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-263-0002.png"
+        },
+        {
+            "filename": "Page-287-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0003.png"
+        },
+        {
+            "filename": "Page-213-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-213-0001.png"
+        },
+        {
+            "filename": "Page-212-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-212-0001.png"
+        },
+        {
+            "filename": "Page-868-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-868-0002.png"
+        },
+        {
+            "filename": "Page-251-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-251-0002.png"
+        },
+        {
+            "filename": "Page-215-0702.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-215-0702.png"
+        },
+        {
+            "filename": "Page-199-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0000.png"
+        },
+        {
+            "filename": "Page-250-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-250-0002.png"
+        },
+        {
+            "filename": "Page-198-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-198-0000.png"
+        },
+        {
+            "filename": "Page-281-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-281-0001.png"
+        },
+        {
+            "filename": "Page-160-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0004.png"
+        },
+        {
+            "filename": "Page-280-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-280-0001.png"
+        },
+        {
+            "filename": "Page-264-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-264-0000.png"
+        },
+        {
+            "filename": "Page-142-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-142-0000.png"
+        },
+        {
+            "filename": "Page-143-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-143-0000.png"
+        },
+        {
+            "filename": "Page-237-0060.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-237-0060.png"
+        },
+        {
+            "filename": "Page-218-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-218-0002.png"
+        },
+        {
+            "filename": "Page-219-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-219-0002.png"
+        },
+        {
+            "filename": "Page-134-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-134-0001.png"
+        },
+        {
+            "filename": "Page-135-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-135-0001.png"
+        },
+        {
+            "filename": "Page-135-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-135-0000.png"
+        },
+        {
+            "filename": "Page-134-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-134-0000.png"
+        },
+        {
+            "filename": "Page-264-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-264-0001.png"
+        },
+        {
+            "filename": "Page-265-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-265-0001.png"
+        },
+        {
+            "filename": "Page-280-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-280-0000.png"
+        },
+        {
+            "filename": "Page-160-0005.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0005.png"
+        },
+        {
+            "filename": "Page-199-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0001.png"
+        },
+        {
+            "filename": "Page-226-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-226-0002.png"
+        },
+        {
+            "filename": "Page-227-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-227-0002.png"
+        },
+        {
+            "filename": "Page-212-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-212-0002.png"
+        },
+        {
+            "filename": "Page-213-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-213-0002.png"
+        },
+        {
+            "filename": "Page-226-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-226-0000.png"
+        },
+        {
+            "filename": "Page-286-0701.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0701.png"
+        },
+        {
+            "filename": "Page-250-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-250-0001.png"
+        },
+        {
+            "filename": "Page-199-0017.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0017.png"
+        },
+        {
+            "filename": "Page-199-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0003.png"
+        },
+        {
+            "filename": "Page-251-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-251-0001.png"
+        },
+        {
+            "filename": "Page-148-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-148-0000.png"
+        },
+        {
+            "filename": "Page-280-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-280-0002.png"
+        },
+        {
+            "filename": "Page-149-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-149-0000.png"
+        },
+        {
+            "filename": "Page-160-0007.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0007.png"
+        },
+        {
+            "filename": "Page-281-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-281-0002.png"
+        },
+        {
+            "filename": "Page-863-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-863-0002.png"
+        },
+        {
+            "filename": "Page-862-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-862-0002.png"
+        },
+        {
+            "filename": "Page-101-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-101-0000.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-100-0000.png"
+        },
+        {
+            "filename": "Page-219-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-219-0001.png"
+        },
+        {
+            "filename": "Page-218-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-218-0001.png"
+        },
+        {
+            "filename": "Page-134-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-134-0002.png"
+        },
+        {
+            "filename": "Page-218-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-218-0000.png"
+        },
+        {
+            "filename": "Page-265-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-265-0002.png"
+        },
+        {
+            "filename": "Page-264-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-264-0002.png"
+        },
+        {
+            "filename": "Page-160-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0006.png"
+        },
+        {
+            "filename": "Page-149-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-149-0001.png"
+        },
+        {
+            "filename": "Page-199-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0002.png"
+        },
+        {
+            "filename": "Page-251-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-251-0000.png"
+        },
+        {
+            "filename": "Page-136-1010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-136-1010.png"
+        },
+        {
+            "filename": "Page-250-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-250-0000.png"
+        },
+        {
+            "filename": "Page-227-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-227-0001.png"
+        },
+        {
+            "filename": "Page-226-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-226-0001.png"
+        },
+        {
+            "filename": "Page-299-0008.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0008.png"
+        },
+        {
+            "filename": "Page-122-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-122-0001.png"
+        },
+        {
+            "filename": "Page-199-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0006.png"
+        },
+        {
+            "filename": "Page-155-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-155-0000.png"
+        },
+        {
+            "filename": "Page-154-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-154-0000.png"
+        },
+        {
+            "filename": "Page-160-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0002.png"
+        },
+        {
+            "filename": "Page-246-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-246-0002.png"
+        },
+        {
+            "filename": "Page-247-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-247-0002.png"
+        },
+        {
+            "filename": "Page-231-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-231-0002.png"
+        },
+        {
+            "filename": "Page-230-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-230-0002.png"
+        },
+        {
+            "filename": "Page-273-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-273-0001.png"
+        },
+        {
+            "filename": "Page-237-0701.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-237-0701.png"
+        },
+        {
+            "filename": "Page-272-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-272-0001.png"
+        },
+        {
+            "filename": "Page-160-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0003.png"
+        },
+        {
+            "filename": "Page-278-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-278-0002.png"
+        },
+        {
+            "filename": "Page-279-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-279-0002.png"
+        },
+        {
+            "filename": "Page-122-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-122-0000.png"
+        },
+        {
+            "filename": "Page-299-0009.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0009.png"
+        },
+        {
+            "filename": "Page-123-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-123-0000.png"
+        },
+        {
+            "filename": "Page-116-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-116-0000.png"
+        },
+        {
+            "filename": "Page-117-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-117-0000.png"
+        },
+        {
+            "filename": "Page-199-0005.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0005.png"
+        },
+        {
+            "filename": "Page-279-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-279-0000.png"
+        },
+        {
+            "filename": "Page-209-0702.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-209-0702.png"
+        },
+        {
+            "filename": "Page-160-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0001.png"
+        },
+        {
+            "filename": "Page-247-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-247-0001.png"
+        },
+        {
+            "filename": "Page-246-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-246-0001.png"
+        },
+        {
+            "filename": "Page-280-2001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-280-2001.png"
+        },
+        {
+            "filename": "Page-128-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-128-0001.png"
+        },
+        {
+            "filename": "Page-205-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-205-0002.png"
+        },
+        {
+            "filename": "Page-230-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-230-0001.png"
+        },
+        {
+            "filename": "Page-231-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-231-0001.png"
+        },
+        {
+            "filename": "Page-128-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-128-0000.png"
+        },
+        {
+            "filename": "Page-129-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-129-0000.png"
+        },
+        {
+            "filename": "Page-272-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-272-0002.png"
+        },
+        {
+            "filename": "Page-209-0111.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-209-0111.png"
+        },
+        {
+            "filename": "Page-220-0102.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-220-0102.png"
+        },
+        {
+            "filename": "Page-273-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-273-0002.png"
+        },
+        {
+            "filename": "Page-247-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-247-0000.png"
+        },
+        {
+            "filename": "Page-160-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-160-0000.png"
+        },
+        {
+            "filename": "Page-279-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-279-0001.png"
+        },
+        {
+            "filename": "Page-199-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0004.png"
+        },
+        {
+            "filename": "Page-278-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-278-0001.png"
+        },
+        {
+            "filename": "Page-117-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-117-0001.png"
+        },
+        {
+            "filename": "Page-259-1002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-259-1002.png"
+        },
+        {
+            "filename": "Page-299-0007.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0007.png"
+        },
+        {
+            "filename": "Page-254-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-254-0001.png"
+        },
+        {
+            "filename": "Page-217-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-217-0002.png"
+        },
+        {
+            "filename": "Page-130-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-130-0002.png"
+        },
+        {
+            "filename": "Page-105-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-105-0000.png"
+        },
+        {
+            "filename": "Page-104-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-104-0000.png"
+        },
+        {
+            "filename": "Page-242-0761.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-242-0761.png"
+        },
+        {
+            "filename": "Page-228-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-228-0002.png"
+        },
+        {
+            "filename": "Page-229-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-229-0002.png"
+        },
+        {
+            "filename": "Page-199-0008.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-0008.png"
+        },
+        {
+            "filename": "Page-223-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-223-0001.png"
+        },
+        {
+            "filename": "Page-298-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-0006.png"
+        },
+        {
+            "filename": "Page-299-0006.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0006.png"
+        },
+        {
+            "filename": "Page-261-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-261-0002.png"
+        },
+        {
+            "filename": "Page-260-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-260-0002.png"
+        },
+        {
+            "filename": "Page-279-1111.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-279-1111.png"
+        },
+        {
+            "filename": "Page-299-0004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0004.png"
+        },
+        {
+            "filename": "Page-298-0010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-0010.png"
+        },
+        {
+            "filename": "Page-254-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-254-0002.png"
+        },
+        {
+            "filename": "Page-217-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-217-0001.png"
+        },
+        {
+            "filename": "Page-216-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-216-0001.png"
+        },
+        {
+            "filename": "Page-130-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-130-0001.png"
+        },
+        {
+            "filename": "Page-104-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-104-0003.png"
+        },
+        {
+            "filename": "Page-146-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-146-0000.png"
+        },
+        {
+            "filename": "Page-229-0202.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-229-0202.png"
+        },
+        {
+            "filename": "Page-147-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-147-0000.png"
+        },
+        {
+            "filename": "Page-146-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-146-0001.png"
+        },
+        {
+            "filename": "Page-229-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-229-0001.png"
+        },
+        {
+            "filename": "Page-228-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-228-0001.png"
+        },
+        {
+            "filename": "Page-131-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-131-0000.png"
+        },
+        {
+            "filename": "Page-130-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-130-0000.png"
+        },
+        {
+            "filename": "Page-216-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-216-0000.png"
+        },
+        {
+            "filename": "Page-217-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-217-0000.png"
+        },
+        {
+            "filename": "Page-252-0072.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-252-0072.png"
+        },
+        {
+            "filename": "Page-223-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-223-0002.png"
+        },
+        {
+            "filename": "Page-299-0005.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0005.png"
+        },
+        {
+            "filename": "Page-260-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-260-0001.png"
+        },
+        {
+            "filename": "Page-153-0040.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-153-0040.png"
+        },
+        {
+            "filename": "Page-261-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-261-0001.png"
+        },
+        {
+            "filename": "Page-248-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-248-0002.png"
+        },
+        {
+            "filename": "Page-249-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-249-0002.png"
+        },
+        {
+            "filename": "Page-298-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-0001.png"
+        },
+        {
+            "filename": "Page-112-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-112-0000.png"
+        },
+        {
+            "filename": "Page-113-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-113-0000.png"
+        },
+        {
+            "filename": "Page-201-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-201-0002.png"
+        },
+        {
+            "filename": "Page-200-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-200-0002.png"
+        },
+        {
+            "filename": "Page-243-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-243-0001.png"
+        },
+        {
+            "filename": "Page-242-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-242-0001.png"
+        },
+        {
+            "filename": "Page-215-1002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-215-1002.png"
+        },
+        {
+            "filename": "Page-276-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-276-0002.png"
+        },
+        {
+            "filename": "Page-277-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-277-0002.png"
+        },
+        {
+            "filename": "Page-288-0063.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-288-0063.png"
+        },
+        {
+            "filename": "Page-234-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-234-0001.png"
+        },
+        {
+            "filename": "Page-235-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-235-0001.png"
+        },
+        {
+            "filename": "Page-113-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-113-0001.png"
+        },
+        {
+            "filename": "Page-845-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-845-0001.png"
+        },
+        {
+            "filename": "Page-298-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-0000.png"
+        },
+        {
+            "filename": "Page-249-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-249-0001.png"
+        },
+        {
+            "filename": "Page-248-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-248-0001.png"
+        },
+        {
+            "filename": "Page-299-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0002.png"
+        },
+        {
+            "filename": "Page-151-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-151-0000.png"
+        },
+        {
+            "filename": "Page-298-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-298-0002.png"
+        },
+        {
+            "filename": "Page-150-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-150-0000.png"
+        },
+        {
+            "filename": "Page-113-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-113-0003.png"
+        },
+        {
+            "filename": "Page-118-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-118-0000.png"
+        },
+        {
+            "filename": "Page-119-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-119-0000.png"
+        },
+        {
+            "filename": "Page-200-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-200-0001.png"
+        },
+        {
+            "filename": "Page-242-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-242-0002.png"
+        },
+        {
+            "filename": "Page-243-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-243-0002.png"
+        },
+        {
+            "filename": "Page-230-0021.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-230-0021.png"
+        },
+        {
+            "filename": "Page-277-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-277-0001.png"
+        },
+        {
+            "filename": "Page-276-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-276-0001.png"
+        },
+        {
+            "filename": "Page-201-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-201-0000.png"
+        },
+        {
+            "filename": "Page-200-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-200-0000.png"
+        },
+        {
+            "filename": "Page-235-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-235-0002.png"
+        },
+        {
+            "filename": "Page-234-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-234-0002.png"
+        },
+        {
+            "filename": "Page-113-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-113-0002.png"
+        },
+        {
+            "filename": "Page-126-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-126-0000.png"
+        },
+        {
+            "filename": "Page-127-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-127-0000.png"
+        },
+        {
+            "filename": "Page-299-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-299-0003.png"
+        },
+        {
+            "filename": "Page-249-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-249-0000.png"
+        },
+        {
+            "filename": "Page-115-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-115-0000.png"
+        },
+        {
+            "filename": "Page-114-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-114-0000.png"
+        },
+        {
+            "filename": "Page-282-0010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-282-0010.png"
+        },
+        {
+            "filename": "Page-258-0010.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-258-0010.png"
+        },
+        {
+            "filename": "Page-234-0071.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-234-0071.png"
+        },
+        {
+            "filename": "Page-244-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-244-0001.png"
+        },
+        {
+            "filename": "Page-245-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-245-0001.png"
+        },
+        {
+            "filename": "Page-233-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-233-0000.png"
+        },
+        {
+            "filename": "Page-233-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-233-0001.png"
+        },
+        {
+            "filename": "Page-232-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-232-0001.png"
+        },
+        {
+            "filename": "Page-271-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-271-0002.png"
+        },
+        {
+            "filename": "Page-235-0702.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-235-0702.png"
+        },
+        {
+            "filename": "Page-270-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-270-0002.png"
+        },
+        {
+            "filename": "Page-252-0760.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-252-0760.png"
+        },
+        {
+            "filename": "Page-238-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-238-0002.png"
+        },
+        {
+            "filename": "Page-239-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-239-0002.png"
+        },
+        {
+            "filename": "Page-114-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-114-0001.png"
+        },
+        {
+            "filename": "Page-120-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-120-0001.png"
+        },
+        {
+            "filename": "Page-156-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-156-0000.png"
+        },
+        {
+            "filename": "Page-157-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-157-0000.png"
+        },
+        {
+            "filename": "Page-245-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-245-0002.png"
+        },
+        {
+            "filename": "Page-244-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-244-0002.png"
+        },
+        {
+            "filename": "Page-206-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-206-0000.png"
+        },
+        {
+            "filename": "Page-232-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-232-0002.png"
+        },
+        {
+            "filename": "Page-233-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-233-0002.png"
+        },
+        {
+            "filename": "Page-270-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-270-0001.png"
+        },
+        {
+            "filename": "Page-271-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-271-0001.png"
+        },
+        {
+            "filename": "Page-239-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-239-0001.png"
+        },
+        {
+            "filename": "Page-238-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-238-0001.png"
+        },
+        {
+            "filename": "Page-121-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-121-0000.png"
+        },
+        {
+            "filename": "Page-120-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-120-0000.png"
+        },
+        {
+            "filename": "Page-286-0020.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0020.png"
+        },
+        {
+            "filename": "Page-211-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-211-0002.png"
+        },
+        {
+            "filename": "Page-287-0008.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-287-0008.png"
+        },
+        {
+            "filename": "Page-282-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-282-0002.png"
+        },
+        {
+            "filename": "Page-253-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-253-0001.png"
+        },
+        {
+            "filename": "Page-252-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-252-0001.png"
+        },
+        {
+            "filename": "Page-258-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-258-0002.png"
+        },
+        {
+            "filename": "Page-259-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-259-0002.png"
+        },
+        {
+            "filename": "Page-288-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-288-0001.png"
+        },
+        {
+            "filename": "Page-199-1004.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-199-1004.png"
+        },
+        {
+            "filename": "Page-102-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-102-0000.png"
+        },
+        {
+            "filename": "Page-103-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-103-0000.png"
+        },
+        {
+            "filename": "Page-200-0060.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-200-0060.png"
+        },
+        {
+            "filename": "Page-289-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-289-0000.png"
+        },
+        {
+            "filename": "Page-266-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-266-0002.png"
+        },
+        {
+            "filename": "Page-267-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-267-0002.png"
+        },
+        {
+            "filename": "Page-286-0009.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-286-0009.png"
+        },
+        {
+            "filename": "Page-224-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-224-0001.png"
+        },
+        {
+            "filename": "Page-225-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-225-0001.png"
+        },
+        {
+            "filename": "Page-108-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-108-0000.png"
+        },
+        {
+            "filename": "Page-109-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-109-0000.png"
+        },
+        {
+            "filename": "Page-211-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-211-0001.png"
+        },
+        {
+            "filename": "Page-282-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-282-0001.png"
+        },
+        {
+            "filename": "Page-283-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-283-0001.png"
+        },
+        {
+            "filename": "Page-227-3001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-227-3001.png"
+        },
+        {
+            "filename": "Page-252-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-252-0002.png"
+        },
+        {
+            "filename": "Page-253-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-253-0002.png"
+        },
+        {
+            "filename": "Page-259-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-259-0001.png"
+        },
+        {
+            "filename": "Page-258-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-258-0001.png"
+        },
+        {
+            "filename": "Page-141-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-141-0000.png"
+        },
+        {
+            "filename": "Page-288-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-288-0002.png"
+        },
+        {
+            "filename": "Page-140-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-140-0000.png"
+        },
+        {
+            "filename": "Page-136-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-136-0001.png"
+        },
+        {
+            "filename": "Page-136-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-136-0000.png"
+        },
+        {
+            "filename": "Page-137-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-137-0000.png"
+        },
+        {
+            "filename": "Page-288-0003.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-288-0003.png"
+        },
+        {
+            "filename": "Page-259-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-259-0000.png"
+        },
+        {
+            "filename": "Page-267-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-267-0001.png"
+        },
+        {
+            "filename": "Page-266-0001.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-266-0001.png"
+        },
+        {
+            "filename": "Page-282-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-282-0000.png"
+        },
+        {
+            "filename": "Page-210-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-210-0000.png"
+        },
+        {
+            "filename": "Page-225-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-225-0002.png"
+        },
+        {
+            "filename": "Page-224-0002.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25.zip/1992-01-03_WTBS_Electra_ToKillAClown_2026-08-25/Page-224-0002.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/USTT_WTBS-19920103_1/Page-100-0000.png"
+        }
+    ]
+}

@@ -18,6 +18,24 @@
         "IsNew": true
     },
     {
+        "ID": "4b73bddd-a724-11f1-a705-0200170221f6",
+        "Year": "1983",
+        "Month": "October",
+        "Date": "1983-10-28",
+        "Affiliate": "WKYC",
+        "Program_Title": "Riviera International Triathlon",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_NBC-19831028_1/1983-10-28_WKYC_NBC_NBC%20Teletext.zip",
+        "Thumbnail": "https://ia600107.us.archive.org/6/items/USTT_NBC-19831028_1/Record-000-001-v0.png",
+        "Network": "NBC",
+        "Service_Name": "NBC Teletext",
+        "Notes": "",
+        "Date_Added": "2026-09-02",
+        "Recovered_By": "Evan P.",
+        "IsNew": true
+    },
+    {
         "ID": "e8d5322e-a62e-11f1-a705-0200170221f6",
         "Year": "1983",
         "Month": "November",
@@ -51,7 +69,7 @@
         "Notes": "",
         "Date_Added": "2026-08-26",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "64c75d5e-a533-11f1-a705-0200170221f6",

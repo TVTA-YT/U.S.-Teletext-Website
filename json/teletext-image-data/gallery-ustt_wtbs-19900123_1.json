@@ -1,0 +1,995 @@
+{
+    "identifier": "ustt_wtbs-19900123_1",
+    "generated_at": "2026-09-04T05:57:02+00:00",
+    "recovered_by": "TVTA",
+    "program_title": "The Andy Griffith Show",
+    "date": "1990-01-23",
+    "service": "Electra",
+    "network": "TBS",
+    "images": [
+        {
+            "filename": "Page-152-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-152-0000.png"
+        },
+        {
+            "filename": "Page-241-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-241-0002.png"
+        },
+        {
+            "filename": "Page-240-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-240-0002.png"
+        },
+        {
+            "filename": "Page-291-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-291-0001.png"
+        },
+        {
+            "filename": "Page-290-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0001.png"
+        },
+        {
+            "filename": "Page-274-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-274-0001.png"
+        },
+        {
+            "filename": "Page-275-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-275-0001.png"
+        },
+        {
+            "filename": "Page-236-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-236-0002.png"
+        },
+        {
+            "filename": "Page-272-0702.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-272-0702.png"
+        },
+        {
+            "filename": "Page-237-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-237-0002.png"
+        },
+        {
+            "filename": "Page-400-0110.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-400-0110.png"
+        },
+        {
+            "filename": "Page-203-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-203-0000.png"
+        },
+        {
+            "filename": "Page-400-0070.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-400-0070.png"
+        },
+        {
+            "filename": "Page-125-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-125-0000.png"
+        },
+        {
+            "filename": "Page-124-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-124-0000.png"
+        },
+        {
+            "filename": "Page-111-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-111-0000.png"
+        },
+        {
+            "filename": "Page-110-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-110-0000.png"
+        },
+        {
+            "filename": "Page-240-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-240-0001.png"
+        },
+        {
+            "filename": "Page-241-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-241-0001.png"
+        },
+        {
+            "filename": "Page-290-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0002.png"
+        },
+        {
+            "filename": "Page-291-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-291-0002.png"
+        },
+        {
+            "filename": "Page-290-0003.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0003.png"
+        },
+        {
+            "filename": "Page-275-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-275-0002.png"
+        },
+        {
+            "filename": "Page-274-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-274-0002.png"
+        },
+        {
+            "filename": "Page-237-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-237-0001.png"
+        },
+        {
+            "filename": "Page-236-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-236-0001.png"
+        },
+        {
+            "filename": "Page-256-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-256-0002.png"
+        },
+        {
+            "filename": "Page-257-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-257-0002.png"
+        },
+        {
+            "filename": "Page-214-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-214-0001.png"
+        },
+        {
+            "filename": "Page-215-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-215-0001.png"
+        },
+        {
+            "filename": "Page-401-0077.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-401-0077.png"
+        },
+        {
+            "filename": "Page-145-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-145-0000.png"
+        },
+        {
+            "filename": "Page-144-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-144-0000.png"
+        },
+        {
+            "filename": "Page-290-0007.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0007.png"
+        },
+        {
+            "filename": "Page-218-0701.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-218-0701.png"
+        },
+        {
+            "filename": "Page-290-0006.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0006.png"
+        },
+        {
+            "filename": "Page-291-0012.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-291-0012.png"
+        },
+        {
+            "filename": "Page-268-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-268-0002.png"
+        },
+        {
+            "filename": "Page-132-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-132-0000.png"
+        },
+        {
+            "filename": "Page-133-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-133-0000.png"
+        },
+        {
+            "filename": "Page-221-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-221-0002.png"
+        },
+        {
+            "filename": "Page-220-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-220-0002.png"
+        },
+        {
+            "filename": "Page-199-0070.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-199-0070.png"
+        },
+        {
+            "filename": "Page-263-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-263-0001.png"
+        },
+        {
+            "filename": "Page-262-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-262-0001.png"
+        },
+        {
+            "filename": "Page-152-0007.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-152-0007.png"
+        },
+        {
+            "filename": "Page-257-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-257-0001.png"
+        },
+        {
+            "filename": "Page-256-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-256-0001.png"
+        },
+        {
+            "filename": "Page-199-0700.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-199-0700.png"
+        },
+        {
+            "filename": "Page-215-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-215-0002.png"
+        },
+        {
+            "filename": "Page-214-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-214-0002.png"
+        },
+        {
+            "filename": "Page-106-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-106-0000.png"
+        },
+        {
+            "filename": "Page-107-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-107-0000.png"
+        },
+        {
+            "filename": "Page-290-0004.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0004.png"
+        },
+        {
+            "filename": "Page-218-0702.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-218-0702.png"
+        },
+        {
+            "filename": "Page-290-0005.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0005.png"
+        },
+        {
+            "filename": "Page-269-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-269-0001.png"
+        },
+        {
+            "filename": "Page-268-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-268-0001.png"
+        },
+        {
+            "filename": "Page-220-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-220-0001.png"
+        },
+        {
+            "filename": "Page-221-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-221-0001.png"
+        },
+        {
+            "filename": "Page-138-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-138-0000.png"
+        },
+        {
+            "filename": "Page-139-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-139-0000.png"
+        },
+        {
+            "filename": "Page-262-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-262-0002.png"
+        },
+        {
+            "filename": "Page-226-0702.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-226-0702.png"
+        },
+        {
+            "filename": "Page-263-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-263-0002.png"
+        },
+        {
+            "filename": "Page-213-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-213-0001.png"
+        },
+        {
+            "filename": "Page-212-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-212-0001.png"
+        },
+        {
+            "filename": "Page-251-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-251-0002.png"
+        },
+        {
+            "filename": "Page-199-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-199-0000.png"
+        },
+        {
+            "filename": "Page-250-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-250-0002.png"
+        },
+        {
+            "filename": "Page-198-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-198-0000.png"
+        },
+        {
+            "filename": "Page-281-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-281-0001.png"
+        },
+        {
+            "filename": "Page-280-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-280-0001.png"
+        },
+        {
+            "filename": "Page-142-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-142-0000.png"
+        },
+        {
+            "filename": "Page-143-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-143-0000.png"
+        },
+        {
+            "filename": "Page-133-0070.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-133-0070.png"
+        },
+        {
+            "filename": "Page-218-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-218-0002.png"
+        },
+        {
+            "filename": "Page-219-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-219-0002.png"
+        },
+        {
+            "filename": "Page-135-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-135-0000.png"
+        },
+        {
+            "filename": "Page-134-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-134-0000.png"
+        },
+        {
+            "filename": "Page-264-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-264-0001.png"
+        },
+        {
+            "filename": "Page-265-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-265-0001.png"
+        },
+        {
+            "filename": "Page-227-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-227-0002.png"
+        },
+        {
+            "filename": "Page-212-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-212-0002.png"
+        },
+        {
+            "filename": "Page-213-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-213-0002.png"
+        },
+        {
+            "filename": "Page-250-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-250-0001.png"
+        },
+        {
+            "filename": "Page-251-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-251-0001.png"
+        },
+        {
+            "filename": "Page-148-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-148-0000.png"
+        },
+        {
+            "filename": "Page-280-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-280-0002.png"
+        },
+        {
+            "filename": "Page-149-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-149-0000.png"
+        },
+        {
+            "filename": "Page-281-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-281-0002.png"
+        },
+        {
+            "filename": "Page-101-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-101-0000.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-100-0000.png"
+        },
+        {
+            "filename": "Page-219-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-219-0001.png"
+        },
+        {
+            "filename": "Page-269-0702.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-269-0702.png"
+        },
+        {
+            "filename": "Page-265-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-265-0002.png"
+        },
+        {
+            "filename": "Page-264-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-264-0002.png"
+        },
+        {
+            "filename": "Page-227-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-227-0001.png"
+        },
+        {
+            "filename": "Page-226-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-226-0001.png"
+        },
+        {
+            "filename": "Page-401-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-401-0000.png"
+        },
+        {
+            "filename": "Page-246-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-246-0002.png"
+        },
+        {
+            "filename": "Page-247-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-247-0002.png"
+        },
+        {
+            "filename": "Page-296-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-296-0001.png"
+        },
+        {
+            "filename": "Page-231-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-231-0002.png"
+        },
+        {
+            "filename": "Page-230-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-230-0002.png"
+        },
+        {
+            "filename": "Page-205-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-205-0000.png"
+        },
+        {
+            "filename": "Page-297-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-297-0000.png"
+        },
+        {
+            "filename": "Page-273-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-273-0001.png"
+        },
+        {
+            "filename": "Page-272-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-272-0001.png"
+        },
+        {
+            "filename": "Page-278-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-278-0002.png"
+        },
+        {
+            "filename": "Page-122-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-122-0000.png"
+        },
+        {
+            "filename": "Page-123-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-123-0000.png"
+        },
+        {
+            "filename": "Page-116-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-116-0000.png"
+        },
+        {
+            "filename": "Page-152-0700.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-152-0700.png"
+        },
+        {
+            "filename": "Page-117-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-117-0000.png"
+        },
+        {
+            "filename": "Page-247-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-247-0001.png"
+        },
+        {
+            "filename": "Page-246-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-246-0001.png"
+        },
+        {
+            "filename": "Page-291-0701.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-291-0701.png"
+        },
+        {
+            "filename": "Page-230-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-230-0001.png"
+        },
+        {
+            "filename": "Page-231-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-231-0001.png"
+        },
+        {
+            "filename": "Page-128-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-128-0000.png"
+        },
+        {
+            "filename": "Page-129-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-129-0000.png"
+        },
+        {
+            "filename": "Page-273-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-273-0002.png"
+        },
+        {
+            "filename": "Page-279-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-279-0001.png"
+        },
+        {
+            "filename": "Page-278-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-278-0001.png"
+        },
+        {
+            "filename": "Page-198-0010.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-198-0010.png"
+        },
+        {
+            "filename": "Page-254-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-254-0001.png"
+        },
+        {
+            "filename": "Page-255-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-255-0001.png"
+        },
+        {
+            "filename": "Page-216-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-216-0002.png"
+        },
+        {
+            "filename": "Page-217-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-217-0002.png"
+        },
+        {
+            "filename": "Page-105-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-105-0000.png"
+        },
+        {
+            "filename": "Page-104-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-104-0000.png"
+        },
+        {
+            "filename": "Page-228-0201.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-228-0201.png"
+        },
+        {
+            "filename": "Page-229-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-229-0002.png"
+        },
+        {
+            "filename": "Page-200-2000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-200-2000.png"
+        },
+        {
+            "filename": "Page-223-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-223-0001.png"
+        },
+        {
+            "filename": "Page-222-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-222-0001.png"
+        },
+        {
+            "filename": "Page-261-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-261-0002.png"
+        },
+        {
+            "filename": "Page-260-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-260-0002.png"
+        },
+        {
+            "filename": "Page-255-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-255-0002.png"
+        },
+        {
+            "filename": "Page-254-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-254-0002.png"
+        },
+        {
+            "filename": "Page-217-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-217-0001.png"
+        },
+        {
+            "filename": "Page-216-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-216-0001.png"
+        },
+        {
+            "filename": "Page-146-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-146-0000.png"
+        },
+        {
+            "filename": "Page-147-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-147-0000.png"
+        },
+        {
+            "filename": "Page-229-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-229-0001.png"
+        },
+        {
+            "filename": "Page-228-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-228-0001.png"
+        },
+        {
+            "filename": "Page-131-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-131-0000.png"
+        },
+        {
+            "filename": "Page-130-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-130-0000.png"
+        },
+        {
+            "filename": "Page-222-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-222-0002.png"
+        },
+        {
+            "filename": "Page-223-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-223-0002.png"
+        },
+        {
+            "filename": "Page-260-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-260-0001.png"
+        },
+        {
+            "filename": "Page-261-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-261-0001.png"
+        },
+        {
+            "filename": "Page-248-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-248-0002.png"
+        },
+        {
+            "filename": "Page-249-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-249-0002.png"
+        },
+        {
+            "filename": "Page-298-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-298-0001.png"
+        },
+        {
+            "filename": "Page-112-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-112-0000.png"
+        },
+        {
+            "filename": "Page-113-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-113-0000.png"
+        },
+        {
+            "filename": "Page-293-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-293-0002.png"
+        },
+        {
+            "filename": "Page-243-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-243-0001.png"
+        },
+        {
+            "filename": "Page-242-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-242-0001.png"
+        },
+        {
+            "filename": "Page-276-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-276-0002.png"
+        },
+        {
+            "filename": "Page-277-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-277-0002.png"
+        },
+        {
+            "filename": "Page-234-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-234-0001.png"
+        },
+        {
+            "filename": "Page-235-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-235-0001.png"
+        },
+        {
+            "filename": "Page-290-1004.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-1004.png"
+        },
+        {
+            "filename": "Page-249-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-249-0001.png"
+        },
+        {
+            "filename": "Page-248-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-248-0001.png"
+        },
+        {
+            "filename": "Page-151-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-151-0000.png"
+        },
+        {
+            "filename": "Page-150-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-150-0000.png"
+        },
+        {
+            "filename": "Page-118-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-118-0000.png"
+        },
+        {
+            "filename": "Page-119-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-119-0000.png"
+        },
+        {
+            "filename": "Page-292-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-292-0001.png"
+        },
+        {
+            "filename": "Page-293-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-293-0001.png"
+        },
+        {
+            "filename": "Page-242-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-242-0002.png"
+        },
+        {
+            "filename": "Page-243-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-243-0002.png"
+        },
+        {
+            "filename": "Page-238-0110.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-238-0110.png"
+        },
+        {
+            "filename": "Page-293-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-293-0000.png"
+        },
+        {
+            "filename": "Page-292-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-292-0000.png"
+        },
+        {
+            "filename": "Page-277-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-277-0001.png"
+        },
+        {
+            "filename": "Page-276-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-276-0001.png"
+        },
+        {
+            "filename": "Page-201-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-201-0000.png"
+        },
+        {
+            "filename": "Page-235-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-235-0002.png"
+        },
+        {
+            "filename": "Page-271-0702.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-271-0702.png"
+        },
+        {
+            "filename": "Page-234-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-234-0002.png"
+        },
+        {
+            "filename": "Page-295-0071.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-295-0071.png"
+        },
+        {
+            "filename": "Page-126-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-126-0000.png"
+        },
+        {
+            "filename": "Page-127-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-127-0000.png"
+        },
+        {
+            "filename": "Page-115-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-115-0000.png"
+        },
+        {
+            "filename": "Page-114-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-114-0000.png"
+        },
+        {
+            "filename": "Page-294-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-294-0002.png"
+        },
+        {
+            "filename": "Page-244-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-244-0001.png"
+        },
+        {
+            "filename": "Page-292-0701.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-292-0701.png"
+        },
+        {
+            "filename": "Page-290-0008.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0008.png"
+        },
+        {
+            "filename": "Page-291-0008.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-291-0008.png"
+        },
+        {
+            "filename": "Page-290-0009.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-290-0009.png"
+        },
+        {
+            "filename": "Page-233-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-233-0001.png"
+        },
+        {
+            "filename": "Page-232-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-232-0001.png"
+        },
+        {
+            "filename": "Page-245-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-245-0000.png"
+        },
+        {
+            "filename": "Page-270-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-270-0002.png"
+        },
+        {
+            "filename": "Page-239-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-239-0002.png"
+        },
+        {
+            "filename": "Page-299-0701.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-299-0701.png"
+        },
+        {
+            "filename": "Page-403-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-403-0000.png"
+        },
+        {
+            "filename": "Page-294-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-294-0001.png"
+        },
+        {
+            "filename": "Page-245-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-245-0002.png"
+        },
+        {
+            "filename": "Page-244-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-244-0002.png"
+        },
+        {
+            "filename": "Page-232-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-232-0002.png"
+        },
+        {
+            "filename": "Page-233-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-233-0002.png"
+        },
+        {
+            "filename": "Page-270-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-270-0001.png"
+        },
+        {
+            "filename": "Page-239-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-239-0001.png"
+        },
+        {
+            "filename": "Page-238-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-238-0001.png"
+        },
+        {
+            "filename": "Page-121-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-121-0000.png"
+        },
+        {
+            "filename": "Page-120-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-120-0000.png"
+        },
+        {
+            "filename": "Page-211-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-211-0002.png"
+        },
+        {
+            "filename": "Page-283-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-283-0002.png"
+        },
+        {
+            "filename": "Page-282-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-282-0002.png"
+        },
+        {
+            "filename": "Page-253-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-253-0001.png"
+        },
+        {
+            "filename": "Page-252-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-252-0001.png"
+        },
+        {
+            "filename": "Page-258-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-258-0002.png"
+        },
+        {
+            "filename": "Page-259-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-259-0002.png"
+        },
+        {
+            "filename": "Page-102-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-102-0000.png"
+        },
+        {
+            "filename": "Page-103-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-103-0000.png"
+        },
+        {
+            "filename": "Page-266-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-266-0002.png"
+        },
+        {
+            "filename": "Page-267-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-267-0002.png"
+        },
+        {
+            "filename": "Page-224-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-224-0001.png"
+        },
+        {
+            "filename": "Page-225-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-225-0001.png"
+        },
+        {
+            "filename": "Page-108-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-108-0000.png"
+        },
+        {
+            "filename": "Page-109-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-109-0000.png"
+        },
+        {
+            "filename": "Page-211-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-211-0001.png"
+        },
+        {
+            "filename": "Page-283-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-283-0001.png"
+        },
+        {
+            "filename": "Page-252-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-252-0002.png"
+        },
+        {
+            "filename": "Page-253-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-253-0002.png"
+        },
+        {
+            "filename": "Page-259-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-259-0001.png"
+        },
+        {
+            "filename": "Page-258-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-258-0001.png"
+        },
+        {
+            "filename": "Page-141-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-141-0000.png"
+        },
+        {
+            "filename": "Page-140-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-140-0000.png"
+        },
+        {
+            "filename": "Page-400-1000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-400-1000.png"
+        },
+        {
+            "filename": "Page-136-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-136-0000.png"
+        },
+        {
+            "filename": "Page-137-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-137-0000.png"
+        },
+        {
+            "filename": "Page-267-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-267-0001.png"
+        },
+        {
+            "filename": "Page-266-0001.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-266-0001.png"
+        },
+        {
+            "filename": "Page-282-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-282-0000.png"
+        },
+        {
+            "filename": "Page-210-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-210-0000.png"
+        },
+        {
+            "filename": "Page-225-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-225-0002.png"
+        },
+        {
+            "filename": "Page-224-0002.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/1990-01-23_TBS_Electra.zip/1990-01-23_TBS_Electra/Page-224-0002.png"
+        },
+        {
+            "filename": "Page-100-0000.png",
+            "url": "https://archive.org/download/ustt_wtbs-19900123_1/Page-100-0000.png"
+        }
+    ]
+}

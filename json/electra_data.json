@@ -47,7 +47,7 @@
         "Service_Name": "Electra",
         "Notes": "Due to a noisy recording, some pages have decoding issues.",
         "Date_Added": "2026-08-11",
-        "Recovered_By": "Zaroff's Video Archives",
+        "Recovered_By": "TVTA",
         "IsNew": false
     },
     {
@@ -64,7 +64,7 @@
         "Service_Name": "Electra",
         "Notes": "Due to a noisy recording, every page has decoding issues.",
         "Date_Added": "2026-08-15",
-        "Recovered_By": "Zaroff's Video Archives",
+        "Recovered_By": "TVTA",
         "IsNew": false
     },
     {
@@ -337,7 +337,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "9e63c548-a1e3-11f1-a705-0200170221f6",
@@ -354,7 +354,7 @@
         "Notes": "",
         "Date_Added": "2026-08-27",
         "Recovered_By": "TVTA",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "12112334-a2a5-11f1-a705-0200170221f6",

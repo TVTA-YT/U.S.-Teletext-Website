@@ -140,7 +140,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-19",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -158,7 +158,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-19",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -177,7 +177,7 @@
         "Notes": "All data is incomplete. These samples were sourced from a portion of a the tape that recorded someone channel surfing.",
         "Date_Added": "2026-08-27",
         "Recovered_By": "Sebastian T.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "19e99c47-9bef-11f1-a705-0200170221f6",
@@ -285,7 +285,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "Evan P.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4a84a934-a0ed-11f1-a705-0200170221f6",
@@ -303,7 +303,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "Evan P.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "e6e2e720-9d8b-11f1-a705-0200170221f6",
@@ -320,7 +320,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-21",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -339,7 +339,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "Evan P.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "821ce4b1-a0ed-11f1-a705-0200170221f6",
@@ -357,7 +357,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "Evan P.",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "d0d639dd-9bf4-11f1-a705-0200170221f6",
@@ -392,7 +392,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-22",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -410,8 +410,8 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "TEXT1 data is incomplete.",
         "Date_Added": "2026-08-25",
-        "Recovered_By": "Fry L.",
-        "IsNew": true
+        "Recovered_By": "Fry's Video Archives",
+        "IsNew": false
     },
     {
         "ID": "30ca60c2-a050-11f1-a705-0200170221f6",
@@ -428,8 +428,8 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "TEXT1 data is incomplete.",
         "Date_Added": "2026-08-25",
-        "Recovered_By": "Fry L.",
-        "IsNew": true
+        "Recovered_By": "Fry's Video Archives",
+        "IsNew": false
     },
     {
         "ID": "df0c218f-9bf4-11f1-a705-0200170221f6",
@@ -464,7 +464,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-21",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -482,8 +482,8 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-25",
-        "Recovered_By": "Fry L.",
-        "IsNew": true
+        "Recovered_By": "Fry's Video Archives",
+        "IsNew": false
     },
     {
         "ID": "279081f6-a052-11f1-a705-0200170221f6",
@@ -500,8 +500,8 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-25",
-        "Recovered_By": "Fry L.",
-        "IsNew": true
+        "Recovered_By": "Fry's Video Archives",
+        "IsNew": false
     },
     {
         "ID": "3c8f1050-9bf5-11f1-a705-0200170221f6",
@@ -518,7 +518,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "TEXT2 is not available.",
         "Date_Added": "2026-08-19",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -536,7 +536,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "TEXT2 is not available.",
         "Date_Added": "2026-08-19",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     },
     {
@@ -554,8 +554,8 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "",
         "Date_Added": "2026-08-25",
-        "Recovered_By": "Fry L.",
-        "IsNew": true
+        "Recovered_By": "Fry's Video Archives",
+        "IsNew": false
     },
     {
         "ID": "3fbfc663-9d91-11f1-a705-0200170221f6",
@@ -572,7 +572,7 @@
         "Service_Name": "ABC-PLUS",
         "Notes": "There is no PLUS data, only looped messages about captions being found on the C1 service.",
         "Date_Added": "2026-08-21",
-        "Recovered_By": "Fry L.",
+        "Recovered_By": "Fry's Video Archives",
         "IsNew": false
     }
 ]
