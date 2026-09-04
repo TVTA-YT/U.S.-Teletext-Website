@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_NBC-19831028_1",
-    "generated_at": "2026-09-04T05:58:03+00:00",
+    "generated_at": "2026-09-04T07:20:28+00:00",
     "recovered_by": "Evan P.",
     "program_title": "Riviera International Triathlon",
     "date": "1983-10-28",
@@ -178,10 +178,6 @@
         {
             "filename": "Record-000-021-v0.png",
             "url": "https://archive.org/download/USTT_NBC-19831028_1/1983-10-28_WKYC_NBC_NBC%20Teletext.zip/1983-10-28_WKYC_NBC_NBC%20Teletext/Record-000-021-v0.png"
-        },
-        {
-            "filename": "Record-000-001-v0.png",
-            "url": "https://archive.org/download/USTT_NBC-19831028_1/Record-000-001-v0.png"
         }
     ]
 }

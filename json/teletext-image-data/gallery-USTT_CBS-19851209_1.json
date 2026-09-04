@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19851209_1",
-    "generated_at": "2026-09-04T05:57:16+00:00",
+    "generated_at": "2026-09-04T07:19:45+00:00",
     "recovered_by": "Zaroff's Video Archives",
     "program_title": "N/A",
     "date": "1985-12-09",
@@ -270,10 +270,6 @@
         {
             "filename": "Record-000-021-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19851209_1/CBS_1985-12-09_ExtraVision.zip/CBS_1985-12-09_ExtraVision/Record-000-021-v0.png"
-        },
-        {
-            "filename": "Record-000-000-v1.png",
-            "url": "https://archive.org/download/USTT_CBS-19851209_1/Record-000-000-v1.png"
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_KICU-19870603_1",
-    "generated_at": "2026-09-04T05:56:23+00:00",
+    "generated_at": "2026-09-04T07:18:54+00:00",
     "recovered_by": "Bored's Teletext Pile",
     "program_title": "N/A",
     "date": "1987-06-03",
@@ -338,10 +338,6 @@
         {
             "filename": "Page-210-0000.png",
             "url": "https://archive.org/download/USTT_KICU-19870603_1/1987-06-03_KICU_DaTaVizion.zip/1987-06-03_KCIU_DaTaVizion/Page-210-0000.png"
-        },
-        {
-            "filename": "Page-200-0000.png",
-            "url": "https://archive.org/download/USTT_KICU-19870603_1/Page-200-0000.png"
         }
     ]
 }

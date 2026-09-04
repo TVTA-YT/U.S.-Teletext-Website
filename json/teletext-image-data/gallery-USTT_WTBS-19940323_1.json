@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_WTBS-19940323_1",
-    "generated_at": "2026-09-04T05:56:49+00:00",
+    "generated_at": "2026-09-04T07:19:18+00:00",
     "recovered_by": "TVTA",
     "program_title": "Perry Mason",
     "date": "1994-03-23",
@@ -1154,10 +1154,6 @@
         {
             "filename": "Page-224-0002.png",
             "url": "https://archive.org/download/USTT_WTBS-19940323_1/1994-03-23_TBS_SSS-Teletext.zip/1994-03-23_TBS_SSS-Teletext/Page-224-0002.png"
-        },
-        {
-            "filename": "Page-200-0000.png",
-            "url": "https://archive.org/download/USTT_WTBS-19940323_1/Page-200-0000.png"
         }
     ]
 }

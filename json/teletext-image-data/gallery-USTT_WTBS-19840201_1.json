@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_WTBS-19840201_1",
-    "generated_at": "2026-09-04T05:58:01+00:00",
+    "generated_at": "2026-09-04T07:20:26+00:00",
     "recovered_by": "Bored's Teletext Pile",
     "program_title": "Perry Mason",
     "date": "1984-02-01",
@@ -438,10 +438,6 @@
         {
             "filename": "Page-137-0000.png",
             "url": "https://archive.org/download/USTT_WTBS-19840201_1/1984-02-01_WTBS_Keyfax.zip/1984-02-01_WTBS_Keyfax/Page-137-0000.png"
-        },
-        {
-            "filename": "Page-100-0000.png",
-            "url": "https://archive.org/download/USTT_WTBS-19840201_1/Page-100-0000.png"
         }
     ]
 }

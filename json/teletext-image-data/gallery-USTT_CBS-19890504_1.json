@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19890504_1",
-    "generated_at": "2026-09-04T05:57:48+00:00",
+    "generated_at": "2026-09-04T07:20:13+00:00",
     "recovered_by": "TVTA",
     "program_title": "The Smothers Brothers Comedy Hour",
     "date": "1989-05-04",
@@ -242,10 +242,6 @@
         {
             "filename": "Record-000-034-v8.png",
             "url": "https://archive.org/download/USTT_CBS-19890504_1/1989-05-04_KDFW_CBS_ExtraVision.zip/1989-05-04_KDFW_CBS_ExtraVision/Record-000-034-v8.png"
-        },
-        {
-            "filename": "Record-000-000-v1.png",
-            "url": "https://archive.org/download/USTT_CBS-19890504_1/Record-000-000-v1.png"
         }
     ]
 }

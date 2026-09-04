@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_WTBS-19900126_1",
-    "generated_at": "2026-09-04T05:56:47+00:00",
+    "generated_at": "2026-09-04T07:19:16+00:00",
     "recovered_by": "TVTA",
     "program_title": "The Andy Griffith Show",
     "date": "1990-01-26",
@@ -1678,10 +1678,6 @@
         {
             "filename": "Page-224-0002.png",
             "url": "https://archive.org/download/USTT_WTBS-19900126_1/1990-01-26_TBS_Electra.zip/1990-01-26_TBS_Electra/Page-224-0002.png"
-        },
-        {
-            "filename": "Page-100-0000.png",
-            "url": "https://archive.org/download/USTT_WTBS-19900126_1/Page-100-0000.png"
         }
     ]
 }

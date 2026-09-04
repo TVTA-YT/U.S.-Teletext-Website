@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_NBC-19831125_1",
-    "generated_at": "2026-09-04T05:58:11+00:00",
+    "generated_at": "2026-09-04T07:20:36+00:00",
     "recovered_by": "Evan P.",
     "program_title": "Boxing on NBC: | Larry Holmes vs. Marvis Frazier",
     "date": "1983-11-25",
@@ -122,10 +122,6 @@
         {
             "filename": "Record-000-021-v0.png",
             "url": "https://archive.org/download/USTT_NBC-19831125_1/1983-11-25_WKYC_NBC_NBC-Teletext.zip/1983-11-25_WKYC_NBC_NBC-Teletext/Record-000-021-v0.png"
-        },
-        {
-            "filename": "Record-000-002-v0.png",
-            "url": "https://archive.org/download/USTT_NBC-19831125_1/Record-000-002-v0.png"
         }
     ]
 }

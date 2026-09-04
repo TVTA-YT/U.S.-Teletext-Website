@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19881128_1",
-    "generated_at": "2026-09-04T05:57:34+00:00",
+    "generated_at": "2026-09-04T07:20:02+00:00",
     "recovered_by": "TVTA",
     "program_title": "How the Grinch Stole Christmas",
     "date": "1988-11-28",
@@ -242,10 +242,6 @@
         {
             "filename": "Record-000-033-v0.png",
             "url": "https://archive.org/download/USTT_CBS-19881128_1/1988-11-28_WCAX_CBS_ExtraVision.zip/1988-11-28_WCAX_CBS_ExtraVision/Record-000-033-v0.png"
-        },
-        {
-            "filename": "Record-000-000-v1.png",
-            "url": "https://archive.org/download/USTT_CBS-19881128_1/Record-000-000-v1.png"
         }
     ]
 }

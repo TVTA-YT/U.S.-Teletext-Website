@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19851002_1",
-    "generated_at": "2026-09-04T05:57:54+00:00",
+    "generated_at": "2026-09-04T07:20:21+00:00",
     "recovered_by": "Zaroff's Video Archives",
     "program_title": "The Equalizer (S01 E03)",
     "date": "1985-10-02",
@@ -66,10 +66,6 @@
         {
             "filename": "Record-000-064-v5.png",
             "url": "https://archive.org/download/USTT_CBS-19851002_1/CBS_1985-10-02_ExtraVision.zip/CBS_1985-10-02_ExtraVision/Record-000-064-v5.png"
-        },
-        {
-            "filename": "Record-000-000-v5.png",
-            "url": "https://archive.org/download/USTT_CBS-19851002_1/Record-000-000-v5.png"
         }
     ]
 }

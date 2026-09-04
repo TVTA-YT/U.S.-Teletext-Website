@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_NBC-19851118_1",
-    "generated_at": "2026-09-04T05:58:07+00:00",
+    "generated_at": "2026-09-04T07:20:32+00:00",
     "recovered_by": "Evan P.",
     "program_title": "Dumbo",
     "date": "1985-11-18",
@@ -198,10 +198,6 @@
         {
             "filename": "Record-000-021-v0.png",
             "url": "https://archive.org/download/USTT_NBC-19851118_1/1985-11-18_WKYC_NBC_NBC-Teletext.zip/1985-11-18_WKYC_NBC_NBC-Teletext/Record-000-021-v0.png"
-        },
-        {
-            "filename": "Record-000-000-v0.png",
-            "url": "https://archive.org/download/USTT_NBC-19851118_1/Record-000-000-v0.png"
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_NBC-19831027_1",
-    "generated_at": "2026-09-04T05:58:09+00:00",
+    "generated_at": "2026-09-04T07:20:34+00:00",
     "recovered_by": "Evan P.",
     "program_title": "Hill Street Blues",
     "date": "1983-10-27",
@@ -322,10 +322,6 @@
         {
             "filename": "Record-000-021-v0.png",
             "url": "https://archive.org/download/USTT_NBC-19831027_1/1983-10-27_WKYC_NBC_NBC-Teletext.zip/1983-10-27_WKYC_NBC_NBC-Teletext/Record-000-021-v0.png"
-        },
-        {
-            "filename": "Record-000-001-v0.png",
-            "url": "https://archive.org/download/USTT_NBC-19831027_1/Record-000-001-v0.png"
         }
     ]
 }

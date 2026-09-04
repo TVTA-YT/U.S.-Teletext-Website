@@ -1,6 +1,6 @@
 {
     "identifier": "USTT_CBS-19850909_1",
-    "generated_at": "2026-09-04T05:57:42+00:00",
+    "generated_at": "2026-09-04T07:20:09+00:00",
     "recovered_by": "TVTA",
     "program_title": "CBS Evening News",
     "date": "1985-09-09",
@@ -410,10 +410,6 @@
         {
             "filename": "Record-000-042-v1.png",
             "url": "https://archive.org/download/USTT_CBS-19850909_1/1985-09-09_WCBS_CBS_ExtraVision.zip/1985-09-09_WCBS_CBS_ExtraVision/Record-000-042-v1.png"
-        },
-        {
-            "filename": "Record-000-000-v6.png",
-            "url": "https://archive.org/download/USTT_CBS-19850909_1/Record-000-000-v6.png"
         }
     ]
 }
