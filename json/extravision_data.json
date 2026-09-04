@@ -15,6 +15,7 @@
         "Notes": "This is only about 4 minutes worth of decoded data.",
         "Date_Added": "2026-09-03",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19850217_1",
         "IsNew": true
     },
     {
@@ -33,6 +34,7 @@
         "Notes": "",
         "Date_Added": "2026-08-31",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19850414_1",
         "IsNew": true
     },
     {
@@ -51,6 +53,7 @@
         "Notes": "",
         "Date_Added": "2026-08-26",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19850519_1",
         "IsNew": false
     },
     {
@@ -69,6 +72,7 @@
         "Notes": "",
         "Date_Added": "2026-08-27",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19850909_1",
         "IsNew": false
     },
     {
@@ -87,6 +91,7 @@
         "Notes": "",
         "Date_Added": "2026-08-12",
         "Recovered_By": "Zaroff's Video Archives",
+        "IA_ID": "USTT_CBS-19851002_1",
         "IsNew": false
     },
     {
@@ -105,6 +110,7 @@
         "Notes": "",
         "Date_Added": "2026-08-12",
         "Recovered_By": "Zaroff's Video Archives",
+        "IA_ID": "USTT_CBS-19851209_1",
         "IsNew": false
     },
     {
@@ -123,6 +129,7 @@
         "Notes": "",
         "Date_Added": "2026-08-12",
         "Recovered_By": "Zaroff's Video Archives",
+        "IA_ID": "USTT_CBS-19851210_1",
         "IsNew": false
     },
     {
@@ -141,6 +148,7 @@
         "Notes": "",
         "Date_Added": "2026-08-31",
         "Recovered_By": "Evan P.",
+        "IA_ID": "USTT_CBS-19860215_1",
         "IsNew": true
     },
     {
@@ -159,6 +167,7 @@
         "Notes": "",
         "Date_Added": "2026-08-12",
         "Recovered_By": "UniArchives",
+        "IA_ID": "USTT_CBS-19860603_1",
         "IsNew": false
     },
     {
@@ -177,6 +186,7 @@
         "Notes": "",
         "Date_Added": "2026-08-14",
         "Recovered_By": "UniArchives",
+        "IA_ID": "USTT_CBS-19871113_1",
         "IsNew": false
     },
     {
@@ -195,6 +205,7 @@
         "Notes": "",
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19881122_1",
         "IsNew": true
     },
     {
@@ -213,6 +224,7 @@
         "Notes": "",
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19881128_1",
         "IsNew": true
     },
     {
@@ -231,6 +243,7 @@
         "Notes": "This sample is from the premiere,",
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19881221_1",
         "IsNew": true
     },
     {
@@ -249,6 +262,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890204_1",
         "IsNew": false
     },
     {
@@ -267,6 +281,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890211_1",
         "IsNew": false
     },
     {
@@ -285,6 +300,7 @@
         "Notes": "",
         "Date_Added": "2026-08-25",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19850414_1",
         "IsNew": false
     },
     {
@@ -303,6 +319,7 @@
         "Notes": "All pages have decoding issues due to corrupted data.",
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890427_1",
         "IsNew": true
     },
     {
@@ -321,6 +338,7 @@
         "Notes": "",
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890504_1",
         "IsNew": true
     },
     {
@@ -339,6 +357,7 @@
         "Notes": "",
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890511_1",
         "IsNew": true
     },
     {
@@ -357,6 +376,7 @@
         "Notes": "",
         "Date_Added": "2026-08-31",
         "Recovered_By": "TVTA",
+        "IA_ID": "USTT_CBS-19890823_1",
         "IsNew": true
     },
     {
@@ -375,6 +395,7 @@
         "Notes": "",
         "Date_Added": "2026-08-30",
         "Recovered_By": "Bored's Teletext Pile",
+        "IA_ID": "USTT_CBS-19910126_1",
         "IsNew": true
     }
 ]
