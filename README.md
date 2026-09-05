@@ -21,17 +21,17 @@ For the last few years, European teletext has been able to be decoded thanks to 
 
 In August 2026, a milestone was reached: U.S. teletext could now be properly decoded thanks to the further development of [Decode-Orc](https://github.com/decode-orc/decode-orc). With this development, pages from U.S. teletext services such as will finally be seen for the first time since these pages were transmitted via the networks' VBI, possibly for the first time ever. Some of the teletext services available in the U.S. follow:
 
-- **Electra** (primarily used by TBS) *(appx. 1982 - appx. 1993)* **[WST]**
-- **ExtraVision** (CBS's teletext service) *(appx. 1984 - appx. 1990)* **[NABTS]**
-- **Keyfax** (primarily used by TBS) *(appx. 1982 - appx. 1985)* **[WST]**
-- **NBC Teletext** (NBC's teletext service) *(May 16, 1983 - appx. 1985)* **[NABTS]**
+- **Electra** (primarily used by TBS) *(appx. 1982 - June 11, 1993)* **[WST]**
+- **ExtraVision** (CBS's teletext service) *(appx. 1984 - appx. late 1991)* **[NABTS]**
+- **Keyfax** (primarily used by TBS) *(appx. 1982 - appx. mid-1985)* **[WST]**
+- **NBC Teletext** (NBC's teletext service) *(May 16, 1983 - appx. late 1985)* **[NABTS]**
 
 \*NOTE: Keyfax was transmitted on TBS from 1982-1985. Electra took over teletext services on TBS after Keyfax's closure.
 
 ## Overall Purpose
 
-With there being existing software tools to decode European teletext, there are a few websites dedicated to hosting archives of those European services, such as the BBC's Ceefax service. Now, with there being available software to decode North American NABTS and WST services, a proper archival website was needed to host these newly-decoded samples - that's the purpose of this website. The goal is to make these samples widely available to anyone who wants download them. Samples are provided as ZIP files. Included in the ZIP archives are the decoded images and, depending on the service, a T33 (NABTS) or T34 (WST) file, which contains the raw, decoded teletext stream.
+With there being existing software tools to decode European teletext, there are a few websites dedicated to hosting archives of those European services, such as the BBC's Ceefax service. Now, with there being available software to decode North American NABTS and WST services, a proper archival website was needed to host these newly-decoded samples - that's the purpose of this website. The goal is to make these samples widely available to anyone who wants download them. Samples are provided as ZIP files. Included in the ZIP archives are the decoded images and, depending on the service, a T33 (NABTS) or T34 (WST) file, which contains the raw teletext stream. All decoded images can also be viewed on the site.
 
 Created August 10, 2026, 13:50
 
-Updated August 13, 2026, 17:51
+Updated September 4, 2026, 16:57

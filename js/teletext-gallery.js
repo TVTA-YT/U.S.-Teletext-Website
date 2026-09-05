@@ -104,56 +104,56 @@
 
 
   function buildFrameList(rawImages) {
-  const frames = [];
+    const frames = [];
 
-  rawImages.forEach((entry) => {
-    const nameNoExt = entry.filename.replace(/\.[^.]+$/, '');
-    const parsed = parseFilename(nameNoExt);
+    rawImages.forEach((entry) => {
+      const nameNoExt = entry.filename.replace(/\.[^.]+$/, '');
+      const parsed = parseFilename(nameNoExt);
 
-    if (!parsed) return;
+      if (!parsed) return;
 
-    frames.push({
-      kind: parsed.kind,
-      pageNumber: parsed.pageNumber,
-      displayNumber: parsed.displayNumber,
-      subIndex: parsed.subIndex,
-      filename: entry.filename,
-      url: entry.url
+      frames.push({
+        kind: parsed.kind,
+        pageNumber: parsed.pageNumber,
+        displayNumber: parsed.displayNumber,
+        subIndex: parsed.subIndex,
+        filename: entry.filename,
+        url: entry.url
+      });
     });
-  });
 
-  // Sort by the number encoded in the filename,
-  // then by version/subpage number.
-  frames.sort((a, b) => {
-    return a.pageNumber - b.pageNumber || a.subIndex - b.subIndex;
-  });
+    // Sort by the number encoded in the filename,
+    // then by version/subpage number.
+    frames.sort((a, b) => {
+      return a.pageNumber - b.pageNumber || a.subIndex - b.subIndex;
+    });
 
-  // Record where each occurrence falls within a repeated
-  // display-number group.
-  let i = 0;
+    // Record where each occurrence falls within a repeated
+    // display-number group.
+    let i = 0;
 
-  while (i < frames.length) {
-    let j = i;
+    while (i < frames.length) {
+      let j = i;
 
-    while (
-      j < frames.length &&
-      frames[j].displayNumber === frames[i].displayNumber
-    ) {
-      j++;
+      while (
+        j < frames.length &&
+        frames[j].displayNumber === frames[i].displayNumber
+      ) {
+        j++;
+      }
+
+      const groupSize = j - i;
+
+      for (let k = i; k < j; k++) {
+        frames[k].occurrenceIndex = k - i + 1;
+        frames[k].occurrenceCount = groupSize;
+      }
+
+      i = j;
     }
 
-    const groupSize = j - i;
-
-    for (let k = i; k < j; k++) {
-      frames[k].occurrenceIndex = k - i + 1;
-      frames[k].occurrenceCount = groupSize;
-    }
-
-    i = j;
+    return frames;
   }
-
-  return frames;
-}
 
   function setStatus(message) {
     if (els.status) {
@@ -162,115 +162,115 @@
   }
 
   function render(index) {
-  if (!frames.length) return;
+    if (!frames.length) return;
 
-  currentIndex = Math.max(0, Math.min(index, frames.length - 1));
-  const frame = frames[currentIndex];
+    currentIndex = Math.max(0, Math.min(index, frames.length - 1));
+    const frame = frames[currentIndex];
 
-  if (els.pageCount) {
-    els.pageCount.textContent =
-      `Image ${currentIndex + 1} out of ${frames.length}`;
-  }
+    if (els.pageCount) {
+      els.pageCount.textContent =
+        `Image ${currentIndex + 1} out of ${frames.length}`;
+    }
 
-  if (els.spinner) els.spinner.hidden = false;
+    if (els.spinner) els.spinner.hidden = false;
 
-  els.image.onload = () => {
-    if (els.spinner) els.spinner.hidden = true;
-  };
+    els.image.onload = () => {
+      if (els.spinner) els.spinner.hidden = true;
+    };
 
-  els.image.onerror = () => {
-    if (els.spinner) els.spinner.hidden = true;
+    els.image.onerror = () => {
+      if (els.spinner) els.spinner.hidden = true;
+
+      setStatus(
+        'This image failed to load (page ' + frame.displayNumber + ').'
+      );
+    };
+
+    els.image.src = frame.url;
+    els.image.alt = 'Decoded teletext frame, page ' + frame.displayNumber;
+    els.image.dataset.bsCaption = `${sampleTitle} — Page ${frame.displayNumber}`;
+
+    if (els.caption) {
+      const captionParts = [
+        'Page ' + frame.displayNumber
+      ];
+
+      if (frame.occurrenceCount > 1) {
+        captionParts.push(
+          'capture ' +
+          frame.occurrenceIndex +
+          ' of ' +
+          frame.occurrenceCount
+        );
+      }
+
+      if (frame.kind === 'record' && frame.subIndex) {
+        captionParts.push('v' + frame.subIndex);
+      }
+
+      captionParts.push(
+        'image ' + (currentIndex + 1) + ' of ' + frames.length
+      );
+
+      els.caption.textContent =
+        captionParts.join(' \u2014 ');
+    }
+
+    if (els.actualPageNumber) {
+      els.actualPageNumber.textContent = frame.displayNumber;
+    }
+
+    els.prevBtn.disabled = currentIndex === 0;
+    els.nextBtn.disabled = currentIndex === frames.length - 1;
+
+    // The form represents the image's position, not the
+    // displayNumber encoded in the filename.
+    els.gotoInput.value = currentIndex + 1;
 
     setStatus(
-      'This image failed to load (page ' + frame.displayNumber + ').'
-    );
-  };
-
-  els.image.src = frame.url;
-  els.image.alt = 'Decoded teletext frame, page ' + frame.displayNumber;
-  els.image.dataset.bsCaption = `${sampleTitle} — Page ${frame.displayNumber}`;
-
-  if (els.caption) {
-    const captionParts = [
-      'Page ' + frame.displayNumber
-    ];
-
-    if (frame.occurrenceCount > 1) {
-      captionParts.push(
-        'capture ' +
-        frame.occurrenceIndex +
-        ' of ' +
-        frame.occurrenceCount
-      );
-    }
-
-    if (frame.kind === 'record' && frame.subIndex) {
-      captionParts.push('v' + frame.subIndex);
-    }
-
-    captionParts.push(
-      'image ' + (currentIndex + 1) + ' of ' + frames.length
+      'Showing image ' +
+      (currentIndex + 1) +
+      ' of ' +
+      frames.length +
+      ', page ' +
+      frame.displayNumber
     );
 
-    els.caption.textContent =
-      captionParts.join(' \u2014 ');
+    const params = new URLSearchParams(window.location.search);
+    params.set('stream', streamId);
+    params.set('page', String(currentIndex + 1));
+
+    history.replaceState(
+      null,
+      '',
+      '?' + params.toString()
+    );
   }
-
-  if (els.actualPageNumber) {
-      els.actualPageNumber.textContent = frame.displayNumber;
-  }
-
-  els.prevBtn.disabled = currentIndex === 0;
-  els.nextBtn.disabled = currentIndex === frames.length - 1;
-
-  // The form represents the image's position, not the
-  // displayNumber encoded in the filename.
-  els.gotoInput.value = currentIndex + 1;
-
-  setStatus(
-    'Showing image ' +
-    (currentIndex + 1) +
-    ' of ' +
-    frames.length +
-    ', page ' +
-    frame.displayNumber
-  );
-
-  const params = new URLSearchParams(window.location.search);
-  params.set('stream', streamId);
-  params.set('page', String(currentIndex + 1));
-
-  history.replaceState(
-    null,
-    '',
-    '?' + params.toString()
-  );
-}
 
 
   function goToSequence(imageNumber) {
-  const index = imageNumber - 1;
+    const index = imageNumber - 1;
 
-  if (index < 0 || index >= frames.length) {
-    if (els.gotoError) {
-      els.gotoError.textContent =
-        `No image numbered ${imageNumber}. Enter a number from 1 to ${frames.length}.`;
+    if (index < 0 || index >= frames.length) {
+      if (els.gotoError) {
+        els.gotoError.textContent =
+          `No image numbered ${imageNumber}. Enter a number from 1 to ${frames.length}.`;
+      }
+
+      setStatus(
+        `No image ${imageNumber}. Enter a number from 1 to ${frames.length}.`
+      );
+
+      return false;
     }
 
-    setStatus(
-      `No image ${imageNumber}. Enter a number from 1 to ${frames.length}.`
-    );
+    if (els.gotoError) {
+      els.gotoError.textContent = '';
+    }
 
-    return false;
+    render(index);
+    return true;
   }
-
-  if (els.gotoError) {
-    els.gotoError.textContent = '';
-  }
-
-  render(index);
-  return true;
-}
 
 
   function showLoadError() {

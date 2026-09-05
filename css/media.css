@@ -162,6 +162,14 @@
     margin-left: 1rem;
   }
 
+  #teletext-image {
+    width: 50%;
+  }
+
+  #input-number {
+    width: 10% !important;
+  }
+
   .electra-images {
     width: 50%;
   }
@@ -218,6 +226,14 @@
     margin-left: 1rem;
   }
 
+  #teletext-image {
+    width: 55%;
+  }
+
+  #input-number {
+    width: 8% !important;
+  }
+
   .electra-images {
     width: 50%;
   }
@@ -264,6 +280,14 @@
     width: 30%;
     float: right;
     margin-left: 1rem;
+  }
+
+  #teletext-image {
+    width: 70%;
+  }
+
+  #input-number {
+    width: 10% !important;
   }
 
   .electra-images {
@@ -325,6 +349,14 @@
     max-width: 100%;
   }
 
+  #teletext-image {
+    width: 85%;
+  }
+
+  #input-number {
+    width: 12% !important;
+  }
+
   .electra-images {
     width: 50%;
   }
@@ -378,6 +410,14 @@
 
   #encoded-extravision-image {
     max-width: 100%;
+  }
+
+  #teletext-image {
+    width: 100%;
+  }
+
+  #input-number {
+    width: 18% !important;
   }
 
   .electra-images {
@@ -439,6 +479,14 @@
     max-width: 100%;
   }
 
+  #teletext-image {
+    width: 100%;
+  }
+
+  #input-number {
+    width: 22% !important;
+  }
+
   .electra-images {
     width: 70%;
   }
@@ -497,6 +545,14 @@
 
   #encoded-extravision-image {
     max-width: 100%;
+  }
+
+  #teletext-image {
+    width: 100%;
+  }
+
+  #input-number {
+    width: 32% !important;
   }
 
   .electra-images {
