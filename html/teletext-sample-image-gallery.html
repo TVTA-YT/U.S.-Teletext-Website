@@ -330,6 +330,26 @@
               </div>
             </form>
           </div>
+
+          <hr aria-hidden="true" />
+          <h3 class="text-center display-5">Image Gallery</h3>
+          <p class="text-center">
+            Click an image below to display it in the viewer above.
+          </p>
+
+          <!-- Image gallery -->
+          <div id="teletext-image-gallery-grid" role="group">
+            <div class="row justify-content-center pt-3">
+              <div class="col-2 p-2"></div>
+            </div>
+          </div>
+          <div class="text-center py-3">
+            <button
+              type="button"
+              class="btn btn-primary d-none"
+              id="load-more-images"
+            ></button>
+          </div>
           <p id="loading">Loading gallery&hellip;</p>
           <p id="loading-error" hidden>
             Could not load this gallery. The stream may not exist or the
@@ -484,8 +504,8 @@
         >
       </div>
     </footer>
+    <script src="../js/teletext-gallery.js"></script>
     <script src="../js/color-modes.js"></script>
     <script src="../js/image-modal.js"></script>
-    <script src="../js/teletext-gallery.js"></script>
   </body>
 </html>
