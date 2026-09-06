@@ -123,7 +123,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": null,
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "8eac0b67-a369-11f1-a705-0200170221f6",
@@ -141,7 +141,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900118_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "414f57bd-a36a-11f1-a705-0200170221f6",
@@ -159,7 +159,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "ustt_wtbs-19900119_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "c3599691-a36a-11f1-a705-0200170221f6",
@@ -177,7 +177,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900121_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4a51f949-a36b-11f1-a705-0200170221f6",
@@ -195,7 +195,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900122_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "bc0e8922-a36b-11f1-a705-0200170221f6",
@@ -213,7 +213,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "ustt_wtbs-19900123_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4a77d087-a36c-11f1-a705-0200170221f6",
@@ -231,7 +231,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900124_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "c8c53a62-a36c-11f1-a705-0200170221f6",
@@ -249,7 +249,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900125_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "729abe85-a36d-11f1-a705-0200170221f6",
@@ -267,7 +267,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900126_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a0609d91-a36f-11f1-a705-0200170221f6",
@@ -285,7 +285,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": null,
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "0acf9a6c-a36e-11f1-a705-0200170221f6",
@@ -303,7 +303,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": null,
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4f2566a9-a36e-11f1-a705-0200170221f6",
@@ -321,7 +321,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900129_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "d532662d-a36e-11f1-a705-0200170221f6",
@@ -339,7 +339,7 @@
         "Date_Added": "2026-08-29",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19900130_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "ed96bc64-a04b-11f1-a705-0200170221f6",
@@ -393,7 +393,7 @@
         "Date_Added": "2026-08-28",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940321_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "23ff3eda-a2a4-11f1-a705-0200170221f6",
@@ -411,7 +411,7 @@
         "Date_Added": "2026-08-28",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940322_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "755ddb60-a2a4-11f1-a705-0200170221f6",
@@ -429,7 +429,7 @@
         "Date_Added": "2026-08-28",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940323_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "caac4f25-a2a4-11f1-a705-0200170221f6",
@@ -447,7 +447,7 @@
         "Date_Added": "2026-08-28",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940324_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "1b77db80-9613-11f1-a705-0200170221f6",
