@@ -152,6 +152,44 @@
         "IsNew": true
     },
     {
+        "ID": "da3886f0-aad2-11f1-a705-0200170221f6",
+        "Year": "1986",
+        "Month": "March",
+        "Date": "1986-03-06",
+        "Affiliate": "WCPX",
+        "Program_Title": "Knots Landing",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19860306_1/1986-03-06_WCPX_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia600500.us.archive.org/34/items/USTT_CBS-19860306_1/Record-000-000-v0.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-07",
+        "Recovered_By": "Helen",
+        "IA_ID": "USTT_CBS-19860306_1",
+        "IsNew": true
+    },
+    {
+        "ID": "19cad5de-aad3-11f1-a705-0200170221f6",
+        "Year": "1986",
+        "Month": "March",
+        "Date": "1986-03-13",
+        "Affiliate": "WCPX",
+        "Program_Title": "Knots Landing",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19860313_1/1986-03-13_WCPX_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia601503.us.archive.org/21/items/USTT_CBS-19860313_1/Record-000-000-v5.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-07",
+        "Recovered_By": "Helen",
+        "IA_ID": "USTT_CBS-19860313_1",
+        "IsNew": true
+    },
+    {
         "ID": "3d6db2b2-9526-11f1-bcc0-1a92c823833d",
         "Year": "1986",
         "Month": "June",
@@ -169,6 +207,25 @@
         "Recovered_By": "UniArchives",
         "IA_ID": "USTT_CBS-19860603_1",
         "IsNew": false
+    },
+    {
+        "ID": "378774a1-aad3-11f1-a705-0200170221f6",
+        "Year": "1986",
+        "Month": "June",
+        "Date": "1986-06-30",
+        "Affiliate": "WCPX",
+        "Program_Title": "Star Trek",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19860630_1/1986-06-30_WCPX_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia600804.us.archive.org/27/items/USTT_CBS-19860630_1/Record-000-000-v2.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-07",
+        "Recovered_By": "Helen",
+        "IA_ID": "USTT_CBS-19860630_1",
+        "IsNew": true
     },
     {
         "ID": "510cde07-9801-11f1-a705-0200170221f6",
@@ -206,7 +263,7 @@
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19881122_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "56c91bc2-a449-11f1-a705-0200170221f6",
@@ -225,7 +282,7 @@
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19881128_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "752b480f-a449-11f1-a705-0200170221f6",
@@ -244,6 +301,25 @@
         "Date_Added": "2026-08-30",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19881221_1",
+        "IsNew": false
+    },
+    {
+        "ID": "174eae94-ab05-11f1-a705-0200170221f6",
+        "Year": "1989",
+        "Month": "January",
+        "Date": "1989-01-19",
+        "Affiliate": "WCPX",
+        "Program_Title": "Knots Landing",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19890119_1/1989-01-19_WCPX_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia601003.us.archive.org/18/items/USTT_CBS-19890119_1/Record-000-000-v7.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-07",
+        "Recovered_By": "Helen",
+        "IA_ID": "USTT_CBS-19890119_1",
         "IsNew": true
     },
     {
@@ -396,6 +472,6 @@
         "Date_Added": "2026-08-30",
         "Recovered_By": "Bored's Teletext Pile",
         "IA_ID": "USTT_CBS-19910126_1",
-        "IsNew": true
+        "IsNew": false
     }
 ]
