@@ -12,9 +12,6 @@ if (!$conn) {
 // New entires will be marked for 7 days
 const NEW_WINDOW_DAYS = 7;
 
-/* One entry per table. ExtraVision and NBC Teletext will share
-the same columns.
-*/
 $broadcastNetworkSharedColumns = "ID, Year, Month, Date, Affiliate, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By, IA_ID";
 $textSharedColumns = "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, TEXT1, TEXT2, Network, Service_Name, Notes, Date_Added, Recovered_By";
 $otherSharedColumns = "ID, Year, Month, Date, Program_Title, Tape_Type, Tape_Speed, Download_Link, Thumbnail, Network, Service_Name, Notes, Date_Added, Recovered_By, IA_ID";
@@ -72,6 +69,15 @@ $exports = [
         'outputFile' =>  $jsonDirectory . '/nbc_teletext_data.json',
         'trackerFile' => $trackerDirectory . '/nbc_teletext_data.json',
     ],
+    [
+        'table'      => 'SSS_Teletext',
+        'idField'    => 'ID',
+        'columns'    =>  $otherSharedColumns,
+        'orderBy'    =>  $sharedOrderBy,
+        'outputFile' =>  $jsonDirectory . '/sss_teletext_data.json',
+        'trackerFile' => $trackerDirectory . '/sss_teletext_data.json',
+
+    ],
     // Text service
     [
         'table'      => 'ABC_PLUS',
@@ -100,6 +106,15 @@ $exports = [
         'trackerFile' => $trackerDirectory . '/iptv_agids_data.json',
 
     ],
+    // [
+    //     'table'      => 'PPTN_INFOTEXT',
+    //     'idField'    => 'ID',
+    //     'columns'    =>  $textSharedColumns,
+    //     'orderBy'    =>  $sharedOrderBy,
+    //     'outputFile' =>  $jsonDirectory . '/pptn_infotext_data.json',
+    //     'trackerFile' => $trackerDirectory . '/pptn_infotext_data.json',
+
+    // ],
     [
         'table'      => 'Wis_Infotext',
         'idField'    => 'ID',

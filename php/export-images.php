@@ -47,6 +47,15 @@ $TABLES_WITH_IA_IDENTIFIERS = [
         'service_column' => 'Service_Name',
         'network_column' => 'Network'
     ],
+    [
+        'table' => 'SSS_Teletext',
+        'ia_column' => 'IA_ID',
+        'recovered_by_column' => 'Recovered_By',
+        'title_column' => 'Program_Title',
+        'date_column' => 'Date',
+        'service_column' => 'Service_Name',
+        'network_column' => 'Network'
+    ],
 ];
 
 $OUTPUT_DIR = __DIR__ . '/../json/teletext-image-data/';
@@ -426,7 +435,6 @@ foreach ($identifiers as $identifier) {
 
     $manifest = [
         'identifier' => $identifier,
-        'generated_at' => date('c'),
         'recovered_by' => $identifierMeta[$identifier]['Recovered_By'] ?? null,
         'program_title' => $identifierMeta[$identifier]['Program_Title'] ?? null,
         'date' => $identifierMeta[$identifier]['Date'] ?? null,
