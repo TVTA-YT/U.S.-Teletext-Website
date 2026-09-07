@@ -300,11 +300,11 @@
         <section id="teletext-on-videotape">
           <h2 class="display-5">Wait... Really?</h2>
           <p>
-            It's true! Most people have likely transferred a videotape in their
+            It's true! Many people will have transferred a videotape in their
             lives, whether it's a home movie or a TV broadcast. I (the creator
             of this site) have done my fair share of videotape transfers going
             back to 2011. Like most people who have transferred videotape, I
-            only assumed the only content on the tape was the programming
+            assumed the only content on the tape was the programming
             content I was transferring. It wasn't until around 2025 when I
             realized just how much I was missing by transferring videotape the
             usual conventional way, which for me was transferring to a DVD
@@ -409,8 +409,7 @@
                   class="figure-caption text-center"
                   aria-hidden="true"
                 >
-                  A still of the index page (P100) from BBC's Ceefax service
-                  (August 1, 1991).
+                  A still of the index page (P100) from the Electra service (December 13, 1992).
                 </figcaption>
               </figure>
             </div>
@@ -452,68 +451,52 @@
         <section id="capture-card-section">
           <h2 class="display-5">Do Capture Cards Work?</h2>
           <p>
-            It sort of depends. Your standard, extremely cheap USB capture
-            device, such as an EZ Cap, will
-            <span aria-hidden="true"><strong>not</strong></span
-            ><span class="sr-only">not</span> work. Transferring tapes via a DVD
-            recorder will also not work. While this method does preserve the
-            closed captions, it doesn't preserve the VBI itself. There are
-            certain older Hauppauge WinTV capture cards that, when used with
-            Linux, can grab the VBI, but according to someone familiar, this can
-            be "hit or miss".
+            Yes, <span aria-hidden="true"><em>some</em></span>
+            <span class="sr-only">some</span> capture cards are capable of
+            capturing the VBI and therefore the telext data. An up-to-date
+            list of capable devices, as well as instructions for capturing
+            the raw data is available from the Analog Video Wiki's page on
+            <a href="https://analogvideo.miraheze.org/wiki/Capturing_VBI_signals"
+            target="_blank">Capturing VBI signals</a>.
           </p>
         </section>
         <section id="get-started">
           <h2 class="display-5">How Do I Get Started?</h2>
           <p>
-            The best way to preserve the VBI when transferring videotape is by
-            transferring videotape via the FM RF method using software tools
-            such as
+            The simplest method for capturing raw VBI data from the playback of videotape recordings
+            is by using an appropriate capture card as described in the Analog Video Wiki's page on
+            <a href="https://analogvideo.miraheze.org/wiki/Capturing_VBI_signals"
+            target="_blank">Capturing VBI signals</a>. It is important with this
+            capture method that the playback VCR be connected directly to the
+            capture device and not passed through other equipment such as DVD
+            recorders, as these other devices can alter or remove the VBI data
+            you are attempting to capture.
+          </p>
+          <p>
+            A more advanced way to preserve the VBI when transferring videotape is using
+            the FM RF capture method and the 
             <a href="https://github.com/oyvindln/vhs-decode" target="_blank"
               >VHS-Decode</a
-            >; the
-            <a href="https://github.com/oyvindln/vhs-decode/wiki">wiki</a> on
-            the GitHub repository contains a section for
-            <a
-              href="https://github.com/oyvindln/vhs-decode/wiki/004-The-Tap-List"
-              target="_blank"
-              >tapping into</a
-            >
-            the FM RF test ports on various VCR models and provides steps for
-            getting started, including the
-            <a
-              href="https://github.com/oyvindln/vhs-decode/wiki/Workflow-Guide"
-              target="_blank"
-              >needed hardware</a
-            ><span aria-hidden="true">.</span>
+            > software. This method insures preservation of the entire video signal,
+            including all lines of the VBI where teletext data is found.
+            Detailed information on this method of videotape capture is available on the
+            <a href="https://github.com/oyvindln/vhs-decode/wiki">VHS-Decode wiki</a>.
           </p>
           <p>
-            After the FM RF transfer, the produced file, a U8 file (sometimes
-            manually compressed to FLAC) will need to be decoded. These are not
-            video files as FM RF capture does not transfer conventional video
-            like a standard capture device. Rather, it transfers the raw FM
-            video signal on the videotape; audio is also transferred, but
-            separately from the FM signal. Again, refer to the VHS-Decode GitHub
-            wiki for more information.
-          </p>
-          <p>
-            During the decoding process, this will produce several files, but
-            the important one is a TBC (time base correction) file. From there,
-            you can use VHS-Decode's built-in <code>ld-analyse</code> tool to
-            view the TBC file, which will show the decoded video; from there,
-            though, the video needs to be exported and merged with the separate
-            audio file, but once again, refer to the wiki. Additionally, there
-            is another, more recent software tool called
+            Once you have archived some VBI data with teletext, the decoding
+            is performed using a software tool called
             <a href="https://github.com/decode-orc/decode-orc" target="_blank"
               >Decode-Orc</a
-            ><span aria-hidden="true">.</span> Both software tools support
-            decoding various data in the VBI, such as Line 21 CC and VITC, but
-            if decoding teletext,
-            <span class="text-decoration-underline"
-              >this is the software to use</span
-            >, as it supports both <span aria-hidden="true">NABTS</span
-            ><span class="sr-only">N A B T S</span> and WST standards. The
-            teletext part of the software, while officially released, is still
+            ><span aria-hidden="true">.</span> This software, though part of
+            the suite of software tools related to LD-Decode and VHS-Decode,
+            can be used to decode VBI data captured either with the simple,
+            conventional method or the advanced FM RF capture method. Most
+            importantly for U.S. teletext archiving,
+            <span class="text-decoration-underline">
+            Decode-Orc is currently the only software decoder that supports
+            both <span aria-hidden="true">NABTS</span
+            ><span class="sr-only">N A B T S</span> and WST standards.</span>
+            The teletext part of the software, while officially released, is still
             under development. As more members of the tape archiving community
             use the software and discover bugs and other issues, the software
             will improve over time.
@@ -522,11 +505,9 @@
         <section id="will-my-videotapes-have-teletext">
           <h2 class="display-5">Will All My Tapes Have Teletext?</h2>
           <p>
-            First, to note, only CBS, NBC, and TBS had teletext services, so
-            recordings from those services between 1982 and 1993
-            <span aria-hidden="true"><em>should</em></span
-            ><span class="sr-only">should</span> (more on this in a bit) have
-            teletext. The service date ranges are below:
+            First, to note, CBS, NBC, and TBS were the only national broadcasters
+            to have teletext services, so recordings from those networks made within
+            the ranges below will often have teletext:
           </p>
           <ul>
             <li>
@@ -539,9 +520,9 @@
             <li>
               <strong>ExtraVision (CBS)</strong>
               <span aria-hidden="true"
-                >(appx. 1983 &ndash; appx. late 1991)</span
+                >(April 4, 1983 &ndash; appx. 1992)</span
               ><span class="sr-only"
-                >: approximately 1983 to approximately late 1991</span
+                >: April 4, 1983 to approximately 1992</span
               >
             </li>
             <li>
@@ -645,8 +626,8 @@
             nationwide. If you see channel 17 references in promotions, don't
             expect teletext!) However, CBS and NBC are different; before
             assuming that any recording of programming from those two networks
-            will automatically have teletext, there are a few important things
-            to note.
+            will automatically have teletext, there are a couple of important
+            things to note.
           </p>
           <div class="row">
             <div class="col-xl-6">
@@ -670,15 +651,17 @@
                 </p>
                 <p>
                   What this means is that the teletext services from CBS and NBC
-                  were not always being broadcast 24/7 on
+                  were not always being broadcast at all times by 
                   <span aria-hidden="true"><em>most</em></span
-                  ><span class="sr-only">most</span> local affiliates. Teletext
-                  data <span aria-hidden="true"><em>was</em></span
-                  ><span class="sr-only">was</span> relayed 24/7 on owned &amp;
+                  ><span class="sr-only">most</span> affiliates while they were
+                  on air. Teletext data <span aria-hidden="true"><em>was</em></span
+                  ><span class="sr-only">was</span> relayed during all broadcast
+                  hours on CBS owned &amp;
                   operated (O&amp;O) stations, stations that the broadcast
-                  networks, as the term suggests, owned and operated. We know
-                  that CBS O&amp;O stations did this, but we do not yet know if
-                  NBC did the same thing. The five CBS O&amp;Os of the 1980s
+                  networks, as the term suggests, owned and operated. NBC O&amp;O
+                  stations did not provide this constant relay of teletext data
+                  as evidenced by the recordings we have so far examined.
+                  The five CBS O&amp;Os of the 1980s
                   were WCBS-TV New York, KNXT/KCBS-TV Los Angeles, WBBM-TV
                   Chicago, WCAU-TV Philadelphia, and KMOX-TV
                   <span aria-hidden="true">St. Louis.</span
@@ -695,29 +678,29 @@
             </div>
             <div class="col-xl-6">
               <section id="affiliate-vbi-takeover">
-                <h2>2.&#41; Affiliate Takeover of the VBI</h2>
+                <h2>2.&#41; Local Affiliate Usage of the VBI</h2>
                 <p>
-                  Not all local affiliates are alike, we all know that. In some
-                  ways, that's a good thing because each station is unique.
-                  However, concerning teletext, that can be a bad thing. Why?
-                  Take a look at the two photos below. These are photos showing
-                  the VBI from two networks: CBS (via WHAS, Louisville, KY) and
-                  NBC.
+                  Not all local affiliates are alike. Differences in operating
+                  practices as well as the type of equipment used at each station
+                  can affect what signals ended up in each station's VBI. The images
+                  below illustrate how this can impact the teletext recovery process.
+                  These images are enlargements of the VBI taken from recordings of
+                  two different CBS affiliates of the 1980s: WHAS-TV, Louisville, KY
+                  and WBBM-TV, Chicago, IL.
                 </p>
                 <div class="row" aria-hidden="true">
                   <div class="col-6">
                     <figure class="figure">
                       <img
                         src="../images/VBI-partial-teletext.png"
-                        alt="WHAS VBI"
+                        alt="WHAS-TV VBI"
                         class="mw-100 figure-img rounded"
                         aria-label=""
                         data-bs-theme="#imageModal"
-                        data-bs-caption="The VBI from WHAS (Louisville, KY) as captured on November 24, 1987, and viewed with Decode-Orc."
+                        data-bs-caption="The VBI from WHAS-TV (Louisville, KY) as recorded on October 23, 1987."
                       />
                       <figcaption class="figure-caption text-center">
-                        WHAS (Louisville, KY) VBI with partial teletext as
-                        viewed in Decode-Orc (November 24, 1987).
+                        WHAS-TV (Louisville, KY) VBI with partial teletext (October 23, 1987).
                       </figcaption>
                     </figure>
                   </div>
@@ -728,59 +711,42 @@
                         alt="NBC VBI"
                         class="mw-100 figure-img rounded"
                         data-bs-theme="#imageModal"
-                        data-bs-caption="The VBI from an NBC affiliate as captured on October 10, 1985, and viewed with Decode-Orc."
+                        data-bs-caption="The VBI from WBBM-TV as recorded on December 10, 1985."
                       />
                       <figcaption class="figure-caption text-center">
-                        VBI from an NBC affiliate with full teletext as viewed
-                        in Decode-Orc (October 10, 1985).
+                        WBBM-TV (Chicago, IL) with full teletext (December 10, 1985).
                       </figcaption>
                     </figure>
                   </div>
                 </div>
                 <p>
-                  To make spotting the difference clearer, I added some red
-                  borders to the VBI images. For those using screen readers,
-                  I'll describe the difference. In the WHAS VBI, there are only
-                  two lines of teletext in both the top and bottom portions,
-                  while the NBC VBI has four lines in both portions. In a
-                  nutshell, the NBC VBI is carrying the full teletext service
-                  (NBC Teletext, in that case), but the WHAS VBI is not &mdash;
-                  this is not what you want to see if archiving teletext.
+                  To make spotting the difference clearer, outlines and labels
+                  have been added to each image to delineate different signals.
+                  In the WHAS-TV VBI, there are only five lines of teletext data
+                  when there should be eight for CBS ExtraVision. This is because
+                  WHAS-TV inserted three lines of VITS (vertical interval test
+                  signals) over top of three of the eight teletext lines. The
+                  VBI image from WBBM-TV shows that they were carrying the full
+                  eight lines of CBS ExtraVision teletext data.
                 </p>
                 <p>
-                  Unfortunately, some affiliates would insert their own data
-                  into the VBI, such as VITS (vertical interval test signals),
-                  which would replace, in this case, some of the teletext VBI
-                  lines. To get a clean decode of all pages in a teletext
-                  stream, the
-                  <span aria-hidden="true"><strong>full</strong></span
-                  ><span class="sr-only">full</span> VBI must be present.
-                  Decoding teletext from a partial VBI, like in the WHAS VBI
-                  photo, <span aria-hidden="true"><em>is</em></span
-                  ><span class="sr-only">is</span> possible. In fact, you can
-                  get a few clean pages from it. However, you will likely not be
-                  able to recover every page from the stream without the
-                  recording having the full, untouched VBI. For an in-progress
-                  list of stations that altered the VBI (that we know of so
-                  far), visit <a href="stations-altered-vbi.html">this</a> page.
+                  The consequence of this is that the teletext data on the WHAS-TV
+                  recording does not represent the full data stream because it
+                  is missing three lines. This means that the complete ExtraVision
+                  magazine cannot be recovered from the WHAS-TV recording and that
+                  there are likely to be more corrupted or garbled pages in the
+                  recovery because the data is incomplete. In contrast, the CBS
+                  ExtraVision data in the WBBM-TV recording is complete and so
+                  the full magazine is recoverable.
                 </p>
-              </section>
-            </div>
-            <div class="col-12">
-              <section id="late-implementation">
-                <h2>3.&#41; Late Implementation by Affiliates</h2>
                 <p>
-                  If you happen to have early recordings from CBS and NBC from
-                  around the time their services launched (refer above for date
-                  ranges), there's a chance that your affiliate didn't pass
-                  through
-                  <span aria-hidden="true"><em>any</em></span
-                  ><span class="sr-only">any</span> of the teletext data. Maybe
-                  they were a little too late to the party. Later recordings are
-                  your best chance for finding teletext, though that doesn't
-                  mean that no affiliates passed teletext through the VBI early
-                  on; I'm sure some did, especially the O&amp;O stations, but
-                  it's hard to say which did and which didn't.
+                  Partial recoveries, while not ideal, are still better than no
+                  recovery at all. Unfortunately, some CBS and NBC affiliates
+                  either completely stripped or did not pass teletext data at all
+                  making recovery impossible from recordings of those stations.
+                  For an in-progress list of stations that stripped or altered the
+                  network teletext lines, visit <a href="stations-altered-vbi.html">
+                  this</a> page.
                 </p>
               </section>
             </div>
@@ -789,12 +755,15 @@
         <section id="how-can-i-find-out">
           <h2 class="display-5">How Can I Find Out?</h2>
           <p>
-            There isn't much of an easy way to find out unless you have access
-            to an old analog CRT TV that allows for adjusting of the vertical
-            hold, allowing you to see the VBI on the tape. Digital TVs do not
-            show the analog VBI and no conventional capture card will either.
-            However, you can see the VBI if you have a CX card from Conexant,
-            such as a Bt8x8 card. Oscilloscopes may also work as well.
+            The quickest and simplest way to determine whether a recording has
+            teletext data in the VBI is to capture a short section of the recording's VBI using one of the capture devices listed
+            on the Analog Video Wiki's page on
+            <a href="https://analogvideo.miraheze.org/wiki/Capturing_VBI_signals"
+            target="_blank">Capturing VBI signals</a>. The short VBI
+            capture can then be examined using ffplay or Decode-Orc
+            to see if teletext data is present. If you see at least
+            several lines containing dense digital bits, you may
+            have teletext!
           </p>
         </section>
         <!-- * BEGIN IMAGE MODAL -->

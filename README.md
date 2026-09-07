@@ -22,11 +22,11 @@ For the last few years, European teletext has been able to be decoded thanks to 
 In August 2026, a milestone was reached: U.S. teletext could now be properly decoded thanks to the further development of [Decode-Orc](https://github.com/decode-orc/decode-orc). With this development, pages from U.S. teletext services such as will finally be seen for the first time since these pages were transmitted via the networks' VBI, possibly for the first time ever. Some of the teletext services available in the U.S. follow:
 
 - **Electra** (primarily used by TBS) *(appx. 1982 - June 11, 1993)* **[WST]**
-- **ExtraVision** (CBS's teletext service) *(appx. 1984 - appx. late 1991)* **[NABTS]**
+- **ExtraVision** (CBS's teletext service) *(April 4, 1983 - appx. 1992)* **[NABTS]**
 - **Keyfax** (primarily used by TBS) *(appx. 1982 - appx. mid-1985)* **[WST]**
 - **NBC Teletext** (NBC's teletext service) *(May 16, 1983 - appx. late 1985)* **[NABTS]**
 
-\*NOTE: Keyfax was transmitted on TBS from 1982-1985. Electra took over teletext services on TBS after Keyfax's closure.
+\*NOTE: Keyfax was transmitted on TBS from 1982-1985 in magazine 1. Electra took over magazine 1 on TBS after Keyfax's closure, while Tempo remained in magazine 2.
 
 ## Overall Purpose
 
