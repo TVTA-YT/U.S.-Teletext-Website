@@ -3,11 +3,12 @@ async function renderTotalRecordCount() {
     const nonTeletextCountEl = document.getElementById("total-record-count-non-teletext");
     const teletextSampleCountEl = document.getElementById("available-sample-count");
     const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
-    const electraCountEl = document.getElementById("electra-count");
     const datavizionCountEl = document.getElementById("datavizion-count");
+    const electraCountEl = document.getElementById("electra-count");
     const extravisionCountEl = document.getElementById("extravision-count");
     const keyfaxCountEl = document.getElementById("keyfax-count");
     const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
+    const sssTeletextCountEl = document.getElementById("sss-teletext-count");
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
@@ -15,15 +16,16 @@ async function renderTotalRecordCount() {
     if (!teletextCountEl && !teletextSampleCountEl && !nonTeletextCountEl && !nonTeletextSampleCountEl) return;
 
     const jsonFiles = [
+        '../json/datavizion_data.json',
         '../json/electra_data.json',
         '../json/extravision_data.json',
+        '../json/keyfax_data.json',
         '../json/nbc_teletext_data.json',
+        '../json/sss_teletext_data.json',
         '../json/abc_plus_data.json',
         '../json/ket_agtext_data.json',
         '../json/wisconsin_infotext_data.json',
         '../json/iptv_agids_data.json',
-        '../json/datavizion_data.json',
-        '../json/keyfax_data.json',
     ];
 
     try {
@@ -34,8 +36,8 @@ async function renderTotalRecordCount() {
             }))
         );
 
-        const teletextResponses = responses.slice(0, 3);
-        const nonTeletextResponses = responses.slice(3, 5);
+        const teletextResponses = responses.slice(0, 6);
+        const nonTeletextResponses = responses.slice(6, 10);
 
         const teletextTotal = teletextResponses.reduce((sum, rows) => sum + rows.length, 0)
         const teletextAvailableSamples = teletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
@@ -48,6 +50,7 @@ async function renderTotalRecordCount() {
         const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const keyfaxSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Keyfax' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const nbcTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'NBC Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        const sssTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'SSS Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
         const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
         const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
         const wisconsinInfotextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'WISINFOTEXT' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
@@ -90,6 +93,11 @@ async function renderTotalRecordCount() {
             nbcTeletextCountEl.textContent = nbcTeletextSamples.toLocaleString();
         }
 
+
+        if (sssTeletextCountEl) {
+            sssTeletextCountEl.textContent = sssTeletextSamples.toLocaleString();
+        }
+
         if (abcPlusCountEl) {
             abcPlusCountEl.textContent = abcPlusSamples.toLocaleString();
         }
@@ -117,6 +125,7 @@ async function renderTotalRecordCount() {
         if (extravisionCountEl) extravisionCountEl.textContent = '-';
         if (keyfaxCountEl) keyfaxCountEl.textContent = '-';
         if (nbcTeletextCountEl) nbcTeletextCountEl.textContent = '-';
+        if (sssTeletextCountEl) sssTeletextCountEl.textContent = '-';
         if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
         if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
         if (wisconsinInfotextCountEl) wisconsinInfotextCountEl.textContent = '-';

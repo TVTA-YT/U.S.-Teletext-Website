@@ -1,35 +1,14 @@
 <!doctype html>
-<!-- Created August 10, 2026, 21:23 -->
+<!-- Created September 7, 2026, 12:23 -->
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Search for archived samples from the Electra teletext service."
+      content="Available samples for the SSS Teletext service."
     />
-    <!-- Open Graph URLs -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="U.S. Teletext Archive - Electra" />
-    <meta
-      property="og:description"
-      content="Search for archived samples from the Electra teletext service."
-    />
-    <meta
-      property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/electra.html"
-    />
-    <meta
-      property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
-    />
-    <meta property="og:image:alt" content="U.S. Teletext Archive" />
-    <meta property="og:site_name" content="U.S. Teletext Archive" />
-    <meta property="og:locale" content="en_US" />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/electra.html"
-    />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="../images/favicons/favicon.ico" />
     <link
       rel="icon"
@@ -78,14 +57,42 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <title>Electra</title>
+    <title>SSS Teletext Results</title>
     <style>
       .container {
         padding-top: 100px;
       }
 
-      .btn {
+      .display-2 {
+        font-weight: bold;
+      }
+
+      .tooltip {
+        --bs-tooltip-max-width: 400px;
+      }
+
+      .tooltip-heading {
+        padding-top: 10px;
+        text-decoration: underline;
+      }
+
+      .tooltip-body {
+        color: var(--tooltip-body-text-color) !important;
+      }
+
+      .tape-notes {
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .btn:not(#themeFab, .theme-choice) {
         border-radius: 24px;
+        background-color: rgb(62, 134, 243);
+      }
+
+      table {
+        text-align: center;
+        vertical-align: middle;
       }
     </style>
   </head>
@@ -239,50 +246,92 @@
     </nav>
     <main>
       <div class="container">
-        <h1>
-          <span class="visually-hidden">Electra</span>
+        <h1 class="page-title data-letter-reveal">
           <img
-            src="../images/banners/light/Electra_light.png"
+            src="../images/banners/light/SSS_light.png"
             alt=""
             class="mw-100 light-mode-image"
             aria-hidden="true"
           />
           <img
-            src="../images/banners/dark/Electra.png"
+            src="../images/banners/dark/SSS.png"
             alt=""
             class="mw-100 dark-mode-image"
             aria-hidden="true"
           />
-        </h1>
-        <hr aria-hidden="true" />
-        <p>
-          Use the form below to view all submissions or to search for
-          submissions by year.
-        </p>
-        <form action="electra-results.html" method="get">
-          <div class="mb-3">
-            <label for="year" class="form-label"
-              >Select a year (leave blank to view all)</label
-            >
-            <select name="year" id="year" class="form-select">
-              <option value=""></option>
-              <option value="1986">1986</option>
-              <option value="1987">1987</option>
-              <option value="1988">1988</option>
-              <option value="1989">1989</option>
-              <option value="1990">1990</option>
-              <option value="1991" disabled>1991</option>
-              <option value="1992">1992</option>
-              <option value="1993" disabled>1993</option>
-            </select>
+          <div id="text-top-padding">
+            <span id="year-heading"></span>
           </div>
-          <button type="submit" class="btn btn-primary form-control">
-            Submit
-          </button>
-          <button type="reset" class="btn btn-danger form-control my-4">
-            Reset Fields
-          </button>
-        </form>
+        </h1>
+        <p class="fs-2" id="result-count"></p>
+        <div class="alert alert-primary text-center">
+          <div class="alert-heading fs-4">*NEW*</div>
+          You can now view all archived teletext pages from each available
+          sample directly on the site. These links can be found in the "Date"
+          column; the text will be bold and underlined.
+        </div>
+        <div class="alert alert-secondary" role="alert">
+          <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
+          ><span
+            >: Some pages may have imperfections, either due to corruption
+            present in the source material or imperfections with the software
+            decoders. As of August 11, 2026, the software is only a few days
+            old, so <em>some</em> imperfections are to be expected, at least for
+            now.</span
+          >
+          <br />
+          <br />
+          <span
+            >The <span aria-hidden="true">table(s)</span
+            ><span class="sr-only">table or tables</span> below are responsive;
+            to view more of the information, simply scroll the table (if
+            applicable).</span
+          >
+          <br />
+          <br />
+          <span
+            >If a ZIP file is available for download, look for the ZIP icon (<i
+              class="bi bi-file-zip-fill"
+            ></i
+            >) in the ZIP column.</span
+          >
+        </div>
+        <hr aria-hidden="true" />
+        <div id="sort-controls"></div>
+        <div id="results"></div>
+        <div class="pb-3" id="return-to-form-button">
+          <a href="sss-teletext.html">
+            <button type="submit" class="btn form-control">
+              <span class="button-text">Return to Form</span>
+            </button>
+          </a>
+        </div>
+        <!-- * BEGIN IMAGE MODAL -->
+        <div
+          class="modal fade"
+          id="imageModal"
+          tabindex="-1"
+          aria-labelledby="imageModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img src alt class="img-fluid" id="modalImage" />
+                <p id="modalCaption"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- * END IMAGE MODAL -->
         <!-- Floating theme button, bottom-right -->
         <button
           id="themeFab"
@@ -406,5 +455,47 @@
       </div>
     </footer>
     <script src="../js/color-modes.js"></script>
+    <script src="../js/heading-reveal.js"></script>
+    <script src="../js/image-modal.js"></script>
+    <script src="../js/render-results.js"></script>
+    <script>
+      renderResults({
+        jsonPath: "../json/sss_teletext_data.json",
+        filterParam: "year",
+        filterField: "Year",
+        serviceLabel: "SSS Teletext",
+        groupByField: "Month",
+        groupOrder: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        sortSecondaryField: "Date",
+        sortOptions: [
+          { label: "Contributor", field: "Recovered_By", type: "string" },
+          { label: "Program Title", field: "Program_Title", type: "string" },
+          { label: "Sample Date", field: "Date", type: "date" },
+        ],
+        columns: [
+          { label: "Thumbnail", renderThumbnail: true },
+          { label: "Date", key: "Date" },
+          { label: "Program", key: "Program_Title" },
+          { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
+          { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
+          { label: "ZIP", key: "ZIP", renderZip: true },
+          { label: "Contributor", key: "Recovered_By" },
+          { label: "Date Added", key: "Date_Added" },
+        ],
+      });
+    </script>
   </body>
 </html>

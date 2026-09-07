@@ -300,7 +300,10 @@
           </table>
         </div>
         <div class="pt-4 pb-4" id="sample-availability-count">
-          <p class="fs-3 text-center">Available Samples by Service</p>
+          <p class="fs-3 text-center mb-0">Available Samples by Service</p>
+          <p class="text-center">
+            (scroll the table on mobile for more services)
+          </p>
           <div class="table-responsive">
             <table
               class="table table-bordered text-center submission-count-table sample-availability-count-table"
@@ -312,6 +315,7 @@
                   <th>ExtraVision</th>
                   <th>Keyfax</th>
                   <th>NBC Teletext</th>
+                  <th>SSS Teletext</th>
                 </tr>
               </thead>
               <tbody>
@@ -335,6 +339,10 @@
                   <td>
                     <span class="sr-only">Available NBC Teletext samples:</span
                     ><span class="fw-bolder" id="nbc-teletext-count"></span>
+                  </td>
+                  <td>
+                    <span class="sr-only">Available SSS Teletext samples:</span
+                    ><span class="fw-bolder" id="sss-teletext-count"></span>
                   </td>
                 </tr>
               </tbody>
@@ -434,7 +442,7 @@
             </a>
           </div>
           <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding"
+            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-new-row-top-padding"
             id="keyfax"
           >
             <div class="heading-images" aria-hidden="true">
@@ -466,8 +474,7 @@
             </a>
           </div>
           <div
-            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding"
-            id="nbc-teletext"
+            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
           >
             <div class="heading-images" aria-hidden="true">
               <img
@@ -491,6 +498,37 @@
               />
               <img
                 src="../images/NBC-Teletext-TV.png"
+                alt=""
+                class="mw-100 dark-mode-image"
+                aria-hidden="true"
+              />
+            </a>
+          </div>
+          <div
+            class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
+          >
+            <div class="heading-images" aria-hidden="true">
+              <img
+                src="../images/banners/light/SSS_light.png"
+                alt=""
+                class="mw-100 pb-4 light-mode-image"
+              />
+              <img
+                src="../images/banners/dark/SSS.png"
+                alt=""
+                class="mw-100 pb-4 dark-mode-image"
+              />
+            </div>
+            <a href="sss-teletext.html">
+              <span class="visually-hidden">SSS Teletext</span>
+              <img
+                src="../images/SSS-Teletext-TV_light.png"
+                alt=""
+                class="mw-100 light-mode-image"
+                aria-hidden="true"
+              />
+              <img
+                src="../images/SSS-Teletext-TV.png"
                 alt=""
                 class="mw-100 dark-mode-image"
                 aria-hidden="true"
