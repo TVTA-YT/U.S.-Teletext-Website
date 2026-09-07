@@ -12,7 +12,7 @@
         "Network": "TBS",
         "Service_Name": "SSS Teletext",
         "Notes": "",
-        "Date_Added": "2026-08-28",
+        "Date_Added": "2026-09-07",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940321_1",
         "IsNew": true
@@ -30,7 +30,7 @@
         "Network": "TBS",
         "Service_Name": "SSS Teletext",
         "Notes": "",
-        "Date_Added": "2026-08-28",
+        "Date_Added": "2026-09-07",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940322_1",
         "IsNew": true
@@ -48,7 +48,7 @@
         "Network": "TBS",
         "Service_Name": "SSS Teletext",
         "Notes": "",
-        "Date_Added": "2026-08-28",
+        "Date_Added": "2026-09-07",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940323_1",
         "IsNew": true
@@ -66,7 +66,7 @@
         "Network": "TBS",
         "Service_Name": "SSS Teletext",
         "Notes": "",
-        "Date_Added": "2026-08-28",
+        "Date_Added": "2026-09-07",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19940324_1",
         "IsNew": true
@@ -150,7 +150,7 @@
         "Date": "1995-12-10",
         "Program_Title": "The Spy Who Loved Me",
         "Tape_Type": "VHS",
-        "Tape_Speed": "",
+        "Tape_Speed": "N/A",
         "Download_Link": "https://archive.org/download/USTT_WTBS_19951210_1/12-10-1995_WTBS_WST_SpyWhoLovedMe_6Sec_OTA0006.zip",
         "Thumbnail": "https://ia600609.us.archive.org/12/items/USTT_WTBS_19951210_1/Page-255-0002.png",
         "Network": "TBS",
@@ -175,7 +175,7 @@
         "Service_Name": "SSS Teletext",
         "Notes": "",
         "Date_Added": "2026-09-07",
-        "Recovered_By": "TBD",
+        "Recovered_By": "BradDR",
         "IA_ID": "USTT_WTBS-19960217_1",
         "IsNew": true
     }
