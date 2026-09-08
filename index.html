@@ -89,10 +89,6 @@
         margin-top: 90px;
       }
 
-      #primary-container {
-        margin-top: 70px;
-      }
-
       #secondary-container {
         margin-top: 20px;
       }
@@ -115,7 +111,7 @@
         animation: blink 2s step-end infinite;
       }
 
-      .container:not(#primary-container, #secondary-container) {
+      .container:not(#secondary-container) {
         margin-top: 110px !important;
       }
 
@@ -127,7 +123,7 @@
         position: relative;
         overflow: hidden;
         width: 100%;
-        background-color: #96c5ff;
+        background-image: linear-gradient(to right, #152de3, #94a1ff);
         padding: 25px 0 25px 0;
       }
 
@@ -346,79 +342,65 @@
             <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
           </div>
         </h1>
-      </div>
-      <div class="alert alert-primary text-center" id="submissions-page-alert">
-        <div class="alert-heading">
-          <p class="fs-2 fw-bold">**NEW**</p>
-        </div>
-        <p id="submission-page-alert-text">
-          Decoded teletext samples (and now non-teletext text services) can now
-          be submitted for inclusion on the site. To submit samples, visit
-          <a href="html/submissions.html">this</a> page.
-          <br />
-          <br />
-          We're now also adding samples from non-teletext services such as ABC's
-          PLUS service. View these samples on the "Other Text Services" page
-          included as a dropdown option in the "Text Services" navigation link.
+        <p class="fs-4 fw-bold text-center">
+          Archiving U.S. teletext samples one submission at a time.
         </p>
-      </div>
-      <div class="container" id="primary-container">
         <div class="image-marquee" id="image-marquee" aria-hidden="true">
           <div class="image-marquee-content">
             <div>
               <img
                 src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
                 alt="Electra index page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-000-vB.png"
                 alt="CBS ExtraVision index page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/NBC-Teletext.png"
                 alt="NBC Teletext logo page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-011-01-v0.png"
                 alt="CBS ExtraVision Weather precipitation page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-029-01-v0.png"
                 alt="CBS ExtraVision Sports page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-000198500-01-v2.png"
                 alt="CBS ExtraVision Media Watch page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-300-vA.png"
                 alt="CBS ExtraVision Captions page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-100-vA.png"
                 alt="CBS ExtraVision Decoder ExtraVision page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <!-- Start of loop -->
@@ -426,56 +408,97 @@
               <img
                 src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
                 alt="Electra index page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-000-vB.png"
                 alt="CBS ExtraVision index page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/NBC-Teletext.png"
                 alt="NBC Teletext logo page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-011-01-v0.png"
                 alt="CBS ExtraVision Weather precipitation page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
             <div>
               <img
                 src="images/decoded-pages/Record-000-029-01-v0.png"
                 alt="CBS ExtraVision Sports page"
-                class="mw-100 w-25 teletext-page-marquee-image rounded-2"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-000198500-01-v2.png"
+                alt="CBS ExtraVision Media Watch page"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-300-vA.png"
+                alt="CBS ExtraVision Captions page"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+              />
+            </div>
+            <div>
+              <img
+                src="images/decoded-pages/Record-000-100-vA.png"
+                alt="CBS ExtraVision Decoder ExtraVision page"
+                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
               />
             </div>
           </div>
         </div>
-        <p class="pt-4 text-center site-introduction">
-          On this website is a collection of newly decoded pages from U.S.
-          teletext from various services such as CBS's <i>ExtraVision</i>, NBC's
-          <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS
-          (then SuperStation WTBS and SuperStation TBS). We're also now
-          including samples from various text-based (non-teletext) services,
-          both national (ABC PLUS) and local (Kentucky Educational Television's
-          AgText).
-        </p>
-        <p class="pt-4 text-center site-introduction">
-          <strong class="text-decoration-underline">Until now</strong>, there
-          had not been any clear, high-quality examples of these services,
-          specifically the teletext services. This site aims to change that by
-          acting as a repository, providing access to individual archives from
-          these services, archives provided by those who have the capacity to
-          decode these services.
-        </p>
+        <hr aria-hidden="true" />
+      </div>
+      <div
+        class="container"
+        style="margin-top: 20px !important; margin-bottom: 20px !important"
+      >
+        <div class="row">
+          <div
+            class="col-xl-5 col-lg-5 col-md-6 col-sm-12"
+            id="site-introduction-paragraphs-column"
+          >
+            <p class="site-introduction">
+              On this website is a collection of newly decoded pages from U.S.
+              teletext from various services such as CBS's <i>ExtraVision</i>,
+              NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast
+              on TBS (then SuperStation WTBS and SuperStation TBS). We're also
+              now including samples from various text-based (non-teletext)
+              services, both national (ABC PLUS) and local (Kentucky Educational
+              Television's AgText).
+            </p>
+            <p class="site-introduction mb-0">
+              <strong class="text-decoration-underline">Until now</strong>,
+              there had not been any clear, high-quality examples of these
+              services, specifically the teletext services. This site aims to
+              change that by acting as a repository, providing access to
+              individual archives from these services, archives provided by
+              those who have the capacity to decode these services.
+            </p>
+          </div>
+          <div
+            class="col-xl-7 col-lg-7 col-md-6 col-sm-12"
+            id="recent-additions-column"
+          >
+            <h3 class="text-center display-6 fw-bold">Ten Newest Additions</h3>
+            <div id="recent-additions"></div>
+          </div>
+        </div>
       </div>
       <div class="p-3" id="samples-div">
         <h2 class="display-1 fw-bolder text-center" id="samples-text">
@@ -664,5 +687,6 @@
     </footer>
     <script src="js/color-modes.js"></script>
     <script src="js/heading-reveal.js"></script>
+    <script src="js/recent-additions.js"></script>
   </body>
 </html>

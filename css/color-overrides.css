@@ -20,3 +20,11 @@
   --horizontal-line: #fff;
   --tooltip-body-text-color: #000;
 }
+
+.table-custom-blue {
+  --bs-table-color: #fff !important;
+  --bs-table-striped-color: #fff !important;
+  --bs-table-bg: #485dff;
+  --bs-table-border-color: #fff;
+  --bs-table-striped-bg: #6072ff;
+}

@@ -90,6 +90,7 @@
 
       .submission-button {
         background-color: #152de3;
+        color: #fff;
       }
 
       .submission-button:hover {
@@ -280,128 +281,194 @@
             possible teletext, use <a href="contact.html">this</a> form.
           </p>
         </div>
-        <form action="https://formspree.io/f/xoeawkye" method="post">
-          <div class="mb-3">
-            <label for="network" class="form-label">Select a network</label>
-            <select name="network" id="network" class="form-select" required>
-              <option value="" disabled selected hidden></option>
-              <option value="ABC">ABC</option>
-              <option value="CBS">CBS</option>
-              <option value="KET">Kentucky Educational Television</option>
-              <option value="NBC">NBC</option>
-              <option value="TBS">TBS</option>
-            </select>
+        <form
+          action="https://formspree.io/f/xoeawkye"
+          method="post"
+          id="submissionForm"
+        >
+          <div id="sample-fields">
+            <div class="mb-3">
+              <label for="network" class="form-label">Select a network</label>
+              <select
+                name="network"
+                id="network"
+                class="form-select network-select"
+                required
+              >
+                <option value="" disabled selected hidden></option>
+                <option value="ABC">ABC</option>
+                <option value="CBS">CBS</option>
+                <option value="KET">Kentucky Educational Television</option>
+                <option value="NBC">NBC</option>
+                <option value="TBS">TBS</option>
+                <option value="Other">Other (please specify)</option>
+              </select>
+            </div>
+            <div class="mb-3 other-network-wrap d-none">
+              <label for="otherNetwork" class="form-label"
+                >Enter network name</label
+              >
+              <input
+                type="text"
+                name="otherNetwork"
+                id="otherNetwork"
+                class="form-control other-network-input"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="affiliate" class="form-label"
+                >Enter station affiliate</label
+              >
+              <input
+                type="text"
+                name="affiliate"
+                id="affiliate"
+                class="form-control affiliate-input"
+                disabled
+              />
+            </div>
+            <div class="mb-3 service-select-options-input">
+              <label for="service" class="form-label"
+                >Text/Teletext service</label
+              >
+              <select
+                name="service"
+                id="service"
+                class="form-select service-select"
+                disabled
+                required
+              >
+                <option value="" disabled selected hidden></option>
+                <option value="ABCPLUS">ABC PLUS (Text)</option>
+                <option value="DaTaVizion">DaTaVizion (Teletext)</option>
+                <option value="Electra">Electra (Teletext)</option>
+                <option value="ExtraVision">ExtraVision (Teletext)</option>
+                <option value="KETAGTEXT">KET AgText (Text)</option>
+                <option value="Keyfax">Keyfax (Teletext)</option>
+                <option value="NBCTeletext">NBC Teletext (Teletext)</option>
+                <option value="SSSTeletext">SSS Teletext (Teletext)</option>
+              </select>
+              <div id="hint" class="form-text text-primary service-hint">
+                Select a service
+              </div>
+            </div>
+            <div class="mb-3 other-service-wrap d-none">
+              <label for="otherService">Enter service name</label>
+              <input
+                type="text"
+                name="otherService"
+                id="otherService"
+                class="form-control other-service-input"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">Select a date</label>
+              <input
+                type="date"
+                name="date"
+                id="date"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="programTitle" class="form-label"
+                ><span aria-hidden="true">Enter program title(s)</span
+                ><span class="sr-only"
+                  >Enter program title or titles</span
+                ></label
+              >
+              <input
+                type="text"
+                name="programTitle"
+                id="programTitle"
+                class="form-control"
+                placeholder="Program Title"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="tapeType" class="form-label"
+                >Select a tape format</label
+              >
+              <select
+                name="tapeType"
+                id="tapeType"
+                class="form-select tape-select"
+                required
+              >
+                <option value="" disabled selected hidden>Betamax/VHS</option>
+                <option value="Betamax">Betamax</option>
+                <option value="VHS">VHS</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="tapeSpeed" class="form-label"
+                >Select a tape speed</label
+              >
+              <select
+                name="tapeSpeed"
+                id="tapeSpeed"
+                class="form-control speed-select"
+                required
+              >
+                <option value="" disabled selected hidden>
+                  <span aria-hidden="true" aria-label="For example, SLP"
+                    >e.g. SLP</span
+                  >
+                </option>
+                <optgroup label="Betamax">
+                  <option value="BI">B-1</option>
+                  <option value="BII">B-2</option>
+                  <option value="BIII">B-3</option>
+                </optgroup>
+                <optgroup label="VHS">
+                  <option value="SP">SP</option>
+                  <option value="LP">LP</option>
+                  <option value="EP">EP/SLP</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="submissionLink" class="form-label"
+                ><span aria-hidden="true">Provide your submission(s)</span
+                ><span class="sr-only"
+                  >Provide your submission or submissions</span
+                ></label
+              >
+              <textarea
+                name="submissionLink"
+                id="submissionLink"
+                class="form-control"
+                placeholder="Shareable links only"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="notes" class="form-label"
+                >Provide any additional information below (optional)</label
+              >
+              <div class="input-group">
+                <span class="input-group-text">Additional Information</span>
+                <textarea
+                  name="notes"
+                  id="notes"
+                  class="form-control"
+                  placeholder="e.g. 'Pages are incomplete'."
+                ></textarea>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="affiliate" class="form-label"
-              >Enter station affiliate</label
-            >
-            <input
-              type="text"
-              name="affiliate"
-              id="affiliate"
-              class="form-control"
-              disabled
-            />
-          </div>
-          <div class="mb-3">
-            <label for="service" class="form-label"
-              >Text/Teletext service</label
-            >
-            <select
-              name="service"
-              id="service"
-              class="form-select"
-              disabled
-              required
-            >
-              <option value="ABCPLUS">ABC PLUS (Text)</option>
-              <option value="Electra">Electra (Teletext)</option>
-              <option value="ExtraVision">ExtraVision (Teletext)</option>
-              <option value="KETAGTEXT">KET AgText (Text)</option>
-              <option value="Keyfax">Keyfax (Teletext)</option>
-              <option value="NBCTeletext">NBC Teletext (Teletext)</option>
-            </select>
-            <div id="hint" class="form-text text-primary">Select a service</div>
-          </div>
-          <input type="hidden" name="service" id="serviceHidden" />
-          <div class="mb-3">
-            <label for="date" class="form-label">Select a date</label>
-            <input
-              type="date"
-              name="date"
-              id="date"
-              class="form-control"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="programTitle" class="form-label"
-              ><span aria-hidden="true">Enter program title(s)</span
-              ><span class="sr-only">Enter program title or titles</span></label
-            >
-            <input
-              type="text"
-              name="programTitle"
-              id="programTitle"
-              class="form-control"
-              placeholder="Program Title"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="tapeType" class="form-label"
-              >Select a tape format</label
-            >
-            <select name="tapeType" id="tapeType" class="form-select" required>
-              <option value="" disabled selected hidden>Betamax/VHS</option>
-              <option value="Betamax">Betamax</option>
-              <option value="VHS">VHS</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="tapeSpeed" class="form-label"
-              >Select a tape speed</label
-            >
-            <select
-              name="tapeSpeed"
-              id="tapeSpeed"
-              class="form-control"
-              required
-            >
-              <option value="" disabled selected hidden>
-                <span aria-hidden="true" aria-label="For example, SLP"
-                  >e.g. SLP</span
-                >
-              </option>
-              <optgroup label="Betamax">
-                <option value="BI">B-1</option>
-                <option value="BII">B-2</option>
-                <option value="BIII">B-3</option>
-              </optgroup>
-              <optgroup label="VHS">
-                <option value="SP">SP</option>
-                <option value="LP">LP</option>
-                <option value="EP">EP/SLP</option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="sumbissionLink" class="form-label"
-              ><span aria-hidden="true">Provide your submission(s)</span
-              ><span class="sr-only"
-                >Provide your submission or submissions</span
-              ></label
-            >
-            <textarea
-              type="url"
-              name="sumbissionLink"
-              id="submissionLink"
-              class="form-control"
-              placeholder="Shareable links only"
-              required
-            ></textarea>
-          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-primary form-control mb-4"
+            id="add-sample-btn"
+          >
+            Add to List
+          </button>
+          <div class="mb-4" id="samples-summary"></div>
+          <div id="hidden-fields-container"></div>
           <div class="mb-3">
             <label for="sumbissionName" class="form-label"
               ><span aria-hidden="true">Uploader name (optional)</span
@@ -419,25 +486,13 @@
             </div>
           </div>
           <div class="mb-4">
-            <label for="notes" class="form-label"
-              >Provide any additional information below (optional)</label
-            >
-            <div class="input-group">
-              <span class="input-group-text">Additional Information</span>
-              <textarea
-                name="notes"
-                id="notes"
-                class="form-control"
-                placeholder="e.g. 'Pages are incomplete'."
-              ></textarea>
-            </div>
+            <button type="submit" class="btn form-control submission-button">
+              Submit Form
+            </button>
+            <button type="reset" class="btn btn-danger form-control my-4">
+              Reset Fields
+            </button>
           </div>
-          <button type="submit" class="btn form-control submission-button">
-            Submit Form
-          </button>
-          <button type="reset" class="btn btn-danger form-control my-4">
-            Reset Fields
-          </button>
         </form>
         <!-- Floating theme button, bottom-right -->
         <button
@@ -561,8 +616,9 @@
         >
       </div>
     </footer>
+    <script src="../js/add-new-form.js"></script>
     <script src="../js/color-modes.js"></script>
-    <script src="../js/form-script.js"></script>
+    <!-- <script src="../js/form-script.js"></script> -->
     <script src="../js/heading-reveal.js"></script>
     <script>
       // Heading banner animation
