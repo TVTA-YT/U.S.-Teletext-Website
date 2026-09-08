@@ -35,7 +35,7 @@
         "Date_Added": "2026-08-31",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19850414_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "3f825a7d-a182-11f1-a705-0200170221f6",
@@ -149,7 +149,7 @@
         "Date_Added": "2026-08-31",
         "Recovered_By": "Evan P.",
         "IA_ID": "USTT_CBS-19860215_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "da3886f0-aad2-11f1-a705-0200170221f6",
@@ -453,7 +453,7 @@
         "Date_Added": "2026-08-31",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19890823_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "451602e1-a44e-11f1-a705-0200170221f6",
@@ -473,5 +473,24 @@
         "Recovered_By": "Bored's Teletext Pile",
         "IA_ID": "USTT_CBS-19910126_1",
         "IsNew": false
+    },
+    {
+        "ID": "a9c2345f-abdb-11f1-a705-0200170221f6",
+        "Year": "1992",
+        "Month": "January",
+        "Date": "1992-01-19",
+        "Affiliate": "WBBM",
+        "Program_Title": "Against Her Will: An Incident In Baltimore",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19920119_1/1992-01-19_WBBM_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia600605.us.archive.org/35/items/USTT_CBS-19920119_1/Record-000-000-v0.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "This is from the premiere. This samples was sourced from about 1 hour and 30 minutes of data.",
+        "Date_Added": "2026-09-08",
+        "Recovered_By": "Digitmouse",
+        "IA_ID": "USTT_CBS-19920119_1",
+        "IsNew": true
     }
 ]

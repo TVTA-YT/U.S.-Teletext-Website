@@ -360,6 +360,24 @@
         "IsNew": false
     },
     {
+        "ID": "0905840c-ab47-11f1-a705-0200170221f6",
+        "Year": "1990",
+        "Month": "July",
+        "Date": "1990-07-26",
+        "Program_Title": "It's a Mad, Mad, Mad, Mad World",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19900726_1/1990-07-26_TBS_Electra.zip",
+        "Thumbnail": "https://ia600509.us.archive.org/9/items/USTT_WTBS-19900726_1/Page-100-0000.png",
+        "Network": "TBS",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "Date_Added": "2026-09-08",
+        "Recovered_By": "Helen",
+        "IA_ID": "USTT_WTBS-19900726_1",
+        "IsNew": true
+    },
+    {
         "ID": "ed96bc64-a04b-11f1-a705-0200170221f6",
         "Year": "1992",
         "Month": "January",
