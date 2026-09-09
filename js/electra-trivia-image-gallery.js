@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!releasing) releaseNextImage();
                 }
             });
-        }, { rootMargin: '300px 0' });
+        }, { rootMargin: '300px 0px' });
 
         images.forEach(img => observer.observe(img));
     }
