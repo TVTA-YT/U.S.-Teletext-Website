@@ -257,6 +257,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSummary();
     });
 
+    // Log the submit button
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Strip the "required" attribute from those specific elements after a submission is added to the list.
+    submitBtn.forEach('click', () => {
+        if (samples.length === 0) return;
+
+        fieldsContainer.querySelectorAll('[required]').forEach(el => {
+            el.required = false;
+        });
+    });
+
     // Trigger all delete or edit buttons for each sample (if multiple)
     summaryEl.addEventListener('click', (e) => {
         const i = e.target.dataset.index;
