@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = form.querySelector('button[type="submit"]');
 
     // Strip the "required" attribute from those specific elements after a submission is added to the list.
-    submitBtn.forEach('click', () => {
+    submitBtn.addEventListener('click', () => {
         if (samples.length === 0) return;
 
         fieldsContainer.querySelectorAll('[required]').forEach(el => {
