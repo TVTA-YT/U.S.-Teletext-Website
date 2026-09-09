@@ -3,16 +3,16 @@ async function renderRecentAdditions() {
   if (!container) return;
 
   const jsonFiles = [
-    "../json/datavizion_data.json",
-    "../json/extravision_data.json",
-    "../json/electra_data.json",
-    "../json/keyfax_data.json",
-    "../json/nbc_teletext_data.json",
-    "../json/sss_teletext_data.json",
-    "../json/abc_plus_data.json",
-    "../json/ket_agtext_data.json",
-    "../json/iptv_agids_data.json",
-    "../json/wisconsin_infotext_data.json",
+    "json/datavizion_data.json",
+    "json/extravision_data.json",
+    "json/electra_data.json",
+    "json/keyfax_data.json",
+    "json/nbc_teletext_data.json",
+    "json/sss_teletext_data.json",
+    "json/abc_plus_data.json",
+    "json/ket_agtext_data.json",
+    "json/iptv_agids_data.json",
+    "json/wisconsin_infotext_data.json",
   ];
 
   try {
