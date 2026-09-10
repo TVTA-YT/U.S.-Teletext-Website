@@ -1,0 +1,714 @@
+{
+    "identifier": "USTT_CBS-19900119_1",
+    "recovered_by": "Evan P,",
+    "program_title": "As the World Turns",
+    "date": "1990-01-19",
+    "service": "CBS ExtraVision",
+    "network": "CBS",
+    "images": [
+        {
+            "filename": "Record-000-000-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000-v0.png"
+        },
+        {
+            "filename": "Record-000-085-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-085-01-v0.png"
+        },
+        {
+            "filename": "Record-000-007-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-007-02-v0.png"
+        },
+        {
+            "filename": "Record-000-000005502-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000005502-01-v0.png"
+        },
+        {
+            "filename": "Record-000-024-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-024-vF.png"
+        },
+        {
+            "filename": "Record-000-000004302-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004302-v0.png"
+        },
+        {
+            "filename": "Record-000-003-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-003-01-v0.png"
+        },
+        {
+            "filename": "Record-000-062-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-062-00-v0.png"
+        },
+        {
+            "filename": "Record-000-036-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-036-vF.png"
+        },
+        {
+            "filename": "Record-000-028-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-028-vF.png"
+        },
+        {
+            "filename": "Record-000-000002104-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000002104-02-v0.png"
+        },
+        {
+            "filename": "Record-000-026-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-026-v7.png"
+        },
+        {
+            "filename": "Record-000-000004104-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004104-00-v0.png"
+        },
+        {
+            "filename": "Record-000-100-05-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-05-v0.png"
+        },
+        {
+            "filename": "Record-000-082-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-082-v0.png"
+        },
+        {
+            "filename": "Record-000-038-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-038-v7.png"
+        },
+        {
+            "filename": "Record-000-041-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-041-01-v0.png"
+        },
+        {
+            "filename": "Record-000-034-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-034-v7.png"
+        },
+        {
+            "filename": "Record-000-055-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-055-01-v0.png"
+        },
+        {
+            "filename": "Record-000-020-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-020-00-v0.png"
+        },
+        {
+            "filename": "Record-000-074-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-074-01-v0.png"
+        },
+        {
+            "filename": "Record-000-051-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-051-02-v0.png"
+        },
+        {
+            "filename": "Record-000-045-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-045-02-v0.png"
+        },
+        {
+            "filename": "Record-000-000004705-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004705-00-v0.png"
+        },
+        {
+            "filename": "Record-000-028-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-028-v7.png"
+        },
+        {
+            "filename": "Record-000-005-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-005-01-v0.png"
+        },
+        {
+            "filename": "Record-000-000004103-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004103-v0.png"
+        },
+        {
+            "filename": "Record-000-002-05-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-05-v0.png"
+        },
+        {
+            "filename": "Record-000-036-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-036-v7.png"
+        },
+        {
+            "filename": "Record-000-020-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-020-02-v0.png"
+        },
+        {
+            "filename": "Record-000-000004104-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004104-02-v0.png"
+        },
+        {
+            "filename": "Record-000-024-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-024-v7.png"
+        },
+        {
+            "filename": "Record-000-011-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-011-01-v0.png"
+        },
+        {
+            "filename": "Record-000-064-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-064-00-v0.png"
+        },
+        {
+            "filename": "Record-000-045-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-045-00-v0.png"
+        },
+        {
+            "filename": "Record-000-051-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-051-00-v0.png"
+        },
+        {
+            "filename": "Record-000-073-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-073-v0.png"
+        },
+        {
+            "filename": "Record-000-000005502-03-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000005502-03-v0.png"
+        },
+        {
+            "filename": "Record-000-007-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-007-00-v0.png"
+        },
+        {
+            "filename": "Record-000-010-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-010-v0.png"
+        },
+        {
+            "filename": "Record-000-000004703-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004703-00-v0.png"
+        },
+        {
+            "filename": "Record-000-013-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-013-00-v0.png"
+        },
+        {
+            "filename": "Record-000-911-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-911-01-v0.png"
+        },
+        {
+            "filename": "Record-000-057-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-057-v0.png"
+        },
+        {
+            "filename": "Record-000-000002104-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000002104-00-v0.png"
+        },
+        {
+            "filename": "Record-000-047-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-047-01-v0.png"
+        },
+        {
+            "filename": "Record-000-081-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-081-00-v0.png"
+        },
+        {
+            "filename": "Record-000-034-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-034-vF.png"
+        },
+        {
+            "filename": "Record-000-038-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-038-vF.png"
+        },
+        {
+            "filename": "Record-000-053-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-053-01-v0.png"
+        },
+        {
+            "filename": "Record-000-026-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-026-vF.png"
+        },
+        {
+            "filename": "Record-000-056-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-056-00-v0.png"
+        },
+        {
+            "filename": "Record-000-084-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-084-01-v0.png"
+        },
+        {
+            "filename": "Record-000-063-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-063-00-v0.png"
+        },
+        {
+            "filename": "Record-000-100-03-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-03-v0.png"
+        },
+        {
+            "filename": "Record-000-002-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-01-v0.png"
+        },
+        {
+            "filename": "Record-000-032-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-032-v7.png"
+        },
+        {
+            "filename": "Record-000-054-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-054-01-v0.png"
+        },
+        {
+            "filename": "Record-000-021-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-021-00-v0.png"
+        },
+        {
+            "filename": "Record-000-071-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-071-02-v0.png"
+        },
+        {
+            "filename": "Record-000-022-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-022-vF.png"
+        },
+        {
+            "filename": "Record-000-030-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-030-vF.png"
+        },
+        {
+            "filename": "Record-000-065-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-065-v0.png"
+        },
+        {
+            "filename": "Record-000-061-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-061-01-v0.png"
+        },
+        {
+            "filename": "Record-000-014-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-014-v0.png"
+        },
+        {
+            "filename": "Record-000-032-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-032-vF.png"
+        },
+        {
+            "filename": "Record-000-071-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-071-00-v0.png"
+        },
+        {
+            "filename": "Record-000-004-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-004-01-v0.png"
+        },
+        {
+            "filename": "Record-000-043-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-043-v0.png"
+        },
+        {
+            "filename": "Record-000-021-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-021-02-v0.png"
+        },
+        {
+            "filename": "Record-000-000004402-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004402-v0.png"
+        },
+        {
+            "filename": "Record-000-075-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-075-v0.png"
+        },
+        {
+            "filename": "Record-000-012-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-012-00-v0.png"
+        },
+        {
+            "filename": "Record-000-000004601-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004601-v0.png"
+        },
+        {
+            "filename": "Record-000-006-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-006-00-v0.png"
+        },
+        {
+            "filename": "Record-000-020-04-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-020-04-v0.png"
+        },
+        {
+            "filename": "Record-000-030-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-030-v7.png"
+        },
+        {
+            "filename": "Record-000-002-03-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-03-v0.png"
+        },
+        {
+            "filename": "Record-000-052-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-052-01-v0.png"
+        },
+        {
+            "filename": "Record-000-000000602-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000000602-v0.png"
+        },
+        {
+            "filename": "Record-000-086-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-086-v0.png"
+        },
+        {
+            "filename": "Record-000-022-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-022-v7.png"
+        },
+        {
+            "filename": "Record-000-100-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-01-v0.png"
+        },
+        {
+            "filename": "Record-000-080-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-080-00-v0.png"
+        },
+        {
+            "filename": "Record-000-074-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-074-00-v0.png"
+        },
+        {
+            "filename": "Record-000-000004705-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004705-01-v0.png"
+        },
+        {
+            "filename": "Record-000-041-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-041-00-v0.png"
+        },
+        {
+            "filename": "Record-000-039-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-039-v7.png"
+        },
+        {
+            "filename": "Record-000-083-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-083-v0.png"
+        },
+        {
+            "filename": "Record-000-027-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-027-v7.png"
+        },
+        {
+            "filename": "Record-000-000004104-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004104-01-v0.png"
+        },
+        {
+            "filename": "Record-000-100-04-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-04-v0.png"
+        },
+        {
+            "filename": "Record-000-005-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-005-02-v0.png"
+        },
+        {
+            "filename": "Record-000-020-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-020-01-v0.png"
+        },
+        {
+            "filename": "Record-000-035-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-035-v7.png"
+        },
+        {
+            "filename": "Record-000-055-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-055-00-v0.png"
+        },
+        {
+            "filename": "Record-000-002-06-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-06-v0.png"
+        },
+        {
+            "filename": "Record-000-000004303-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004303-v0.png"
+        },
+        {
+            "filename": "Record-000-003-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-003-00-v0.png"
+        },
+        {
+            "filename": "Record-000-046-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-046-v0.png"
+        },
+        {
+            "filename": "Record-000-025-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-025-vF.png"
+        },
+        {
+            "filename": "Record-000-053-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-053-02-v0.png"
+        },
+        {
+            "filename": "Record-000-029-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-029-vF.png"
+        },
+        {
+            "filename": "Record-000-037-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-037-vF.png"
+        },
+        {
+            "filename": "Record-000-062-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-062-01-v0.png"
+        },
+        {
+            "filename": "Record-000-085-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-085-00-v0.png"
+        },
+        {
+            "filename": "Record-000-001-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-001-v0.png"
+        },
+        {
+            "filename": "Record-000-000005502-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000005502-00-v0.png"
+        },
+        {
+            "filename": "Record-000-070-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-070-v0.png"
+        },
+        {
+            "filename": "Record-000-035-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-035-vF.png"
+        },
+        {
+            "filename": "Record-000-081-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-081-01-v0.png"
+        },
+        {
+            "filename": "Record-000-000002104-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000002104-01-v0.png"
+        },
+        {
+            "filename": "Record-000-047-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-047-00-v0.png"
+        },
+        {
+            "filename": "Record-000-027-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-027-vF.png"
+        },
+        {
+            "filename": "Record-000-053-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-053-00-v0.png"
+        },
+        {
+            "filename": "Record-000-000004301-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004301-v0.png"
+        },
+        {
+            "filename": "Record-000-039-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-039-vF.png"
+        },
+        {
+            "filename": "Record-000-000004201-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004201-v0.png"
+        },
+        {
+            "filename": "Record-000-044-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-044-v0.png"
+        },
+        {
+            "filename": "Record-000-000000302-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000000302-v0.png"
+        },
+        {
+            "filename": "Record-000-007-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-007-01-v0.png"
+        },
+        {
+            "filename": "Record-000-072-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-072-v0.png"
+        },
+        {
+            "filename": "Record-000-000005502-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000005502-02-v0.png"
+        },
+        {
+            "filename": "Record-000-911-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-911-00-v0.png"
+        },
+        {
+            "filename": "Record-000-060-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-060-v0.png"
+        },
+        {
+            "filename": "Record-000-013-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-013-01-v0.png"
+        },
+        {
+            "filename": "Record-000-000004703-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004703-01-v0.png"
+        },
+        {
+            "filename": "Record-000-045-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-045-01-v0.png"
+        },
+        {
+            "filename": "Record-000-051-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-051-01-v0.png"
+        },
+        {
+            "filename": "Record-000-020-03-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-020-03-v0.png"
+        },
+        {
+            "filename": "Record-000-002-04-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-04-v0.png"
+        },
+        {
+            "filename": "Record-000-037-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-037-v7.png"
+        },
+        {
+            "filename": "Record-000-005-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-005-00-v0.png"
+        },
+        {
+            "filename": "Record-000-029-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-029-v7.png"
+        },
+        {
+            "filename": "Record-000-064-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-064-01-v0.png"
+        },
+        {
+            "filename": "Record-000-025-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-025-v7.png"
+        },
+        {
+            "filename": "Record-000-011-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-011-00-v0.png"
+        },
+        {
+            "filename": "Record-000-041-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-041-02-v0.png"
+        },
+        {
+            "filename": "Record-000-061-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-061-00-v0.png"
+        },
+        {
+            "filename": "Record-000-000004401-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004401-v0.png"
+        },
+        {
+            "filename": "Record-000-000007302-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000007302-v0.png"
+        },
+        {
+            "filename": "Record-000-004-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-004-02-v0.png"
+        },
+        {
+            "filename": "Record-000-023-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-023-vF.png"
+        },
+        {
+            "filename": "Record-000-021-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-021-01-v0.png"
+        },
+        {
+            "filename": "Record-000-040-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-040-v0.png"
+        },
+        {
+            "filename": "Record-000-054-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-054-00-v0.png"
+        },
+        {
+            "filename": "Record-000-031-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-031-vF.png"
+        },
+        {
+            "filename": "Record-000-100-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-02-v0.png"
+        },
+        {
+            "filename": "Record-000-063-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-063-01-v0.png"
+        },
+        {
+            "filename": "Record-000-002-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-00-v0.png"
+        },
+        {
+            "filename": "Record-000-033-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-033-v7.png"
+        },
+        {
+            "filename": "Record-000-052-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-052-02-v0.png"
+        },
+        {
+            "filename": "Record-000-000004602-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004602-v0.png"
+        },
+        {
+            "filename": "Record-000-000004702-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004702-v0.png"
+        },
+        {
+            "filename": "Record-000-056-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-056-01-v0.png"
+        },
+        {
+            "filename": "Record-000-084-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-084-00-v0.png"
+        },
+        {
+            "filename": "Record-000-052-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-052-00-v0.png"
+        },
+        {
+            "filename": "Record-000-031-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-031-v7.png"
+        },
+        {
+            "filename": "Record-000-002-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-002-02-v0.png"
+        },
+        {
+            "filename": "Record-000-099-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-099-v0.png"
+        },
+        {
+            "filename": "Record-000-080-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-080-01-v0.png"
+        },
+        {
+            "filename": "Record-000-023-v7.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-023-v7.png"
+        },
+        {
+            "filename": "Record-000-100-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-100-00-v0.png"
+        },
+        {
+            "filename": "Record-000-087-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-087-v0.png"
+        },
+        {
+            "filename": "Record-000-012-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-012-01-v0.png"
+        },
+        {
+            "filename": "Record-000-006-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-006-01-v0.png"
+        },
+        {
+            "filename": "Record-000-000005502-04-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000005502-04-v0.png"
+        },
+        {
+            "filename": "Record-000-000004403-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-000004403-v0.png"
+        },
+        {
+            "filename": "Record-000-049-v8.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-049-v8.png"
+        },
+        {
+            "filename": "Record-000-050-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-050-v0.png"
+        },
+        {
+            "filename": "Record-000-033-vF.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-033-vF.png"
+        },
+        {
+            "filename": "Record-000-042-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-042-v0.png"
+        },
+        {
+            "filename": "Record-000-021-03-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-021-03-v0.png"
+        },
+        {
+            "filename": "Record-000-054-02-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-054-02-v0.png"
+        },
+        {
+            "filename": "Record-000-004-00-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-004-00-v0.png"
+        },
+        {
+            "filename": "Record-000-071-01-v0.png",
+            "url": "https://archive.org/download/USTT_CBS-19900119_1/1990-01-19_WCIA_CBS_Extravision.zip/1990-01-19_WCIA_CBS_Extravision/Record-000-071-01-v0.png"
+        }
+    ]
+}
