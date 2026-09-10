@@ -1,692 +1,559 @@
 <!doctype html>
 <!-- Created August 10, 2026, 11:21 -->
 <html lang="en" data-bs-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="google-site-verification"
-      content="wi4HN60u3hdPL-o3ZH4nhoG5NlsCN4SOYIWhPvO_7lY"
-    />
-    <!-- <meta name="description" content=""> -->
-    <!-- Open Graph URLs -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="U.S. Teletext Archive" />
-    <meta
-      property="og:description"
-      content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
-    />
-    <meta
-      property="og:url"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/"
-    />
-    <meta
-      property="og:image"
-      content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png"
-    />
-    <meta property="og:image:alt" content="U.S. Teletext Archive" />
-    <meta property="og:site_name" content="U.S. Teletext Archive" />
-    <meta property="og:locale" content="en_US" />
-    <meta
-      name="description"
-      content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
-    />
-    <link
-      rel="canonical"
-      href="https://tvta-yt.github.io/U.S.-Teletext-Website/"
-    />
-    <link rel="icon" href="images/favicons/favicon.ico" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="images/favicons/favicon-16x16.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="images/favicons/favicon-32x32.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="images/favicons/apple-touch-icon.png"
-    />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/media.css" />
-    <link rel="stylesheet" href="css/navigation-bar-animation.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="css/color-overrides.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      data-goatcounter="https://us-teletext-archive.goatcounter.com/count"
-      async
-      src="//gc.zgo.at/count.js"
-    ></script>
-    <title>U.S. Teletext Archive</title>
-    <style>
-      #site-intro-container {
-        margin-top: 90px;
-      }
-
-      #secondary-container {
-        margin-top: 20px;
-      }
-
-      #site-title {
-        font-family: "Contour Generator", sans-serif;
-        line-height: 110%;
-        text-shadow: 3px 3px #000;
-        animation: colorChange 4s steps(4, end) infinite;
-      }
-
-      #samples-div {
-        background-color: #1c165b;
-      }
-
-      #samples-text {
-        font-family: "TU 1000x Regular", sans-serif;
-        color: #f5f4f4 !important;
-        text-shadow: 2px 2px #000;
-        animation: blink 2s step-end infinite;
-      }
-
-      .container:not(#secondary-container) {
-        margin-top: 110px !important;
-      }
-
-      .teletext-page-marquee-image {
-        width: 200px !important;
-      }
-
-      .image-marquee {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        background-image: linear-gradient(to right, #152de3, #94a1ff);
-        padding: 25px 0 25px 0;
-      }
-
-      .image-marquee-content {
-        display: flex;
-        width: max-content;
-        gap: 6rem;
-        animation: image-marquee 25s linear infinite;
-      }
-
-      @keyframes blink {
-        50% {
-          opacity: 0;
-        }
-      }
-
-      @keyframes colorChange {
-        0% {
-          color: #a80000;
-        }
-        25% {
-          color: #321fff;
-        }
-        50% {
-          color: #23b6ff;
-        }
-        75% {
-          color: #00d231;
-        }
-        100% {
-          color: #ffcb20;
-        }
-      }
-
-      @keyframes image-marquee {
-        from {
-          transform: translateX(0%);
-        }
-        to {
-          transform: translateX(calc(-8 * (200px + 6rem)));
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg fixed-top">
-      <div class="logo">
-        <a href="index.html" class="navbar-brand">
-          <!-- <?xml version="1.0" encoding="UTF-8"?> -->
-          <?xml version="1.0" encoding="UTF-8"?>
-          <svg
-            class="site-logo"
-            id="Layer_1"
-            data-name="Layer 1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 363.15 91.12"
-          >
-            <defs>
-              <style>
-                .cls-1 {
-                  font-family: ContourGenerator-Regular, "Contour Generator";
-                  font-size: 43.32px;
-                }
-
-                .cls-2 {
-                  letter-spacing: -0.02em;
-                }
-
-                .cls-3 {
-                  letter-spacing: -0.03em;
-                }
-              </style>
-            </defs>
-            <text
-              class="cls-1"
-              transform="translate(0 36.54)"
-              aria-label="US Teletext Archive"
-            >
-              <tspan class="cls-2" x="0" y="0">U.S</tspan>
-              <tspan x="82.96" y="0">. TELETEXT</tspan>
-              <tspan x="62.34" y="43.32">A</tspan>
-              <tspan class="cls-3" x="102.93" y="43.32">R</tspan>
-              <tspan x="139.66" y="43.32">CHIVE</tspan>
-            </text>
-          </svg>
-        </a>
-      </div>
-      <button
-        class="navbar-toggler mx-4"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown desktop-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Text Services <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/services.html"
-                  class="dropdown-item text-dropdown-option"
-                  >Teletext Services</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/other-text-services.html"
-                  class="dropdown-item text-dropdown-option"
-                  >Other Text Services</a
-                >
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown mobile-link">
-            <a
-              class="nav-link"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-expanded="false"
-              href="#"
-              >Text Services <i class="dropdown-toggle"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-options">
-                <a
-                  href="html/services.html"
-                  class="dropdown-item text-dropdown-option"
-                  >Teletext Services</a
-                >
-              </li>
-              <li class="dropdown-options">
-                <a
-                  href="html/other-text-services.html"
-                  class="dropdown-item text-dropdown-option"
-                  >Other Text Services</a
-                >
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item desktop-link">
-            <a class="nav-link" href="html/archiving-teletext.html"
-              >Archiving Teletext</a
-            >
-          </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" href="html/archiving-teletext.html"
-              >Archiving Teletext</a
-            >
-          </li>
-          <li class="nav-item desktop-link">
-            <a class="nav-link" href="html/teletext-links.html"
-              >Teletext Links</a
-            >
-          </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" href="html/teletext-links.html"
-              >Teletext Links</a
-            >
-          </li>
-          <li class="nav-item desktop-link">
-            <a class="nav-link" href="html/news-oddities.html"
-              >News &amp; Oddities</a
-            >
-          </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" href="html/news-oddities.html"
-              >News &amp; Oddities</a
-            >
-          </li>
-          <li class="nav-item desktop-link">
-            <a class="nav-link" href="html/submissions.html">Submissions</a>
-          </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" href="html/submissions.html">Submissions</a>
-          </li>
-          <li class="nav-item desktop-link">
-            <a class="nav-link" href="html/about.html">About</a>
-          </li>
-          <li class="nav-item mobile-link">
-            <a class="nav-link" href="html/about.html">About</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <main>
-      <!-- TODO: Change container padding value after alert is removed. 08/10/2026, 14:35 -->
-      <div class="container-fluid" id="site-intro-container">
-        <h1 id="site-intro">
-          <span class="visually-hidden"
-            >Welcome to the U.S Teletext Archive</span
-          >
-          <img
-            src="images/banners/light/Welcome_light.png"
-            alt=""
-            class="mw-100 light-mode-image"
-          />
-          <img
-            src="images/banners/dark/Welcome.png"
-            alt=""
-            class="mw-100 dark-mode-image"
-          />
-          <div class="text-center" id="site-logo-padding" aria-hidden="true">
-            <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
-          </div>
-        </h1>
-        <p class="fs-4 fw-bold text-center">
-          Archiving U.S. teletext samples one submission at a time.
-        </p>
-        <div class="image-marquee" id="image-marquee" aria-hidden="true">
-          <div class="image-marquee-content">
-            <div>
-              <img
-                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
-                alt="Electra index page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-000-vB.png"
-                alt="CBS ExtraVision index page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/NBC-Teletext.png"
-                alt="NBC Teletext logo page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-011-01-v0.png"
-                alt="CBS ExtraVision Weather precipitation page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-029-01-v0.png"
-                alt="CBS ExtraVision Sports page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-000198500-01-v2.png"
-                alt="CBS ExtraVision Media Watch page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-300-vA.png"
-                alt="CBS ExtraVision Captions page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-100-vA.png"
-                alt="CBS ExtraVision Decoder ExtraVision page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <!-- Start of loop -->
-            <div>
-              <img
-                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
-                alt="Electra index page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-000-vB.png"
-                alt="CBS ExtraVision index page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/NBC-Teletext.png"
-                alt="NBC Teletext logo page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-011-01-v0.png"
-                alt="CBS ExtraVision Weather precipitation page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-029-01-v0.png"
-                alt="CBS ExtraVision Sports page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-000198500-01-v2.png"
-                alt="CBS ExtraVision Media Watch page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-300-vA.png"
-                alt="CBS ExtraVision Captions page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-            <div>
-              <img
-                src="images/decoded-pages/Record-000-100-vA.png"
-                alt="CBS ExtraVision Decoder ExtraVision page"
-                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
-              />
-            </div>
-          </div>
-        </div>
-        <hr aria-hidden="true" />
-      </div>
-      <div
-        class="container"
-        style="margin-top: 20px !important; margin-bottom: 20px !important"
-      >
-        <div class="row">
-          <div
-            class="col-xl-5 col-lg-5 col-md-6 col-sm-12"
-            id="site-introduction-paragraphs-column"
-          >
-            <p class="site-introduction">
-              On this website is a collection of newly decoded pages from U.S.
-              teletext from various services such as CBS's <i>ExtraVision</i>,
-              NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast
-              on TBS (then SuperStation WTBS and SuperStation TBS). We're also
-              now including samples from various text-based (non-teletext)
-              services, both national (ABC PLUS) and local (Kentucky Educational
-              Television's AgText).
-            </p>
-            <p class="site-introduction mb-0">
-              <strong class="text-decoration-underline">Until now</strong>,
-              there had not been any clear, high-quality examples of these
-              services, specifically the teletext services. This site aims to
-              change that by acting as a repository, providing access to
-              individual archives from these services, archives provided by
-              those who have the capacity to decode these services.
-            </p>
-          </div>
-          <div
-            class="col-xl-7 col-lg-7 col-md-6 col-sm-12"
-            id="recent-additions-column"
-          >
-            <h3 class="text-center display-6 fw-bold">Ten Newest Additions</h3>
-            <div id="recent-additions"></div>
-          </div>
-        </div>
-      </div>
-      <div class="p-3" id="samples-div">
-        <h2 class="display-1 fw-bolder text-center" id="samples-text">
-          Samples Needed!
-        </h2>
-      </div>
-      <div class="container" id="secondary-container">
-        <p class="fs-5 text-center">
-          We are currently looking for more teletext samples to add to the site!
-          We are looking for samples from the following
-          <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three
-          CBS affiliates (especially from those colored red):
-        </p>
-        <div class="justify-content-center">
-          <table class="table text-center table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">Station</th>
-                <th scope="col">City/State</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="bg-danger">KCBS (O&amp;O)</td>
-                <td class="bg-danger">Los Angeles, CA</td>
-              </tr>
-              <tr>
-                <td class="bg-danger">KSL-TV</td>
-                <td class="bg-danger">Salt Lake City, UT</td>
-              </tr>
-              <tr>
-                <td>KMOX (former O&amp;O)*</td>
-                <td>St. Louis, MO</td>
-              </tr>
-              <tr>
-                <td>WBBM (O&amp;O)</td>
-                <td>Chicago, IL</td>
-              </tr>
-              <tr>
-                <td class="bg-danger">WBTV</td>
-                <td class="bg-danger">Charlotte, NC</td>
-              </tr>
-              <tr>
-                <td>WCAU (former O&amp;O)</td>
-                <td>Philadelphia, PA</td>
-              </tr>
-              <tr>
-                <td>WCBS (O&amp;O)</td>
-                <td>New York, NY</td>
-              </tr>
-              <tr>
-                <td class="bg-danger">WIVB</td>
-                <td class="bg-danger">Buffalo, NY</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>NOTE: KMOX samples span 1983 &ndash; 1986.</p>
-          <p class="fs-5 text-center">
-            If you have any videotapes (Betamax or VHS) from these stations that
-            date between 1983 and 1990, we'd love to hear about it! Use
-            <a href="html/contact.html">this</a>
-            form to let us know what you've got.
-          </p>
-        </div>
-        <!-- Floating theme button, bottom-right -->
-        <button
-          id="themeFab"
-          type="button"
-          class="btn btn-outline-secondary rounded-circle shadow"
-          style="
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 48px;
-            height: 48px;
-            z-index: 1050;
-          "
-          data-bs-toggle="offcanvas"
-          data-bs-target="#themeOffcanvas"
-          aria-controls="themeOffcanvas"
-          title="Theme"
-        >
-          <span class="theme-icon">
-            <i class="bi bi-circle-half"></i>
-          </span>
-        </button>
-
-        <!-- Offcanvas panel -->
-        <div
-          class="offcanvas offcanvas-end"
-          tabindex="-1"
-          id="themeOffcanvas"
-          aria-labelledby="themeOffcanvasLabel"
-          style="width: 260px"
-        >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="offcanvas-body">
-            <div class="d-grid gap-2">
-              <button
-                type="button"
-                class="btn btn-outline-secondary theme-choice text-start"
-                data-theme="light"
-              >
-                <i class="bi bi-brightness-high-fill"></i> Light
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary theme-choice text-start"
-                data-theme="dark"
-              >
-                <i class="bi bi-moon-fill"></i> Dark
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary theme-choice text-start"
-                data-theme="auto"
-              >
-                <i class="bi bi-display-fill"></i> Match system
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <footer class="end-footer pt-4 text-center">
-      <div id="footer-site-links">
-        <img
-          src="images/logo-white-2.png"
-          alt="Site footer logo"
-          class="mw-100 pt-2 pb-4 footer-logo"
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="google-site-verification" content="wi4HN60u3hdPL-o3ZH4nhoG5NlsCN4SOYIWhPvO_7lY" />
+        <!-- <meta name="description" content=""> -->
+        <!-- Open Graph URLs -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="U.S. Teletext Archive" />
+        <meta
+            property="og:description"
+            content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
         />
-        <p>
-          Issues? &nbsp;
-          <a
-            href="https://github.com/TVTA-YT/U.S.-Teletext-Website"
-            target="_blank"
-            >Report on GitHub.</a
-          >
-        </p>
-        <p>
-          Have questions or information? &nbsp;
-          <a href="html/contact.html">Contact us.</a>
-        </p>
-        <p>
-          Looking for a specific page? &nbsp;
-          <a href="html/sitemap.html">Site map.</a>
-        </p>
-        <p class="pb-4">
-          <a href="html/privacy-policy.html">Privacy Policy</a>
-        </p>
-      </div>
-      <div class="pt-4">
-        <small class="text-white"
-          >Website <span aria-hidden="true">&copy;</span> Copyright 2026 -
-          TVTA</small
-        >
-        <br />
-        <br />
-        <small class="text-white"
-          >The names, logos, and trademarks of featured broadcast networks are
-          the property of their respectful owners. Any and all properties are
-          used solely for navigational purposes to help visitors of the website
-          select the teletext or text service associated with each broadcaster
-          and easily identify the network the teletext or text service data was
-          sourced from. This website is not affiliated with, endorsed by,
-          sponsored by, or officially connected with any of the broadcast
-          networks featured on this website.</small
-        >
-        <br />
-        <br />
-        <small class="text-white"
-          ><strong
-            >This site respects your privacy &mdash; we use no cookies and no ad
-            tracking.</strong
-          ></small
-        >
-      </div>
-    </footer>
-    <script src="js/color-modes.js"></script>
-    <script src="js/heading-reveal.js"></script>
-    <script src="js/recent-additions.js"></script>
-  </body>
+        <meta property="og:url" content="https://tvta-yt.github.io/U.S.-Teletext-Website/" />
+        <meta property="og:image" content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png" />
+        <meta property="og:image:alt" content="U.S. Teletext Archive" />
+        <meta property="og:site_name" content="U.S. Teletext Archive" />
+        <meta property="og:locale" content="en_US" />
+        <meta
+            name="description"
+            content="An archive of pages from U.S. NABTS and WST teletext (e.g. CBS ExtraVision and Electra) and other various text-based services (e.g. ABC PLUS)."
+        />
+        <link rel="canonical" href="https://tvta-yt.github.io/U.S.-Teletext-Website/" />
+        <link rel="icon" href="images/favicons/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/media.css" />
+        <link rel="stylesheet" href="css/navigation-bar-animation.css" />
+        <link rel="stylesheet" href="css/logo-media.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="css/color-overrides.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+        <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+        <title>U.S. Teletext Archive</title>
+        <style>
+            td img {
+                display: block;
+                margin: 0 auto;
+            }
+
+            #site-intro-container {
+                margin-top: 90px;
+            }
+
+            #secondary-container {
+                margin-top: 20px;
+            }
+
+            #site-title {
+                font-family: "Contour Generator", sans-serif;
+                line-height: 110%;
+                text-shadow: 3px 3px #000;
+                animation: colorChange 4s steps(4, end) infinite;
+            }
+
+            #samples-div {
+                background-color: #1c165b;
+            }
+
+            #samples-text {
+                font-family: "TU 1000x Regular", sans-serif;
+                color: #f5f4f4 !important;
+                text-shadow: 2px 2px #000;
+                animation: blink 2s step-end infinite;
+            }
+
+            .container:not(#secondary-container) {
+                margin-top: 110px !important;
+            }
+
+            .teletext-page-marquee-image {
+                width: 200px !important;
+            }
+
+            .image-marquee {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                background-image: linear-gradient(to right, #152de3, #94a1ff);
+                padding: 25px 0 25px 0;
+            }
+
+            .image-marquee-content {
+                display: flex;
+                width: max-content;
+                gap: 6rem;
+                animation: image-marquee 25s linear infinite;
+            }
+
+            @keyframes blink {
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            @keyframes colorChange {
+                0% {
+                    color: #a80000;
+                }
+                25% {
+                    color: #321fff;
+                }
+                50% {
+                    color: #23b6ff;
+                }
+                75% {
+                    color: #00d231;
+                }
+                100% {
+                    color: #ffcb20;
+                }
+            }
+
+            @keyframes image-marquee {
+                from {
+                    transform: translateX(0%);
+                }
+                to {
+                    transform: translateX(calc(-8 * (200px + 6rem)));
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="logo">
+                <a href="index.html" class="navbar-brand">
+                    <!-- <?xml version="1.0" encoding="UTF-8"?> -->
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <svg class="site-logo" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 363.15 91.12">
+                        <defs>
+                            <style>
+                                .cls-1 {
+                                    font-family: ContourGenerator-Regular, "Contour Generator";
+                                    font-size: 43.32px;
+                                }
+
+                                .cls-2 {
+                                    letter-spacing: -0.02em;
+                                }
+
+                                .cls-3 {
+                                    letter-spacing: -0.03em;
+                                }
+                            </style>
+                        </defs>
+                        <text class="cls-1" transform="translate(0 36.54)" aria-label="US Teletext Archive">
+                            <tspan class="cls-2" x="0" y="0">U.S</tspan>
+                            <tspan x="82.96" y="0">. TELETEXT</tspan>
+                            <tspan x="62.34" y="43.32">A</tspan>
+                            <tspan class="cls-3" x="102.93" y="43.32">R</tspan>
+                            <tspan x="139.66" y="43.32">CHIVE</tspan>
+                        </text>
+                    </svg>
+                </a>
+            </div>
+            <button
+                class="navbar-toggler mx-4"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="html/services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="html/services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Teletext Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="html/stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Teletext Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="html/stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="html/teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="html/archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="html/archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="html/news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="html/news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="html/submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="html/submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="html/about.html">About</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="html/about.html">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="container-fluid" id="site-intro-container">
+                <h1 id="site-intro">
+                    <span class="visually-hidden">Welcome to the U.S Teletext Archive</span>
+                    <img src="images/banners/light/Welcome_light.png" alt="" class="mw-100 light-mode-image" />
+                    <img src="images/banners/dark/Welcome.png" alt="" class="mw-100 dark-mode-image" />
+                    <div class="text-center" id="site-logo-padding" aria-hidden="true">
+                        <span id="site-title">U.S. TELETEXT<br />ARCHIVE</span>
+                    </div>
+                </h1>
+                <p class="fs-4 fw-bold text-center">Archiving U.S. teletext samples one submission at a time.</p>
+                <div class="image-marquee" id="image-marquee" aria-hidden="true">
+                    <div class="image-marquee-content">
+                        <div>
+                            <img
+                                src="images/DaTaVizion-index_stretched.png"
+                                alt="DaTaVizion index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
+                                alt="Electra index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/Record-000-000-vB.png"
+                                alt="CBS ExtraVision index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/Keyfax-index_stretched.png"
+                                alt="CBS ExtraVision Weather precipitation page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/NBC-Teletext.png"
+                                alt="NBC Teletext logo page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/SSS-Teletext-index_stretched.png"
+                                alt="CBS ExtraVision Media Watch page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/Virtext_stretched.png"
+                                alt="CBS ExtraVision Captions page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <!-- Start of loop -->
+                        <div>
+                            <img
+                                src="images/DaTaVizion-index_stretched.png"
+                                alt="DaTaVizion index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
+                                alt="Electra index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/Record-000-000-vB.png"
+                                alt="CBS ExtraVision index page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/Keyfax-index_stretched.png"
+                                alt="CBS ExtraVision Weather precipitation page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/decoded-pages/NBC-Teletext.png"
+                                alt="NBC Teletext logo page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/SSS-Teletext-index_stretched.png"
+                                alt="CBS ExtraVision Media Watch page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="images/Virtext_stretched.png"
+                                alt="CBS ExtraVision Captions page"
+                                class="mw-100 w-25 teletext-page-marquee-image border border-white rounded-2"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <hr aria-hidden="true" />
+            </div>
+            <div class="container" style="margin-top: 20px !important; margin-bottom: 20px !important">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12" id="site-introduction-paragraphs-column">
+                        <p class="site-introduction">
+                            On this website is a collection of newly decoded pages from U.S. teletext from various services such as CBS's
+                            <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS (then SuperStation
+                            WTBS and SuperStation TBS). We're also now including samples from various text-based (non-teletext) services,
+                            both national (ABC PLUS) and local (Kentucky Educational Television's AgText).
+                        </p>
+                        <p class="site-introduction mb-0">
+                            <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality
+                            examples of these services, specifically the teletext services. This site aims to change that by acting as a
+                            repository, providing access to individual archives from these services, archives provided by those who have the
+                            capacity to decode these services.
+                        </p>
+                    </div>
+                    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12" id="recent-additions-column">
+                        <h3 class="text-center display-6 fw-bold">Ten Newest Additions</h3>
+                        <div id="recent-additions"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3" id="samples-div">
+                <h2 class="display-1 fw-bolder text-center" id="samples-text">Samples Needed!</h2>
+            </div>
+            <div class="container" id="secondary-container">
+                <p class="fs-5 text-center">
+                    We are currently looking for more teletext samples to add to the site! We are looking for samples from the following
+                    <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three CBS affiliates (especially from those colored
+                    red):
+                </p>
+                <div class="justify-content-center">
+                    <table class="table text-center table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Station</th>
+                                <th scope="col">City/State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-danger">KCBS (O&amp;O)</td>
+                                <td class="bg-danger">Los Angeles, CA</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger">KSL-TV</td>
+                                <td class="bg-danger">Salt Lake City, UT</td>
+                            </tr>
+                            <tr>
+                                <td>KMOX (former O&amp;O)*</td>
+                                <td>St. Louis, MO</td>
+                            </tr>
+                            <tr>
+                                <td>WBBM (O&amp;O)</td>
+                                <td>Chicago, IL</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger">WBTV</td>
+                                <td class="bg-danger">Charlotte, NC</td>
+                            </tr>
+                            <tr>
+                                <td>WCAU (former O&amp;O)</td>
+                                <td>Philadelphia, PA</td>
+                            </tr>
+                            <tr>
+                                <td>WCBS (O&amp;O)</td>
+                                <td>New York, NY</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-danger">WIVB</td>
+                                <td class="bg-danger">Buffalo, NY</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>NOTE: KMOX samples span 1983 &ndash; 1986.</p>
+                    <p class="fs-5 text-center">
+                        If you have any videotapes (Betamax or VHS) from these stations that date between 1983 and 1990, we'd love to hear
+                        about it! Use
+                        <a href="html/contact.html">this</a>
+                        form to let us know what you've got.
+                    </p>
+                </div>
+                <!-- Floating theme button, bottom-right -->
+                <button
+                    id="themeFab"
+                    type="button"
+                    class="btn btn-outline-secondary rounded-circle shadow"
+                    style="position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; z-index: 1050"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#themeOffcanvas"
+                    aria-controls="themeOffcanvas"
+                    title="Theme"
+                >
+                    <span class="theme-icon">
+                        <i class="bi bi-circle-half"></i>
+                    </span>
+                </button>
+
+                <!-- Offcanvas panel -->
+                <div
+                    class="offcanvas offcanvas-end"
+                    tabindex="-1"
+                    id="themeOffcanvas"
+                    aria-labelledby="themeOffcanvasLabel"
+                    style="width: 260px"
+                >
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="light">
+                                <i class="bi bi-brightness-high-fill"></i> Light
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="dark">
+                                <i class="bi bi-moon-fill"></i> Dark
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="auto">
+                                <i class="bi bi-display-fill"></i> Match system
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="end-footer pt-4 text-center">
+            <div id="footer-site-links">
+                <img src="images/logo-white-2.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
+                <p>
+                    Issues? &nbsp;
+                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
+                </p>
+                <p>
+                    Have questions or information? &nbsp;
+                    <a href="html/contact.html">Contact us.</a>
+                </p>
+                <p>
+                    Looking for a specific page? &nbsp;
+                    <a href="html/sitemap.html">Site map.</a>
+                </p>
+                <p class="pb-4">
+                    <a href="html/privacy-policy.html">Privacy Policy</a>
+                </p>
+            </div>
+            <div class="pt-4">
+                <small class="text-white">Website <span aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small>
+                <br />
+                <br />
+                <small class="text-white">
+                    The names, logos, and trademarks of featured broadcast networks are the property of their respectful owners. Any and all
+                    properties are used solely for navigational purposes to help visitors of the website select the teletext or text service
+                    associated with each broadcaster and easily identify the network the teletext or text service data was sourced from.
+                    This website is not affiliated with, endorsed by, sponsored by, or officially connected with any of the broadcast
+                    networks featured on this website.
+                </small>
+                <br />
+                <br />
+                <small class="text-white">
+                    <strong>This site respects your privacy &mdash; we use no cookies and no ad tracking.</strong>
+                </small>
+            </div>
+        </footer>
+        <script src="js/color-modes.js"></script>
+        <!-- <script src="js/heading-reveal.js"></script> -->
+        <script src="js/recent-additions.js"></script>
+    </body>
 </html>

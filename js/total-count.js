@@ -1,3 +1,4 @@
+// Fetch the total count from all JSON files and display them in their own "span" elements
 async function renderTotalRecordCount() {
     const teletextCountEl = document.getElementById("total-record-count");
     const nonTeletextCountEl = document.getElementById("total-record-count-non-teletext");
@@ -36,6 +37,7 @@ async function renderTotalRecordCount() {
             }))
         );
 
+        // Array positions
         const teletextResponses = responses.slice(0, 6);
         const nonTeletextResponses = responses.slice(6, 10);
 

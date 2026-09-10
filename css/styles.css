@@ -26,7 +26,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, .service-name, .table-result, .letter-reveal-char, .button-text),
+span:not(#site-title, .service-name, .table-result, .letter-reveal-char, .button-text, .station-name),
 li,
 label,
 dt,
@@ -52,8 +52,7 @@ hr {
   border: 1px solid var(--horizontal-line) !important;
 }
 
-h1 .letter-reveal-char,
-#welcome-text .letter-reveal-char {
+h1 .letter-reveal-char {
   font-family: "TU 1000x Bold", sans-serif !important;
   line-height: 30px !important;
   font-size: 3em;
@@ -62,16 +61,13 @@ h1 .letter-reveal-char,
   display: inline-block;
   opacity: 0;
 }
-h1 .letter-reveal-char.is-visible,
-#welcome-text .letter-reveal-char.is-visible {
+h1 .letter-reveal-char.is-visible {
   opacity: 1;
 }
-h1 .letter-reveal-char.is-space,
-#welcome-text .letter-reveal-char.is-space {
+h1 .letter-reveal-char.is-space {
   width: 0.28em;
 }
-h1 .type-cursor,
-#welcome-text .type-cursor {
+h1 .type-cursor {
   display: inline-block;
   width: 1.57em;
   height: 1.8em;

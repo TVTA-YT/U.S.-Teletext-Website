@@ -1,32 +1,32 @@
 /* Created October 11, 2025, 02:26 */
 
 .nav-link:not(.news-oddities-page-link) {
-  position: relative;
-  transition: color 0.3s ease-in;
+    position: relative;
+    transition: color 0.3s ease-in;
 }
 
 .nav-link::after:not(.news-oddities-page-link) {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--navbar-animation-color);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s ease;
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--navbar-animation-color);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
 }
 
 .nav-link:hover::after:not(.news-oddities-page-link) {
-  transform: scaleX(1);
+    transform: scaleX(1);
 }
 
 .nav-link:not(:hover)::after:not(.news-oddities-page-link) {
-  transform-origin: center;
-  transform: scaleX(0);
+    transform-origin: center;
+    transform: scaleX(0);
 }
 
 .dropdown-toggle::after:not(.news-oddities-page-link) {
-  transition: none !important;
+    transition: none !important;
 }

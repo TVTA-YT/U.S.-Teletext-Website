@@ -1,30 +1,30 @@
 :root,
 [data-bs-theme="light"] {
-  --body-color: #f6f8fa;
-  --text-color: #000;
-  --navbar-color: #fff;
-  --navbar-animation-color: #0e0075;
-  --site-logo-color: #000;
-  --site-logo-hover-color: #152de3;
-  --horizontal-line: #000;
-  --tooltip-body-text-color: #fff;
+    --body-color: #f6f8fa;
+    --text-color: #000;
+    --navbar-color: #fff;
+    --navbar-animation-color: #0e0075;
+    --site-logo-color: #000;
+    --site-logo-hover-color: #152de3;
+    --horizontal-line: #000;
+    --tooltip-body-text-color: #fff;
 }
 
 [data-bs-theme="dark"] {
-  --body-color: #000;
-  --text-color: #fff;
-  --navbar-color: #000;
-  --navbar-animation-color: #fff;
-  --site-logo-color: #152de3;
-  --site-logo-hover-color: #fff;
-  --horizontal-line: #fff;
-  --tooltip-body-text-color: #000;
+    --body-color: #000;
+    --text-color: #fff;
+    --navbar-color: #000;
+    --navbar-animation-color: #fff;
+    --site-logo-color: #152de3;
+    --site-logo-hover-color: #fff;
+    --horizontal-line: #fff;
+    --tooltip-body-text-color: #000;
 }
 
 .table-custom-blue {
-  --bs-table-color: #fff !important;
-  --bs-table-striped-color: #fff !important;
-  --bs-table-bg: #485dff;
-  --bs-table-border-color: #fff;
-  --bs-table-striped-bg: #6072ff;
+    --bs-table-color: #fff !important;
+    --bs-table-striped-color: #fff !important;
+    --bs-table-bg: #485dff;
+    --bs-table-border-color: #fff;
+    --bs-table-striped-bg: #6072ff;
 }

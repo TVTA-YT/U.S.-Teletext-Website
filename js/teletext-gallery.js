@@ -1,1717 +1,818 @@
 (function () {
+    "use strict";
+    const MANIFEST_PATH_TEMPLATE = "../json/teletext-image-data/gallery-{stream}.json";
+    const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
+    const PAGE_PATTERN = /^Page-(\d+)-(\d+)$/i;
 
-  'use strict';
+    // Load 30 thumbnail images per requests
+    const IMAGES_PER_LOAD = 30;
 
-  const MANIFEST_PATH_TEMPLATE =
-    '../json/teletext-image-data/gallery-{stream}.json';
+    // Timeout time: 10 seconds
+    const SLOW_LOAD_TIMEOUT_MS = 10000;
 
-  const RECORD_PATTERN =
-    /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
+    // Load only 1 thumbnail at a time to prevent excess requests
+    const THUMBNAIL_CONCURRENCY_LIMIT = 1;
 
-  const PAGE_PATTERN =
-    /^Page-(\d+)-(\d+)$/i;
+    // Send 1 requests every 750 ms
+    const THUMBNAIL_REQUEST_DELAY_MS = 750;
 
-  const IMAGES_PER_LOAD = 30;
+    // If thumbnail fails to load, wait 2 seconds before retrying to prevent excess requests
+    const RETRY_DELAY_MS = 2000;
 
-  const SLOW_LOAD_TIMEOUT_MS = 10000;
-
-  const THUMBNAIL_CONCURRENCY_LIMIT = 1;
-
-  const THUMBNAIL_REQUEST_DELAY_MS = 750;
-
-  const RETRY_DELAY_MS = 2000;
-
-  let activeThumbnailLoads = 0;
-
-  const thumbnailLoadQueue = [];
-
-  let nextThumbnailRequestTime = 0;
-
-  let thumbnailQueueTimer = null;
+    let activeThumbnailLoads = 0;
+    const thumbnailLoadQueue = [];
+    let nextThumbnailRequestTime = 0;
+    let thumbnailQueueTimer = null;
+    let slowLoadTimeoutId = null;
+    let mainImageRetryTimer = null;
 
 
-  function enqueueThumbnailLoad(img, src) {
-
-    thumbnailLoadQueue.push({ img, src });
-
-    pumpThumbnailQueue();
-
-  }
-
-
-  function scheduleThumbnailQueuePump(delay) {
-
-    if (thumbnailQueueTimer !== null) {
-      return;
+    // Put thumbnails in a queue before loading
+    function enqueueThumbnailLoad(img, src) {
+        thumbnailLoadQueue.push({ img, src });
+        pumpThumbnailQueue();
     }
 
-    thumbnailQueueTimer = setTimeout(() => {
-
-      thumbnailQueueTimer = null;
-
-      pumpThumbnailQueue();
-
-    }, Math.max(0, delay));
-
-  }
-
-
-  function pumpThumbnailQueue() {
-
-    if (activeThumbnailLoads >= THUMBNAIL_CONCURRENCY_LIMIT) {
-      return;
-    }
-
-    if (thumbnailLoadQueue.length === 0) {
-      return;
-    }
-
-    const now = Date.now();
-
-    if (now < nextThumbnailRequestTime) {
-
-      scheduleThumbnailQueuePump(
-        nextThumbnailRequestTime - now
-      );
-
-      return;
-    }
-
-    const job = thumbnailLoadQueue.shift();
-
-    activeThumbnailLoads++;
-
-    job.img.src = job.src;
-
-    nextThumbnailRequestTime =
-      Date.now() + THUMBNAIL_REQUEST_DELAY_MS;
-
-  }
-
-
-  function onThumbnailLoadSettled() {
-
-    activeThumbnailLoads =
-      Math.max(0, activeThumbnailLoads - 1);
-
-    pumpThumbnailQueue();
-
-  }
-
-
-  const els = {
-
-    sampleTitle:
-      document.getElementById('sample-title'),
-
-    image:
-      document.getElementById('teletext-image'),
-
-    hiddenServiceName:
-      document.getElementById('visually-hidden-service-name'),
-
-    lightImageBanner:
-      document.getElementById('light-image-banner'),
-
-    darkImageBanner:
-      document.getElementById('dark-image-banner'),
-
-    contributor:
-      document.getElementById('contributor-name'),
-
-    pageCount:
-      document.getElementById('page-count'),
-
-    spinner:
-      document.getElementById('spinner'),
-
-    actualPageNumber:
-      document.getElementById('actual-page-number'),
-
-    prevBtn:
-      document.getElementById('previous-image'),
-
-    nextBtn:
-      document.getElementById('next-image'),
-
-    gotoForm:
-      document.getElementById('page-form-input'),
-
-    gotoInput:
-      document.getElementById('input-number'),
-
-    gotoError:
-      document.getElementById('page-form-error'),
-
-    loading:
-      document.getElementById('loading'),
-
-    loadError:
-      document.getElementById('loading-error'),
-
-    gallery:
-      document.getElementById('teletext-image-gallery'),
-
-    thumbnailGallery:
-      document.getElementById('teletext-image-gallery-grid'),
-
-    imageLoadAlert:
-      document.getElementById('image-load-alert'),
-
-    imageFallback:
-      document.getElementById('image-fallback'),
-
-    loadMoreBtn:
-      document.getElementById('load-more-images')
-
-  };
-
-
-  let frames = [];
-
-  let currentIndex = 0;
-
-  let visibleFrameCount = 0;
-
-  let streamId = null;
-
-  let sampleTitle = '';
-
-  let slowLoadTimeoutId = null;
-
-
-  function ensureImageFallbackElements() {
-
-    const positionedWrapper =
-      els.image.closest('.position-relative') ||
-      els.image.parentNode;
-
-    if (!els.imageLoadAlert) {
-
-      const alertEl =
-        document.createElement('div');
-
-      alertEl.id = 'image-load-alert';
-
-      alertEl.className =
-        'alert alert-warning small text-center d-none';
-
-      alertEl.setAttribute('role', 'alert');
-
-      positionedWrapper.parentNode.insertBefore(
-        alertEl,
-        positionedWrapper
-      );
-
-      els.imageLoadAlert = alertEl;
-
-    }
-
-
-    if (!els.imageFallback) {
-
-      const fallbackEl =
-        document.createElement('div');
-
-      fallbackEl.id = 'image-fallback';
-
-      fallbackEl.className =
-        'd-none align-items-center justify-content-center text-center p-4';
-
-      fallbackEl.style.minHeight = '10px';
-
-      positionedWrapper.parentNode.insertBefore(
-        fallbackEl,
-        positionedWrapper.nextSibling
-      );
-
-      els.imageFallback = fallbackEl;
-
-    }
-
-  }
-
-
-  function clearSlowLoadTimer() {
-
-    if (slowLoadTimeoutId !== null) {
-
-      clearTimeout(slowLoadTimeoutId);
-
-      slowLoadTimeoutId = null;
-
-    }
-
-  }
-
-
-  function showSlowLoadAlert(frame, isHardFailure) {
-
-    if (!els.imageLoadAlert) {
-      return;
-    }
-
-    els.imageLoadAlert.textContent =
-      isHardFailure
-
-        ? 'This image failed to load — archive.org may be experiencing issues. Try again later or refresh the page.'
-
-        : 'This image is taking longer than usual to load — archive.org may be slow right now. Still trying...';
-
-    els.imageLoadAlert.classList.remove('d-none');
-
-  }
-
-
-  function hideSlowLoadAlert() {
-
-    if (els.imageLoadAlert) {
-      els.imageLoadAlert.classList.add('d-none');
-    }
-
-  }
-
-
-  function showImageFallback(frame) {
-
-    if (!els.imageFallback) {
-      return;
-    }
-
-    els.imageFallback.textContent =
-      els.image.alt ||
-      ('Page ' + frame.displayNumber);
-
-    els.imageFallback.classList.remove('d-none');
-
-    els.imageFallback.classList.add('d-flex');
-
-    els.image.hidden = true;
-
-  }
-
-
-  function hideImageFallback() {
-
-    if (els.imageFallback) {
-
-      els.imageFallback.classList.add('d-none');
-
-      els.imageFallback.classList.remove('d-flex');
-
-    }
-
-    els.image.hidden = false;
-
-  }
-
-
-  function hideThumbnailGallery() {
-
-    if (els.thumbnailGallery) {
-      els.thumbnailGallery.hidden = true;
-    }
-
-  }
-
-
-  function showThumbnailGallery() {
-
-    if (els.thumbnailGallery) {
-      els.thumbnailGallery.hidden = false;
-    }
-
-  }
-
-
-  function getStickyNavbarHeight() {
-
-    const navbar =
-      document.querySelector('.navbar.fixed-top');
-
-    return navbar
-      ? navbar.offsetHeight
-      : 0;
-
-  }
-
-
-  function getQueryParams() {
-
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-    return {
-      stream: params.get('stream'),
-      page: params.get('page')
-    };
-
-  }
-
-
-  function formatDate(dateString) {
-
-    if (!dateString) {
-      return '';
-    }
-
-    const match =
-      /^(\d{4})-(\d{2})-(\d{2})$/.exec(
-        String(dateString)
-      );
-
-    if (!match) {
-      return String(dateString);
-    }
-
-    const [, year, month, day] = match;
-
-    const months = [
-      'Jan.',
-      'Feb.',
-      'Mar.',
-      'Apr.',
-      'May',
-      'June',
-      'July',
-      'Aug.',
-      'Sept.',
-      'Oct.',
-      'Nov.',
-      'Dec.'
-    ];
-
-    const monthIndex =
-      Number(month) - 1;
-
-    if (
-      monthIndex < 0 ||
-      monthIndex > 11
-    ) {
-      return String(dateString);
-    }
-
-    return `${months[monthIndex]} ${Number(day)}, ${year}`;
-
-  }
-
-
-  function parseFilename(nameNoExt) {
-
-    const recordMatch =
-      RECORD_PATTERN.exec(nameNoExt);
-
-    if (recordMatch) {
-      const duplicateIndex = recordMatch[3] !== undefined ? parseInt(recordMatch[3], 10) : 0;
-
-      return {
-
-        kind: 'record',
-
-        pageNumber:
-          parseInt(recordMatch[2], 10),
-
-        displayNumber:
-          `${recordMatch[2]}-v${recordMatch[4]}`,
-
-        subIndex:
-          recordMatch[4],
-
-          duplicateIndex,
-
-        collapse: false
-
-      };
-
-    }
-
-
-    const pageMatch =
-      PAGE_PATTERN.exec(nameNoExt);
-
-    if (pageMatch) {
-
-      return {
-
-        kind: 'page',
-
-        pageNumber:
-          parseInt(pageMatch[1], 10),
-
-        displayNumber:
-          `${pageMatch[1]}-${pageMatch[2]}`,
-
-        subIndex:
-          parseInt(pageMatch[2], 10),
-
-        collapse: false
-
-      };
-
-    }
-
-
-    return null;
-
-  }
-
-
-  function buildFrameList(rawImages) {
-
-    const frames = [];
-
-    rawImages.forEach((entry) => {
-
-      const nameNoExt =
-        entry.filename.replace(
-          /\.[^.]+$/,
-          ''
+    // Schedule another attempt to load the thumbnail again after a delay
+    function scheduleThumbnailQueuePump(delay) {
+        if (thumbnailQueueTimer !== null) {
+            return;
+        }
+
+        thumbnailQueueTimer = setTimeout(
+            () => {
+                thumbnailQueueTimer = null;
+                pumpThumbnailQueue();
+            },
+            Math.max(0, delay),
         );
-
-      const parsed =
-        parseFilename(nameNoExt);
-
-      if (!parsed) {
-        return;
-      }
-
-      frames.push({
-
-        kind: parsed.kind,
-
-        pageNumber:
-          parsed.pageNumber,
-
-        displayNumber:
-          parsed.displayNumber,
-
-        subIndex:
-          parsed.subIndex,
-
-        filename:
-          entry.filename,
-
-        url:
-          entry.url
-
-      });
-
-    });
-
-
-    frames.sort(
-      (a, b) =>
-        a.pageNumber - b.pageNumber ||
-        a.subIndex - b.subIndex ||
-        (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0)
-    );
-
-
-    let i = 0;
-
-    while (i < frames.length) {
-
-      let j = i;
-
-      while (
-        j < frames.length &&
-        frames[j].displayNumber ===
-        frames[i].displayNumber
-      ) {
-
-        j++;
-
-      }
-
-
-      const groupSize =
-        j - i;
-
-
-      for (
-        let k = i;
-        k < j;
-        k++
-      ) {
-
-        frames[k].occurrenceIndex =
-          k - i + 1;
-
-        frames[k].occurrenceCount =
-          groupSize;
-
-      }
-
-
-      i = j;
-
     }
 
+    // Start requiting the thumbnail
+    function pumpThumbnailQueue() {
+        if (activeThumbnailLoads >= THUMBNAIL_CONCURRENCY_LIMIT) {
+            return;
+        }
+        if (thumbnailLoadQueue.length === 0) {
+            return;
+        }
 
-    return frames;
+        const now = Date.now();
 
-  }
+        if (now < nextThumbnailRequestTime) {
+            scheduleThumbnailQueuePump(nextThumbnailRequestTime - now);
+            return;
+        }
 
-
-  function setStatus(message) {
-
-    if (els.status) {
-      els.status.textContent = message;
+        const job = thumbnailLoadQueue.shift();
+        activeThumbnailLoads++;
+        job.img.src = job.src;
+        nextThumbnailRequestTime = Date.now() + THUMBNAIL_REQUEST_DELAY_MS;
     }
 
-  }
-
-
-  function updateLoadMoreButton() {
-
-    if (!els.loadMoreBtn) {
-      return;
+    // When the current thumbnail sinister loading, start loading another one
+    function onThumbnailLoadSettled() {
+        activeThumbnailLoads = Math.max(0, activeThumbnailLoads - 1);
+        pumpThumbnailQueue();
     }
 
-
-    if (!visibleFrameCount) {
-
-      els.loadMoreBtn.classList.add(
-        'd-none'
-      );
-
-      return;
-
-    }
-
-
-    const remaining =
-      frames.length -
-      visibleFrameCount;
-
-
-    if (remaining <= 0) {
-
-      els.loadMoreBtn.classList.add(
-        'd-none'
-      );
-
-      return;
-
-    }
-
-
-    const amountToLoad =
-      Math.min(
-        IMAGES_PER_LOAD,
-        remaining
-      );
-
-
-    els.loadMoreBtn.textContent =
-      `Load ${amountToLoad} more image${amountToLoad === 1
-        ? ''
-        : 's'
-      }`;
-
-    els.loadMoreBtn.classList.remove(
-      'd-none'
-    );
-
-  }
-
-
-  let thumbnailRow = null;
-
-
-  function buildThumbnailElement(frame, i) {
-
-    const col =
-      document.createElement('div');
-
-    col.className = 'col-2 p-2';
-
-
-    const btn =
-      document.createElement('button');
-
-    btn.type = 'button';
-
-    btn.className =
-      'tt-thumb-btn p-0 border-0 bg-transparent w-100';
-
-    btn.dataset.index =
-      String(i);
-
-    btn.setAttribute(
-      'aria-label',
-      'Go to page ' +
-      frame.displayNumber
-    );
-
-    btn.setAttribute(
-      'aria-current',
-      i === currentIndex
-        ? 'true'
-        : 'false'
-    );
-
-
-    const img =
-      document.createElement('img');
-
-    img.alt = '';
-
-    img.loading = 'lazy';
-
-    img.decoding = 'async';
-
-    img.className =
-      i === currentIndex
-        ? 'mw-100 border border-primary rounded-2'
-        : 'mw-100 border border-white rounded-2';
-
-
-    const label =
-      document.createElement('div');
-
-    label.className =
-      'small text-center mt-1 invisible';
-
-    label.textContent =
-      frame.displayNumber;
-
-
-    let retried = false;
-
-    let retryTimer = null;
-
-
-    img.onload = () => {
-
-      if (retryTimer !== null) {
-
-        clearTimeout(retryTimer);
-
-        retryTimer = null;
-
-      }
-
-      label.classList.remove(
-        'invisible'
-      );
-
-      onThumbnailLoadSettled();
-
+    const els = {
+        sampleTitle: document.getElementById("sample-title"),
+        image: document.getElementById("teletext-image"),
+        hiddenServiceName: document.getElementById("visually-hidden-service-name"),
+        lightImageBanner: document.getElementById("light-image-banner"),
+        darkImageBanner: document.getElementById("dark-image-banner"),
+        contributor: document.getElementById("contributor-name"),
+        pageCount: document.getElementById("page-count"),
+        spinner: document.getElementById("spinner"),
+        actualPageNumber: document.getElementById("actual-page-number"),
+        prevBtn: document.getElementById("previous-image"),
+        nextBtn: document.getElementById("next-image"),
+        gotoForm: document.getElementById("page-form-input"),
+        gotoInput: document.getElementById("input-number"),
+        gotoError: document.getElementById("page-form-error"),
+        loading: document.getElementById("loading"),
+        loadError: document.getElementById("loading-error"),
+        gallery: document.getElementById("teletext-image-gallery"),
+        thumbnailGallery: document.getElementById("teletext-image-gallery-grid"),
+        imageLoadAlert: document.getElementById("image-load-alert"),
+        imageFallback: document.getElementById("image-fallback"),
+        loadMoreBtn: document.getElementById("load-more-images"),
     };
 
+    let frames = [];
+    let currentIndex = 0;
+    let visibleFrameCount = 0;
+    let streamId = null;
+    let sampleTitle = "";
+    // let slowLoadTimeoutId = null;
 
-    img.onerror = () => {
+    // Display text or alerts depending on why the thumbnails or images fail to load
+    function ensureImageFallbackElements() {
+        const positionedWrapper = els.image.closest(".position-relative") || els.image.parentNode;
 
-      if (!retried) {
+        // Create Bootstrap alert
+        if (!els.imageLoadAlert) {
+            const alertEl = document.createElement("div");
+            alertEl.id = "image-load-alert";
+            alertEl.className = "alert alert-warning small text-center d-none";
+            alertEl.setAttribute("role", "alert");
+            positionedWrapper.parentNode.insertBefore(alertEl, positionedWrapper);
+            els.imageLoadAlert = alertEl;
+        }
 
-        retried = true;
+        // Display fallback image container
+        if (!els.imageFallback) {
+            const fallbackEl = document.createElement("div");
+            fallbackEl.id = "image-fallback";
+            fallbackEl.className = "d-none align-items-center justify-content-center text-center p-4";
+            fallbackEl.style.minHeight = "10px";
+            positionedWrapper.parentNode.insertBefore(fallbackEl, positionedWrapper.nextSibling);
+            els.imageFallback = fallbackEl;
+        }
+    }
 
-        retryTimer =
-          setTimeout(() => {
+    // Cancel the slow timer if the image or thumbnail loads before the 10-second cutoff
+    function clearSlowLoadTimer() {
+        if (slowLoadTimeoutId !== null) {
+            clearTimeout(slowLoadTimeoutId);
+            slowLoadTimeoutId = null;
+        }
+    }
 
-            retryTimer = null;
+    // If the main image is still loading, but a user moves to the second image, cancel the loading retry
+    function clearMainImageRetryTimer() {
+        if (mainImageRetryTimer !== null) {
+            clearTimeout(mainImageRetryTimer);
+            mainImageRetryTimer = null;
+        }
+    }
 
-            img.src = frame.url;
+    // Display the alert for why the images failed to load
+    function showSlowLoadAlert(frame, isHardFailure) {
+        if (!els.imageLoadAlert) {
+            return;
+        }
 
-          }, RETRY_DELAY_MS);
+        // Get current page number
+        const pageRef = frame ? ` (page ${frame.displayNumber})` : "";
 
-        return;
+        // Depending on the failure, display one of these in the alert
+        els.imageLoadAlert.textContent = isHardFailure
+            ? `Failed to load ${pageRef} — archive.org may be experiencing issues. Try again later or refresh the page.`
+            : `${pageRef} is taking longer than usual to load — archive.org may be slow right now. Still trying...`;
+        els.imageLoadAlert.classList.remove("d-none");
+    }
 
-      }
+    // If the images successfully load, hide the alert
+    function hideSlowLoadAlert() {
+        if (els.imageLoadAlert) {
+            els.imageLoadAlert.classList.add("d-none");
+        }
+    }
 
+    // If the images cannot be loaded, display the image's alt value
+    function showImageFallback(frame) {
+        if (!els.imageFallback) {
+            return;
+        }
 
-      const fallback =
-        document.createElement('div');
+        els.imageFallback.textContent = els.image.alt || "Page " + frame.displayNumber;
+        els.imageFallback.classList.remove("d-none");
+        els.imageFallback.classList.add("d-flex");
+        els.image.hidden = true;
+    }
 
-      fallback.className =
-        img.className +
-        ' d-flex align-items-center justify-content-center text-center p-2 small';
+    // If the images successfully load, hide the image fallback element
+    function hideImageFallback() {
+        if (els.imageFallback) {
+            els.imageFallback.classList.add("d-none");
+            els.imageFallback.classList.remove("d-flex");
+        }
 
-      fallback.style.aspectRatio =
-        '4 / 3';
+        els.image.hidden = false;
+    }
 
-      fallback.textContent =
-        'Page ' +
-        frame.displayNumber;
+    // Hide the image gallery during loading
+    function hideThumbnailGallery() {
+        if (els.thumbnailGallery) {
+            els.thumbnailGallery.hidden = true;
+        }
+    }
 
+    // If there is a successful connection and the main image loads, display the image gallery
+    function showThumbnailGallery() {
+        if (els.thumbnailGallery) {
+            els.thumbnailGallery.hidden = false;
+        }
+    }
 
-      img.replaceWith(fallback);
+    // Get the height of the navbar
+    /*
+    * This is here because when a user clicks on an image in the image gallery,
+    * the page will scroll back to the top to show the primary image viewer.
+    *
+    * When the page scrolls to the top, the sample title should still be visible
+    * and not covered by the navbar.
+    */
+    function getStickyNavbarHeight() {
+        const navbar = document.querySelector(".navbar.fixed-top");
+        return navbar ? navbar.offsetHeight : 0;
+    }
 
-      label.remove();
+    // Read URL parameters
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            stream: params.get("stream"),
+            page: params.get("page"),
+        };
+    }
 
-      onThumbnailLoadSettled();
+    // Convert the stored date for each record (YYYY-MM-DD) to Mon. DD, YYYY)
+    function formatDate(dateString) {
+        if (!dateString) {
+            return "";
+        }
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateString));
+        if (!match) {
+            return String(dateString);
+        }
 
-    };
+        const [, year, month, day] = match;
+        const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+        const monthIndex = Number(month) - 1;
+        if (monthIndex < 0 || monthIndex > 11) {
+            return String(dateString);
+        }
 
+        return `${months[monthIndex]} ${Number(day)}, ${year}`;
+    }
 
-    btn.appendChild(img);
+    // Parse record file names
+    function parseFilename(nameNoExt) {
+        const recordMatch = RECORD_PATTERN.exec(nameNoExt);
 
-    btn.appendChild(label);
+        // This is used for CBS and NBC images (NABTS). These pages start with "Record"
+        if (recordMatch) {
+            const duplicateIndex = recordMatch[3] !== undefined ? parseInt(recordMatch[3], 10) : 0;
 
+            return {
+                kind: "record",
+                pageNumber: parseInt(recordMatch[2], 10),
+                displayNumber: `${recordMatch[2]}-v${recordMatch[4]}`,
+                subIndex: recordMatch[4],
+                duplicateIndex,
+                collapse: false,
+            };
+        }
 
-    btn.addEventListener(
-      'click',
-      () => {
+        const pageMatch = PAGE_PATTERN.exec(nameNoExt);
 
-        render(i);
+        // This is used for WST images (DaTaVizion, Electra, Keyfax, etc.). These pages start with "Page"
+        if (pageMatch) {
+            return {
+                kind: "page",
+                pageNumber: parseInt(pageMatch[1], 10),
+                displayNumber: `${pageMatch[1]}-${pageMatch[2]}`,
+                subIndex: parseInt(pageMatch[2], 10),
+                collapse: false,
+            };
+        }
 
+        return null;
+    }
 
-        const anchor =
-          els.sampleTitle ||
-          els.image;
+    // Convert the raw manifest images into useable images. Figure out where they belong, sort in order, find duplicates, then output completed list
+    function buildFrameList(rawImages) {
+        const frames = [];
 
+        // Loop through each image and remove the file extension
+        rawImages.forEach((entry) => {
+            const nameNoExt = entry.filename.replace(/\.[^.]+$/, "");
+            const parsed = parseFilename(nameNoExt);
 
-        const navbarHeight =
-          getStickyNavbarHeight();
+            // Ignore non-understandable file names
+            if (!parsed) return;
 
-
-        const targetY =
-          anchor.getBoundingClientRect().top +
-          window.pageYOffset -
-          navbarHeight;
-
-
-        window.scrollTo({
-
-          top: Math.max(0, targetY),
-
-          behavior: 'smooth'
-
+            // Create frame object
+            frames.push({
+                kind: parsed.kind,
+                pageNumber: parsed.pageNumber,
+                displayNumber: parsed.displayNumber,
+                subIndex: parsed.subIndex,
+                filename: entry.filename,
+                url: entry.url,
+            });
         });
 
-      }
-    );
+        // Sort images in order by page number, by page number and subpage number, or by index if page numbers are identical
+        frames.sort((a, b) => a.pageNumber - b.pageNumber || a.subIndex - b.subIndex) || (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0);
 
+        let i = 0;
 
-    col.appendChild(btn);
+        // Examine each frame, find matching page numbers, calculate the group size, label each duplicate, then return completed list
+        while (i < frames.length) {
+            let j = i;
 
+            while (j < frames.length && frames[j].displayNumber === frames[i].displayNumber) {
+                j++;
+            }
 
-    enqueueThumbnailLoad(
-      img,
-      frame.url
-    );
+            const groupSize = j - i;
 
+            for (let k = i; k < j; k++) {
+                frames[k].occurrenceIndex = k - i + 1;
+                frames[k].occurrenceCount = groupSize;
+            }
+            i = j;
+        }
 
-    return col;
-
-  }
-
-
-  function appendThumbnailRange(
-    startIndex,
-    endIndex
-  ) {
-
-    if (
-      !els.thumbnailGallery ||
-      !thumbnailRow
-    ) {
-      return;
+        return frames;
     }
 
-
-    for (
-      let i = startIndex;
-      i < endIndex;
-      i++
-    ) {
-
-      thumbnailRow.appendChild(
-        buildThumbnailElement(
-          frames[i],
-          i
-        )
-      );
-
+    // Update status if needed
+    function setStatus(message) {
+        if (els.status) {
+            els.status.textContent = message;
+        }
     }
 
-  }
+    // Show or hide the "Load X more images" button depending on how many images are left to load
+    function updateLoadMoreButton() {
+        if (!els.loadMoreBtn) {
+            return;
+        }
 
+        if (!visibleFrameCount) {
+            els.loadMoreBtn.classList.add("d-none");
+            return;
+        }
 
-  function renderThumbnails() {
+        const remaining = frames.length - visibleFrameCount;
 
-    if (!els.thumbnailGallery) {
-      return;
+        if (remaining <= 0) {
+            els.loadMoreBtn.classList.add("d-none");
+            return;
+        }
+
+        const amountToLoad = Math.min(IMAGES_PER_LOAD, remaining);
+        els.loadMoreBtn.textContent = `Load ${amountToLoad} more image${amountToLoad === 1 ? "" : "s"}`;
+        els.loadMoreBtn.classList.remove("d-none");
     }
 
+    let thumbnailRow = null;
 
-    els.thumbnailGallery.innerHTML =
-      '';
+    // Build each thumbnail image one at a time
+    function buildThumbnailElement(frame, i) {
+        const col = document.createElement("div");
+        col.className = "col-2 p-2";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tt-thumb-btn p-0 border-0 bg-transparent w-100";
+        btn.dataset.index = String(i);
+        btn.setAttribute("aria-label", "Go to page " + frame.displayNumber);
+        btn.setAttribute("aria-current", i === currentIndex ? "true" : "false");
+        const img = document.createElement("img");
+        img.alt = "";
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.className = i === currentIndex ? "mw-100 border border-primary rounded-2" : "mw-100 border border-white rounded-2";
+        const label = document.createElement("div");
+        label.className = "small text-center mt-1 invisible";
+        label.textContent = frame.displayNumber;
+        let retried = false;
+        let retryTimer = null;
 
+        // If image loads successfully, clear the retry timer and show the image
+        img.onload = () => {
+            if (retryTimer !== null) {
+                clearTimeout(retryTimer);
+                retryTimer = null;
+            }
 
-    const row =
-      document.createElement('div');
+            label.classList.remove("invisible");
+            onThumbnailLoadSettled();
+        };
 
-    row.className =
-      'row justify-content-center pt-3';
+        // If it doesn't try it again
+        img.onerror = () => {
+            if (!retried) {
+                retried = true;
 
+                retryTimer = setTimeout(() => {
+                    retryTimer = null;
+                    img.src = frame.url;
+                }, RETRY_DELAY_MS);
 
-    els.thumbnailGallery.appendChild(
-      row
-    );
+                return;
+            }
 
+            // Replace image with the fallback container if it fails to load
+            const fallback = document.createElement("div");
+            fallback.className = img.className + " d-flex align-items-center justify-content-center text-center p-2 small";
+            fallback.style.aspectRatio = "4 / 3";
+            fallback.textContent = "Page " + frame.displayNumber;
+            img.replaceWith(fallback);
+            label.remove();
+            onThumbnailLoadSettled();
+        };
 
-    thumbnailRow = row;
+        btn.appendChild(img);
+        btn.appendChild(label);
 
+        // When an image in the gallery is clicked, scroll to the image viewer at the top of the page
+        btn.addEventListener("click", () => {
+            render(i);
+            const anchor = els.sampleTitle || els.image;
+            const navbarHeight = getStickyNavbarHeight();
+            const targetY = anchor.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
 
-    appendThumbnailRange(
-      0,
-      visibleFrameCount
-    );
+            window.scrollTo({
+                top: Math.max(0, targetY),
+                behavior: "smooth",
+            });
+        });
 
-  }
-
-
-  function updateActiveThumbnail() {
-
-    if (!els.thumbnailGallery) {
-      return;
+        col.appendChild(btn);
+        enqueueThumbnailLoad(img, frame.url)
+        return col;
     }
 
+    // Create thumbnail ranges (30 images at a time)
+    function appendThumbnailRange(startIndex, endIndex) {
+        if (!els.thumbnailGallery || !thumbnailRow) {
+            return;
+        }
 
-    const buttons =
-      els.thumbnailGallery.querySelectorAll(
-        '.tt-thumb-btn'
-      );
-
-
-    buttons.forEach((btn, i) => {
-
-      const isActive =
-        i === currentIndex;
-
-
-      const img =
-        btn.querySelector('img');
-
-
-      btn.setAttribute(
-        'aria-current',
-        isActive
-          ? 'true'
-          : 'false'
-      );
-
-
-      if (img) {
-
-        img.classList.toggle(
-          'border-primary',
-          isActive
-        );
-
-        img.classList.toggle(
-          'border-white',
-          !isActive
-        );
-
-      }
-
-    });
-
-  }
-
-
-  function refreshNavControls() {
-
-    if (els.pageCount) {
-
-      els.pageCount.textContent =
-        `Image ${currentIndex + 1} out of ${frames.length}`;
-
+        for (let i = startIndex; i < endIndex; i++) {
+            thumbnailRow.appendChild(buildThumbnailElement(frames[i], i));
+        }
     }
 
+    // Create the thumbnail gallery
+    function renderThumbnails() {
+        if (!els.thumbnailGallery) {
+            return;
+        }
 
-    els.prevBtn.disabled =
-      currentIndex === 0;
+        els.thumbnailGallery.innerHTML = "";
+        const row = document.createElement("div");
+        row.className = "row justify-content-center pt-3";
+        els.thumbnailGallery.appendChild(row);
+        thumbnailRow = row;
+        appendThumbnailRange(0, visibleFrameCount);
+    }
+    // Mark the current thumbnail image with a border
+    function updateActiveThumbnail() {
+        if (!els.thumbnailGallery) {
+            return;
+        }
 
+        const buttons = els.thumbnailGallery.querySelectorAll(".tt-thumb-btn");
 
-    els.nextBtn.disabled =
-      currentIndex ===
-      frames.length - 1;
+        buttons.forEach((btn, i) => {
+            const isActive = i === currentIndex;
+            const img = btn.querySelector("img");
+            btn.setAttribute("aria-current", isActive ? "true" : "false");
 
-  }
-
-
-  function render(index) {
-
-    if (!frames.length) {
-      return;
+            if (img) {
+                img.classList.toggle("border-primary", isActive);
+                img.classList.toggle("border-white", !isActive);
+            }
+        });
     }
 
+    // Disable previous and next button when viewing the first or last image
+    function refreshNavControls() {
+        if (els.pageCount) {
+            els.pageCount.textContent = `Image ${currentIndex + 1} out of ${frames.length}`;
+        }
 
-    currentIndex =
-      Math.max(
-        0,
-        Math.min(
-          index,
-          frames.length - 1
-        )
-      );
-
-
-    const frame =
-      frames[currentIndex];
-
-
-    ensureFrameVisible(
-      currentIndex + 1
-    );
-
-
-    refreshNavControls();
-
-
-    if (els.spinner) {
-      els.spinner.hidden = false;
+        els.prevBtn.disabled = currentIndex === 0;
+        els.nextBtn.disabled = currentIndex === frames.length - 1;
     }
 
+    // ! Render everything
+    function render(index) {
+        // Return any images
+        if (!frames.length) {
+            return;
+        }
 
-    ensureImageFallbackElements();
+        /*
+        * Clamp array index.
+        * Get selected frame.
+        * Make the thumbnails visible if scrolling into ones that haven't been displayed.
+        * Refresh navigation controls
+        */
+        currentIndex = Math.max(0, Math.min(index, frames.length - 1));
+        const frame = frames[currentIndex];
+        ensureFrameVisible(currentIndex + 1);
+        refreshNavControls();
 
-
-    clearSlowLoadTimer();
-
-    hideSlowLoadAlert();
-
-    hideImageFallback();
-
-    hideThumbnailGallery();
-
-
-    slowLoadTimeoutId =
-      setTimeout(() => {
-
-        showSlowLoadAlert(
-          frame,
-          false
-        );
-
-        showImageFallback(
-          frame
-        );
-
+        // Show spinner for loading images
         if (els.spinner) {
-          els.spinner.hidden = true;
+            els.spinner.hidden = false;
         }
 
-      }, SLOW_LOAD_TIMEOUT_MS);
-
-
-    let mainImageRetried = false;
-
-
-    els.image.onload = () => {
-
-      clearSlowLoadTimer();
-
-      hideSlowLoadAlert();
-
-      hideImageFallback();
-
-      showThumbnailGallery();
-
-
-      if (els.spinner) {
-        els.spinner.hidden = true;
-      }
-
-    };
-
-
-    els.image.onerror = () => {
-
-      if (!mainImageRetried) {
-
-        mainImageRetried = true;
-
-
-        setTimeout(() => {
-
-          els.image.src =
-            frame.url;
-
-        }, RETRY_DELAY_MS);
-
-
-        return;
-
-      }
-
-
-      clearSlowLoadTimer();
-
-
-      if (els.spinner) {
-        els.spinner.hidden = true;
-      }
-
-
-      showSlowLoadAlert(
-        frame,
-        true
-      );
-
-
-      showImageFallback(
-        frame
-      );
-
-
-      setStatus(
-        `This image failed to load (page ${frame.displayNumber}).`
-      );
-
-    };
-
-
-    els.image.src =
-      frame.url;
-
-
-    els.image.alt =
-      `Page ${frame.displayNumber}.`;
-
-
-    els.image.dataset.bsCaption =
-      `${sampleTitle} — Page ${frame.displayNumber}`;
-
-
-    if (els.caption) {
-
-      const captionParts = [
-        'Page ' +
-        frame.displayNumber
-      ];
-
-
-      if (
-        frame.occurrenceCount > 1
-      ) {
-
-        captionParts.push(
-          'capture ' +
-          frame.occurrenceIndex +
-          ' of ' +
-          frame.occurrenceCount
-        );
-
-      }
-
-
-      if (
-        frame.kind === 'record' &&
-        frame.subIndex
-      ) {
-
-        captionParts.push(
-          'v' +
-          frame.subIndex
-        );
-
-      }
-
-
-      captionParts.push(
-        'image ' +
-        (currentIndex + 1) +
-        ' of ' +
-        frames.length
-      );
-
-
-      els.caption.textContent =
-        captionParts.join(' — ');
-
-    }
-
-
-    if (els.actualPageNumber) {
-
-      els.actualPageNumber.textContent =
-        frame.displayNumber;
-
-    }
-
-
-    /*
-     * The Go To field now displays the
-     * actual teletext page number rather
-     * than the image sequence number.
-     */
-    els.gotoInput.value =
-      frame.pageNumber;
-
-
-    setStatus(
-      'Showing image ' +
-      (currentIndex + 1) +
-      ' of ' +
-      frames.length +
-      ', page ' +
-      frame.displayNumber
-    );
-
-
-    updateActiveThumbnail();
-
-
-    /*
-     * Store the actual teletext page number
-     * in the URL rather than the image
-     * sequence number.
-     */
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-
-    params.set(
-      'stream',
-      streamId
-    );
-
-
-    params.set(
-      'page',
-      String(frame.pageNumber)
-    );
-
-
-    history.replaceState(
-      null,
-      '',
-      '?' +
-      params.toString()
-    );
-
-  }
-
-
-  function ensureFrameVisible(
-    imageNumber
-  ) {
-
-    if (
-      imageNumber > visibleFrameCount &&
-      imageNumber <= frames.length
-    ) {
-
-      const previousVisibleCount =
-        visibleFrameCount;
-
-
-      visibleFrameCount =
-        Math.min(
-          Math.ceil(
-            imageNumber /
-            IMAGES_PER_LOAD
-          ) *
-          IMAGES_PER_LOAD,
-          frames.length
-        );
-
-
-      appendThumbnailRange(
-        previousVisibleCount,
-        visibleFrameCount
-      );
-
-
-      updateLoadMoreButton();
-
-      refreshNavControls();
-
-    }
-
-  }
-
-
-  /*
-   * Navigate to a page by its actual
-   * teletext page number.
-   *
-   * For example:
-   *
-   *   page=100
-   *
-   * searches for frame.pageNumber === 100
-   * rather than treating 100 as image #100.
-   */
-  function goToPage(pageNumber) {
-
-    const index =
-      frames.findIndex(
-        frame =>
-          frame.pageNumber === pageNumber
-      );
-
-
-    if (index === -1) {
-
-      if (els.gotoError) {
-
-        els.gotoError.textContent =
-          `No page ${pageNumber} was found in this gallery.`;
-
-      }
-
-
-      setStatus(
-        `No page ${pageNumber} was found in this gallery.`
-      );
-
-
-      return false;
-
-    }
-
-
-    /*
-     * Make sure the selected image's
-     * thumbnail is loaded.
-     */
-    ensureFrameVisible(
-      index + 1
-    );
-
-
-    if (els.gotoError) {
-      els.gotoError.textContent = '';
-    }
-
-
-    render(index);
-
-
-    return true;
-
-  }
-
-
-  function loadMoreImages() {
-
-    if (
-      visibleFrameCount >=
-      frames.length
-    ) {
-      return;
-    }
-
-
-    const previousVisibleCount =
-      visibleFrameCount;
-
-
-    visibleFrameCount =
-      Math.min(
-        visibleFrameCount +
-        IMAGES_PER_LOAD,
-        frames.length
-      );
-
-
-    appendThumbnailRange(
-      previousVisibleCount,
-      visibleFrameCount
-    );
-
-
-    showThumbnailGallery();
-
-    updateActiveThumbnail();
-
-    updateLoadMoreButton();
-
-    refreshNavControls();
-
-
-    setStatus(
-      `Loaded ${visibleFrameCount} of ${frames.length} images.`
-    );
-
-
-    if (
-      visibleFrameCount >
-      previousVisibleCount
-    ) {
-
-      const buttons =
-        els.thumbnailGallery
-          ? els.thumbnailGallery.querySelectorAll(
-            '.tt-thumb-btn'
-          )
-          : null;
-
-
-      if (
-        buttons &&
-        buttons[previousVisibleCount]
-      ) {
-
-        buttons[
-          previousVisibleCount
-        ].scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-      }
-
-    }
-
-  }
-
-
-  function showLoadError() {
-
-    els.loading.hidden = true;
-
-    els.loadError.hidden = false;
-
-    els.gallery.setAttribute(
-      'aria-busy',
-      'false'
-    );
-
-
-    if (els.loadMoreBtn) {
-
-      els.loadMoreBtn.classList.add(
-        'd-none'
-      );
-
-    }
-
-  }
-
-
-  async function init() {
-
-    if (els.loadMoreBtn) {
-
-      els.loadMoreBtn.classList.add(
-        'd-none'
-      );
-
-    }
-
-
-    const {
-      stream,
-      page
-    } = getQueryParams();
-
-
-    if (!stream) {
-
-      showLoadError();
-
-
-      els.loadError.textContent =
-        'No stream specified. This page expects a "stream" URL parameter.';
-
-
-      return;
-
-    }
-
-
-    streamId = stream;
-
-
-    const manifestUrl =
-      MANIFEST_PATH_TEMPLATE.replace(
-        '{stream}',
-        stream
-      );
-
-
-    try {
-
-      const response =
-        await fetch(manifestUrl);
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          'Manifest request failed: ' +
-          response.status
-        );
-
-      }
-
-
-      const manifest =
-        await response.json();
-
-
-      frames =
-        buildFrameList(
-          manifest.images || []
-        );
-
-
-      if (!frames.length) {
-
-        showLoadError();
-
-
-        els.loadError.textContent =
-          'This gallery has no images matching the expected filename pattern.';
-
-
-        return;
-
-      }
-
-
-      visibleFrameCount =
-        Math.min(
-          IMAGES_PER_LOAD,
-          frames.length
-        );
-
-
-      const service =
-        manifest.service || '';
-
-
-      const bannerService =
-        service.replace(
-          /\s+/g,
-          '-'
-        );
-
-
-      if (els.hiddenServiceName) {
-
-        els.hiddenServiceName.textContent =
-          service;
-
-      }
-
-
-      if (els.lightImageBanner) {
-
-        els.lightImageBanner.src =
-          `../images/banners/light/${bannerService}_light.png`;
-
-      }
-
-
-      if (els.darkImageBanner) {
-
-        els.darkImageBanner.src =
-          `../images/banners/dark/${bannerService}.png`;
-
-      }
-
-
-      const formattedDate =
-        formatDate(
-          manifest.date
-        );
-
-
-      sampleTitle =
-        `${service} (${formattedDate})`;
-
-
-      if (els.sampleTitle) {
-
-        els.sampleTitle.textContent =
-          sampleTitle;
-
-      }
-
-
-      document.title =
-        sampleTitle;
-
-
-      if (els.contributor) {
-
-        els.contributor.textContent =
-          manifest.recovered_by || '';
-
-      }
-
-
-      els.loading.hidden = true;
-
-
-      els.gallery.setAttribute(
-        'aria-busy',
-        'false'
-      );
-
-
-      renderThumbnails();
-
-      updateLoadMoreButton();
-
-
-      /*
-       * The ?page= URL parameter is now
-       * interpreted as an actual teletext
-       * page number.
-       */
-      const requestedPage =
-        page !== null
-          ? parseInt(page, 10)
-          : null;
-
-
-      if (
-        requestedPage !== null &&
-        !Number.isNaN(requestedPage)
-      ) {
-
-        if (
-          !goToPage(requestedPage)
-        ) {
-
-          render(0);
-
+        // Call fallback functions
+        ensureImageFallbackElements();
+        clearSlowLoadTimer();
+        clearMainImageRetryTimer();
+        hideSlowLoadAlert();
+        hideImageFallback();
+        hideThumbnailGallery();
+
+        // Start 10-second load timer
+        slowLoadTimeoutId = setTimeout(() => {
+            showSlowLoadAlert(frame, false);
+            showImageFallback(frame);
+
+            if (els.spinner) {
+                els.spinner.hidden = true;
+            }
+        }, SLOW_LOAD_TIMEOUT_MS);
+
+        let mainImageRetried = false;
+
+        // Handlers for successful image load
+        els.image.onload = () => {
+            clearSlowLoadTimer();
+            clearMainImageRetryTimer();
+            hideSlowLoadAlert();
+            hideImageFallback();
+            showThumbnailGallery();
+
+            if (els.spinner) {
+                els.spinner.hidden = true;
+            }
+        };
+
+        // Handlers for failed image load
+        els.image.onerror = () => {
+            if (!mainImageRetried) {
+                mainImageRetried = true;
+
+                mainImageRetryTimer = setTimeout(() => {
+                    mainImageRetryTimer = null;
+                    els.image.src = frame.url;
+                }, RETRY_DELAY_MS);
+
+                return;
+            }
+
+            clearSlowLoadTimer();
+
+            if (els.spinner) {
+                els.spinner.hidden = true;
+            }
+
+            showSlowLoadAlert(frame, true);
+            showImageFallback(frame);
+            setStatus(`This image failed to load (page ${frame.displayNumber}).`);
+        };
+
+        // Request image, update alt value, and set Bootstrap caption
+        els.image.src = frame.url;
+        els.image.alt = `Page ${frame.displayNumber}.`;
+        els.image.dataset.bsCaption = `${sampleTitle} — Page ${frame.displayNumber}`;
+
+        // Create caption
+        if (els.caption) {
+            const captionParts = ["Page " + frame.displayNumber];
+
+            if (frame.occurrenceCount > 1) {
+                captionParts.push("capture " + frame.occurrenceIndex + " of " + frame.occurrenceCount);
+            }
+
+            // If the image begins with "record," push the version number to the image name
+            if (frame.kind === "record" && frame.subIndex) {
+                captionParts.push("v" + frame.subIndex);
+            }
+
+            captionParts.push("image " + (currentIndex + 1) + " of " + frames.length);
+            els.caption.textContent = captionParts.join(" — ");
         }
 
-      } else {
+        // Update page number
+        if (els.actualPageNumber) {
+            els.actualPageNumber.textContent = frame.displayNumber;
+        }
 
-        render(0);
+        // Update page number input and update active thumbnail
+        els.gotoInput.value = frame.pageNumber;
+        setStatus("Showing image " + (currentIndex + 1) + " of " + frames.length + ", page " + frame.displayNumber);
+        updateActiveThumbnail();
 
-      }
-
-    } catch (err) {
-
-      console.error(
-        'Teletext gallery load error:',
-        err
-      );
-
-
-      showLoadError();
-
+        // Update the URL with the new parameters
+        const params = new URLSearchParams(window.location.search);
+        params.set("stream", streamId);
+        params.set("page", String(frame.pageNumber));
+        history.replaceState(null, "", "?" + params.toString());
     }
 
-  }
+    // !
+    function ensureFrameVisible(imageNumber) {
+        if (imageNumber > visibleFrameCount && imageNumber <= frames.length) {
+            const previousVisibleCount = visibleFrameCount;
+            visibleFrameCount = Math.min(Math.ceil(imageNumber / IMAGES_PER_LOAD) * IMAGES_PER_LOAD, frames.length);
+            appendThumbnailRange(previousVisibleCount, visibleFrameCount);
+            updateLoadMoreButton();
+            refreshNavControls();
+        }
+    }
 
+    // Find an image based on the actual teletext page number, not the overall image number
+    function goToPage(pageNumber) {
+        const index = frames.findIndex((frame) => frame.pageNumber === pageNumber);
 
-  /*
-   * Previous/next buttons still operate
-   * on the internal image sequence.
-   */
-  els.prevBtn.addEventListener(
-    'click',
-    () =>
-      render(
-        currentIndex - 1
-      )
-  );
+        if (index === -1) {
+            if (els.gotoError) {
+                els.gotoError.textContent = `No page ${pageNumber} was found in this gallery.`;
+            }
 
+            setStatus(`No page ${pageNumber} was found in this gallery.`);
+            return false;
+        }
 
-  els.nextBtn.addEventListener(
-    'click',
-    () =>
-      render(
-        currentIndex + 1
-      )
-  );
-
-
-  if (els.loadMoreBtn) {
-
-    els.loadMoreBtn.addEventListener(
-      'click',
-      loadMoreImages
-    );
-
-  }
-
-
-  /*
-   * Go To form now searches for an
-   * actual teletext page number.
-   */
-  els.gotoForm.addEventListener(
-    'submit',
-    (event) => {
-
-      event.preventDefault();
-
-
-      const value =
-        parseInt(
-          els.gotoInput.value,
-          10
-        );
-
-
-      if (Number.isNaN(value)) {
+        ensureFrameVisible(index + 1);
 
         if (els.gotoError) {
-
-          els.gotoError.textContent =
-            'Enter a valid page number.';
-
+            els.gotoError.textContent = "";
         }
 
-
-        return;
-
-      }
-
-
-      goToPage(value);
-
+        render(index);
+        return true;
     }
-  );
 
+    // Load more thumbnail images if a user requests it
+    function loadMoreImages() {
+        if (visibleFrameCount >= frames.length) {
+            return;
+        }
 
-  document.addEventListener(
-    'keydown',
-    (event) => {
+        const previousVisibleCount = visibleFrameCount;
+        visibleFrameCount = Math.min(visibleFrameCount + IMAGES_PER_LOAD, frames.length);
+        appendThumbnailRange(previousVisibleCount, visibleFrameCount);
+        showThumbnailGallery();
+        updateActiveThumbnail();
+        updateLoadMoreButton();
+        refreshNavControls();
+        setStatus(`Loaded ${visibleFrameCount} of ${frames.length} images.`);
 
-      if (
-        document.activeElement ===
-        els.gotoInput
-      ) {
-        return;
-      }
+        if (visibleFrameCount > previousVisibleCount) {
+            const buttons = els.thumbnailGallery ? els.thumbnailGallery.querySelectorAll(".tt-thumb-btn") : null;
 
-
-      if (
-        event.key === 'ArrowLeft' &&
-        !els.prevBtn.disabled
-      ) {
-
-        render(
-          currentIndex - 1
-        );
-
-      }
-
-
-      if (
-        event.key === 'ArrowRight' &&
-        !els.nextBtn.disabled
-      ) {
-
-        render(
-          currentIndex + 1
-        );
-
-      }
-
+            if (buttons && buttons[previousVisibleCount]) {
+                buttons[previousVisibleCount].scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+        }
     }
-  );
 
+    // If the image or thumbnails couldn't be loaded, show an error and hide the image gallery
+    function showLoadError() {
+        els.loading.hidden = true;
+        els.loadError.hidden = false;
+        els.gallery.setAttribute("aria-busy", "false");
 
-  init();
+        if (els.loadMoreBtn) {
+            els.loadMoreBtn.classList.add("d-none");
+        }
+    }
 
+    // ! Initialize the gallery
+    async function init() {
+        if (els.loadMoreBtn) {
+            els.loadMoreBtn.classList.add("d-none");
+        }
+
+        const { stream, page } = getQueryParams();
+
+        if (!stream) {
+            showLoadError();
+            els.loadError.textContent = 'No stream specified. This page expects a "stream" URL parameter.';
+            return;
+        }
+
+        // Construct JSON URL
+        streamId = stream;
+        const manifestUrl = MANIFEST_PATH_TEMPLATE.replace("{stream}", stream);
+
+        try {
+            const response = await fetch(manifestUrl);
+
+            if (!response.ok) {
+                throw new Error("Manifest request failed: " + response.status);
+            }
+
+            const manifest = await response.json();
+            frames = buildFrameList(manifest.images || []);
+
+            // Show error if the filename pattern is incorrect
+            if (!frames.length) {
+                showLoadError();
+                els.loadError.textContent = "This gallery has no images matching the expected filename pattern.";
+                return;
+            }
+
+            // Show first 30 thumbnails on successful load
+            visibleFrameCount = Math.min(IMAGES_PER_LOAD, frames.length);
+            const service = manifest.service || "";
+            const bannerService = service.replace(/\s+/g, "-");
+
+            if (els.hiddenServiceName) {
+                els.hiddenServiceName.textContent = service;
+            }
+
+            // Depending on the service, fetch and display the necessary image heading banner; this is for light mode. The bottom "if" is for dark mode
+            if (els.lightImageBanner) {
+                els.lightImageBanner.src = `../images/banners/light/${bannerService}_light.png`;
+            }
+
+            if (els.darkImageBanner) {
+                els.darkImageBanner.src = `../images/banners/dark/${bannerService}.png`;
+            }
+
+            // Format the date from the JSON and display it and the service name as the page title
+            const formattedDate = formatDate(manifest.date);
+            sampleTitle = `${service} (${formattedDate})`;
+
+            if (els.sampleTitle) {
+                els.sampleTitle.textContent = sampleTitle;
+            }
+
+            // Update the HTML "title" tag as needed
+            document.title = sampleTitle;
+
+            // Show name of contributor or nothing if a contributor name is not available
+            if (els.contributor) {
+                els.contributor.textContent = manifest.recovered_by || "";
+            }
+
+            // Hide loading state
+            els.loading.hidden = true;
+            els.gallery.setAttribute("aria-busy", "false");
+            renderThumbnails();
+            updateLoadMoreButton();
+
+            const requestedPage = page !== null ? parseInt(page, 10) : null;
+
+            // Determine the page to show
+            if (requestedPage !== null && !Number.isNaN(requestedPage)) {
+                if (!goToPage(requestedPage)) {
+                    render(0);
+                }
+            } else {
+                render(0);
+            }
+        } catch (err) {
+            console.error("Teletext gallery load error:", err);
+            showLoadError();
+        }
+    }
+
+    // Previous and Next buttons
+    els.prevBtn.addEventListener("click", () => render(currentIndex - 1));
+    els.nextBtn.addEventListener("click", () => render(currentIndex + 1));
+
+    if (els.loadMoreBtn) {
+        els.loadMoreBtn.addEventListener("click", loadMoreImages);
+    }
+
+    // If a user enter a specific page number in the input field, show that page (image)
+    els.gotoForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const value = parseInt(els.gotoInput.value, 10);
+
+        if (Number.isNaN(value)) {
+            if (els.gotoError) {
+                els.gotoError.textContent = "Enter a valid page number.";
+            }
+
+            return;
+        }
+
+        goToPage(value);
+    });
+
+    // Keyboard functions
+    document.addEventListener("keydown", (event) => {
+        if (document.activeElement === els.gotoInput) {
+            return;
+        }
+
+        if (event.key === "ArrowLeft" && !els.prevBtn.disabled) {
+            render(currentIndex - 1);
+        }
+
+        if (event.key === "ArrowRight" && !els.nextBtn.disabled) {
+            render(currentIndex + 1);
+        }
+    });
+
+    init();
 })();
