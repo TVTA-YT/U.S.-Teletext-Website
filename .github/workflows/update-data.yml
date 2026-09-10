@@ -32,7 +32,7 @@ jobs:
         run: php php/export-all.php
 
       - name: Export image data to JSON
-        run: php php/export-images.php
+        run: php php/export-images.php --force
 
       - name: Commit and push if changed
         run: |

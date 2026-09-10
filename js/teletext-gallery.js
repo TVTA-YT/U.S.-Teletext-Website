@@ -6,7 +6,7 @@
     '../json/teletext-image-data/gallery-{stream}.json';
 
   const RECORD_PATTERN =
-    /^Record-(\d+)-(\d+)-v([A-Za-z0-9]+)$/i;
+    /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
 
   const PAGE_PATTERN =
     /^Page-(\d+)-(\d+)$/i;
@@ -404,6 +404,7 @@
       RECORD_PATTERN.exec(nameNoExt);
 
     if (recordMatch) {
+      const duplicateIndex = recordMatch[3] !== undefined ? parseInt(recordMatch[3], 10) : 0;
 
       return {
 
@@ -413,10 +414,12 @@
           parseInt(recordMatch[2], 10),
 
         displayNumber:
-          `${recordMatch[2]}-v${recordMatch[3]}`,
+          `${recordMatch[2]}-v${recordMatch[4]}`,
 
         subIndex:
-          recordMatch[3],
+          recordMatch[4],
+
+          duplicateIndex,
 
         collapse: false
 
@@ -501,7 +504,8 @@
     frames.sort(
       (a, b) =>
         a.pageNumber - b.pageNumber ||
-        a.subIndex - b.subIndex
+        a.subIndex - b.subIndex ||
+        (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0)
     );
 
 
