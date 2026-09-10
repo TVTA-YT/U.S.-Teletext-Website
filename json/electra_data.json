@@ -108,6 +108,24 @@
         "IsNew": false
     },
     {
+        "ID": "69a93dc7-ac74-11f1-a705-0200170221f6",
+        "Year": "1989",
+        "Month": "January",
+        "Date": "1989-01-29",
+        "Program_Title": "Carbine Williams",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19890129_1/1988-01-29_TBS_Electra.zip",
+        "Thumbnail": "https://ia801908.us.archive.org/6/items/USTT_WTBS-19890129_1/Page-100-0000.png",
+        "Network": "TBS",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "Fry's Video Archives",
+        "IA_ID": "USTT_WTBS-19890129_1",
+        "IsNew": true
+    },
+    {
         "ID": "62d34959-9868-11f1-a705-0200170221f6",
         "Year": "1989",
         "Month": "August",
@@ -288,22 +306,22 @@
         "IsNew": false
     },
     {
-        "ID": "a0609d91-a36f-11f1-a705-0200170221f6",
+        "ID": "62004bcd-ac0c-11f1-a705-0200170221f6",
         "Year": "1990",
         "Month": "January",
         "Date": "1990-01-27",
         "Program_Title": "World Championship Wrestling",
         "Tape_Type": "VHS",
         "Tape_Speed": "EP",
-        "Download_Link": "",
-        "Thumbnail": "",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19900127_1/1990-01-27_TBS_Electra.zip",
+        "Thumbnail": "https://ia601402.us.archive.org/30/items/USTT_WTBS-19900127_1/Page-100-0000.png",
         "Network": "TBS",
         "Service_Name": "Electra",
         "Notes": "",
-        "Date_Added": "2026-08-29",
+        "Date_Added": "2026-09-09",
         "Recovered_By": "TVTA",
-        "IA_ID": null,
-        "IsNew": false
+        "IA_ID": "USTT_WTBS-19900127_1",
+        "IsNew": true
     },
     {
         "ID": "0acf9a6c-a36e-11f1-a705-0200170221f6",
@@ -394,6 +412,24 @@
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_WTBS-19920103_1",
         "IsNew": false
+    },
+    {
+        "ID": "73578310-ac07-11f1-a705-0200170221f6",
+        "Year": "1992",
+        "Month": "February",
+        "Date": "1992-02-12",
+        "Program_Title": "The Shadow Riders",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19920212_1/1992-02-12_TBS_Electra.zip",
+        "Thumbnail": "https://ia601907.us.archive.org/16/items/USTT_WTBS-19920212_1/Page-100-0000.png",
+        "Network": "TBS",
+        "Service_Name": "Electra",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "Fry's Video Archives",
+        "IA_ID": "USTT_WTBS-19920212_1",
+        "IsNew": true
     },
     {
         "ID": "9e63c548-a1e3-11f1-a705-0200170221f6",

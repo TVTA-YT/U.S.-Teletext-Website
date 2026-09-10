@@ -247,6 +247,44 @@
         "IsNew": false
     },
     {
+        "ID": "aa9b5471-ac75-11f1-a705-0200170221f6",
+        "Year": "1988",
+        "Month": "November",
+        "Date": "1988-11-04",
+        "Affiliate": "WCBS",
+        "Program_Title": "Cathy's Last Resort",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19881104_1/1988-11-04_WCBS_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia600603.us.archive.org/9/items/USTT_CBS-19881104_1/Record-000-001_v0.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "Fry's Video Archives",
+        "IA_ID": "USTT_CBS-19881104_1",
+        "IsNew": true
+    },
+    {
+        "ID": "263993ec-ac76-11f1-a705-0200170221f6",
+        "Year": "1988",
+        "Month": "November",
+        "Date": "1988-11-11",
+        "Affiliate": "WCBS",
+        "Program_Title": "Meet the Raisins!",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19881111_1/1988-11-11_WCBS_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia800804.us.archive.org/26/items/USTT_CBS-19881111_1/Record-000-001-v0.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "Fry's Video Archives",
+        "IA_ID": "USTT_CBS-19881111_1",
+        "IsNew": true
+    },
+    {
         "ID": "09fe64f8-a441-11f1-a705-0200170221f6",
         "Year": "1988",
         "Month": "November",
@@ -396,7 +434,7 @@
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19890427_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a0c73b21-a675-11f1-a705-0200170221f6",
@@ -415,7 +453,7 @@
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19890504_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a300c7fd-a675-11f1-a705-0200170221f6",
@@ -434,7 +472,7 @@
         "Date_Added": "2026-09-01",
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19890511_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a5852a09-a5aa-11f1-a705-0200170221f6",
@@ -454,6 +492,25 @@
         "Recovered_By": "TVTA",
         "IA_ID": "USTT_CBS-19890823_1",
         "IsNew": false
+    },
+    {
+        "ID": "c28beba4-ac08-11f1-a705-0200170221f6",
+        "Year": "1990",
+        "Month": "December",
+        "Date": "1990-12-10",
+        "Affiliate": "WCCO",
+        "Program_Title": "I Love Lucy Christmas",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_CBS-19901210_1/12-10-1990_WCCO_CBS_ExtraVision.zip",
+        "Thumbnail": "https://ia601907.us.archive.org/24/items/USTT_CBS-19901210_1/Record-000-000-v0.png",
+        "Network": "CBS",
+        "Service_Name": "CBS ExtraVision",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "Fry's Video Archives",
+        "IA_ID": "USTT_CBS-19901210_1",
+        "IsNew": true
     },
     {
         "ID": "451602e1-a44e-11f1-a705-0200170221f6",

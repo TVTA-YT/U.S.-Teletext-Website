@@ -170,13 +170,31 @@
         "Tape_Type": "VHS",
         "Tape_Speed": "EP",
         "Download_Link": "https://archive.org/download/USTT_WTBS-19960217_1/1996-02-17_TBS_SSS-Teletext.zip",
-        "Thumbnail": "https://ia600908.us.archive.org/31/items/USTT_WTBS-19960217_1/Page-200-0000.png",
+        "Thumbnail": "https://ia800908.us.archive.org/31/items/USTT_WTBS-19960217_1/Page-200-0000.png",
         "Network": "TBS",
         "Service_Name": "SSS Teletext",
         "Notes": "",
         "Date_Added": "2026-09-07",
         "Recovered_By": "BradDR",
         "IA_ID": "USTT_WTBS-19960217_1",
+        "IsNew": true
+    },
+    {
+        "ID": "e5b0770e-ac09-11f1-a705-0200170221f6",
+        "Year": "1997",
+        "Month": "March",
+        "Date": "1997-03-16",
+        "Program_Title": "3 Masters on Ice",
+        "Tape_Type": "VHS",
+        "Tape_Speed": "EP",
+        "Download_Link": "https://archive.org/download/USTT_WTBS-19970316_1/1997-03-16_TBS_SSS-Teletext.zip",
+        "Thumbnail": "https://ia600100.us.archive.org/2/items/USTT_WTBS-19970316_1/Page-200-0000.png",
+        "Network": "TBS",
+        "Service_Name": "SSS Teletext",
+        "Notes": "",
+        "Date_Added": "2026-09-09",
+        "Recovered_By": "BradDR",
+        "IA_ID": "USTT_WTBS-19970316_1",
         "IsNew": true
     }
 ]

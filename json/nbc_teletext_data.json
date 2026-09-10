@@ -16,7 +16,7 @@
         "Date_Added": "2026-09-01",
         "Recovered_By": "Evan P.",
         "IA_ID": "USTT_NBC-19831027_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "4b73bddd-a724-11f1-a705-0200170221f6",
@@ -54,7 +54,7 @@
         "Date_Added": "2026-09-01",
         "Recovered_By": "Evan P.",
         "IA_ID": "USTT_NBC-19831125_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "005b63fb-a1b0-11f1-a705-0200170221f6",
@@ -92,7 +92,7 @@
         "Date_Added": "2026-08-31",
         "Recovered_By": "Evan P.",
         "IA_ID": "USTT_NBC-19851115_1",
-        "IsNew": true
+        "IsNew": false
     },
     {
         "ID": "a64bd102-a534-11f1-a705-0200170221f6",
@@ -111,6 +111,6 @@
         "Date_Added": "2026-08-31",
         "Recovered_By": "Evan P.",
         "IA_ID": "USTT_NBC-19851118_1",
-        "IsNew": true
+        "IsNew": false
     }
 ]
