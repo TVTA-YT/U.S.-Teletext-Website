@@ -220,7 +220,10 @@
                     ><span class="sr-only">can</span> recover some pages from a partial set of teletext lines, the complete magazine will
                     likely not be recoverable.
                 </p>
-                <p>Below is a list of broadcast affiliates that altered their VBI, which affected the teletext stream.</p>
+                <p>
+                    Below is a list of broadcast affiliates that altered their VBI, which affected the teletext stream. Scroll the tables to
+                    view more affiliates (if more than 4 are listed).
+                </p>
                 <div class="row">
                     <div class="col-xl-6">
                         <h3 class="text-center">Partial Teletext</h3>
@@ -232,7 +235,7 @@
                                         <th scope="col">City/State</th>
                                         <th scope="col">Network</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Notes</th>
+                                        <th scope="col">Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -244,7 +247,7 @@
                                         <td>Omaha, NE</td>
                                         <td>CBS</td>
                                         <td>Partial</td>
-                                        <td>Based on recording from September 1987.</td>
+                                        <td>Recording from September 1987.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="whas-row">
                                         <td>
@@ -254,7 +257,7 @@
                                         <td>Louisville, KY</td>
                                         <td>CBS</td>
                                         <td>Partial</td>
-                                        <td>Based on multiple recordings 1987-1990.</td>
+                                        <td>Multiple recordings from 1987-1990.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wrc-row">
                                         <td>
@@ -264,7 +267,7 @@
                                         <td>Washington, D.C.</td>
                                         <td>NBC</td>
                                         <td>Partial</td>
-                                        <td>Based on recording from May 16, 1983.</td>
+                                        <td>Recording from 05/16/1983.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -272,15 +275,15 @@
                     </div>
                     <div class="col-xl-6">
                         <h3 class="text-center">Omitted Teletext</h3>
-                        <div class="table-responsive">
+                        <div class="table-responsive overflow-y-auto" id="omitted-teletext-table-container">
                             <table class="table table-danger table-bordered table-striped text-center align-middle">
-                                <thead class="table-light">
+                                <thead class="table-light sticky-top">
                                     <tr>
                                         <th scope="col" style="width: 15%">Affiliate</th>
                                         <th scope="col">City/State</th>
                                         <th scope="col">Network</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Notes</th>
+                                        <th scope="col">Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -292,7 +295,17 @@
                                         <td>Tuscon, AZ</td>
                                         <td>CBS</td>
                                         <td>Omitted</td>
-                                        <td>Based on 1984 recording.</td>
+                                        <td>Recording from around 1984.</td>
+                                    </tr>
+                                    <tr class="station-logo-row" id="koln-row">
+                                        <td>
+                                            <img src="../images/station-logos/KTSP.png" alt="KTSP" class="mw-100" id="ktsp-logo" />
+                                            <span class="station-name">KTSP</span>
+                                        </td>
+                                        <td>Phoenix, AZ</td>
+                                        <td>CBS</td>
+                                        <td>Omitted</td>
+                                        <td>Recording from around Dec 1991.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="koln-row">
                                         <td>
@@ -302,7 +315,7 @@
                                         <td>Lincoln &amp; Grand Island, NE</td>
                                         <td>CBS</td>
                                         <td>Omitted</td>
-                                        <td>Based on recording from 1989.</td>
+                                        <td>Recording from around 1989.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wdbj-row">
                                         <td>
@@ -312,7 +325,7 @@
                                         <td>Roanoke, VA</td>
                                         <td>CBS</td>
                                         <td>Omitted</td>
-                                        <td>Based on recording from Nov 28, 1991.</td>
+                                        <td>Recording from 11/28/1991.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wjbk-row">
                                         <td>
@@ -322,7 +335,7 @@
                                         <td>Detroit, MI</td>
                                         <td>CBS</td>
                                         <td>Omitted</td>
-                                        <td>Based on multiple late 1988 recordings.</td>
+                                        <td>Multiple late 1988 recordings.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wjw-row">
                                         <td>
@@ -332,7 +345,17 @@
                                         <td>Cleveland, OH</td>
                                         <td>CBS</td>
                                         <td>Omitted</td>
-                                        <td>Based on December 1987 recording.</td>
+                                        <td>Recording from December 1987.</td>
+                                    </tr>
+                                    <tr class="station-logo-row" id="wkyc-row">
+                                        <td>
+                                            <img src="../images/station-logos/WKYC.png" alt="WKYC" class="mw-100" id="wkyc-logo" />
+                                            <span class="station-name">WKYC</span>
+                                        </td>
+                                        <td>Cleveland, OH</td>
+                                        <td>NBC</td>
+                                        <td class="fw-bold">Omitted*</td>
+                                        <td>Recording from 05/16/1983.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wkyt-row">
                                         <td>
@@ -342,7 +365,7 @@
                                         <td>Lexington, KY</td>
                                         <td>CBS</td>
                                         <td>Partial</td>
-                                        <td>Based on recording from Aug 27, 1988.</td>
+                                        <td>Recording from 08/27/1988.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wmar-row">
                                         <td>
@@ -350,9 +373,9 @@
                                             <span class="station-name">WMAR</span>
                                         </td>
                                         <td>Baltimore, MD</td>
-                                        <td>CBS</td>
+                                        <td>NBC</td>
                                         <td>Omitted</td>
-                                        <td>Based on recording from May 16, 1983.</td>
+                                        <td>Recording from 05/16/1983.</td>
                                     </tr>
                                     <tr class="station-logo-row" id="wtcn-row">
                                         <td>
@@ -360,13 +383,17 @@
                                             <span class="station-name">WTCN</span>
                                         </td>
                                         <td>Palm Beach, FL</td>
-                                        <td>CBS</td>
+                                        <td>NBC</td>
                                         <td>Omitted</td>
-                                        <td>Based on recording from August 1983.</td>
+                                        <td>Recording from Aug 1983.</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <p>
+                            *Recordings from WKYC from after October 1983 do include the full teletext stream in the VBI. It is currently
+                            unknown when WKYC started passing through NBC Teletext in their VBI.
+                        </p>
                     </div>
                 </div>
                 <!-- Floating theme button, bottom-right -->

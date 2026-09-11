@@ -40,8 +40,16 @@
         width: 50%;
     }
 
+    #ktsp-logo {
+        width: 50%;
+    }
+
     #whas-logo {
         width: 50%;
+    }
+
+    #wkyc-logo {
+        width: 75%;
     }
 
     #wkyt-logo {
@@ -86,6 +94,10 @@
 
     .station-logo-row {
         height: 87.45px !important;
+    }
+
+    #omitted-teletext-table-container {
+        max-height: 389px;
     }
 }
 
@@ -131,8 +143,16 @@
         width: 50%;
     }
 
+    #ktsp-logo {
+        width: 50%;
+    }
+
     #whas-logo {
         width: 50%;
+    }
+
+    #wkyc-logo {
+        width: 75%;
     }
 
     #wkyt-logo {
@@ -144,7 +164,7 @@
     }
 
     #kold-logo {
-        width: 50%;
+        width: 57%;
     }
 
     #koln-logo {
@@ -177,6 +197,10 @@
 
     .station-logo-row {
         height: 87.45px !important;
+    }
+
+    #omitted-teletext-table-container {
+        max-height: 394px;
     }
 }
 
@@ -222,8 +246,16 @@
         width: 35%;
     }
 
+    #ktsp-logo {
+        width: 35%;
+    }
+
     #whas-logo {
         width: 40%;
+    }
+
+    #wkyc-logo {
+        width: 55%;
     }
 
     #wkyt-logo {
@@ -269,6 +301,10 @@
     .station-logo-row {
         height: 92.2167px !important;
     }
+
+    #omitted-teletext-table-container {
+        max-height: 409px;
+    }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -313,8 +349,16 @@
         width: 40%;
     }
 
+    #ktsp-logo {
+        width: 40%;
+    }
+
     #whas-logo {
         width: 45%;
+    }
+
+    #wkyc-logo {
+        width: 65%;
     }
 
     #wkyt-logo {
@@ -360,6 +404,10 @@
     .station-logo-row {
         height: 92.2167px !important;
     }
+
+    #omitted-teletext-table-container {
+        max-height: 409px;
+    }
 }
 
 @media only screen and (max-width: 767px) {
@@ -404,8 +452,16 @@
         width: 50%;
     }
 
+    #ktsp-logo {
+        width: 45%;
+    }
+
     #whas-logo {
         width: 55%;
+    }
+
+    #wkyc-logo {
+        width: 75%;
     }
 
     #wkyt-logo {
@@ -450,5 +506,9 @@
 
     .station-logo-row {
         height: 92.2167px !important;
+    }
+
+    #omitted-teletext-table-container {
+        max-height: 409px;
     }
 }
