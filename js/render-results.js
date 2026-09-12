@@ -19,8 +19,11 @@ const TAPE_VALUE_MAPS = {
     },
 };
 
+// Base URL
+const WORKER_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev";
+
 // API call
-const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev/api";
+const API_BASE = `${WORKER_BASE}/api`;
 
 async function renderResults(config) {
     const {
@@ -268,7 +271,7 @@ function appendRow(tbody, row, columns) {
     const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2);
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
-    const nonTeletextDirectory = `../html/other-text-services/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
+    const nonTeletextDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon

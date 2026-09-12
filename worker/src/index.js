@@ -747,6 +747,20 @@ export default {
             return handleApi(request, env);
         }
 
-        return env.ASSETS.fetch(request);
+        // Getting TEXT service HTML files from R2
+        const key = url.pathname.replace(/^\/+/, "");
+
+        const object = await env.TEXT_ARCHIVE.get(key);
+        if (!object) return new Response("Not found", { status: 404 });
+
+        const headers = new Headers();
+        object.writeHttpMetadata(headers);
+        headers.set("etag", object.httpEtag);
+
+        if (!headers.has("content-type")) {
+            headers.set("content-type", "text/html; charset=utf-8");
+        }
+
+        return new Response(object.body, { headers });
     }
 };

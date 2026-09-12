@@ -7,10 +7,6 @@
     "observability": {
         "enabled": true
     },
-    "assets": {
-        "directory": "./public",
-        "binding": "ASSETS"
-    },
     "d1_databases": [
         {
             "binding": "DB",
@@ -22,6 +18,10 @@
         {
             "binding": "GALLERY",
             "bucket_name": "teletext-gallery"
+        },
+        {
+            "binding": "TEXT_ARCHIVE",
+            "bucket_name": "text-service-html"
         }
     ]
 }
