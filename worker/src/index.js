@@ -155,6 +155,25 @@ async function exportTable(db, config) {
 }
 
 
+/* ELECTRA/KEYFAX TRIVIA */
+
+// Function for Electra/Keyfax trivia pages
+async function getElectraKeyfaxTrivia(db) {
+    const { results } = await db.prepare(`
+        SELECT
+            IA_ID AS iaID,
+            Year AS year,
+            Date_Caption AS caption,
+            Contributor AS contributor,
+            Image_URL AS imageURL
+        FROM Electra_Keyfax_Trivia
+        ORDER BY Date_Caption ASC
+        `).all();
+
+    return results;
+}
+
+
 /* DATASET COUNTS */
 
 // Calculate statistics for every dataset
@@ -212,7 +231,13 @@ async function getAllCounts(db) {
 
 // Find recently added records
 async function getRecentFromDataset(db, config) {
-    const columns = config.columns.map(column => `t.${column}`).join(", ");
+
+    // The homepage widget only needs Date, Date_Added, and (when present) IA_ID
+    // Text service tables do not have an IA ID, so it's only added when "config.columns" actually lists it
+    const selectColumns = ["Date", "Date_Added"];
+    if (config.columns.includes("IA_ID")) selectColumns.push("IA_ID");
+
+    const columns = selectColumns.map(column => `t.${column}`).join(", ");
 
     const sql = `
         SELECT ${columns}
@@ -591,6 +616,22 @@ async function handleApi(request, env) {
     }
 
     /*
+    * API CALL: /api/electra-keyfax-trivia
+    * This is called on the "Electra Trivia Pages" page.
+    * This fetches all trivia pages found from submitted Electra samples.
+    * Note that while Keyfax is listed, there are no trivia pages from Keyfax currently.
+    */
+    if (url.pathname === "/api/electra-keyfax-trivia") {
+        try {
+            const triviaPages = await getElectraKeyfaxTrivia(env.DB);
+            return jsonResponse(triviaPages);
+        } catch (error) {
+            console.error("D1 Electra/Keyfax query failed:", error);
+            return errorResponse(`Electra/Keyfax query failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
      * API CALL: /api/counts
      * This is called on the "Other Text Services" and "Services" pages.
      * This fetches the total number of available samples from each database table.
@@ -611,7 +652,6 @@ async function handleApi(request, env) {
     * This is called on the homepage.
     * This fetches the ten most recent additions across all the database tables.
     */
-    // Recent additions: /api/recent-additions
     if (url.pathname === "/api/recent-additions") {
         try {
             const recent = await getRecentAdditions(env.DB);
@@ -707,6 +747,6 @@ export default {
             return handleApi(request, env);
         }
 
-        return new Response("Not Found", { status: 404 });
+        return env.ASSETS.fetch(request);
     }
 };
