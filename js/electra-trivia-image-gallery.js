@@ -5,17 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCaption = document.getElementById('imageModalCaption');
     const modalContributor = document.getElementById('imageModalContributor');
 
+    const TRIVIA_API_URL = 'https://us-teletext-website.us-teletext-archive.workers.dev/api/electra-keyfax-trivia';
+
     // Delay requests by 500 ms
     const REQUEST_DELAY_MS = 500;
 
-    fetch('../json/electra-trivia.json')
-        .then(res => {
-            if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-            return res.json();
+    fetch(TRIVIA_API_URL)
+        .then(response => {
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+            return response.json();
         })
         .then(renderGallery)
-        .catch(err => {
-            console.error('Failed to load gallery data:', err);
+        .catch(error => {
+            console.error('Failed to load gallery data:', error);
             container.innerHTML = '<p class="text-center text-danger">Unable to load images. There may be an issue somewhere.</p>';
         });
 
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { once: true });
         }
 
-        // Watch all images on the page
+        // Watch all images on the page as they approach the viewport
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
 
