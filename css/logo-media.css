@@ -1,6 +1,6 @@
 @media only screen and (min-width: 1400px) {
     /* LOGOS */
-    .abc-logo {
+    .abc-plus-logo {
         width: 25% !important;
     }
 
@@ -103,7 +103,7 @@
 
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
     /* LOGOS */
-    .abc-logo {
+    .abc-plus-logo {
         width: 25% !important;
     }
 
@@ -206,7 +206,7 @@
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     /* LOGOS */
-    .abc-logo {
+    .abc-plus-logo {
         width: 35% !important;
     }
 
@@ -309,7 +309,7 @@
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     /* LOGOS */
-    .abc-logo {
+    .abc-plus-logo {
         width: 25% !important;
     }
 
@@ -412,7 +412,7 @@
 
 @media only screen and (max-width: 767px) {
     /* LOGOS */
-    .abc-logo {
+    .abc-plus-logo {
         width: 25% !important;
     }
 
