@@ -1,63 +1,135 @@
-// Fetch the total count from all JSON files and display them in their own "span" elements
+// Fetch total and available-sample counts from the API
+// and display them in their respective elements.
 async function renderTotalRecordCount() {
     const teletextCountEl = document.getElementById("total-record-count");
     const nonTeletextCountEl = document.getElementById("total-record-count-non-teletext");
     const teletextSampleCountEl = document.getElementById("available-sample-count");
     const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
+
     const datavizionCountEl = document.getElementById("datavizion-count");
     const electraCountEl = document.getElementById("electra-count");
     const extravisionCountEl = document.getElementById("extravision-count");
     const keyfaxCountEl = document.getElementById("keyfax-count");
     const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
     const sssTeletextCountEl = document.getElementById("sss-teletext-count");
+
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
     const iptvAgidsCountEl = document.getElementById("iptv-agids-count");
-    if (!teletextCountEl && !teletextSampleCountEl && !nonTeletextCountEl && !nonTeletextSampleCountEl) return;
 
-    const jsonFiles = [
-        '../json/datavizion_data.json',
-        '../json/electra_data.json',
-        '../json/extravision_data.json',
-        '../json/keyfax_data.json',
-        '../json/nbc_teletext_data.json',
-        '../json/sss_teletext_data.json',
-        '../json/abc_plus_data.json',
-        '../json/ket_agtext_data.json',
-        '../json/wisconsin_infotext_data.json',
-        '../json/iptv_agids_data.json',
+    // Don't make an API request if none of the count elements exist.
+    const countElements = [
+        teletextCountEl,
+        nonTeletextCountEl,
+        teletextSampleCountEl,
+        nonTeletextSampleCountEl,
+        datavizionCountEl,
+        electraCountEl,
+        extravisionCountEl,
+        keyfaxCountEl,
+        nbcTeletextCountEl,
+        sssTeletextCountEl,
+        abcPlusCountEl,
+        ketAgtextCountEl,
+        wisconsinInfotextCountEl,
+        iptvAgidsCountEl
     ];
 
+    if (!countElements.some(Boolean)) return;
+
+    const API_URL = "https://us-teletext-website.us-teletext-archive.workers.dev/api/counts";
+
     try {
-        const responses = await Promise.all(
-            jsonFiles.map(path => fetch(path).then(r => {
-                if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-                return r.json();
-            }))
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const counts = await response.json();
+
+        /*
+         * Overall Teletext counts
+         *
+         * Expected API structure:
+         *
+         * counts.teletext.total
+         * counts.teletext.availableSamples
+         */
+        const teletextTotal = Number(
+            counts.teletext?.total ?? 0
         );
 
-        // Array positions
-        const teletextResponses = responses.slice(0, 6);
-        const nonTeletextResponses = responses.slice(6, 10);
+        const teletextAvailableSamples = Number(
+            counts.teletext?.availableSamples ?? 0
+        );
 
-        const teletextTotal = teletextResponses.reduce((sum, rows) => sum + rows.length, 0)
-        const teletextAvailableSamples = teletextResponses.reduce((sum, rows) => sum + rows.filter(row => row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
+        /*
+         * Overall non-Teletext counts
+         */
+        const nonTeletextTotal = Number(
+            counts.nonTeletext?.total ?? 0
+        );
 
-        const nonTeletextTotal = nonTeletextResponses.reduce((sum, rows) => sum + rows.length, 0);
-        const nonTeletextAvailableSamples = nonTeletextResponses.reduce((sum, rows) => sum + rows.filter(row => (row.HTML_Link != null && String(row.HTML_Link).trim() != '') || (row.TEXT1 != null && String(row.TEXT1).trim() != '')).length, 0);
+        const nonTeletextAvailableSamples = Number(
+            counts.nonTeletext?.availableSamples ?? 0
+        );
 
-        const datavizionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'DaTaVizion' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const electraSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Electra' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const extravisionSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'CBS ExtraVision' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const keyfaxSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'Keyfax' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const nbcTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'NBC Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const sssTeletextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'SSS Teletext' && row.Download_Link != null && String(row.Download_Link).trim() !== '').length, 0);
-        const abcPlusSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'ABC-PLUS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
-        const ketAgtextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'AGTEXT' && row.HTML_Link != null && String(row.HTML_Link).trim() !== '').length, 0);
-        const wisconsinInfotextSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'WISINFOTEXT' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
-        const iptvAgidsSamples = responses.reduce((sum, rows) => sum + rows.filter(row => row.Service_Name === 'IPTV-AGIDS' && row.TEXT1 != null && String(row.TEXT1).trim() !== '').length, 0);
+        /*
+         * Individual dataset counts
+         *
+         * Expected API structure:
+         *
+         * counts.datasets.datavizion.total
+         * counts.datasets.datavizion.availableSamples
+         */
+        const datasetCounts = counts.datasets ?? {};
 
+        const datavizionSamples = Number(
+            datasetCounts.datavizion?.availableSamples ?? 0
+        );
+
+        const electraSamples = Number(
+            datasetCounts.electra?.availableSamples ?? 0
+        );
+
+        const extravisionSamples = Number(
+            datasetCounts.extravision?.availableSamples ?? 0
+        );
+
+        const keyfaxSamples = Number(
+            datasetCounts.keyfax?.availableSamples ?? 0
+        );
+
+        const nbcTeletextSamples = Number(
+            datasetCounts.nbcTeletext?.availableSamples ?? 0
+        );
+
+        const sssTeletextSamples = Number(
+            datasetCounts.sssTeletext?.availableSamples ?? 0
+        );
+
+        const abcPlusSamples = Number(
+            datasetCounts.abcPlus?.availableSamples ?? 0
+        );
+
+        const ketAgtextSamples = Number(
+            datasetCounts.ketAgtext?.availableSamples ?? 0
+        );
+
+        const wisconsinInfotextSamples = Number(
+            datasetCounts.wisconsinInfotext?.availableSamples ?? 0
+        );
+
+        const iptvAgidsSamples = Number(
+            datasetCounts.iptvAgids?.availableSamples ?? 0
+        );
+
+
+        /* --------------------------------------------------
+           Display overall counts
+        -------------------------------------------------- */
 
         if (teletextCountEl) {
             teletextCountEl.textContent = teletextTotal.toLocaleString();
@@ -74,6 +146,11 @@ async function renderTotalRecordCount() {
         if (nonTeletextSampleCountEl) {
             nonTeletextSampleCountEl.textContent = nonTeletextAvailableSamples.toLocaleString();
         }
+
+
+        /* --------------------------------------------------
+           Display individual dataset sample counts
+        -------------------------------------------------- */
 
         if (datavizionCountEl) {
             datavizionCountEl.textContent = datavizionSamples.toLocaleString();
@@ -95,7 +172,6 @@ async function renderTotalRecordCount() {
             nbcTeletextCountEl.textContent = nbcTeletextSamples.toLocaleString();
         }
 
-
         if (sssTeletextCountEl) {
             sssTeletextCountEl.textContent = sssTeletextSamples.toLocaleString();
         }
@@ -116,24 +192,16 @@ async function renderTotalRecordCount() {
             iptvAgidsCountEl.textContent = iptvAgidsSamples.toLocaleString();
         }
 
-
     } catch (error) {
-        if (teletextCountEl) teletextCountEl.textContent = '-';
-        if (teletextSampleCountEl) teletextSampleCountEl.textContent = '-';
-        if (nonTeletextCountEl) nonTeletextCountEl.textContent = '-';
-        if (nonTeletextSampleCountEl) nonTeletextSampleCountEl.textContent = '-';
-        if (datavizionCountEl) datavizionCountEl.textContent = '-';
-        if (electraCountEl) electraCountEl.textContent = '-';
-        if (extravisionCountEl) extravisionCountEl.textContent = '-';
-        if (keyfaxCountEl) keyfaxCountEl.textContent = '-';
-        if (nbcTeletextCountEl) nbcTeletextCountEl.textContent = '-';
-        if (sssTeletextCountEl) sssTeletextCountEl.textContent = '-';
-        if (ketAgtextCountEl) ketAgtextCountEl.textContent = '-';
-        if (abcPlusCountEl) abcPlusCountEl.textContent = '-';
-        if (wisconsinInfotextCountEl) wisconsinInfotextCountEl.textContent = '-';
-        if (iptvAgidsCountEl) iptvAgidsCountEl.textContent = '-';
-        console.error('Could not load total record/sample count;', error);
+        // Display "-" if the API cannot be reached.
+        countElements.forEach((element) => {
+            if (element) {
+                element.textContent = "-";
+            }
+        });
+
+        console.error("Could not load total record/sample count:", error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', renderTotalRecordCount)
+document.addEventListener("DOMContentLoaded", renderTotalRecordCount);

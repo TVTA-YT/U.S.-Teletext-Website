@@ -1,0 +1,23 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "account_id": "d995bd56c0b97564ac35e9a7d87dd7de",
+    "name": "us-teletext-website",
+    "main": "worker/src/index.js",
+    "compatibility_date": "2026-09-11",
+    "observability": {
+        "enabled": true
+    },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "teletext",
+            "database_id": "b2359f88-2698-4738-9748-a4f7830d3d48"
+        }
+    ],
+    "r2_buckets": [
+        {
+            "binding": "GALLERY",
+            "bucket_name": "teletext-gallery"
+        }
+    ]
+}

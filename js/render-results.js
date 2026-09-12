@@ -19,9 +19,12 @@ const TAPE_VALUE_MAPS = {
     },
 };
 
+// API call
+const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev/api";
+
 async function renderResults(config) {
     const {
-        jsonPath,
+        dataset,
         filterParam,
         filterField,
         groupByField = null,
@@ -32,6 +35,13 @@ async function renderResults(config) {
         sortOptions = null,
         columns
     } = config;
+
+    if (!dataset) {
+        console.error('renderResults() called without a "dataset" value');
+        return;
+    }
+
+    const resolvedPath = `${API_BASE}/${dataset}`;
 
     const heading = document.getElementById('year-heading');
     const countEl = document.getElementById('result-count');
@@ -44,11 +54,20 @@ async function renderResults(config) {
 
     let allRows;
     try {
-        const response = await fetch(jsonPath);
+        const response = await fetch(resolvedPath);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         allRows = await response.json();
+
+        if (!Array.isArray(allRows)) {
+            throw new Error('API returned an invalid dataset');
+        }
+
     } catch (err) {
-        container.innerHTML = `<p>Could not load results (${escapeHtml(err.message)}).</p>`;
+        if (container) {
+            container.innerHTML = `<p>Could not load results (${escapeHtml(err.message)}).</p>`;
+        }
+
+        console.error(`Could not load dataset "${dataset}"`, err)
         return;
     }
 
@@ -81,10 +100,7 @@ async function renderResults(config) {
 
     // Create the heading for each page
     if (heading) {
-        const visibleParts = [stationLabel, serviceLabel].filter(Boolean).join(' ');
-        const headingText = showAllRows
-            ? (visibleParts ? `All Records` : 'All Records')
-            : (visibleParts ? `${filterValue}` : filterValue);
+        const headingText = showAllRows ? 'All Records' : filterValue;
 
         // The next few blocks below are for screen readers
         const spokenText = showAllRows
@@ -244,11 +260,15 @@ function hasRealValue(v) {
 // ! Create the table rows
 function appendRow(tbody, row, columns) {
     const tr = document.createElement('tr');
-    if (row.IsNew) tr.classList.add('row-new');
+
+    const isNewRecord = row.isNew === true;
+    if (isNewRecord) tr.classList.add('row-new');
+
+    // if (row.isNew) (now - Number(firstSeen)) <= NEW_WINDOW_SECONDS;
     const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2);
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
-    const nonTeletextDirectory = `../html/other-text-services/${row.Service_Name}/${row.Year}/`;
+    const nonTeletextDirectory = `../html/other-text-services/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
@@ -327,11 +347,9 @@ function appendRow(tbody, row, columns) {
         // Link the viewable sample, directing to the "Teletext Sample Image Gallery" page, inside the "Date" column
         if (c.key === 'Date') {
             const stream = row.IA_ID;
-            console.log('IA_ID:', row.IA_ID);
 
             if (hasRealValue(stream)) {
                 const galleryPath = `teletext-sample-image-gallery.html?stream=${encodeURIComponent(stream)}`;
-                console.log('Gallery URL:', galleryPath);
 
                 const visible = `<a href="${escapeHtml(galleryPath)}" class="text-black fw-bold">${escapeHtml(row[c.key])}</a>`;
 

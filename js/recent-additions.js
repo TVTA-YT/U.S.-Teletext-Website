@@ -2,18 +2,8 @@ async function renderRecentAdditions() {
     const container = document.getElementById("recent-additions");
     if (!container) return;
 
-    const jsonFiles = [
-        "json/datavizion_data.json",
-        "json/extravision_data.json",
-        "json/electra_data.json",
-        "json/keyfax_data.json",
-        "json/nbc_teletext_data.json",
-        "json/sss_teletext_data.json",
-        "json/abc_plus_data.json",
-        "json/ket_agtext_data.json",
-        "json/iptv_agids_data.json",
-        "json/wisconsin_infotext_data.json",
-    ];
+    const API_URL =
+        "https://us-teletext-website.us-teletext-archive.workers.dev/api/recent-additions";
 
     const serviceImages = {
         "ABC-PLUS": "images/ABC_white.png",
@@ -27,11 +17,11 @@ async function renderRecentAdditions() {
         "PENNTEXT": "images/PPTN_white.png",
         "SSS Teletext": "images/SSS_white.png",
         "WISINFOTEXT": "images/WHA_white.png",
-    }
+    };
 
     // Replace service name string with the image for each service (or network/station logo for text services)
     function getServiceImage(serviceName) {
-        return serviceImages[serviceName];
+        return serviceImages[serviceName] || "";
     }
 
     // Convert service name to lowercase name that will be used for CSS. Remove space and add hyphen if necessary (e.g. "CBS ExtraVision" becomes "cbs-extravision")
@@ -39,81 +29,94 @@ async function renderRecentAdditions() {
         return String(serviceName ?? "").trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-zA-Z0-9_-]/g, "").replace(/-+/g, "-");
     }
 
-    try {
-        const responses = await Promise.all(
-            jsonFiles.map((path) =>
-                fetch(path)
-                    .then((r) => {
-                        if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-                        return r.json();
-                    })
-                    .catch((err) => {
-                        console.warn("Skipping recent additions source:", err.message);
-                        return [];
-                    }),
-            ),
+    function hasRealValue(value) {
+        if (value === null || value === undefined) return false;
+
+        const trimmed = String(value).trim();
+
+        return (
+            trimmed !== "" &&
+            trimmed.toLowerCase() !== "null" &&
+            trimmed.toLowerCase() !== "n/a"
         );
+    }
 
-        const allRows = responses.flat();
+    try {
+        const response = await fetch(API_URL);
 
-        // Only show records that have a "Date_Added" value (all do, but this is a fallback just in case I forget to add the date). Sort records by date
-        const withDates = allRows.filter((r) => r.Date_Added);
-        withDates.sort((a, b) => new Date(b.Date_Added) - new Date(a.Date_Added));
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
 
-        // Only show 10 records
-        const recent = withDates.slice(0, 10);
+        const recent = await response.json();
+
+        if (!Array.isArray(recent)) {
+            throw new Error("API response was not an array");
+        }
 
         if (recent.length === 0) {
             container.innerHTML = "<p>No recent additions found.</p>";
             return;
         }
 
-        // ! Create table rows
         const rowsHtml = recent
-            .map((r) => {
-                const serviceName = r.Service_Name ?? "";
+            .map((row) => {
+                const serviceName = hasRealValue(row.Service_Name)
+                    ? String(row.Service_Name).trim()
+                    : "";
+
                 const serviceImage = getServiceImage(serviceName);
                 const serviceClass = serviceNameToClass(serviceName);
 
+                // Link to the specific teletext sample when an IA_ID exists.
+                const sampleDate = hasRealValue(row.IA_ID)
+                    ? `<a href="html/teletext-sample-image-gallery.html?stream=${encodeURIComponent(row.IA_ID)}" class="text-white fw-bold">${escHtml(row.Date)}</a>`
+                    : escHtml(row.Date);
+
+                const logoHtml = serviceImage
+                    ? `<img src="${escHtml(serviceImage)}" alt="${escHtml(serviceName)}" class="mw-100 ${escHtml(serviceClass)}-logo" loading="lazy" />`
+                    : escHtml(serviceName);
+
                 return `
                 <tr>
-                    <td class="additions-table-logo-row">
-                        <img src="${escHtml(serviceImage)}" alt="${escHtml(serviceName)}" class="mw-100 ${escHtml(serviceClass)}-logo" loading="lazy" />
-                    </td>
-                    <td>${escHtml(r.Date)}</td>
-                    <td>${escHtml(r.Date_Added)}</td>
-                    <td>${escHtml(r.Recovered_By)}</td>
+                    <td class="additions-table-logo-row">${logoHtml}</td>
+                    <td>${sampleDate}</td>
+                    <td>${escHtml(row.Date_Added)}</td>
+                    <td>${escHtml(row.Recovered_By)}</td>
                 </tr>
-                `;
+            `;
             })
             .join("");
 
         container.innerHTML = `
-            <div class="table-responsive">
-                <table class="table table-bordered table-custom-blue table-striped align-middle text-center text-white">
-                    <thead>
-                        <tr class="align-middle">
-                            <th scope="col" style="width: 25%">Service</th>
-                            <th scope="col">Sample Date</th>
-                            <th scope="col">Date Added</th>
-                            <th scope="col">Contributor</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                </table>
-            </div>
-            `;
-    } catch (err) {
-        container.innerHTML = `<p>Could not load recent additions.</p>`;
-        console.error("Could not load recent additions:", err);
-    }
-}
+        <div class="table-responsive">
+            <table class="table table-bordered table-custom-blue table-striped align-middle text-center text-white">
+                <thead>
+                    <tr class="align-middle">
+                        <th scope="col" style="width: 25%">Service</th>
+                        <th scope="col">Sample Date</th>
+                        <th scope="col">Date Added</th>
+                        <th scope="col">Contributor</th>
+                    </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+        </div>
+    `;
+    } catch (error) {
+        container.innerHTML = "<p>Could not load recent additions.</p>";
 
-function escHtml(str) {
-    if (str === null || str === undefined) return "";
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
+        console.error("Could not load recent additions:", error);
+    }
+
+    function escHtml(value) {
+        if (value === null || value === undefined) return "";
+
+        const div = document.createElement("div");
+        div.textContent = String(value);
+
+        return div.innerHTML;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", renderRecentAdditions);

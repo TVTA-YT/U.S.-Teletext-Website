@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    const MANIFEST_PATH_TEMPLATE = "../json/teletext-image-data/gallery-{stream}.json";
+    const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev/api";
     const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
     const PAGE_PATTERN = /^Page-(\d+)-(\d+)$/i;
 
@@ -105,7 +105,6 @@
     let visibleFrameCount = 0;
     let streamId = null;
     let sampleTitle = "";
-    // let slowLoadTimeoutId = null;
 
     // Display text or alerts depending on why the thumbnails or images fail to load
     function ensureImageFallbackElements() {
@@ -698,14 +697,17 @@
             return;
         }
 
-        // Construct JSON URL
+        // Construct API URL for the gallery manifest
         streamId = stream;
-        const manifestUrl = MANIFEST_PATH_TEMPLATE.replace("{stream}", stream);
+        const manifestUrl = `${API_BASE}/gallery/${encodeURIComponent(stream)}`;
 
         try {
             const response = await fetch(manifestUrl);
 
             if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error("This gallery hasn't been generated yet.");
+                }
                 throw new Error("Manifest request failed: " + response.status);
             }
 
@@ -772,6 +774,9 @@
         } catch (err) {
             console.error("Teletext gallery load error:", err);
             showLoadError();
+            if (els.loadError && err && err.message) {
+                els.loadError.textContent = err.message;
+            }
         }
     }
 

@@ -2,4 +2,15 @@ database.php
 test.html
 penntext.html
 penntext-results.html
+package-lock.json
+package.json
+depreciated/
+node_modules/
 TODO/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
