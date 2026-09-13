@@ -118,7 +118,7 @@ h1 .type-cursor {
   fill: var(--site-logo-color);
 }
 
-.site-logo:hover .cls-1 tspan {
+.site-logo:hover path {
   fill: var(--site-logo-hover-color);
 }
 
@@ -147,8 +147,8 @@ h1 .type-cursor {
 }
 
 .site-logo {
-  padding-left: 20px;
-  width: 80%;
+  padding: 10px 0 10px 20px;
+  width: 90%;
 }
 
 .navbar-toggler {
@@ -204,6 +204,11 @@ h1 .type-cursor {
   --bs-table-bg: #ffa5a5;
   --bs-table-striped-bg: #ffa5a5;
   background-color: #ffa5a5 !important;
+}
+
+.cell-wrap {
+  position: relative;
+  display: inline-block;
 }
 
 .end-footer {

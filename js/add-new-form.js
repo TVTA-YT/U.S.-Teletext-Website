@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'CBS': ['ExtraVision'],
         'KET': ['KETAGTEXT'],
         'NBC': ['NBCTeletext'],
-        'TBS': ['Electra', 'Keyfax']
+        'TBS': ['Electra', 'Keyfax', 'SSSTeletext']
     };
 
     const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC'];
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             serviceSelect.disabled = true;
             hint.hidden = true;
 
-            // For TBS: let someone choose between Electra and Keyfax. There is no default option since TBS used both services.
+            // For TBS: let someone choose between Electra, Keyfax, or SSS Teletext. There is no default option since TBS used both services.
         } else if (validServices.length > 1) {
             serviceSelect.value = validServices.includes(currentValue) ? currentValue : '';
             serviceSelect.disabled = false;

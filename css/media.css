@@ -29,15 +29,15 @@
 
 @media only screen and (max-width: 1516px) {
     .navbar-nav {
-        margin-left: 0%;
-        font-size: 20px;
+        margin-left: 8%;
+        font-size: 18px;
     }
 }
 
 @media only screen and (max-width: 1429px) {
     .navbar-nav {
-        margin-left: 2%;
-        font-size: 18px;
+        margin-left: 10%;
+        font-size: 16px;
     }
 }
 
@@ -50,57 +50,63 @@
 
 @media only screen and (min-width: 1235px) and (max-width: 1291px) {
     .navbar-nav {
-        margin-left: -2%;
-        font-size: 16px;
+        margin-left: 8%;
+        font-size: 14px;
     }
 }
 
 @media only screen and (max-width: 1234px) {
-    .navbar-nav {
-        margin-left: -6%;
-        font-size: 16px;
-    }
-}
-
-@media only screen and (max-width: 1184px) {
-    .navbar-nav {
-        margin-left: -4%;
-        font-size: 14px;
-    }
-}
-
-@media only screen and (max-width: 1138px) {
-    .navbar-nav {
-        margin-left: -6%;
-        font-size: 14px;
-    }
-}
-
-@media only screen and (max-width: 1112px) {
     .navbar-nav {
         margin-left: 2%;
         font-size: 14px;
     }
 }
 
-@media only screen and (max-width: 1074px) {
+@media only screen and (max-width: 1184px) {
     .navbar-nav {
         margin-left: 0%;
-        font-size: 14px;
+        font-size: 13px;
+    }
+}
+
+@media only screen and (max-width: 1138px) {
+    .navbar-nav {
+        margin-left: -2%;
+        font-size: 13px;
+    }
+}
+
+@media only screen and (max-width: 1112px) {
+    .navbar-nav {
+        margin-left: 6%;
+        font-size: 13px;
+    }
+}
+
+@media only screen and (max-width: 1074px) {
+    .navbar-nav {
+        margin-left: 4%;
+        font-size: 13px;
     }
 }
 
 @media only screen and (max-width: 1047px) {
     .navbar-nav {
-        margin-left: -4%;
-        font-size: 14px;
+        margin-left: 6%;
+        font-size: 12px;
     }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1018px) {
     .navbar-nav {
-        margin-left: -2%;
-        font-size: 13px;
+        margin-left: 2%;
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .navbar-nav {
+        margin-left: 0% !important;
     }
 }
 
@@ -310,7 +316,7 @@
 /* * QUERY FOR MEDIUM DEVICES * */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     #site-intro span#site-title {
-        font-size: 2.0em !important;
+        font-size: 1.6em !important;
     }
 
     #site-logo-padding {
@@ -386,7 +392,7 @@
 /* * QUERY FOR EXTRA SMALL AND SMALL DEVICES * */
 @media only screen and (min-width: 500px) and (max-width: 767px) {
     #site-intro span#site-title {
-        font-size: 1.8em !important;
+        font-size: 1.2em !important;
     }
 
     #site-logo-padding {
@@ -454,7 +460,7 @@
 
 @media only screen and (min-width: 400px) and (max-width: 499px) {
     #site-intro span#site-title {
-        font-size: 1.4em !important;
+        font-size: 1.0em !important;
     }
 
     #site-logo-padding {
@@ -527,7 +533,7 @@
 
 @media only screen and (max-width: 399px) {
     #site-intro span#site-title {
-        font-size: 1.2em !important;
+        font-size: 0.8em !important;
     }
 
     #site-logo-padding {

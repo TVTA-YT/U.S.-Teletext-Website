@@ -131,14 +131,12 @@ h1 {
 }
 
 .site-logo {
-    fill: var(--site-logo-color)
+    fill: var(--site-logo-color);
 }
 
 .site-logo:hover {
-    .cls-1 {
-        tspan {
-            fill: var(--site-logo-hover-color);
-        }
+    path {
+        fill: var(--site-logo-hover-color);
     }
 }
 
@@ -181,8 +179,8 @@ h1 {
 }
 
 .site-logo {
-    padding-left: 20px;
-    width: 80%;
+    padding: 10px 0 10px 20px;
+    width: 90%;
 }
 
 .navbar-toggler {
@@ -240,6 +238,11 @@ h1 {
     --bs-table-bg: #ffa5a5;
     --bs-table-striped-bg: #ffa5a5;
     background-color: #ffa5a5 !important;
+}
+
+.cell-wrap {
+    position: relative;
+    display: inline-block;
 }
 
 .end-footer {

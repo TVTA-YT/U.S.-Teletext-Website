@@ -110,17 +110,12 @@ async function renderResults(config) {
             ? getSpokenText(serviceLabel, stationLabel, 'all records')
             : getSpokenText(serviceLabel, stationLabel, filterValue);
 
-        heading.removeAttribute('aria-label');
+        heading.removeAttribute('aria-label', spokenText);
         heading.innerHTML = '';
 
         const visualSpan = document.createElement('span');
         visualSpan.setAttribute('aria-hidden', 'true');
         heading.appendChild(visualSpan);
-
-        const srSpan = document.createElement('span');
-        srSpan.className = 'sr-only';
-        srSpan.textContent = spokenText;
-        heading.appendChild(srSpan);
 
         // Animate heading
         LetterReveal.type(visualSpan, headingText)
@@ -249,8 +244,8 @@ function renderTable(rows, columns, groupByField, container) {
 
 // visibleHtml: the raw HTML that should be seen but not spoken
 // spokenText: the plain text a screen reader should say instead
-function renderAccessibleCell(visibleHtml, spokenText) {
-    return `<span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span>`;
+function renderAccessibleCell(visibleHtml, spokenText, extraAttributes = '') {
+    return `<td${extraAttributes}><span class="cell-wrap"><span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span></span></td$>`;
 }
 
 // Prevent any null or undefined values from being treated as real data
@@ -279,11 +274,11 @@ function appendRow(tbody, row, columns) {
         if (c.renderHTML) {
             if (!row.HTML_Link) {
                 const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-                return `<td>${renderAccessibleCell(visible, `${c.label}: No HTML file available`)}</td>`;
+                return renderAccessibleCell(visible, `${c.label}: HTML file available`);
             }
             const htmlPath = nonTeletextDirectory + row.HTML_Link;
             const visible = `<a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
-            return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: HTML file available`);
         }
 
         // For ABC PLUS and Wisconsin Infotext, which use TEXT1 and TEXT2
@@ -292,33 +287,33 @@ function appendRow(tbody, row, columns) {
 
             if (!value) {
                 const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-                return `<td>${renderAccessibleCell(visible, `${c.label}: No HTML file available`)}</td>`;
+                return renderAccessibleCell(visible, `${c.label}: No HTML file available`);
             }
 
             const path = nonTeletextDirectory + value;
             const visible = `<a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
-            return `<td>${renderAccessibleCell(visible, `${c.label}: HTML file available`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: HTML file available`);
         }
 
         // Showing ZIP download link for all teletext services
         if (c.renderZip) {
             if (row.Download_Link) {
                 const visible = `<a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a>`;
-                return `<td>${renderAccessibleCell(visible, `${c.label}: Download link available`)}</td>`;
+                return renderAccessibleCell(visible, `${c.label}: Download link available`);
             }
             const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-            return `<td>${renderAccessibleCell(visible, `${c.label}: No download link available`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: No download link available`);
         }
 
         // Displaying the thumbnail for all teletext services
         if (c.renderThumbnail) {
             if (!row.Thumbnail) {
                 const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-                return `<td>${renderAccessibleCell(visible, `${c.label}: No thumbnail image available.`)}</td>`;
+                return renderAccessibleCell(visible, `${c.label}: No thumbnail image available.`);
             }
             const imagePath = row.Thumbnail;
             const visible = `<img src="${escapeHtml(imagePath)}" alt="" role="presentation" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">`;
-            return `<td class="thumbnail-column">${renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}`, ' class="thumbnail-column"');
         }
 
         // Screen reader guide
@@ -326,7 +321,7 @@ function appendRow(tbody, row, columns) {
             const map = TAPE_VALUE_MAPS[c.accessibleMap];
             const spoken = (map && map[row[c.key]]) || row[c.key];
             const visible = escapeHtml(row[c.key]);
-            return `<td>${renderAccessibleCell(visible, `${c.label}: ${spoken}.`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: ${spoken}.`);
         }
 
         /*
@@ -338,13 +333,14 @@ function appendRow(tbody, row, columns) {
             const title = renderProgramTitles(row[c.key]);
             const spokenTitle = getSpokenProgramTitle(row[c.key]);
             const visible = `${title} <i class="bi bi-info-circle-fill" aria-hidden="true"></i>`;
-            return `<td class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>">${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}. Archive note: ${row.Notes}`)}</td>`;
+            const tooltipAttributes = ` class="tape-notes" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<h4 class='tooltip-heading'>ARCHIVE NOTE</h4><p class='tooltip-body'>${notes}</p>"`
+            return renderAccessibleCell(visible, `${c.label}: ${spokenTitle}. Archive note: ${row.Notes}`, tooltipAttributes);
         }
 
         if (c.key === 'Program_Title') {
             const visible = renderProgramTitles(row[c.key]);
             const spokenTitle = getSpokenProgramTitle(row[c.key]);
-            return `<td>${renderAccessibleCell(visible, `${c.label}: ${spokenTitle}`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: ${spokenTitle}`);
         }
 
         // Link the viewable sample, directing to the "Teletext Sample Image Gallery" page, inside the "Date" column
@@ -353,17 +349,15 @@ function appendRow(tbody, row, columns) {
 
             if (hasRealValue(stream)) {
                 const galleryPath = `teletext-sample-image-gallery.html?stream=${encodeURIComponent(stream)}`;
-
                 const visible = `<a href="${escapeHtml(galleryPath)}" class="text-black fw-bold">${escapeHtml(row[c.key])}</a>`;
-
-                return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}. View teletext images.`)}</td>`;
+                return renderAccessibleCell(visible, `${c.label}: ${row[c.key]}. View teletext images.`);
             }
             const visible = escapeHtml(row[c.key]);
-            return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`)}</td>`;
+            return renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`);
         }
 
         const visible = escapeHtml(row[c.key]);
-        return `<td>${renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`)}</td>`;
+        return renderAccessibleCell(visible, `${c.label}: ${row[c.key]}`);
     }).join('');
 
     tbody.appendChild(tr);

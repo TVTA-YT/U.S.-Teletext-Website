@@ -232,11 +232,11 @@ async function getAllCounts(db) {
 // Find recently added records
 async function getRecentFromDataset(db, config) {
 
-    // The homepage widget only needs Date, Date_Added, and (when present) IA_ID
-    // Text service tables do not have an IA ID, so it's only added when "config.columns" actually lists it
-    const selectColumns = ["Date", "Date_Added"];
-    if (config.columns.includes("IA_ID")) selectColumns.push("IA_ID");
+    // The homepage table only needs values from the "Date", "Date_Added", "Recovered_By", and "Service_Name" columns
+    const selectColumns = ["Date", "Date_Added", "Recovered_By", "Service_Name"];
 
+    // This selects the IA ID only from tables that have it
+    if (config.columns.includes("IA_ID")) selectColumns.push("IA_ID");
     const columns = selectColumns.map(column => `t.${column}`).join(", ");
 
     const sql = `

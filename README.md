@@ -1,6 +1,9 @@
-# The U.S. Teletext Archive
+# The North American Teletext Archive
 
-![images/white-logo-2.png](images/logo-white-2.png)
+![images/white-logo-2.png](images/North-American-Teletext-Archive-Logo.png)
+
+## SITE UPDATE
+As of September 13, 2026, the site name has changed to the "North American Teletext Archive" to be more inclusive for possible future examples from other countries in North America.
 
 ## REPOSITORY UPDATE
 
@@ -8,7 +11,7 @@ As of September 12, 2026, I have migrated the site away from using a GitHub Acti
 
 ## Repository Information
 
-This repository contains code and files for a website that will host information about and pages for decoded U.S. teletext. This website is a work in progress. As more progress is made, this README will be updated.
+This repository contains code and files for a website that will host information about and pages for decoded North American teletext. This website is a work in progress. As more progress is made, this README will be updated.
 
 In this repository are the main HTML pages. Also included are the following directories:
 
@@ -20,30 +23,30 @@ In this repository are the main HTML pages. Also included are the following dire
 - `json` only contains one file that it used to store information used for the "Electra Trivia" page.
 
 ## Some Background
-For the last few years, European teletext has been able to be decoded thanks to software tools such as [VHS-Teletext](https://github.com/ali1234/vhs-teletext). However, due to the different broadcast standards used in both Europe and the U.S. (PAL vs NTSC), there had been no working method to decode North American teletext. Another issue was that the U.S. has two teletext standards: World System Teletext (WST, also used in Europe) and the North American Broadcast Teletext Specification (NABTS). Also, teletext was not as popular in the U.S. as it was in Europe.
+For the last few years, European teletext has been able to be decoded thanks to software tools such as [VHS-Teletext](https://github.com/ali1234/vhs-teletext). However, due to the different broadcast standards used in both Europe and the U.S. (PAL vs NTSC), there had been no working method to decode North American teletext. Another issue was that North American teletext services utilized two standards: World System Teletext (WST, also used in Europe) and the North American Broadcast Teletext Specification (NABTS). Also, teletext was not as popular in North America as it was in Europe.
 
-In August 2026, a milestone was reached: U.S. teletext could now be properly decoded thanks to the further development of [Decode-Orc](https://github.com/decode-orc/decode-orc). With this development, pages from U.S. teletext services such as will finally be seen for the first time since these pages were transmitted via the networks' VBI, possibly for the first time ever. Some of the teletext services available in the U.S. follow:
+In August 2026, a milestone was reached: North American teletext could now be properly decoded thanks to the further development of [Decode-Orc](https://github.com/decode-orc/decode-orc). With this development, pages from North American teletext services such as will finally be seen for the first time since these pages were transmitted via the networks' VBI, possibly for the first time ever. Some of the teletext services available in North America follow:
 
-- **DaTaVizion** **[WST]**
+- **DaTaVizion** **[WST, U.S.]**
     - Networks: KCIU-TV (San Jose, CA) | Discovery Channel
     - Appx. mid-1980s - Appx. 1989
-- **Electra** **[WST]**
+- **Electra** **[WST, U.S.]**
     - Networks: (TBS | Various local stations)
     - Appx. 1982 - June 11, 1993
     - *The national version of Electra launched on January 1, 1985.*
-- **ExtraVision** **[NABTS]**
+- **ExtraVision** **[NABTS, U.S.]**
     - Network: CBS
     - April 4, 1983 - Appx. 1992
-- **Keyfax** **[WST]**
+- **Keyfax** **[WST, U.S.]**
     - Networks: TBS | WFLD-TV (Chicago, IL)
     - Appx. 1982 - Appx. mid-1985
-- **NBC Teletext** **[NABTS]**
+- **NBC Teletext** **[NABTS, U.S.]**
     - Network: NBC
     - May 16, 1983 - Appx. late 1985
- - **SSS Teletext** **[WST]**
+ - **SSS Teletext** **[WS, U.S.]**
     - Network: TBS
     - June 11, 1993 - Appx. 1997
-- **Virtext** **[WST]**
+- **Virtext** **[WST, U.S.]**
     - Network: WGN-TV (Chicago, IL)
     - 1980s - Appx. late 1980s
 
@@ -55,4 +58,4 @@ With there being existing software tools to decode European teletext, there are 
 
 Created August 10, 2026, 13:50
 
-Updated September 12, 2026, 04:12
+Updated September 13, 2026, 19:19
