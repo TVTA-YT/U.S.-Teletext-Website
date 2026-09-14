@@ -3,7 +3,7 @@
 body {
     background-color: var(--body-color) !important;
 
-    &:not(#site-title, .service-name, .letter-reveal-char) {
+    &:not(#site-title, .service-name, .letter-reveal-char, .logo) {
         font-family: 'Open Sans', sans-serif;
     }
 }
@@ -131,11 +131,13 @@ h1 {
 }
 
 .site-logo {
-    fill: var(--site-logo-color);
+    text {
+        fill: var(--site-logo-color);
+    }
 }
 
 .site-logo:hover {
-    path {
+    text {
         fill: var(--site-logo-hover-color);
     }
 }
@@ -178,9 +180,15 @@ h1 {
     text-decoration: none;
 }
 
+// .logo {
+//     max-width: 100%;
+//     width: fit-content;
+// }
+
 .site-logo {
     padding: 10px 0 10px 20px;
-    width: 90%;
+    width: 150px;
+    max-width: 100%;
 }
 
 .navbar-toggler {

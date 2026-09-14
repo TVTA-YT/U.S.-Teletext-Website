@@ -526,7 +526,8 @@
     }
 
     svg {
-        height: 55px;
+        /* width: 100px !important; */
+        height: 25% !important;
         margin-left: -5px;
     }
 }
@@ -599,7 +600,7 @@
     }
 
     svg {
-        height: 45px;
-        margin-left: -5px;
+        height: 55px;
+        margin-left: -15px;
     }
 }
