@@ -8,9 +8,10 @@ async function renderRecentAdditions() {
     const serviceImages = {
         "ABC-PLUS": "images/ABC_white.png",
         "AGTEXT": "images/KET_white.png",
+        "CBS ExtraVision": "images/ExtraVision_white.png",
         "DaTaVizion": "images/DaTaVizion_white.png",
         "Electra": "images/Electra_white.png",
-        "CBS ExtraVision": "images/ExtraVision_white.png",
+        "KCET-TEXT": "images/KCET_white.png",
         "IPTV-AGIDS": "images/IPTV_white.png",
         "Keyfax": "images/Keyfax_white.png",
         "NBC Teletext": "images/NBC-Teletext_white.png",

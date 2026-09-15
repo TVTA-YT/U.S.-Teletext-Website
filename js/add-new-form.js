@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'ABC': ['ABCPLUS'],
         'CBS': ['ExtraVision'],
         'KET': ['KETAGTEXT'],
+        'IPTV': ['IPTVAGIDS'],
         'NBC': ['NBCTeletext'],
         'TBS': ['Electra', 'Keyfax', 'SSSTeletext']
     };

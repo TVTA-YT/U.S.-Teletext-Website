@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- Created August 11, 2026, 14:57 -->
+<!-- Created September 15, 2026, 02:53 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Available samples for the Electra teletext service." />
+        <meta name="description" content="Available samples for KCET's text service." />
         <meta name="robots" content="noindex, nofollow" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
@@ -30,7 +30,7 @@
             crossorigin="anonymous"
         ></script>
         <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <title>Electra Results</title>
+        <title>KCET Results</title>
         <style>
             .container {
                 padding-top: 110px;
@@ -156,7 +156,7 @@
                                 <a href="services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option"> Other Text Services </a>
                             </li>
                         </ul>
                     </li>
@@ -226,31 +226,23 @@
         <main>
             <div class="container">
                 <h1 class="page-title data-letter-reveal">
-                    <img src="../images/banners/light/Electra_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/Electra.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/light/KCET_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/KCET.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                     <div id="text-top-padding">
                         <span id="year-heading"></span>
                     </div>
                 </h1>
                 <p class="fs-2" id="result-count"></p>
-                <div class="alert alert-primary text-center">
-                    <div class="alert-heading fs-4">*NEW*</div>
-                    You can now view all archived teletext pages from each available sample directly on the site. These links can be found
-                    in the "Date" column; the text will be bold and underlined.
-                </div>
                 <div class="alert alert-secondary" role="alert">
                     <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong>:
+                    <span>Some lines may have decoding issues due to imperfections with the original recording</span>
+                    <br />
+                    <br />
                     <span>
-                        Some pages may have imperfections, either due to corruption present in the source material or imperfections with the
-                        software decoders. As of August 11, 2026, the software is only a few days old, so <em>some</em> imperfections are to
-                        be expected, at least for now.
-                    </span>
-                    <br />
-                    <br />
-                    <span
-                        ><span aria-hidden="true">
-                            The table(s) below are responsive; to view more of the information, simply scroll the table (if applicable). </span
-                        ><span class="sr-only">
+                        <span aria-hidden="true">
+                            The table(s) below are responsive; to view more of the information, simply scroll the table (if applicable).
+                        </span>
+                        <span class="sr-only">
                             The table or tables below are responsive; to view more of the information, simply scroll the table (if
                             applicable).
                         </span>
@@ -258,7 +250,7 @@
                     <br />
                     <br />
                     <span>
-                        If a ZIP file is available for download, look for the ZIP icon (<i class="bi bi-file-zip-fill"></i>) in the ZIP
+                        If an HTML file is available for viewing, look for the HTML icon (<i class="bi bi-filetype-html"></i>) in the HTML
                         column.
                     </span>
                 </div>
@@ -266,7 +258,7 @@
                 <div id="sort-controls"></div>
                 <div id="results"></div>
                 <div class="pb-3" id="return-to-form-button">
-                    <a href="electra.html">
+                    <a href="kcet-text.html">
                         <button type="submit" class="btn form-control">
                             <span class="button-text">Return to Form</span>
                         </button>
@@ -374,10 +366,11 @@
         <script src="../js/render-results.js"></script>
         <script>
             renderResults({
-                dataset: "electra",
+                dataset: "kcet",
                 filterParam: "year",
                 filterField: "Year",
-                serviceLabel: "Electra",
+                serviceLabel: "KCET-TEXT",
+                stationLabel: "KCET",
                 groupByField: "Month",
                 groupOrder: [
                     "January",
@@ -400,12 +393,11 @@
                     { label: "Sample Date", field: "Date", type: "date" },
                 ],
                 columns: [
-                    { label: "Thumbnail", renderThumbnail: true },
                     { label: "Date", key: "Date" },
                     { label: "Program", key: "Program_Title" },
                     { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
                     { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
-                    { label: "ZIP", key: "ZIP", renderZip: true },
+                    { label: "HTML", key: "HTML_Link", renderHTML: true },
                     { label: "Contributor", key: "Recovered_By" },
                     { label: "Date Added", key: "Date_Added" },
                 ],

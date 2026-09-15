@@ -14,6 +14,7 @@ async function renderTotalRecordCount() {
     const sssTeletextCountEl = document.getElementById("sss-teletext-count");
 
     const abcPlusCountEl = document.getElementById("abc-plus-count");
+    const kcetCountEl = document.getElementById("kcet-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
     const iptvAgidsCountEl = document.getElementById("iptv-agids-count");
@@ -31,6 +32,7 @@ async function renderTotalRecordCount() {
         nbcTeletextCountEl,
         sssTeletextCountEl,
         abcPlusCountEl,
+        kcetCountEl,
         ketAgtextCountEl,
         wisconsinInfotextCountEl,
         iptvAgidsCountEl
@@ -114,6 +116,10 @@ async function renderTotalRecordCount() {
             datasetCounts.abcPlus?.availableSamples ?? 0
         );
 
+        const kcetSamples = Number(
+            datasetCounts.kcet?.availableSamples ?? 0
+        );
+
         const ketAgtextSamples = Number(
             datasetCounts.ketAgtext?.availableSamples ?? 0
         );
@@ -126,11 +132,7 @@ async function renderTotalRecordCount() {
             datasetCounts.iptvAgids?.availableSamples ?? 0
         );
 
-
-        /* --------------------------------------------------
-           Display overall counts
-        -------------------------------------------------- */
-
+        // Teletext sample counts
         if (teletextCountEl) {
             teletextCountEl.textContent = teletextTotal.toLocaleString();
         }
@@ -147,11 +149,7 @@ async function renderTotalRecordCount() {
             nonTeletextSampleCountEl.textContent = nonTeletextAvailableSamples.toLocaleString();
         }
 
-
-        /* --------------------------------------------------
-           Display individual dataset sample counts
-        -------------------------------------------------- */
-
+        // Individual sample counts
         if (datavizionCountEl) {
             datavizionCountEl.textContent = datavizionSamples.toLocaleString();
         }
@@ -178,6 +176,10 @@ async function renderTotalRecordCount() {
 
         if (abcPlusCountEl) {
             abcPlusCountEl.textContent = abcPlusSamples.toLocaleString();
+        }
+
+        if (kcetCountEl) {
+            kcetCountEl.textContent = kcetSamples.toLocaleString();
         }
 
         if (ketAgtextCountEl) {

@@ -1,5 +1,9 @@
 :root,
 [data-bs-theme="light"] {
+    --navbar-logo-site-name: #000;
+    --navbar-logo-site-name-hover: #0019ff;
+    --navbar-logo-bars: #7d96ff;
+    --navbar-logo-bars-hover: #fff800;
     --body-color: #f6f8fa;
     --text-color: #000;
     --navbar-color: #fff;
@@ -11,11 +15,15 @@
 }
 
 [data-bs-theme="dark"] {
+    --navbar-logo-site-name: #fff800;
+    --navbar-logo-site-name-hover: #fff;
+    --navbar-logo-bars: #0019ff;
+    --navbar-logo-bars-hover: #7d96ff;
     --body-color: #000;
     --text-color: #fff;
     --navbar-color: #000;
     --navbar-animation-color: #fff;
-    --site-logo-color: #152de3;
+    --site-logo-color: #fff800;
     --site-logo-hover-color: #fff;
     --horizontal-line: #fff;
     --tooltip-body-text-color: #000;

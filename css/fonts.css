@@ -1,15 +1,23 @@
 @font-face {
     font-family: 'Cinecav X Type';
-    src: url(../fonts/CinecavXType-Regular.ttf) format(truetype);
-    src: url(../fonts/CinecavXType-Regular.woff) format(woff);
-    src: url(../fonts/CinecavXType-Regular.woff2) format(woff2);
+    src: url(../fonts/CinecavXType-Regular.ttf) format("truetype");
+    src: url(../fonts/CinecavXType-Regular.woff) format("woff");
+    src: url(../fonts/CinecavXType-Regular.woff2) format("woff2");
 }
 
 @font-face {
     font-family: 'Contour Generator';
-    src: url(../fonts/Contour-Generator.ttf) format(truetype);
-    src: url(../fonts/Contour-Generator.woff) format(woff);
-    src: url(../fonts/Contour-Generator.woff2) format(woff2);
+    src: url(../fonts/Contour-Generator.ttf) format("truetype");
+    src: url(../fonts/Contour-Generator.woff) format("woff");
+    src: url(../fonts/Contour-Generator.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: 'Tiny and Chunky';
+    src: url(../fonts/TinyAndChunkyRegular.ttf) format("truetype");
+    src: url(../fonts/TinyAndChunkyRegular.woff) format("woff");
+    src: url(../fonts/TinyAndChunkyRegular.woff2) format("woff2");
+    font-weight: normal;
 }
 
 @font-face {

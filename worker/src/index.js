@@ -39,6 +39,13 @@ const tables = {
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
+    kcet: {
+        table: "KCET",
+        idField: "ID",
+        type: "nonTeletext",
+        sampleCondition: `HTML_Link IS NOT NULL AND TRIM(CAST(HTML_Link AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "HTML_Link", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
+    },
     ketAgtext: {
         table: "KET_AgText",
         idField: "ID",

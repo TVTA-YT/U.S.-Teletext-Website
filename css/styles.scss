@@ -131,12 +131,28 @@ h1 {
 }
 
 .site-logo {
+    padding: 10px 0 10px 20px;
+    width: 190px;
+    max-width: 100%;
+
+    .cls-2 {
+        fill: var(--navbar-logo-site-name);
+    }
+    .cls-3 {
+        fill: var(--navbar-logo-bars);
+    }
     text {
         fill: var(--site-logo-color);
     }
 }
 
 .site-logo:hover {
+    .cls-2 {
+        fill: var(--navbar-logo-site-name-hover);
+    }
+    .cls-3 {
+        fill: var(--navbar-logo-bars-hover);
+    }
     text {
         fill: var(--site-logo-hover-color);
     }
@@ -184,12 +200,6 @@ h1 {
 //     max-width: 100%;
 //     width: fit-content;
 // }
-
-.site-logo {
-    padding: 10px 0 10px 20px;
-    width: 150px;
-    max-width: 100%;
-}
 
 .navbar-toggler {
     background-color: var(--bs-body-color);

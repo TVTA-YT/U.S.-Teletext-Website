@@ -269,7 +269,7 @@ function appendRow(tbody, row, columns) {
     const nonTeletextDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
 
     tr.innerHTML = columns.map(c => {
-        // This is for KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
+        // This is for KCET and KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
         // The next few "if" statements will have similar functionality
         if (c.renderHTML) {
             if (!row.HTML_Link) {
