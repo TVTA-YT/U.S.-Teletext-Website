@@ -1,9 +1,13 @@
-database.php
 test.html
 penntext.html
 penntext-results.html
+starsight-data.html
+starsight.html
+starsight.js
 package-lock.json
 package.json
+StarSight.png
+StarSight_light.png
 depreciated/
 node_modules/
 TODO/
