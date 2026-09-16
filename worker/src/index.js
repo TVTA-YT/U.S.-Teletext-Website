@@ -306,7 +306,7 @@ async function getGalleryManifest(env, identifier) {
 }
 
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
-const GALLERY_TABLES = ["DaTaVizion", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext"];
+const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext"];
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+)\.(?:png|jpg|jpeg|gif)$/i;
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 
