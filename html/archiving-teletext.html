@@ -448,6 +448,14 @@
                         more members of the tape archiving community use the software and discover bugs and other issues, the software will
                         improve over time.
                     </p>
+                    <p>
+                        We also want to note something else. Capturing the VBI not only captures the teletext stream, but it also captures
+                        Line 21, used for closed captioning. Line 21 was also sometimes used for text-based services, services that are
+                        purely text-based. Examples of these services include ABC's Program Listing Update Service (PLUS) and Kentucky
+                        Educational Television's (KET) AgText. These services can be decoded using
+                        <a href="https://github.com/eshaz/cc_decoder" target="_blank">this fork</a> of the CC-Decoder project, just be sure
+                        to specify the output as HTML.
+                    </p>
                 </section>
                 <section id="will-my-videotapes-have-teletext">
                     <h2 class="display-5">Will All My Tapes Have Teletext?</h2>
@@ -704,7 +712,10 @@
                         section of the recording's VBI using one of the capture devices listed on the Analog Video Wiki's page on
                         <a href="https://analogvideo.miraheze.org/wiki/Capturing_VBI_signals" target="_blank">Capturing VBI signals</a>. The
                         short VBI capture can then be examined using ffplay or Decode-Orc to see if teletext data is present. If you see at
-                        least several lines containing dense digital bits, you may have teletext!
+                        least several lines containing dense digital bits, you may have teletext! For text services, simply export all Line
+                        21 data using CC-Decoder and, after the export completes, look for filenames that include "T1" or "T2". Another way
+                        is to simply conenct your VCR to a TV that still has composite inputs, then check the TEXT1-TEXT4 channels by
+                        navigating through your TV's settings; so far, we haven't encountered any data on TEXT3 and TEXT4.
                     </p>
                 </section>
                 <!-- * BEGIN IMAGE MODAL -->

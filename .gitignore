@@ -8,6 +8,10 @@ package-lock.json
 package.json
 StarSight.png
 StarSight_light.png
+starsight.css.map
+starsight.css
+starsight.scss
+json/
 depreciated/
 node_modules/
 TODO/

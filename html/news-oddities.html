@@ -96,6 +96,10 @@
                 padding: 10px;
             }
 
+            h4 {
+                font-size: 1.2em;
+            }
+
             #electra-shutdown-1994_tempo-1995_2026-08-26 {
                 scroll-margin-top: 90px;
             }
@@ -303,6 +307,84 @@
                     <section class="tab-pane fade show active" id="teletext-news" role="tabpanel">
                         <h2 class="section pt-4">Teletext News</h2>
                         <p>Newest updates will be highlighted</p>
+                        <article id="starsight-coming-soon_2026-09-17">
+                            <p>September 17, 2026</p>
+                            <h1 class="story text-primary">NEW / COMING SOON: StarSight EPG data has been decoded; new page coming soon</h1>
+                            <h4>StarSight EPG data has been decoded</h4>
+                            <p>
+                                For the last few days, myself and a few others have been researching information about a VBI service called
+                                National Datacast (NDI), which was provided by PBS. In the early days of NDI, one of the services it
+                                provided was EPG (electronic program guide) listings from a provider known as StarSight.
+                            </p>
+                            <p>
+                                What spurred this research was the presence of teletext-like data in the VBI seen in recordings from KCET
+                                (Los Angeles, CA), a PBS affiliate. Attempts to decode this data in Decode-Orc using both the NABTS and
+                                Teletext sinks produced no results, so we wanted to figure out what this data could be. At first, we
+                                suspected that it might be another teletext standard known as Antiope, created in France. However, as we dug
+                                deeper, we began to suspect that this data was possibly related to NDI. With that, I and the others began
+                                trying to find as much information as we could about NDI and what standards it used. This information would
+                                be sent to the developer of a
+                                <a href="https://github.com/eshaz/cc_decoder" target="_blank">custom fork</a> of the
+                                <a href="https://github.com/CordySmith/cc_decoder" target="_blank">CC_Decoder</a> project.
+                            </p>
+                            <p>
+                                Let's move forward to September 14. Initial tests with submitted VBI samples conducted by the developer
+                                mentioned earlier showed that StarSight data was discovered in the VBI data, which came from recordings from
+                                the statewide PBS network KET in Kentucky; these recordings were from late 1998. Soon after, we started to
+                                get our first results showing decoded StarSight data, data rendered in HTML, but much of it was incomplete,
+                                likely due to the short runtimes of the samples, meaning longer samples would be needed to get a better
+                                sense of what data was being transmitted.
+                            </p>
+                            <p>
+                                Soon after, updated code was published to the fork on GitHub for testing. Yesterday, September 16, I
+                                transferred two hours of data recorded from KCET on May 3, 1994. I had initially submitted a ten minute
+                                sample about a week ago, but no data was found, likely because the sample was too short. After decoding the
+                                sample and running it through CC_Decoder, I opened the HTML file and saw a very populated table containing
+                                rows for program title, channel ID, days of the week, and program start times, to name a few. This is the
+                                most extensive StarSight data we have as of now. The VBI sample has been sent to the CC_Decoder fork
+                                developer so more can be done with the existing code since this sample has much more data than any of the
+                                previous samples.
+                            </p>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <figure class="figure">
+                                        <img
+                                            src="../images/StarSight_HTML-table.png"
+                                            alt="StarSight HTML table"
+                                            class="mw-100 figure-img border border-white border-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="StarSight HTML table produced by CC Decoder."
+                                        />
+                                        <figcaption class="figure-caption">StarSight HTML table produced by CC Decoder.</figcaption>
+                                    </figure>
+                                </div>
+                                <div class="col-6">
+                                    <figure class="figure">
+                                        <img
+                                            src="../images/StarSight_program-table.png"
+                                            alt="StarSight program table"
+                                            class="mw-100 figure-img border border-white border-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="An HTML table produced by CC Decoder showing all show number IDs, show theme IDs, and program titles."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            An HTML table showing all show number IDs, show theme IDs, and program titles.
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                            <h4>Coming Soon: New page for StarSight data</h4>
+                            <p>
+                                Now that we have this newly decoded data, it has been suggested that there should be a way to view this
+                                data. Granted, HTML files are already generated from CC_Decoder, but like with the teletext and text
+                                samples, there should be a central place to view this data. That's why I'll soon be adding a new page for
+                                viewing this decoded StarSight data. This page is currently under construction. There will be a lot of
+                                backend logic to make this page work with the provided JSON (JavaScript Object Notation) files, so I cannot
+                                provide an exact date as to when this page will be available. I'm hoping it'll be available in the next few
+                                days or so. Once it's available, it'll be under the "Other Teletext Pages" navigation dropdown link.
+                            </p>
+                        </article>
+                        <hr aria-hidden="true" />
                         <article id="first-canadian-sample_2026-09-13">
                             <p>September 13, 2026</p>
                             <h1 class="story text-primary">
@@ -428,7 +510,7 @@
                         <hr aria-hidden="true" />
                         <article id="etravision-january-1992_2026-09-08">
                             <p>September 8, 2026</p>
-                            <h1 class="story text-primary">NEW: CBS ExtraVision from January 1992 discovered</h1>
+                            <h1 class="story">CBS ExtraVision from January 1992 discovered</h1>
                             <p>
                                 We now have a sample of ExtraVision from 1992, specifically January 19, 1992. It seems that we're getting
                                 closer to finding a definitive shutdown date for ExtraVision. As a reminder, multiple sources have stated
@@ -465,7 +547,7 @@
                         <hr aria-hidden="true" />
                         <article id="extravision-affiliate-passthrough_2026-09-07">
                             <p>September 8, 2026</p>
-                            <h1 class="story text-primary">NEW: TBS continued broadcasting teletext through 1997</h1>
+                            <h1 class="story">TBS continued broadcasting teletext through 1997</h1>
                             <p>
                                 When we first started decoding samples of Electra from tapes with content recorded from TBS, we assumed,
                                 based on the information already out there, that Electra shut down sometime in 1993. Then, in mid-August, a
