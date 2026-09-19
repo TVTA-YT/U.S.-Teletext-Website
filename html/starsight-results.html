@@ -242,27 +242,15 @@
         <main>
             <div class="container">
                 <h1 class="page-title data-letter-reveal">
-                    <img src="../images/banners/light/NBC-Teletext_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/NBC-Teletext.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/light/StarSight_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/StarSight.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                     <div id="text-top-padding">
                         <span id="year-heading"></span>
                     </div>
                 </h1>
                 <p class="fs-2" id="result-count"></p>
-                <div class="alert alert-primary text-center">
-                    <div class="alert-heading fs-4">*NEW*</div>
-                    You can now view all archived teletext pages from each available sample directly on the site. These links can be found
-                    in the "Date" column; the text will be bold and underlined.
-                </div>
                 <div class="alert alert-secondary" role="alert">
                     <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong>:
-                    <span>
-                        Some pages may have imperfections, either due to corruption present in the source material or imperfections with the
-                        software decoders. As of August 11, 2026, the software is only a few days old, so <em>some</em> imperfections are to
-                        be expected, at least for now.
-                    </span>
-                    <br />
-                    <br />
                     <span>
                         <span aria-hidden="true">
                             The table(s) below are responsive; to view more of the information, simply scroll the table (if applicable).
@@ -274,10 +262,7 @@
                     </span>
                     <br />
                     <br />
-                    <span>
-                        If a ZIP file is available for download, look for the ZIP icon (<i class="bi bi-file-zip-fill"></i>) in the ZIP
-                        column.
-                    </span>
+                    <span> If EPG data is available to view, look for a linked value in the "Data" column. </span>
                 </div>
                 <hr aria-hidden="true" />
                 <div id="sort-controls"></div>
@@ -417,12 +402,12 @@
                     { label: "Sample Date", field: "Date", type: "date" },
                 ],
                 columns: [
-                    { label: "Date", key: "Date" },
+                    { label: "Record Date", key: "Record_Date" },
                     { label: "Program", key: "Program_Title" },
+                    { label: "Data Range", key: "Dataset_Name", renderStarSightDate: true },
                     { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
                     { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
-                    { label: "Data", key: "Dataset_Name", renderStarSightDate: true },
-                    { label: "Data Range", key: "Data" },
+                    { label: "Data Source", key: "Network" },
                     { label: "Contributor", key: "Recovered_By" },
                     { label: "Date Added", key: "Date_Added" },
                 ],

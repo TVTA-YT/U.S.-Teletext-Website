@@ -419,7 +419,7 @@ function renderProgramTitles(rawTitle) {
     }
 
     const items = titles.map(t => `<li class="text-black">${escapeHtml(t)}</li>`).join('');
-    return `<ul class="mb-0 ps-3 multiple-programs">${items}</ul>`
+    return `<ul class="mb-0 ps-0 multiple-programs">${items}</ul>`
 }
 
 function escapeHtml(str) {
