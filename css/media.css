@@ -110,11 +110,15 @@
     }
 }
 
-/* * SERVICE TV IMAGES * */
+/* * SERVICE TV IMAGES AND EPG TABLE * */
 
 @media only screen and (min-width: 992px) {
     .service-top-padding {
         padding-top: 100px !important;
+    }
+
+    .starsight-title {
+        font-size: 3em;
     }
 }
 
@@ -129,13 +133,22 @@
     .service-xsmall-bottom-padding {
         padding-top: 150px !important;
     }
+
+    .date-column {
+        display: none !important;
+    }
+
+    .guide {
+        grid-template-columns: 120px minmax(0, 1fr) !important;
+    }
+
+    /* .time-row > div {
+        width: 150px !important;
+        min-width: 150px !important;
+    } */
 }
 
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
-
-/* @media only screen and (max-width: 1199px) {
-
-} */
 
 @media only screen and (min-width: 1400px) {
     #site-intro span#site-title {
@@ -371,6 +384,10 @@
         padding-top: 100px !important;
     }
 
+    .starsight-title {
+        font-size: 2.5em;
+    }
+
     .site-introduction {
         font-size: 1em;
     }
@@ -434,6 +451,10 @@
 
     .submission-count-table {
         font-size: 1.2em !important;
+    }
+
+    .starsight-title {
+        font-size: 2em;
     }
 
     .desktop-link {
@@ -517,6 +538,10 @@
         padding-top: 100px;
     }
 
+    .starsight-title {
+        font-size: 1.5em;
+    }
+
     .desktop-link {
         display: none;
     }
@@ -594,6 +619,10 @@
 
     .submission-count-table {
         font-size: 0.8em !important;
+    }
+
+    .starsight-title {
+        font-size: 1em;
     }
 
     .desktop-link {

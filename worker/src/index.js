@@ -8,6 +8,7 @@ const tables = {
         table: "ABC_PLUS",
         idField: "ID",
         type: "nonTeletext",
+        dateField: "Date",
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
@@ -15,6 +16,7 @@ const tables = {
         table: "DaTaVizion",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -22,6 +24,7 @@ const tables = {
         table: "Edutel",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -29,6 +32,7 @@ const tables = {
         table: "Electra",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -36,6 +40,7 @@ const tables = {
         table: "ExtraVision",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -43,6 +48,7 @@ const tables = {
         table: "IPTV_AGIDS",
         idField: "ID",
         type: "nonTeletext",
+        dateField: "Date",
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
@@ -50,6 +56,7 @@ const tables = {
         table: "KCET",
         idField: "ID",
         type: "nonTeletext",
+        dateField: "Date",
         sampleCondition: `HTML_Link IS NOT NULL AND TRIM(CAST(HTML_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "HTML_Link", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
@@ -57,6 +64,7 @@ const tables = {
         table: "KET_AgText",
         idField: "ID",
         type: "nonTeletext",
+        dateField: "Date",
         sampleCondition: `HTML_Link IS NOT NULL AND TRIM(CAST(HTML_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "HTML_Link", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
@@ -64,6 +72,7 @@ const tables = {
         table: "Keyfax",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -71,6 +80,7 @@ const tables = {
         table: "NBC_Teletext",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -78,6 +88,23 @@ const tables = {
         table: "SSS_Teletext",
         idField: "ID",
         type: "teletext",
+        dateField: "Date",
+        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+    },
+    starsight: {
+        table: "StarSight",
+        idField: "ID",
+        type: "epg",
+        dateField: "Record_Date",
+        sampleCondition: `Data IS NOT NULL AND TRIM(CAST(Data AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Record_Date", "Program_Title", "Tape_Type", "Tape_Speed", "Data", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "Dataset_Name"]
+    },
+    virtext: {
+        table: "Virtext",
+        idField: "ID",
+        type: "teletext",
+        dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
@@ -85,6 +112,7 @@ const tables = {
         table: "Wis_Infotext",
         idField: "ID",
         type: "nonTeletext",
+        dateField: "Date",
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     }
@@ -134,12 +162,13 @@ function getDatasetConfig(datasetName) {
 async function exportTable(db, config) {
     const now = Math.floor(Date.now() / 1000);
     const columns = config.columns.map(column => `t.${column}`).join(", ");
+    const dateField = config.dateField || "Date";
 
     // SQL statement
     const sql = `
         SELECT ${columns}
         FROM ${config.table} AS t
-        ORDER BY t.Year, t.Date
+        ORDER BY t.Year, t.${dateField}
     `;
 
     const result = await db.prepare(sql).all();
@@ -236,6 +265,7 @@ async function getAllCounts(db) {
     return {
         teletext: sumByType("teletext"),
         nonTeletext: sumByType("nonTeletext"),
+        epg: sumByType("epg"),
         datasets: counts
     };
 }
@@ -247,14 +277,15 @@ async function getAllCounts(db) {
 async function getRecentFromDataset(db, config) {
 
     // The homepage table only needs values from the "Date", "Date_Added", "Recovered_By", and "Service_Name" columns
-    const selectColumns = ["Date", "Date_Added", "Recovered_By", "Service_Name"];
+    const dateField = config.dateField || "Date";
+    const selectColumns = ["Date_Added", "Recovered_By", "Service_Name"];
 
     // This selects the IA ID only from tables that have it
     if (config.columns.includes("IA_ID")) selectColumns.push("IA_ID");
     const columns = selectColumns.map(column => `t.${column}`).join(", ");
 
     const sql = `
-        SELECT ${columns}
+        SELECT t.${dateField} AS Date, ${columns}
         FROM ${config.table} AS t
         WHERE t.Date_Added IS NOT NULL
             AND TRIM(CAST(t.Date_Added AS TEXT)) != ''
@@ -293,9 +324,14 @@ async function getRecentAdditions(db) {
 
 /* R2 GALLERY MANIFEST */
 
-// Generate Cloudflare R2 object path
+// Generate Cloudflare R2 object path for image gallery
 function galleryKey(identifier) {
     return `gallery/gallery-${identifier}.json`;
+}
+
+// Generate Cloudflare R2 object path for StarSight data
+function starsightKey(identifier) {
+    return `starsight/${identifier}.json`;
 }
 
 // Get gallery manifests
@@ -305,8 +341,14 @@ async function getGalleryManifest(env, identifier) {
     return await object.json();
 }
 
+async function getStarSightManifest(env, identifier) {
+    const object = await env.EPG.get(starsightKey(identifier));
+    if (!object) return null;
+    return await object.json()
+}
+
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
-const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext"];
+const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext"];
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+)\.(?:png|jpg|jpeg|gif)$/i;
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 
@@ -314,13 +356,9 @@ const GALLERY_ZIP_PATTERN = /\.zip$/i;
 async function fetchIaMetadata(identifier) {
     const url = `https://archive.org/metadata/${encodeURIComponent(identifier)}`;
     const response = await fetch(url);
-
     if (!response.ok) throw new Error(`Internet Archive metadata returned HTTP ${response.status}`);
-
     const data = await response.json();
-
     if (!data || !Array.isArray(data.files)) throw new Error(`Malformed Internet Archive metadata for ${identifier}`);
-
     return data;
 }
 
@@ -565,7 +603,6 @@ async function generateSingleGallery(env, identifier, force) {
     }
 
     const manifest = await generateGalleryManifest(env, identifier);
-
     return { status: "generated", identifier, key, imageCount: manifest.images.length };
 }
 
@@ -764,15 +801,18 @@ export default {
         // Getting TEXT service HTML files from R2
         const key = url.pathname.replace(/^\/+/, "");
 
-        const object = await env.TEXT_ARCHIVE.get(key);
+        const bucket = key.toLowerCase().endsWith(".json") ? env.EPG : env.TEXT_ARCHIVE;
+        const object = await bucket.get(key);
         if (!object) return new Response("Not found", { status: 404 });
 
-        const headers = new Headers();
+        const headers = new Headers(corsHeader());
         object.writeHttpMetadata(headers);
         headers.set("etag", object.httpEtag);
 
         if (!headers.has("content-type")) {
-            headers.set("content-type", "text/html; charset=utf-8");
+            headers.set("content-type", key.toLowerCase().endsWith(".json")
+                ? "application/json; charset=utf-8"
+                : "text/html; charset=utf-8");
         }
 
         return new Response(object.body, { headers });

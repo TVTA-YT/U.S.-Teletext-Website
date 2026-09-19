@@ -1,20 +1,11 @@
 <!doctype html>
-<!-- Created September 15, 2026, 02:50 -->
+<!-- Created September 15, 2026, 20:44 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Search for archived samples from KCET's text service." />
-        <!-- Open Graph URLs -->
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="North American Teletext Archive - Electra" />
-        <meta property="og:description" content="Search for archived samples from KCET's text service." />
-        <meta property="og:url" content="https://tvta-yt.github.io/U.S.-Teletext-Website/html/ket-agtext.html" />
-        <meta property="og:image" content="https://tvta-yt.github.io/U.S.-Teletext-Website/images/og-site-image.png" />
-        <meta property="og:image:alt" content="North American Teletext Archive" />
-        <meta property="og:site_name" content="North American Teletext Archive" />
-        <meta property="og:locale" content="en_US" />
-        <link rel="canonical" href="https://tvta-yt.github.io/U.S.-Teletext-Website/html/ket-agtext.html" />
+        <meta name="description" content="EPG data from the StarSight EPG service." />
+        <meta name="robots" content="noindex, nofollow" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
@@ -22,6 +13,7 @@
         <link rel="stylesheet" href="../css/styles.css" />
         <link rel="stylesheet" href="../css/media.css" />
         <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
+        <link rel="stylesheet" href="../css/starsight.css" />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -39,14 +31,19 @@
             crossorigin="anonymous"
         ></script>
         <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <title>KCET</title>
+        <title>StarSight EPG Data</title>
         <style>
             .container {
                 padding-top: 110px;
             }
 
-            .btn {
+            .display-2 {
+                font-weight: bold;
+            }
+
+            .btn:not(#themeFab, .theme-choice) {
                 border-radius: 24px;
+                background-color: rgb(62, 134, 243);
             }
         </style>
     </head>
@@ -214,24 +211,55 @@
         </nav>
         <main>
             <div class="container">
-                <h1>
-                    <span class="visually-hidden">Kentucky Educational Television AgText</span>
-                    <img src="../images/banners/light/KCET_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/KCET.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                <h1 class="page-title data-letter-reveal">
+                    <img src="../images/banners/light/StarSight_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/StarSight.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
                 <hr aria-hidden="true" />
-                <p>Use the form below to view all submissions or to search for submissions by year.</p>
-                <form action="kcet-text-results.html" method="get">
-                    <div class="mb-3">
-                        <label for="year" class="form-label">Select a year (leave blank to view all)</label>
-                        <select name="year" id="year" class="form-select">
-                            <option value=""></option>
-                            <option value="1994">1994</option>
-                        </select>
+                <div class="starsight pb-4" id="epg-table">
+                    <div class="starsight-title">S T A R S I G H T</div>
+                    <div class="starsight-date" id="date"></div>
+                    <div class="day-selection"></div>
+                    <div class="guide">
+                        <div class="date-column"></div>
+                        <div class="service-column">
+                            <div class="service-header" id="services">SERVICE</div>
+                        </div>
+                        <div class="guide-scroll">
+                            <div class="time-row" id="time"></div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary form-control">Submit</button>
-                    <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
-                </form>
+                    <div class="starsight-mobile" id="starsight-guide-mobile"></div>
+                </div>
+                <div class="pb-3" id="return-to-form-button">
+                    <a href="starsight.html">
+                        <button type="submit" class="btn form-control">
+                            <span class="button-text">Return to Form</span>
+                        </button>
+                    </a>
+                </div>
+                <!-- * BEGIN IMAGE MODAL -->
+                <div class="modal fade" id="programModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="programModalTitle"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="programModalDescription"></p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Captioned:</strong> <span id="programModalCaptioned"></span></li>
+                                    <li><strong>Black &amp; White:</strong> <span id="programModalColor"></span></li>
+                                    <li><strong>Audio:</strong> <span id="programModalAudio"></span></li>
+                                    <li><strong>Rating:</strong> <span id="programModalRating"></span></li>
+                                    <li><strong>Year:</strong> <span id="programModalYear"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- * END IMAGE MODAL -->
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"
@@ -314,5 +342,8 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
+        <script src="../js/heading-reveal.js"></script>
+        <script src="../js/image-modal.js"></script>
+        <script src="../js/starsight.js"></script>
     </body>
 </html>

@@ -22,6 +22,10 @@
         {
             "binding": "TEXT_ARCHIVE",
             "bucket_name": "text-service-html"
+        },
+        {
+            "binding": "EPG",
+            "bucket_name": "starsight"
         }
     ]
 }

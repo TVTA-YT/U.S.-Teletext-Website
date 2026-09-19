@@ -1,0 +1,219 @@
+:root {
+  --slot-width: 250px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --slot-width: 150px;
+  }
+}
+.starsight {
+  font-family: "TU 1000x Regular Modified", sans-serif;
+  width: 100%;
+  max-width: 1500px;
+  overflow: hidden;
+}
+
+.starsight-title,
+.starsight-date,
+.date-column {
+  padding-left: 6px;
+}
+
+.time-row div,
+.program-row div {
+  padding-left: 4px;
+}
+
+.service-column {
+  width: 120px;
+  min-width: 120px;
+  background-color: #007bff;
+  border-right: 1px solid #dee2e6;
+  max-height: 673px;
+  overflow-y: hidden;
+}
+.service-column div {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  border-bottom: 1px solid #dee2e6;
+}
+.service-column .service-header {
+  height: 40px;
+  font-weight: bold;
+  padding-left: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+.service-column .service-header div {
+  padding-left: 4px !important;
+}
+
+.starsight-title {
+  text-align: center;
+  background-color: #0019ff;
+  color: #fff800;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.starsight-date {
+  font-size: 1.5em;
+  text-align: center;
+  background-color: #0019ff;
+  color: #fff800;
+  border-top: 1px solid #fff800;
+  /* padding: 5px; */
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.day-selection {
+  display: grid;
+  text-align: center;
+  grid-auto-flow: column;
+  grid-auto-columns: 150px;
+  overflow-x: auto;
+  width: 100%;
+  vertical-align: middle;
+  color: #000;
+  background-color: #fff800;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.day-selection div {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+}
+.day-selection .selected {
+  color: #000;
+  background-color: #fff;
+}
+
+.guide {
+  display: grid;
+  letter-spacing: 20%;
+  grid-template-columns: 100px 120px minmax(0, 1fr);
+  width: 100%;
+}
+.guide .date-column {
+  width: 100px;
+  min-width: 100px;
+  font-size: 2em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0014c9;
+}
+.guide .guide-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 673px;
+}
+.guide .guide-scroll .time-row {
+  display: grid;
+  background-color: #0019ff;
+  width: -moz-max-content;
+  width: max-content;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+.guide .guide-scroll .time-row div {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+.guide .guide-scroll .program-row {
+  display: grid;
+  background-color: #fff;
+  width: -moz-max-content;
+  width: max-content;
+}
+.guide .guide-scroll .program-row div {
+  grid-column: span 1;
+  font-size: 0.8em;
+  height: 100px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #939dff;
+  color: #000;
+  border: 1px solid #000;
+}
+.guide .guide-scroll .program-row .no-data {
+  color: #fff;
+  background-color: #424242;
+}
+
+.starsight-mobile {
+  display: grid;
+  overflow: auto;
+  max-height: 600px;
+}
+.starsight-mobile .corner-cell,
+.starsight-mobile .channel-header,
+.starsight-mobile .time-label {
+  position: sticky;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #fff;
+  background-color: #0019ff;
+}
+.starsight-mobile .corner-cell {
+  top: 0;
+  left: 0;
+  z-index: 20;
+}
+.starsight-mobile .channel-header {
+  top: 0;
+  font-size: 0.6em;
+}
+.starsight-mobile .time-label {
+  left: 0;
+}
+.starsight-mobile .program,
+.starsight-mobile .no-data {
+  font-size: 0.5em;
+  align-content: center;
+  text-align: center;
+  border: 1px solid #fff;
+}
+.starsight-mobile .program {
+  background-color: #939dff;
+  color: #000;
+}
+.starsight-mobile .no-data {
+  background-color: #424242;
+}
+
+@media (min-width: 768px) {
+  .starsight-mobile {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .guide {
+    display: none;
+  }
+}/*# sourceMappingURL=starsight.css.map */

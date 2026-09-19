@@ -13,6 +13,7 @@ async function renderTotalRecordCount() {
     const keyfaxCountEl = document.getElementById("keyfax-count");
     const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
     const sssTeletextCountEl = document.getElementById("sss-teletext-count");
+    const virtextCountEl = document.getElementById("virtext-count");
 
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const kcetCountEl = document.getElementById("kcet-count");
@@ -33,6 +34,7 @@ async function renderTotalRecordCount() {
         keyfaxCountEl,
         nbcTeletextCountEl,
         sssTeletextCountEl,
+        virtextCountEl,
         abcPlusCountEl,
         kcetCountEl,
         ketAgtextCountEl,
@@ -118,6 +120,10 @@ async function renderTotalRecordCount() {
             datasetCounts.sssTeletext?.availableSamples ?? 0
         );
 
+        const virtextSamples = Number(
+            datasetCounts.virtext?.availableSamples ?? 0
+        );
+
         const abcPlusSamples = Number(
             datasetCounts.abcPlus?.availableSamples ?? 0
         );
@@ -147,6 +153,7 @@ async function renderTotalRecordCount() {
             teletextSampleCountEl.textContent = teletextAvailableSamples.toLocaleString();
         }
 
+        // Non-teletext sample counts
         if (nonTeletextCountEl) {
             nonTeletextCountEl.textContent = nonTeletextTotal.toLocaleString();
         }
@@ -182,6 +189,10 @@ async function renderTotalRecordCount() {
 
         if (sssTeletextCountEl) {
             sssTeletextCountEl.textContent = sssTeletextSamples.toLocaleString();
+        }
+
+        if (virtextCountEl) {
+            virtextCountEl.textContent = virtextSamples.toLocaleString();
         }
 
         if (abcPlusCountEl) {

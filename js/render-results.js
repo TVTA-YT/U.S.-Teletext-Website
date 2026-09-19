@@ -263,10 +263,11 @@ function appendRow(tbody, row, columns) {
     if (isNewRecord) tr.classList.add('row-new');
 
     // if (row.isNew) (now - Number(firstSeen)) <= NEW_WINDOW_SECONDS;
-    const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2);
+    const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
     const nonTeletextDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
+    const epgDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KCET and KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
@@ -293,6 +294,23 @@ function appendRow(tbody, row, columns) {
             const path = nonTeletextDirectory + value;
             const visible = `<a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
             return renderAccessibleCell(visible, `${c.label}: HTML file available`);
+        }
+
+        // For StarSight, which uses its own datasets
+        if (c.renderStarSightDate) {
+            const jsonFile = row.Data;
+            const dateValue = row[c.key];
+
+            if (!hasRealValue(jsonFile) || !hasRealValue(dateValue)) {
+                // const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+                const visible = escapeHtml(dateValue ?? '');
+                return renderAccessibleCell(visible, `${c.label}: ${dateValue}`);
+            }
+
+            const jsonUrl = epgDirectory + jsonFile;
+            const guidePath = `starsight-data.html?json=${encodeURIComponent(jsonUrl)}`;
+            const visible = `<a href="${escapeHtml(guidePath)}" class="text-black">${escapeHtml(dateValue)}</a>`;
+            return renderAccessibleCell(visible, `${c.label}: ${dateValue}. View EPG guide`);
         }
 
         // Showing ZIP download link for all teletext services
