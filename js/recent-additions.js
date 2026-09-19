@@ -18,7 +18,7 @@ async function renderRecentAdditions() {
         "NBC Teletext": "images/NBC-Teletext_white.png",
         "PENNTEXT": "images/PPTN_white.png",
         "SSS Teletext": "images/SSS_white.png",
-        "Virtext": "images/WGN9_white.png",
+        "Virtext": "images/Virtext_white.png",
         "WISINFOTEXT": "images/WHA_white.png",
     };
 
