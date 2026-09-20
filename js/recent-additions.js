@@ -92,7 +92,7 @@ async function renderRecentAdditions() {
             .join("");
 
         container.innerHTML = `
-        <div class="table-responsive">
+        <div class="table-responsive overflow-y-auto" id="recent-additions-table">
             <table class="table table-bordered table-custom-blue table-striped align-middle text-center text-white">
                 <thead>
                     <tr class="align-middle">

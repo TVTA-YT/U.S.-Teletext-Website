@@ -292,7 +292,7 @@ async function getRecentFromDataset(db, config) {
             AND LOWER(TRIM(CAST(t.Date_Added AS TEXT))) != 'null'
             AND LOWER(TRIM(CAST(t.Date_Added AS TEXT))) != 'n/a'
         ORDER BY t.Date_Added DESC
-        LIMIT 10
+        LIMIT 30
     `;
 
     const result = await db.prepare(sql).all();
@@ -315,7 +315,7 @@ async function getRecentAdditions(db) {
     allRecentRows.sort((a, b) => new Date(b.Date_Added).getTime() - new Date(a.Date_Added).getTime());
 
     // Return the 10 newest additions
-    return allRecentRows.slice(0, 10).map(row => {
+    return allRecentRows.slice(0, 25).map(row => {
         delete row.__dataset;
         return row;
     });
