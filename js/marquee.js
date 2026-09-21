@@ -82,6 +82,7 @@ function formatLastUpdatedLabel(dbDate, headlinesDate) {
             month: "short",
             day: "numeric",
             year: "numeric",
+            timeZone: "UTC"
         })
         .toUpperCase();
 
@@ -95,6 +96,7 @@ function formatDayLabel(dayStartISO) {
         .toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
+            timeZone: "UTC"
         })
         .toUpperCase();
 
@@ -187,6 +189,7 @@ function updateMarqueeDateTime() {
         year: "numeric",
         month: "long",
         day: "numeric",
+        timeZone: "America/New_York"
     });
 
     // FOrmats time: 22:00:00 for 10:00pm
@@ -195,10 +198,11 @@ function updateMarqueeDateTime() {
         minute: "2-digit",
         second: "2-digit",
         hour12: false,
+        timeZone: "America/New_York"
     });
 
     document.querySelectorAll(".marquee-date").forEach((el) => (el.textContent = formattedDate));
-    document.querySelectorAll(".marquee-time").forEach((el) => (el.textContent = formattedTime));
+    document.querySelectorAll(".marquee-time").forEach((el) => (el.textContent = `${formattedTime} ET`));
 }
 updateMarqueeDateTime();
 

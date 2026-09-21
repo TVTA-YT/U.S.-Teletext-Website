@@ -138,10 +138,11 @@ function toDateOnly(date) {
 
 // Retrieve total listing from all samples for the previous day (e.g. if Monday, return totals from Sunday)
 function getMarqueeDayRange(now = new Date()) {
-    const todayStart = new Date(now);
 
-    // Set time to midnight
-    todayStart.setHours(0, 0, 0, 0);
+    // Use Eastern Time regardless of Cloudflare's server time zone
+    const easternDateStr = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+
+    const todayStart = new Date(`${easternDateStr}T00:00:00`);
 
     // Create copy of "todayStart", then subtract 1 day
     const yesterdayStart = new Date(todayStart);
@@ -805,7 +806,7 @@ async function handleApi(request, env) {
                 ).all();
 
                 const maxDate = maxRows[0]?.maxDate;
-                if (maxDate && !(latestDate || maxDate > latestDate)) {
+                if (maxDate && (!latestDate || maxDate > latestDate)) {
                     latestDate = maxDate;
                 }
             }
