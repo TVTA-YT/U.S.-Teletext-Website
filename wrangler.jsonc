@@ -3,7 +3,7 @@
     "account_id": "d995bd56c0b97564ac35e9a7d87dd7de",
     "name": "us-teletext-website",
     "main": "worker/src/index.js",
-    "compatibility_date": "2026-09-11",
+    "compatibility_date": "2026-09-10",
     "observability": {
         "enabled": true
     },
@@ -26,6 +26,13 @@
         {
             "binding": "EPG",
             "bucket_name": "starsight"
+        }
+    ],
+    "kv_namespaces": [
+        {
+            "binding": "HEADLINES",
+            "id": "23efc897376544bdb413512d80f3942c",
+            "preview_id": "23efc897376544bdb413512d80f3942c"
         }
     ]
 }

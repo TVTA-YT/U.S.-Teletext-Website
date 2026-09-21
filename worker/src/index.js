@@ -131,6 +131,26 @@ function corsHeader() {
     };
 }
 
+// Take JS Date (e.g. 2026-09-20T00:00:00Z) and remove time (e.g. 2026-09-20)
+function toDateOnly(date) {
+    return date.toISOString().slice(0, 10);
+}
+
+// Retrieve total listing from all samples for the previous day (e.g. if Monday, return totals from Sunday)
+function getMarqueeDayRange(now = new Date()) {
+    const todayStart = new Date(now);
+
+    // Set time to midnight
+    todayStart.setHours(0, 0, 0, 0);
+
+    // Create copy of "todayStart", then subtract 1 day
+    const yesterdayStart = new Date(todayStart);
+    yesterdayStart.setDate(todayStart.getDate() - 1);
+
+    // Return date range
+    return { dayStart: yesterdayStart, dayEnd: todayStart }
+}
+
 // Convert the data to JSON, set HTTP status, set JSON content type, and add CORS headers
 function jsonResponse(data, status = 200) {
     return new Response(JSON.stringify(data), { status, headers: corsHeader() });
@@ -751,6 +771,63 @@ async function handleApi(request, env) {
         } catch (error) {
             console.error("Bulk gallery generation failed:", error);
             return errorResponse(`Bulk gallery generation failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
+    * API CALL: /api/marquee/updates
+    * This is called on the homepage.
+    * This fetches the total number of samples added for each service during the previous day.
+    */
+    if (url.pathname === "/api/marquee/updates") {
+        try {
+            const { dayStart, dayEnd } = getMarqueeDayRange();
+            const results = [];
+            let latestDate = null;
+
+            for (const [key, cfg] of Object.entries(tables)) {
+                const { results: rows } = await env.DB.prepare(
+                    `SELECT COUNT(*)
+                    AS count
+                    FROM ${cfg.table}
+                    WHERE Date_Added >= ?
+                    AND Date_Added < ?`
+                ).bind(toDateOnly(dayStart), toDateOnly(dayEnd)).all();
+
+                const count = rows[0]?.count ?? 0;
+                if (count > 0) {
+                    const displayName = key.replace(/([A-Z])/g, " $1").trim();
+                    results.push({ service: displayName, count })
+                };
+
+                const { results: maxRows } = await env.DB.prepare(
+                    `SELECT MAX(Date_Added) AS maxDate FROM ${cfg.table}`
+                ).all();
+
+                const maxDate = maxRows[0]?.maxDate;
+                if (maxDate && !(latestDate || maxDate > latestDate)) {
+                    latestDate = maxDate;
+                }
+            }
+            return jsonResponse({ dayStart, dayEnd, services: results, lastUpdated: latestDate });
+        } catch (error) {
+            console.error("D1 marquee updates query failed:", error);
+            return errorResponse(`Marquee updates query failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
+    * API CALL: /api/marquee/headlines
+    * This is called on the homepage.
+    * This fetches the text stored in a Cloudflare KV.
+    */
+    if (url.pathname === "/api/marquee/headlines") {
+        try {
+            const headlines = await env.HEADLINES.get("headlines", { type: "json" });
+            return jsonResponse(headlines ?? []);
+        } catch (error) {
+            console.error("KV marquee updates query failed:", error);
+            return errorResponse(`Marquee updates query failed: ${error.message}`, 500);
         }
     }
 

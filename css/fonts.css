@@ -4,6 +4,7 @@
     url(../fonts/CinecavXType-Regular.ttf) format("truetype"),
     url(../fonts/CinecavXType-Regular.woff) format("woff"),
     url(../fonts/CinecavXType-Regular.woff2) format("woff2");
+    font-weight: normal;
 }
 
 @font-face {
@@ -11,7 +12,26 @@
     src:
     url(../fonts/Contour-Generator.ttf) format("truetype"),
     url(../fonts/Contour-Generator.woff) format("woff"),
-    url(../fonts/Contour-Generator.woff2) format("woff2")
+    url(../fonts/Contour-Generator.woff2) format("woff2");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'LED Counter 7';
+    src:
+    url(../fonts/LED-Counter-7.ttf) format("truetype"),
+    url(../fonts/LED-Counter-7.woff) format("woff"),
+    url(../fonts/LED-Counter-7.woff2) format("woff2");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'LED Counter 7 Italics';
+    src:
+    url(../fonts/LED-Counter-7_italics.ttf) format("truetype"),
+    url(../fonts/LED-Counter-7_italics.woff) format("woff"),
+    url(../fonts/LED-Counter-7_italics.woff2) format("woff2");
+    font-style: italic;
 }
 
 @font-face {

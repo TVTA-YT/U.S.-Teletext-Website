@@ -56,7 +56,7 @@
             }
 
             #site-intro-container {
-                margin-top: 90px;
+                margin-top: 0;
             }
 
             #secondary-container {
@@ -89,6 +89,36 @@
                 width: 200px !important;
             }
 
+            .updates-marquee {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                padding-top: 20px;
+            }
+
+            .updates-marquee-content.marquee-enter {
+                animation: updates-marquee-enter var(--enter-duration, 3s) linear forwards;
+            }
+
+            .updates-marquee-content.marquee-loop {
+                animation: updates-marquee 50s linear infinite;
+            }
+
+            .updates-marquee-content {
+                display: flex;
+                width: max-content;
+            }
+
+            .updates-marquee-track {
+                display: flex;
+                flex-shrink: 0;
+                white-space: nowrap;
+            }
+
+            .updates-marquee-text {
+                display: inline;
+            }
+
             .image-marquee {
                 position: relative;
                 overflow: hidden;
@@ -102,6 +132,14 @@
                 width: max-content;
                 gap: 6rem;
                 animation: image-marquee 25s linear infinite;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .updates-marquee-content.marquee-enter,
+                .updates-marquee-content.marquee-loop {
+                    transition: none;
+                    transform: translateX(0);
+                }
             }
 
             @keyframes blink {
@@ -134,6 +172,24 @@
                 }
                 to {
                     transform: translateX(calc(-7 * (200px + 6rem)));
+                }
+            }
+
+            @keyframes updates-marquee-enter {
+                from {
+                    transform: translateX(100vw);
+                }
+                to {
+                    transform: translateX(0%);
+                }
+            }
+
+            @keyframes updates-marquee {
+                from {
+                    transform: translateX(0%);
+                }
+                to {
+                    transform: translateX(-50%);
                 }
             }
         </style>
@@ -299,6 +355,14 @@
             </div>
         </nav>
         <main>
+            <div class="updates-marquee" id="updates-marquee" style="margin-top: 94px">
+                <div class="updates-marquee-content">
+                    <div class="updates-marquee-track"></div>
+                    <div class="updates-marquee-track" aria-hidden="true">
+                        <!-- <span class="updates-marquee-text" style="font-family: 'LED Counter 7', sans-serif;">****NORTH AMERICA'S TELETEXT ARCHIVE***</span> -->
+                    </div>
+                </div>
+            </div>
             <div class="container-fluid" id="site-intro-container">
                 <h1 id="site-intro">
                     <span class="visually-hidden">Welcome to the North American Teletext Archive</span>
@@ -630,6 +694,7 @@
             </div>
         </footer>
         <script src="js/color-modes.js"></script>
+        <script src="js/marquee.js"></script>
         <script src="js/recent-additions.js"></script>
     </body>
 </html>
