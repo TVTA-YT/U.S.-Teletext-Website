@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const networkServices = {
         'ABC': ['ABCPLUS'],
         'CBS': ['ExtraVision'],
-        'KET': ['KETAGTEXT'],
         'IPTV': ['IPTVAGIDS'],
+        'KET': ['KETAGTEXT'],
         'NBC': ['NBCTeletext'],
-        'TBS': ['Electra', 'Keyfax', 'SSSTeletext']
+        'TBS': ['Electra', 'Keyfax', 'SSSTeletext'],
+        'WGN': ["Virtext"],
+        'WHA': ["WisInfotext"]
     };
 
     const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC'];
@@ -26,13 +28,25 @@ document.addEventListener('DOMContentLoaded', () => {
         'programTitle',
         'tapeType',
         'tapeSpeed',
-        'submissionLink'
+        'submissionFile'
     ];
+
+    const FILE_FIELD_NAMES = ['submissionFile'];
 
     // If there are multiple samples, they need to be kept in memory.
     let samples = [];
     // This will remain null unless a sample is being edited
     let editingIndex = null;
+
+    // !
+    function makeFileList(files) {
+        const data = new DataTransfer();
+        files.forEach(f => {
+            if (f) data.items.add(f);
+        });
+
+        return data.files;
+    }
 
     // Update available tape speed options depending on the selected tape format
     function updateTapeSpeedOptions(scope) {
@@ -185,7 +199,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = {};
         FIELD_NAMES.forEach(name => {
             const el = fieldsContainer.querySelector(`[name="${name}"], [name="${name}[]"]`);
-            data[name] = el ? el.value : '';
+
+            if (!el) {
+                data[name] = FILE_FIELD_NAMES.includes(name) ? null : '';
+                return;
+            }
+
+            if (FILE_FIELD_NAMES.includes(name)) {
+                data[name] = el.files && el.files.length ? el.files[0] : null;
+            } else {
+                data[name] = el.value;
+            }
         });
         return data;
     }
@@ -194,7 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function writeFields(data) {
         FIELD_NAMES.forEach(name => {
             const el = fieldsContainer.querySelector(`[name="${name}"], [name="${name}[]"]`);
-            if (el) el.value = data[name] || ''
+            if (!el) return;
+
+            if (FILE_FIELD_NAMES.includes(name)) {
+                el.value = '';
+                el.files = makeFileList(data[name] ? [data[name]] : []);
+            } else {
+                el.value = data[name] || '';
+            }
         });
         initFields(fieldsContainer);
     }
@@ -220,10 +251,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const networkLabel = s.network === 'Other' ? s.otherNetwork : s.network;
             const serviceLabel = s.service === 'Other' || !s.service ? s.otherService : s.service;
+            const fileLabel = s.submissionFile ? s.submissionFile.name : 'No file attached';
 
             // Sample row label (i.e. CBS - ExtraVision - "Program Title")
             row.innerHTML = `
-            <span>Sample ${i + 1}: ${networkLabel} - ${serviceLabel} - "${s.programTitle}"</span>
+            <span>Sample ${i + 1}: ${networkLabel} - ${serviceLabel} -- ${s.date} -- "${s.programTitle}" -- ${fileLabel}</span>
             <span>
                 <button type="button" class="btn btn-sm btn-outline-secondary edit-sample" data-index="${i}">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-danger remove-sample" data-index="${i}">Remove</button>
@@ -315,15 +347,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        //
         hiddenFieldsContainer.innerHTML = '';
         samples.forEach(s => {
             FIELD_NAMES.forEach(name => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = `${name}[]`;
-                input.value = s[name] || '';
-                hiddenFieldsContainer.appendChild(input);
+                if (FILE_FIELD_NAMES.includes(name)) {
+                    const fileInput = document.createElement("input");
+                    fileInput.type = "file";
+                    fileInput.name = `${name}[]`;
+                    fileInput.hidden = true;
+                    fileInput.files = makeFileList(s[name] ? [s[name]] : []);
+                    hiddenFieldsContainer.appendChild(fileInput);
+                } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = `${name}[]`;
+                    input.value = s[name] || '';
+                    hiddenFieldsContainer.appendChild(input);
+                }
             });
         });
     });

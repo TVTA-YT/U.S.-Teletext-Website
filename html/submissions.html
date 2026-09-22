@@ -254,7 +254,7 @@
                         personal tapes with possible teletext, use <a href="contact.html">this</a> form.
                     </p>
                 </div>
-                <form action="https://formspree.io/f/xoeawkye" method="post" id="submissionForm">
+                <form action="https://formspree.io/f/xoeawkye" method="post" id="submissionForm" enctype="multipart/form-data">
                     <div id="sample-fields">
                         <div class="mb-3">
                             <label for="network" class="form-label">Select a network</label>
@@ -266,6 +266,8 @@
                                 <option value="KET">Kentucky Educational Television</option>
                                 <option value="NBC">NBC</option>
                                 <option value="TBS">TBS</option>
+                                <option value="WGN">WGN</option>
+                                <option value="WHA">WHA-TV (PBS Wisconsin)</option>
                                 <option value="Other">Other (please specify)</option>
                             </select>
                         </div>
@@ -290,6 +292,8 @@
                                 <option value="Keyfax">Keyfax (Teletext)</option>
                                 <option value="NBCTeletext">NBC Teletext (Teletext)</option>
                                 <option value="SSSTeletext">SSS Teletext (Teletext)</option>
+                                <option value="Virtext">Virtext (Teletext)</option>
+                                <option value="WisInfotext">Wisconsin Infotext (Text)</option>
                             </select>
                             <div id="hint" class="form-text text-primary service-hint">Select a service</div>
                         </div>
@@ -302,10 +306,10 @@
                             <input type="date" name="date" id="date" class="form-control" required />
                         </div>
                         <div class="mb-3">
-                            <label for="programTitle" class="form-label"
-                                ><span aria-hidden="true">Enter program title(s)</span
-                                ><span class="sr-only">Enter program title or titles</span></label
-                            >
+                            <label for="programTitle" class="form-label">
+                                <span aria-hidden="true">Enter program title(s)</span>
+                                <span class="sr-only">Enter program title or titles</span>
+                            </label>
                             <input
                                 type="text"
                                 name="programTitle"
@@ -342,17 +346,18 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="submissionLink" class="form-label"
-                                ><span aria-hidden="true">Provide your submission(s)</span
-                                ><span class="sr-only">Provide your submission or submissions</span></label
-                            >
-                            <textarea
+                            <label for="submissionLink" class="form-label">
+                                <span aria-hidden="true">Provide your submission</span>
+                                <span class="sr-only">Provide your submission</span>
+                            </label>
+                            <input type="file" name="submissionFile" id="submissionFile" class="form-control" accept=".zip, .7z" required />
+                            <!-- <textarea
                                 name="submissionLink"
                                 id="submissionLink"
                                 class="form-control"
                                 placeholder="Shareable links only"
                                 required
-                            ></textarea>
+                            ></textarea> -->
                         </div>
                         <div class="mb-3">
                             <label for="notes" class="form-label">Provide any additional information below (optional)</label>
