@@ -4,21 +4,21 @@ const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev";
 // Default section labels
 const SECTION_LABELS = {
     intro: {
-        text: "****WELCOME TO NATA, NORTH AMERICA'S TELETEXT ARCHIVE**** ",
+        text: "**** WELCOME TO NATA, NORTH AMERICA'S TELETEXT ARCHIVE **** ",
         color: "#fff800",
-        font: "LED Counter 7",
+        font: "Bedstead Bold",
         nbsp: 2,
     },
     watch: {
         text: "==== WATCH THIS SPACE FOR QUICK UPDATES ====",
         color: "#00cfff",
-        font: "LED Counter 7",
+        font: "Bedstead Bold",
         nbsp: 12,
     },
     updates: {
         text: "UPDATES...",
         color: "#e501f6",
-        font: "LED Counter 7 Italics",
+        font: "Bedstead Regular",
         nbsp: 2,
     },
 };
@@ -28,13 +28,13 @@ const dateTimeItems = [
     {
         text: '<span class="marquee-datetime marquee-date"></span>',
         color: "#0019ff",
-        font: "LED Counter 7",
+        font: "Bedstead Regular",
         nbsp: 2,
     },
     {
         text: '<span class="marquee-datetime marquee-time">00:00:00</span>',
         color: "#0019ff",
-        font: "LED Counter 7",
+        font: "Bedstead Regular",
         nbsp: 12,
     },
 ];
@@ -69,36 +69,30 @@ function startMarqueeEntrance() {
 }
 
 // & Create text that will show the date the marquee headlines were last updated
-function formatLastUpdatedLabel(dbDate, headlinesDate) {
-    const candidates = [dbDate, headlinesDate].filter(Boolean).map((d) => new Date(d));
-
+function formatLastUpdatedLabel(headlinesDate) {
     // If no date, return static text
-    if (candidates.length === 0) return `UPDATE DATE UNKNOWN`;
+    if (!headlinesDate) return `UPDATE DATE UNKNOWN`;
 
-    // Find newest date
-    const latest = new Date(Math.max(...candidates.map((d) => d.getTime())));
-    const fmt = latest
-        .toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            timeZone: "UTC"
-        })
-        .toUpperCase();
+    // Find date headlines were last updated
+    const date = new Date(headlinesDate);
+    const fmt = date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC"
+    }).toUpperCase();
 
-    return `LAST UPDATED: ${fmt}`;
+    return `HEADLINES LAST UPDATED: ${fmt}`;
 }
 
 // & Format "new samples" text; convert JS Date (e.g. 2026-09-20T00:00:00Z) into short date (e.g. Sep 20)
 function formatDayLabel(dayStartISO) {
     const day = new Date(dayStartISO);
-    const fmt = day
-        .toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            timeZone: "UTC"
-        })
-        .toUpperCase();
+    const fmt = day.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC"
+    }).toUpperCase();
 
     return `NEW SAMPLES FOR ${fmt}:`;
 }
@@ -110,7 +104,7 @@ function buildMarqueeItems({ dateTimeItems, serviceCounts, headlines, dayStart, 
     const newSamplesLabel = {
         text: formatDayLabel(dayStart),
         color: "#00d231",
-        font: "LED Counter 7 Italics",
+        font: "Bedstead Regular",
         nbsp: 2,
     };
 
@@ -122,7 +116,7 @@ function buildMarqueeItems({ dateTimeItems, serviceCounts, headlines, dayStart, 
         items.push({
             text: "NO UPDATES AVAILABLE",
             color: "#ff0000",
-            font: "LED Counter 7",
+            font: "Bedstead Bold",
             nbsp: 12,
         });
         // Output each update otherwise
@@ -134,7 +128,7 @@ function buildMarqueeItems({ dateTimeItems, serviceCounts, headlines, dayStart, 
             items.push({
                 text: `${s.service.toUpperCase()} - ${s.count}`,
                 color: "#ff0000",
-                font: isLast ? "LED Counter 7 Italics" : "LED Counter 7",
+                font: "Bedstead Condensed",
                 nbsp: isLast ? 12 : 0,
                 separator: isLast ? undefined : "///&nbsp;",
             });
@@ -150,7 +144,7 @@ function buildMarqueeItems({ dateTimeItems, serviceCounts, headlines, dayStart, 
         items.push({
             text: h.text,
             color: h.color ?? "#a801f6",
-            font: h.font ?? "LED Counter 7",
+            font: h.font ?? "Bedstead Condensed",
             nbsp: h.nbsp ?? (isLast ? 2 : 2),
             separator: isLast ? undefined : "///",
         });
@@ -160,7 +154,7 @@ function buildMarqueeItems({ dateTimeItems, serviceCounts, headlines, dayStart, 
     items.push({
         text: lastUpdatedLabel,
         color: "#fff",
-        font: "LED Counter 7",
+        font: "Bedstead Condensed",
         nbsp: 25,
     });
 
@@ -225,7 +219,7 @@ async function initMarquee() {
         const headlineItems = headlinesData?.items ?? [];
 
         // Determine the last updated date
-        const lastUpdatedLabel = formatLastUpdatedLabel(updateData.lastUpdated, headlinesData?.updatedAt);
+        const lastUpdatedLabel = formatLastUpdatedLabel(headlinesData?.updatedAt);
 
         // Build the marquee
         const items = buildMarqueeItems({

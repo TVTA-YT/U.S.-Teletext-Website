@@ -1,4 +1,31 @@
 @font-face {
+    font-family: 'Bedstead Regular';
+    src:
+    url(../fonts/Bedstead-Regular.ttf) format("truetype"),
+    url(../fonts/Bedstead-Regular.woff) format("woff"),
+    url(../fonts/Bedstead-Regular.woff2) format("woff2");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Bedstead Bold';
+    src:
+    url(../fonts/Bedstead-Bold.ttf) format("truetype"),
+    url(../fonts/Bedstead-Bold.woff) format("woff"),
+    url(../fonts/Bedstead-Bold.woff2) format("woff2");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Bedstead Condensed';
+    src:
+    url(../fonts/Bedstead-Condensed.ttf) format("truetype"),
+    url(../fonts/Bedstead-Condensed.woff) format("woff"),
+    url(../fonts/Bedstead-Condensed.woff2) format("woff2");
+    font-weight: normal;
+}
+
+@font-face {
     font-family: 'Cinecav X Type';
     src:
     url(../fonts/CinecavXType-Regular.ttf) format("truetype"),
