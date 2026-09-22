@@ -19,6 +19,15 @@
     // If thumbnail fails to load, wait 2 seconds before retrying to prevent excess requests
     const RETRY_DELAY_MS = 2000;
 
+    // Scroll to image once 60px have passed when using mouse wheel or trackpad
+    const FS_WHEEL_THRESHOLD = 60;
+
+    // Ignore further input after 450ms
+    const FS_WHEEL_COOLDOWN_MS = 450;
+
+    // When swiping on mobile, show next image once 50px has been reached
+    const FS_SWIPE_THRESHOLD = 50;
+
     let activeThumbnailLoads = 0;
     const thumbnailLoadQueue = [];
     let nextThumbnailRequestTime = 0;
@@ -70,7 +79,7 @@
         nextThumbnailRequestTime = Date.now() + THUMBNAIL_REQUEST_DELAY_MS;
     }
 
-    // When the current thumbnail sinister loading, start loading another one
+    // When the current thumbnail finishes loading, start loading another one
     function onThumbnailLoadSettled() {
         activeThumbnailLoads = Math.max(0, activeThumbnailLoads - 1);
         pumpThumbnailQueue();
@@ -368,7 +377,7 @@
         col.className = "col-2 p-2";
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "tt-thumb-btn p-0 border-0 bg-transparent w-100";
+        btn.className = "thumbnail-button p-0 border-0 bg-transparent w-100";
         btn.dataset.index = String(i);
         btn.setAttribute("aria-label", "Go to page " + frame.displayNumber);
         btn.setAttribute("aria-current", i === currentIndex ? "true" : "false");
@@ -468,7 +477,7 @@
             return;
         }
 
-        const buttons = els.thumbnailGallery.querySelectorAll(".tt-thumb-btn");
+        const buttons = els.thumbnailGallery.querySelectorAll(".thumbnail-button");
 
         buttons.forEach((btn, i) => {
             const isActive = i === currentIndex;
@@ -490,6 +499,11 @@
 
         els.prevBtn.disabled = currentIndex === 0;
         els.nextBtn.disabled = currentIndex === frames.length - 1;
+
+        //
+        if (fullscreenOpen) {
+            renderFullscreenChrome();
+        }
     }
 
     // ! Render everything
@@ -609,6 +623,11 @@
         params.set("stream", streamId);
         params.set("page", String(frame.pageNumber));
         history.replaceState(null, "", "?" + params.toString());
+
+        // Run function only when full screen mode is enabled
+        if (fullscreenOpen) {
+            renderFullscreenFrame(currentIndex);
+        }
     }
 
     // !
@@ -661,7 +680,7 @@
         setStatus(`Loaded ${visibleFrameCount} of ${frames.length} images.`);
 
         if (visibleFrameCount > previousVisibleCount) {
-            const buttons = els.thumbnailGallery ? els.thumbnailGallery.querySelectorAll(".tt-thumb-btn") : null;
+            const buttons = els.thumbnailGallery ? els.thumbnailGallery.querySelectorAll(".thumbnail-button") : null;
 
             if (buttons && buttons[previousVisibleCount]) {
                 buttons[previousVisibleCount].scrollIntoView({
@@ -681,6 +700,270 @@
         if (els.loadMoreBtn) {
             els.loadMoreBtn.classList.add("d-none");
         }
+    }
+
+    // Full screen variables
+    let fullscreenOpen = false;
+    let fullscreenWheelAccumulator = 0;
+    let fullscreenWheelCooldown = false;
+    let fullscreenTouchStartX = null;
+    let fullscreenTouchStartY = null;
+    let fullscreenLastFocused = null;
+    let fullscreenHintTimer = null;
+
+    // Empty object for full screen elements
+    const fullscreenElements = {};
+
+    // & Build the full screen viewer
+    function buildFullscreenViewer() {
+        const overlay = document.createElement("div");
+        overlay.id = "fullscreen-image-viewer";
+        overlay.className = "fullscreen-overlay";
+        overlay.setAttribute("role", "dialog");
+        overlay.setAttribute("aria-modal", "true");
+        overlay.setAttribute("aria-label", "Full screen image viewer");
+        overlay.hidden = true;
+
+        // ^ Close button
+        const closeBtn = document.createElement("button");
+        closeBtn.type = "button";
+        closeBtn.className = "fullscreen-close";
+        closeBtn.setAttribute("aria-label", "Close full screen viewer");
+        closeBtn.innerHTML = "&times;";
+        closeBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            closeFullscreen();
+        });
+
+        // ^ Images
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "fullscreen-image-wrap";
+
+        const img = document.createElement("img");
+        img.className = "fullscreen-image";
+        img.alt = "";
+        img.draggable = false;
+
+        // ^ Loading spinner
+        const spinner = document.createElement("div");
+        spinner.className = "fullscreen-spinner spinner-border text-primary";
+        spinner.setAttribute("role", "status");
+        spinner.hidden = true;
+
+        imgWrap.appendChild(img);
+        imgWrap.appendChild(spinner);
+
+        // ^ Image caption
+        const caption = document.createElement("div");
+        caption.className = "fullscreen-image-caption";
+        caption.setAttribute("aria-live", "polite");
+
+        // ^ Viewer hint
+        const hint = document.createElement("div");
+        hint.className = "fullscreen-hint";
+        hint.textContent = "Scroll or click to browse images \u2022 Press Escape to close";
+
+        overlay.appendChild(closeBtn);
+        overlay.appendChild(imgWrap);
+        overlay.appendChild(caption);
+        overlay.appendChild(hint);
+
+        document.body.appendChild(overlay);
+
+        fullscreenElements.overlay = overlay;
+        fullscreenElements.closeBtn = closeBtn;
+        fullscreenElements.imgWrap = imgWrap;
+        fullscreenElements.img = img;
+        fullscreenElements.spinner = spinner;
+        fullscreenElements.caption = caption;
+        fullscreenElements.hint = hint;
+
+        // ^ Go to next or previous image
+        overlay.addEventListener("click", (event) => {
+            const rect = overlay.getBoundingClientRect();
+            const relativeX = event.clientX - rect.left;
+            fullscreenImageNavigate(relativeX > rect.width / 2 ? 1 : -1);
+        });
+
+        // ^ Listen for mouse wheel, trackpad, and touch scrolls.
+        // * First "passive" is false to prevent the browser's default scrolling behavior
+        overlay.addEventListener("wheel", onFullscreenWheel, { passive: false });
+        overlay.addEventListener("touchstart", onFullscreenTouchStart, { passive: true });
+        overlay.addEventListener("touchend", onFullscreenTouchEnd, { passive: true });
+    }
+
+    // & Open the full screen viewer
+    function openFullscreen(index) {
+        if (!frames.length) return;
+
+        // Show overlay and lock the body behind the overlay to prevent it from scrolling
+        fullscreenLastFocused = document.activeElement;
+        fullscreenOpen = true;
+        fullscreenElements.overlay.hidden = false;
+        document.body.classList.add("fullscreen-lock");
+
+        // Load selected image inside the viewer
+        renderFullscreenFrame(index);
+
+        // For keyboards, focus the close button
+        fullscreenElements.closeBtn.focus();
+
+        // Show hint when viewer is first opened; close it after 3 seconds
+        fullscreenElements.hint.classList.add("fullscreen-hint-visible");
+        clearTimeout(fullscreenHintTimer);
+        fullscreenHintTimer = setTimeout(() => {
+            fullscreenElements.hint.classList.remove("fullscreen-hint-visible");
+        }, 3000);
+    }
+
+    // & Close the full screen viewer
+    function closeFullscreen() {
+        if (!fullscreenOpen) return;
+
+        // Remove overlay and unlock the body
+        fullscreenOpen = false;
+        fullscreenElements.overlay.hidden = true;
+        document.body.classList.remove("fullscreen-lock");
+
+        // Remove keyboard focus from close button and put it back where it originally was
+        if (fullscreenLastFocused && typeof fullscreenLastFocused.focus === "function") {
+            fullscreenLastFocused.focus();
+        }
+    }
+
+    // & Change the images inside the overlay
+    function fullscreenImageNavigate(delta) {
+        const target = currentIndex + delta;
+
+        // !
+        if (target < 0 || target > frames.length - 1) return;
+        render(target);
+    }
+
+    /*
+    ! This function does nothing if there are loaded images with captions.
+    ! This is merely here as a safety check to prevent the overlay from loading if both aren't present.
+    */
+    function renderFullscreenChrome() {
+        if (!fullscreenElements.caption || !frames[currentIndex]) return;
+    }
+
+    // & Render the full screen image
+    function renderFullscreenFrame(index) {
+
+        // Load whatever image the user clicks on
+        const frame = frames[index];
+        if (!frame || !fullscreenElements.img) return;
+
+        // Show loading spinner and temporarily set image opacity to 0
+        fullscreenElements.spinner.hidden = false;
+        fullscreenElements.img.style.opacity = "0";
+
+        // This is used later; this checks to see of an image retry has been used
+        let retriedImage = false;
+
+        // Show the image on load if successful
+        fullscreenElements.img.onload = () => {
+            fullscreenElements.spinner.hidden = true;
+            fullscreenElements.img.style.opacity = "1";
+        };
+
+        // If unsuccessful, wait 2 seconds before trying again
+        fullscreenElements.img.onerror = () => {
+
+            // If the image load is unsuccessful the first time, try loading it again.
+            if (!retriedImage) {
+                retriedImage = true;
+                setTimeout(() => {
+                    fullscreenElements.img.src = frame.url;
+                }, RETRY_DELAY_MS);
+                return;
+            }
+
+            // If a retry fails a second time, stop retrying and hide the spinner
+            fullscreenElements.spinner.hidden = true;
+        };
+
+        // Assign images
+        fullscreenElements.img.src = frame.url;
+        fullscreenElements.img.alt = `Page ${frame.displayNumber}.`;
+
+        // Build image caption
+        const parts = ["Page " + frame.displayNumber];
+
+        // Differentiate different versions of the same page if needed
+        if (frame.occurrenceCount > 1) {
+            parts.push("capture " + frame.occurrenceIndex + " of " + frame.occurrenceCount);
+        }
+
+        // Differentiate versions of different "record" pages (NABTS pages use "Record" instead of "Page")
+        if (frame.kind === "record" && frame.subIndex) {
+            parts.push("v" + frame.subIndex);
+        }
+
+        // Add image positions
+        parts.push((index + 1) + " of " + frames.length);
+        fullscreenElements.caption.textContent = parts.join(" - ");
+    }
+
+    // & This will handle mouse wheen and trackpad scrolling
+    function onFullscreenWheel(event) {
+
+        // Do not scroll body behind the overlay
+        event.preventDefault();
+        if (fullscreenWheelCooldown) return;
+
+        // Take current scroll movement in pixels and add it to accumulated amount
+        fullscreenWheelAccumulator += event.deltaY;
+
+        // If the scroll movement meets the threshold, reset the threshold count, disable another nav scroll, then go forward 1 image
+        if (fullscreenWheelAccumulator > FS_WHEEL_THRESHOLD) {
+            fullscreenWheelAccumulator = 0;
+            fullscreenWheelCooldown = true;
+            fullscreenImageNavigate(1);
+
+            // Enable navigation again after the cooldown period
+            setTimeout(() => {
+                fullscreenWheelCooldown = false;
+            }, FS_WHEEL_COOLDOWN_MS);
+
+            // Do the same as the code above,but go back 1 image
+        } else if (fullscreenWheelAccumulator < -FS_WHEEL_THRESHOLD) {
+            fullscreenWheelAccumulator = 0;
+            fullscreenWheelCooldown = true;
+            fullscreenImageNavigate(-1);
+            setTimeout(() => {
+                fullscreenWheelCooldown = false;
+            }, FS_WHEEL_COOLDOWN_MS);
+        }
+    }
+
+    // & This will handle mobile swiping; calculates where the swiping begins (finger touch)
+    function onFullscreenTouchStart(event) {
+        const touch = event.touches[0];
+        fullscreenTouchStartX = touch.clientX;
+        fullscreenTouchStartY = touch.clientY;
+    }
+
+    // & This will handle mobile swiping; calculates where the swiping ends (finger lift)
+    function onFullscreenTouchEnd(event) {
+        if (fullscreenTouchStartX === null) return;
+
+        const touch = event.changedTouches[0];
+        const deltaX = fullscreenTouchStartX - touch.clientX;
+        const deltaY = fullscreenTouchStartY - touch.clientY;
+
+        // If the swipe is vertical and meets the threshold requirement, it is a navigation gesture
+        if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > FS_SWIPE_THRESHOLD) {
+            fullscreenImageNavigate(deltaY > 0 ? 1 : -1);
+
+            // Otherwise, handle horizontal swiped
+        } else if (Math.abs(deltaX) > FS_SWIPE_THRESHOLD) {
+            fullscreenImageNavigate(deltaX > 0 ? 1 : -1)
+        }
+
+        fullscreenTouchStartX = null;
+        fullscreenTouchStartY = null;
     }
 
     // ! Initialize the gallery
@@ -804,8 +1087,34 @@
         goToPage(value);
     });
 
+    els.image.classList.add("expandable-image");
+    els.image.setAttribute("role", "button");
+    els.image.setAttribute("tabindex", "0");
+    els.image.setAttribute("aria-label", "View this image full screen");
+    els.image.addEventListener("click", () => openFullscreen(currentIndex));
+    els.image.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openFullscreen(currentIndex);
+        }
+    });
+
+    buildFullscreenViewer();
+
     // Keyboard functions
     document.addEventListener("keydown", (event) => {
+        if (fullscreenOpen) {
+            if (event.key === "Escape") {
+                closeFullscreen();
+            } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+                fullscreenImageNavigate(1);
+            } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+                fullscreenImageNavigate(-1)
+            }
+
+            return;
+        }
+
         if (document.activeElement === els.gotoInput) {
             return;
         }

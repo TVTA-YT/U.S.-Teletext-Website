@@ -1,110 +1,110 @@
 /* * NAVIGATION MENU MEDIA QUERIES * */
 
-@media only screen and (min-width: 1113px) {
+@media (min-width: 1113px) {
     #navbarNav .nav-item .nav-link {
         margin: 0 10px;
     }
 }
 
-@media only screen and (min-width: 1670px) {
+@media (min-width: 1670px) {
     .navbar-nav {
         margin-left: 26%;
         font-size: 20px;
     }
 }
 
-@media only screen and (max-width: 1669px) {
+@media (max-width: 1669px) {
     .navbar-nav {
         margin-left: 22%;
         font-size: 20px;
     }
 }
 
-@media only screen and (max-width: 1613px) {
+@media (max-width: 1613px) {
     .navbar-nav {
         margin-left: 16%;
         font-size: 20px;
     }
 }
 
-@media only screen and (max-width: 1516px) {
+@media (max-width: 1516px) {
     .navbar-nav {
         margin-left: 18%;
         font-size: 18px;
     }
 }
 
-@media only screen and (max-width: 1429px) {
+@media (max-width: 1429px) {
     .navbar-nav {
         margin-left: 12%;
         font-size: 18px;
     }
 }
 
-@media only screen and (max-width: 1355px) {
+@media (max-width: 1355px) {
     .navbar-nav {
         margin-left: 8%;
         font-size: 18px;
     }
 }
 
-@media only screen and (min-width: 1235px) and (max-width: 1291px) {
+@media (min-width: 1235px) and (max-width: 1291px) {
     .navbar-nav {
         margin-left: 2%;
         font-size: 18px;
     }
 }
 
-@media only screen and (max-width: 1234px) {
+@media (max-width: 1234px) {
     .navbar-nav {
         margin-left: 6%;
         font-size: 16px;
     }
 }
 
-@media only screen and (max-width: 1184px) {
+@media (max-width: 1184px) {
     .navbar-nav {
         margin-left: 2%;
         font-size: 16px;
     }
 }
 
-@media only screen and (max-width: 1138px) {
+@media (max-width: 1138px) {
     .navbar-nav {
         margin-left: 4%;
         font-size: 15px;
     }
 }
 
-@media only screen and (max-width: 1112px) {
+@media (max-width: 1112px) {
     .navbar-nav {
         margin-left: 16%;
         font-size: 14px;
     }
 }
 
-@media only screen and (max-width: 1074px) {
+@media (max-width: 1074px) {
     .navbar-nav {
         margin-left: 14%;
         font-size: 14px;
     }
 }
 
-@media only screen and (max-width: 1047px) {
+@media (max-width: 1047px) {
     .navbar-nav {
         margin-left: 10%;
         font-size: 14px;
     }
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1018px) {
+@media (min-width: 992px) and (max-width: 1018px) {
     .navbar-nav {
         margin-left: 8%;
         font-size: 14px;
     }
 }
 
-@media only screen and (max-width: 991px) {
+@media (max-width: 991px) {
     .navbar-nav {
         margin-left: 0% !important;
     }
@@ -112,7 +112,7 @@
 
 /* * SERVICE TV IMAGES AND EPG TABLE * */
 
-@media only screen and (min-width: 992px) {
+@media (min-width: 992px) {
     .service-top-padding {
         padding-top: 100px !important;
     }
@@ -122,14 +122,14 @@
     }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991px) {
     .service-new-row-top-padding {
         padding-top: 100px !important;
     }
 }
 
 
-@media only screen and (max-width: 767px) {
+@media (max-width: 767px) {
     .service-xsmall-bottom-padding {
         padding-top: 150px !important;
     }
@@ -150,7 +150,7 @@
 
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
 
-@media only screen and (min-width: 1400px) {
+@media (min-width: 1400px) {
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -222,7 +222,7 @@
     }
 }
 
-@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+@media (min-width: 1200px) and (max-width: 1399px) {
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -286,7 +286,7 @@
     }
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1199px) {
     #site-intro span#site-title {
         font-size: 2.2em !important;
     }
@@ -351,7 +351,7 @@
 }
 
 /* * QUERY FOR MEDIUM DEVICES * */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991px) {
     #site-intro span#site-title {
         font-size: 1.6em !important;
     }
@@ -438,7 +438,33 @@
 }
 
 /* * QUERY FOR EXTRA SMALL AND SMALL DEVICES * */
-@media only screen and (min-width: 500px) and (max-width: 767px) {
+
+/* Styles used for the fullscreen image viewer */
+@media (max-width: 576px) {
+    .fullscreen-image-wrap {
+        padding: 1rem;
+    }
+
+    .fullscreen-close {
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+    }
+
+    .fullscreen-image-caption {
+        bottom: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .fullscreen-hint {
+        top: 0.75rem;
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
     #site-intro span#site-title {
         font-size: 1.2em !important;
     }
@@ -523,7 +549,7 @@
     }
 }
 
-@media only screen and (min-width: 400px) and (max-width: 499px) {
+@media (min-width: 400px) and (max-width: 499px) {
     #site-intro span#site-title {
         font-size: 1.0em !important;
     }
@@ -610,7 +636,7 @@
     }
 }
 
-@media only screen and (max-width: 399px) {
+@media (max-width: 399px) {
     #site-intro span#site-title {
         font-size: 0.8em !important;
     }
