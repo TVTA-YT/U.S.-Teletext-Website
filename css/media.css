@@ -600,6 +600,10 @@
         width: 70%;
     }
 
+    .updates-marquee-text {
+        font-size: 1.5em;
+    }
+
     .submission-count-table {
         font-size: 1em !important;
     }
@@ -685,6 +689,10 @@
 
     .electra-images {
         width: 80%;
+    }
+
+    .updates-marquee-text {
+        font-size: 1.5em;
     }
 
     .navbar {
