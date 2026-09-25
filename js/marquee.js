@@ -49,7 +49,7 @@ function startMarqueeEntrance() {
     const trackWidth = track.getBoundingClientRect().width;
 
     // Loop duration is every 50 seconds.
-    const loopDurationSec = 50;
+    const loopDurationSec = 30;
     const pxPerSecond = trackWidth / loopDurationSec;
 
     // Calculate how long it takes the marquee to scroll into the visible area; add custom CSS property and assign class to start animation
