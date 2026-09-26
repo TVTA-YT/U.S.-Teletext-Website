@@ -108,13 +108,21 @@ const tables = {
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
-    wisconsinInfotext: {
+    wisconsinInfotextText: {
         table: "Wis_Infotext",
         idField: "ID",
         type: "nonTeletext",
         dateField: "Date",
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
+    },
+    wisconsinInfotextTeletext: {
+        table: "Wis_Infotext_Teletext",
+        idField: "ID",
+        type: "teletext",
+        dateField: "Date",
+        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     }
 };
 
@@ -369,7 +377,7 @@ async function getStarSightManifest(env, identifier) {
 }
 
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
-const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext"];
+const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+)\.(?:png|jpg|jpeg|gif)$/i;
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 

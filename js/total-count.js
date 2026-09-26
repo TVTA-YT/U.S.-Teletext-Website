@@ -14,11 +14,12 @@ async function renderTotalRecordCount() {
     const nbcTeletextCountEl = document.getElementById("nbc-teletext-count");
     const sssTeletextCountEl = document.getElementById("sss-teletext-count");
     const virtextCountEl = document.getElementById("virtext-count");
+    const wisconsinInfotextTeletextServiceCountEl = document.getElementById("wisconsin-infotext-teletext-count");
 
     const abcPlusCountEl = document.getElementById("abc-plus-count");
     const kcetCountEl = document.getElementById("kcet-count");
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
-    const wisconsinInfotextCountEl = document.getElementById("wisconsin-infotext-count");
+    const wisconsinInfotextTextServiceCountEl = document.getElementById("wisconsin-infotext-text-count");
     const iptvAgidsCountEl = document.getElementById("iptv-agids-count");
 
     // Don't make an API request if none of the count elements exist.
@@ -38,7 +39,8 @@ async function renderTotalRecordCount() {
         abcPlusCountEl,
         kcetCountEl,
         ketAgtextCountEl,
-        wisconsinInfotextCountEl,
+        wisconsinInfotextTeletextServiceCountEl,
+        wisconsinInfotextTextServiceCountEl,
         iptvAgidsCountEl
     ];
 
@@ -136,8 +138,12 @@ async function renderTotalRecordCount() {
             datasetCounts.ketAgtext?.availableSamples ?? 0
         );
 
-        const wisconsinInfotextSamples = Number(
-            datasetCounts.wisconsinInfotext?.availableSamples ?? 0
+        const wisconsinInfotextTextSamples = Number(
+            datasetCounts.wisconsinInfotextTextService?.availableSamples ?? 0
+        );
+
+        const wisconsinInfotextTeletextSamples = Number(
+            datasetCounts.wisconsinInfotextTeletextService?.availableSamples ?? 0
         );
 
         const iptvAgidsSamples = Number(
@@ -207,8 +213,12 @@ async function renderTotalRecordCount() {
             ketAgtextCountEl.textContent = ketAgtextSamples.toLocaleString();
         }
 
-        if (wisconsinInfotextCountEl) {
-            wisconsinInfotextCountEl.textContent = wisconsinInfotextSamples.toLocaleString();
+        if (wisconsinInfotextTextServiceCountEl) {
+            wisconsinInfotextTextServiceCountEl.textContent = wisconsinInfotextTextSamples.toLocaleString();
+        }
+
+        if (wisconsinInfotextTeletextServiceCountEl) {
+            wisconsinInfotextTeletextServiceCountEl.textContent = wis.toLocaleString();
         }
 
         if (iptvAgidsCountEl) {

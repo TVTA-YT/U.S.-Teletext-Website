@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'NBC': ['NBCTeletext'],
         'TBS': ['Electra', 'Keyfax', 'SSSTeletext'],
         'WGN': ["Virtext"],
-        'WHA': ["WisInfotext"]
+        'WHA': ['WisInfotext-Text', 'WisInfotext-Teletext']
     };
 
     const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC'];
@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hint.hidden = true;
 
             // For TBS: let someone choose between Electra, Keyfax, or SSS Teletext. There is no default option since TBS used both services.
+            // Do the same for WHA-TV, but choosing between the text/teletext versions of Wisconsin Infotext
         } else if (validServices.length > 1) {
             serviceSelect.value = validServices.includes(currentValue) ? currentValue : '';
             serviceSelect.disabled = false;

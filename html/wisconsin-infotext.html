@@ -225,19 +225,39 @@
                     <img src="../images/banners/dark/Wisconsin-Infotext.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
                 <hr aria-hidden="true" />
-                <p>Use the form below to view all submissions or to search for submissions by year.</p>
-                <form action="wisconsin-infotext-results.html" method="get">
-                    <div class="mb-3">
-                        <label for="year" class="form-label">Select a year (leave blank to view all)</label>
-                        <select name="year" id="year" class="form-select">
-                            <option value=""></option>
-                            <option value="1984">1984</option>
-                            <option value="1985">1985</option>
-                        </select>
+                <p>Use the forms below to view all submissions or to search for submissions by year.</p>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <h2>Teletext Service</h2>
+                        <form action="wisconsin-infotext-text-results.html" method="get">
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Select a year (leave blank to view all)</label>
+                                <select name="year" id="year" class="form-select">
+                                    <option value=""></option>
+                                    <option value="1984">1984</option>
+                                    <option value="1985">1985</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary form-control">Submit</button>
+                            <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-primary form-control">Submit</button>
-                    <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
-                </form>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <h2>Text Service</h2>
+                        <form action="wisconsin-infotext-teletext-results.html" method="get">
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Select a year (leave blank to view all)</label>
+                                <select name="year" id="year" class="form-select">
+                                    <option value=""></option>
+                                    <option value="1985">1985</option>
+                                    <option value="1986">1986</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary form-control">Submit</button>
+                            <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
+                        </form>
+                    </div>
+                </div>
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"

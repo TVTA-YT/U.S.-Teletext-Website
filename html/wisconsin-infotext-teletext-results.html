@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- Created August 23, 2026, 15:07 -->
+<!-- Created September 26, 2026, 13:15 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Available samples for the Wisconsin Infotext text service." />
+        <meta name="description" content="Available samples for the Wisconsin Infotext teletext service." />
         <meta name="robots" content="noindex, nofollow" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
@@ -387,10 +387,10 @@
         <script src="../js/render-results.js"></script>
         <script>
             renderResults({
-                dataset: "wisconsininfotext",
+                dataset: "wisconsininfotextteletext",
                 filterParam: "year",
                 filterField: "Year",
-                serviceLabel: "Wisconsin InfoText",
+                serviceLabel: "Wisconsin Infotext",
                 groupByField: "Month",
                 groupOrder: [
                     "January",
@@ -413,12 +413,12 @@
                     { label: "Sample Date", field: "Date", type: "date" },
                 ],
                 columns: [
+                    { label: "Thumbnail", renderThumbnail: true },
                     { label: "Date", key: "Date" },
                     { label: "Program", key: "Program_Title" },
                     { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
                     { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
-                    { label: "TEXT1", key: "TEXT1", renderWisconsinInfotext: true },
-                    { label: "TEXT2", key: "TEXT2", renderWisconsinInfotext: true },
+                    { label: "ZIP", key: "ZIP", renderZip: true },
                     { label: "Contributor", key: "Recovered_By" },
                     { label: "Date Added", key: "Date_Added" },
                 ],

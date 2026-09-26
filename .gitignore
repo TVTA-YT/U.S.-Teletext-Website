@@ -2,6 +2,10 @@ test.html
 penntext.html
 penntext-results.html
 teletext-editor.html
+teletext-viewer.html
+t42-decode.js
+teletext-editor.js
+teletext-viewer.js
 package-lock.json
 package.json
 json/
