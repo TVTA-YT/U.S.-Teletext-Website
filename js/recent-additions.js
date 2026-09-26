@@ -19,8 +19,7 @@ async function renderRecentAdditions() {
         "PENNTEXT": "images/PPTN_white.png",
         "SSS Teletext": "images/SSS_white.png",
         "Virtext": "images/WGN9_white.png",
-        "WISINFOTEXT-Text": "images/WHA_white.png",
-        "WISINFOTEXT-Teletext": "images/WHA_white.png",
+        "WISINFOTEXT": "images/WHA_white.png",
     };
 
     // Replace service name string with the image for each service (or network/station logo for text services)
