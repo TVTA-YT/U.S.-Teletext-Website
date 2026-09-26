@@ -139,11 +139,11 @@ async function renderTotalRecordCount() {
         );
 
         const wisconsinInfotextTextSamples = Number(
-            datasetCounts.wisconsinInfotextTextService?.availableSamples ?? 0
+            datasetCounts.wisconsinInfotextText?.availableSamples ?? 0
         );
 
         const wisconsinInfotextTeletextSamples = Number(
-            datasetCounts.wisconsinInfotextTeletextService?.availableSamples ?? 0
+            datasetCounts.wisconsinInfotextTeletext?.availableSamples ?? 0
         );
 
         const iptvAgidsSamples = Number(
@@ -218,7 +218,7 @@ async function renderTotalRecordCount() {
         }
 
         if (wisconsinInfotextTeletextServiceCountEl) {
-            wisconsinInfotextTeletextServiceCountEl.textContent = wis.toLocaleString();
+            wisconsinInfotextTeletextServiceCountEl.textContent = wisconsinInfotextTeletextSamples.toLocaleString();
         }
 
         if (iptvAgidsCountEl) {
