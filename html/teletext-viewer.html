@@ -1,11 +1,20 @@
 <!doctype html>
-<!-- Created August 26, 2026, 18:26 -->
+<!-- Created September 25, 2026, 13:53 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Available samples for the Keyfax teletext service." />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content="View a decoded T34 teletext stream." />
+        <!-- Open Graph URLs -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="North American Teletext Archive - T34 Teletext Editor" />
+        <meta property="og:description" content="View a decoded T34 teletext stream" />
+        <meta property="og:url" content="https://nateletext.com/html/sss-teletext.html" />
+        <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
+        <meta property="og:image:alt" content="North American Teletext Archive" />
+        <meta property="og:site_name" content="North American Teletext Archive" />
+        <meta property="og:locale" content="en_US" />
+        <link rel="canonical" href="https://nateletext.com/html/sss-teletext.html" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
@@ -30,42 +39,73 @@
             crossorigin="anonymous"
         ></script>
         <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <title>Keyfax Results</title>
+        <title>SSS Teletext</title>
         <style>
             .container {
                 padding-top: 110px;
             }
 
-            .display-2 {
-                font-weight: bold;
-            }
-
-            .tooltip {
-                --bs-tooltip-max-width: 400px;
-            }
-
-            .tooltip-heading {
-                padding-top: 10px;
-                text-decoration: underline;
-            }
-
-            .tooltip-body {
-                color: var(--tooltip-body-text-color) !important;
-            }
-
-            .tape-notes {
-                text-decoration: none;
-                font-weight: 600;
-            }
-
-            .btn:not(#themeFab, .theme-choice) {
+            .btn {
                 border-radius: 24px;
-                background-color: rgb(62, 134, 243);
             }
 
-            table {
+            .viewer-screen {
+                background: #000;
+                padding: 2.5% 3%;
+                border-radius: 0.75rem;
+            }
+
+            .viewer-screen:focus-visible {
+                outline: 3px solid var(--bs-primary);
+                outline-offset: 3px;
+            }
+
+            .viewer-screen canvas {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            /* Stretch the 480 × 500 page to a 4:3 picture, as on a TV */
+            .viewer-screen.aspect-ratio canvas {
+                aspect-ratio: 4 / 3;
+            }
+
+            .entry-display {
+                font-family: "Bedstead Regular", monospace;
+                font-size: 1.75rem;
+                letter-spacing: 0.1em;
+                background: #000;
+                color: #fff;
+                border-radius: 0.5rem;
                 text-align: center;
-                vertical-align: middle;
+                padding: 0.25rem;
+                min-height: 3rem;
+            }
+
+            .keypad {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+
+            .keypad .btn {
+                font-size: 1.25rem;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .btn[aria-pressed="true"] {
+                background: var(--bs-primary);
+                border-color: var(--bs-primary);
+                color: #fff;
+            }
+
+            #pageText {
+                white-space: pre;
+                overflow-x: auto;
+                font-family: var(--bs-font-monospace);
+                font-size: 0.875rem;
+                margin: 0;
             }
         </style>
     </head>
@@ -233,69 +273,152 @@
         </nav>
         <main>
             <div class="container">
-                <h1 class="page-title data-letter-reveal">
-                    <img src="../images/banners/light/Keyfax_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/Keyfax.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
-                    <div id="text-top-padding">
-                        <span id="year-heading"></span>
-                    </div>
+                <h1>
+                    <span class="visually-hidden" id="bannerTitle"></span>
+                    <img src="" alt="" class="mw-100 light-mode-image" id="lightImageBanner" aria-hidden="true" />
+                    <img src="" alt="" class="mw-100 dark-mode-image" id="darkImageBanner" aria-hidden="true" />
                 </h1>
-                <p class="fs-2" id="result-count"></p>
-                <div class="alert alert-primary text-center">
-                    <div class="alert-heading fs-4">*NEW*</div>
-                    You can now view all archived teletext pages from each available sample directly on the site. These links can be found
-                    in the "Date" column; the text will be bold and underlined.
-                </div>
-                <div class="alert alert-secondary" role="alert">
-                    <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong>:
-                    <span>
-                        Some pages may have imperfections, either due to corruption present in the source material or imperfections with the
-                        software decoders. As of August 11, 2026, the software is only a few days old, so <em>some</em> imperfections are to
-                        be expected, at least for now.
-                    </span>
-                    <br />
-                    <br />
-                    <span>
-                        <span aria-hidden="true">
-                            The table(s) below are responsive; to view more of the information, simply scroll the table (if applicable).
-                        </span>
-                        <span class="sr-only">
-                            The table or tables below are responsive; to view more of the information, simply scroll the table (if
-                            applicable).
-                        </span>
-                    </span>
-                    <br />
-                    <br />
-                    <span>
-                        If a ZIP file is available for download, look for the ZIP icon (<i class="bi bi-file-zip-fill"></i>) in the ZIP
-                        column
-                    </span>
-                </div>
                 <hr aria-hidden="true" />
-                <div id="sort-controls"></div>
-                <div id="results"></div>
-                <div class="pb-3" id="return-to-form-button">
-                    <a href="keyfax.html">
-                        <button type="submit" class="btn form-control">
-                            <span class="button-text">Return to Form</span>
-                        </button>
-                    </a>
+                <!-- Sample name and date -->
+                <h2 class="text-center display-6 fw-bold" id="sample-title"></h2>
+
+                <!-- Contributor name -->
+                <p class="text-center fs-4">Submitted by: <span id="contributor-name"></span></p>
+                <div class="text-center fst-italic mb-3">
+                    <span>T42 Name: <span id="sourceName">none chosen</span></span>
                 </div>
-                <!-- * BEGIN IMAGE MODAL -->
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <img src alt class="img-fluid" id="modalImage" />
-                                <p id="modalCaption"></p>
-                            </div>
+
+                <div class="row g-4">
+                    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
+                        <div class="viewer-screen aspect-ratio" id="screen" tabindex="0" aria-describedby="pageInfo screenHelp">
+                            <canvas
+                                class="border border-white"
+                                id="pageCanvas"
+                                role="img"
+                                aria-label="Teletext screen. Choose a sample from the results page to view its pages"
+                            ></canvas>
                         </div>
+                        <p class="visually-hidden" id="screenHelp">
+                            Type a three-digit page number to go to a specific page. With the screen focused, the up and down arrow keys
+                        </p>
+                        <p class="mt-2 mb-3" id="pageInfo">
+                            No sample chosen. Choose an available teletext sample from one of the results pages.
+                        </p>
+                        <details class="card">
+                            <summary class="card-header">Text version of this page</summary>
+                            <div class="card-body">
+                                <pre id="pageText">Plain text from each page will appear here once a page from a sample has loaded.</pre>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                        <section class="mb-4" aria-labelledby="remoteHeading">
+                            <h2 id="remoteHeading" class="h5">Keypad</h2>
+                            <div class="entry-display mb-3" id="entryDisplay" aria-hidden="true"></div>
+                            <div class="keypad mb-3" role="group" aria-label="Page number keys">
+                                <button type="button" class="btn btn-outline-secondary" data-digit="1">1</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="2">2</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="3">3</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="4">4</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="5">5</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="6">6</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="7">7</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="8">8</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="9">9</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="hold">Hold</button>
+                                <button type="button" class="btn btn-outline-secondary" data-digit="0">0</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="reveal">Reveal</button>
+                            </div>
+                            <div class="d-grid gap-2 mb-3" style="grid-template-columns: 1fr 1fr">
+                                <button type="button" class="btn btn-outline-secondary" data-command="prev-page">Previous Page</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="next-page">Next Page</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="prev-subpage">
+                                    Previous Subpage
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="next-subpage">Next Subpage</button>
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary w-100 mb-3"
+                                data-command="boxed"
+                                aria-pressed="false"
+                                disabled
+                            >
+                                Newsflash Box Only
+                            </button>
+                            <label for="pageSelect" class="form-label">Pages in this sample</label>
+                            <select class="form-select" id="pageSelect" disabled></select>
+                        </section>
+                        <section class="mb-4" aria-labelledby="flagsHeading">
+                            <h2 class="h5" id="flagsHeading">Header Flags</h2>
+                            <ul class="mb-0" id="pageFlags">
+                                <li class="text-body-secondary">None set</li>
+                            </ul>
+                        </section>
+                        <section class="mb-4" aria-labelledby="optionsHeading">
+                            <h2 class="h5" id="optionsHeading">Display</h2>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="optRolling" checked />
+                                <label for="optRolling" class="form-check-label">Rolling header and page search</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="optFlash" checked />
+                                <label for="optFlash" class="form-check-label">Flashing text</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="optAspect" checked />
+                                <label for="optAspect" class="form-check-label">Aspect ratio (4:3)</label>
+                            </div>
+                        </section>
+                        <section aria-labelledby="keysHeading">
+                            <h2 class="h5" id="keysHeading">Keyboard Shortcuts</h2>
+                            <table class="table table-sm table-primary table-bordered mb-3 text-center align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Keys</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Num keys</td>
+                                        <td>Go to a specific page</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Period key</td>
+                                        <td>Hold current page</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R</td>
+                                        <td>Reveal hidden text</td>
+                                    </tr>
+                                    <tr>
+                                        <td>X</td>
+                                        <td>Newsflash box only / full page</td>
+                                    </tr>
+                                    <tr>
+                                        <td>+ / -</td>
+                                        <td>Next / previous page</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Up / Down arrow</td>
+                                        <td>Next / previous page (when viewer is focused)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Left / Right arrow</td>
+                                        <td>View subpages (when viewer is focused)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Escape / Delete (macOS)</td>
+                                        <td>Cancel page entry</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
                     </div>
                 </div>
-                <!-- * END IMAGE MODAL -->
+                <div class="visually-hidden" id="announcer" aria-live="polite"></div>
+
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"
@@ -378,48 +501,7 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
-        <script src="../js/image-modal.js"></script>
-        <script src="../js/render-results.js"></script>
-        <script>
-            renderResults({
-                dataset: "keyfax",
-                filterParam: "year",
-                filterField: "Year",
-                serviceLabel: "Keyfax",
-                groupByField: "Month",
-                groupOrder: [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                ],
-                sortSecondaryField: "Date",
-                sortOptions: [
-                    { label: "Contributor", field: "Recovered_By", type: "string" },
-                    { label: "Program Title", field: "Program_Title", type: "string" },
-                    { label: "Sample Date", field: "Date", type: "date" },
-                ],
-                columns: [
-                    { label: "Thumbnail", renderThumbnail: true },
-                    { label: "Date", key: "Date" },
-                    { label: "Program", key: "Program_Title" },
-                    { label: "View Teletext Stream", key: "Teletext_Sample", renderTeletext: true },
-                    { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
-                    { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
-                    { label: "ZIP", key: "ZIP", renderZip: true },
-                    { label: "Contributor", key: "Recovered_By" },
-                    { label: "Date Added", key: "Date_Added" },
-                ],
-            });
-        </script>
+        <script src="../js/teletext-render.js"></script>
+        <script src="../js/teletext-viewer.js"></script>
     </body>
 </html>

@@ -18,7 +18,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     },
     edutel: {
         table: "Edutel",
@@ -34,7 +34,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     },
     extravision: {
         table: "ExtraVision",
@@ -74,7 +74,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     },
     nbcTeletext: {
         table: "NBC_Teletext",
@@ -90,7 +90,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     },
     starsight: {
         table: "StarSight",
@@ -106,7 +106,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     },
     wisconsinInfotextText: {
         table: "Wis_Infotext",
@@ -122,7 +122,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
     }
 };
 
@@ -174,14 +174,18 @@ function errorResponse(message, status = 500) {
 /* FINDING THE DATASET */
 
 // Recognize the URL-safe name or actual table name
-function getDatasetConfig(datasetName) {
+function getDatasetEntry(datasetName) {
     const normalizedName = String(datasetName ?? "").trim().toLowerCase();
 
     const entry = Object.entries(tables).find(
         ([key, config]) => key.toLowerCase() === normalizedName || config.table.toLowerCase() === normalizedName
     );
 
-    return entry ? entry[1] : null;
+    return entry ? { key: entry[0], config: entry[1] } : null;
+}
+
+function getDatasetConfig(datasetName) {
+    return getDatasetEntry(datasetName)?.config ?? null;
 }
 
 
@@ -370,10 +374,41 @@ async function getGalleryManifest(env, identifier) {
     return await object.json();
 }
 
+// Get StarSight manifest
 async function getStarSightManifest(env, identifier) {
     const object = await env.EPG.get(starsightKey(identifier));
     if (!object) return null;
     return await object.json()
+}
+
+// ID pattern for fetching teletext JSON files
+const SAMPLE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
+
+// Generate R2 object path for teletext JSON
+function pagesKey(datasetKey, iaID) {
+    return `${datasetKey}/${iaID}.json`;
+}
+
+// List all samples that have available JSON files in the R2
+async function listSamplesWithPages(env, datasetKey) {
+    const ids = [];
+    let cursor;
+
+    do {
+        const listing = await env.TELETEXT.list({ prefix: `${datasetKey}/`, cursor });
+
+        for (const object of listing.objects) {
+            const name = object.key.slice(datasetKey.length + 1);
+            if (!name.endsWith(".json")) continue;
+
+            const iaID = name.slice(0, -".json".length);
+            if (SAMPLE_ID_PATTERN.test(iaID)) ids.push(iaID);
+        }
+
+        cursor = listing.truncated ? listing.cursor : undefined;
+    } while (cursor);
+
+    return ids.sort();
 }
 
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
@@ -837,6 +872,62 @@ async function handleApi(request, env) {
         } catch (error) {
             console.error("KV marquee updates query failed:", error);
             return errorResponse(`Marquee updates query failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
+    * API CALL: /api/teletext/<dataset>/<id>
+    * This is called on the "WST Teletext Viewer" page.
+    * This fetches the available JSON file for a decoded teletext sample.
+    *
+    * API CALL: /api/teletext/<dataset>
+    * This is called on each "Results" page.
+    * This fetches the ID of every sample that has a JSON file, meaning it can be viewed on the "WST Teletext Viewer" page.
+    */
+    if (url.pathname.startsWith("/api/teletext/")) {
+        try {
+            const [datasetName, id = "", ...extra] = url.pathname.slice("/api/teletext/".length).split("/").map(part => decodeURIComponent(part).trim());
+            const dataset = getDatasetEntry(datasetName);
+
+            if (!dataset || dataset.config.type !== "teletext" || extra.length) {
+                return errorResponse(`Unknown teletext dataset: ${datasetName}`, 404);
+            }
+
+            if (!id) {
+                const ids = await listSamplesWithPages(env, dataset.key);
+                return jsonResponse({ dataset: dataset.key, ids });
+            }
+
+            if (!SAMPLE_ID_PATTERN.test(id)) return errorResponse("Invalid sample ID", 400);
+
+
+            const [object, row] = await Promise.all([
+                env.TELETEXT.get(pagesKey(dataset.key, id)),
+                env.DB.prepare(`
+                    SELECT Date, Service_Name, Recovered_By
+                    FROM ${dataset.config.table}
+                    WHERE IA_ID = ?
+                    LIMIT 1
+                    `).bind(id).first()
+            ]);
+
+            if (!object) return errorResponse("No pages found for this sample", 404);
+
+            const pages = await object.json();
+            const response = jsonResponse({
+                ...pages,
+                sample: {
+                    date: row?.Date ?? null,
+                    service: row?.Service_Name ?? null,
+                    recovered_by: row?.Recovered_By ?? null
+                }
+            });
+
+            response.headers.set("cache-control", "public, max-age=3600");
+            return response;
+        } catch (error) {
+            console.error("Teletext sample lookup failed:", error);
+            return errorResponse(`Teletext sample lookup failed: ${error.message}`, 500);
         }
     }
 

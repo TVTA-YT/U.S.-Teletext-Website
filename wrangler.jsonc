@@ -26,6 +26,10 @@
         {
             "binding": "EPG",
             "bucket_name": "starsight"
+        },
+        {
+            "binding": "TELETEXT",
+            "bucket_name": "decoded-teletext"
         }
     ],
     "kv_namespaces": [

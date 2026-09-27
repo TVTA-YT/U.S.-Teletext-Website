@@ -148,7 +148,7 @@ async function renderResults(config) {
 
             sortSelect.addEventListener('change', () => {
                 if (sortSelect.value === 'default') {
-                    renderTable(applyDefaultSort(rows), columns, showAllRows ? null : groupByField, container);
+                    renderTable(applyDefaultSort(rows), columns, showAllRows ? null : groupByField, container, dataset);
                     return;
                 }
 
@@ -156,14 +156,14 @@ async function renderResults(config) {
                 const sorted = sortRowsByField(rows, opt.field, opt.type);
 
                 // Custom sort overrides month-grouping
-                renderTable(sorted, columns, null, container);
+                renderTable(sorted, columns, null, container, dataset);
             });
         } else {
             sortControls.innerHTML = '';
         }
     }
 
-    renderTable(rows, columns, showAllRows ? null : groupByField, container);
+    renderTable(rows, columns, showAllRows ? null : groupByField, container, dataset);
 }
 
 // Handles sorting based on the selected filter
@@ -183,7 +183,7 @@ function sortRowsByField(rows, field, type) {
 }
 
 // ! Render the table
-function renderTable(rows, columns, groupByField, container) {
+function renderTable(rows, columns, groupByField, container, dataset) {
     container.innerHTML = '';
 
     if (!groupByField) {
@@ -200,7 +200,7 @@ function renderTable(rows, columns, groupByField, container) {
         `;
 
         const tbody = container.querySelector('tbody');
-        rows.forEach(r => appendRow(tbody, r, columns));
+        rows.forEach(r => appendRow(tbody, r, columns, dataset));
         return;
     }
 
@@ -236,7 +236,7 @@ function renderTable(rows, columns, groupByField, container) {
             tbody = col.querySelector('tbody');
         }
 
-        appendRow(tbody, r, columns);
+        appendRow(tbody, r, columns, dataset);
     }
 
     container.appendChild(rowDiv);
@@ -256,7 +256,7 @@ function hasRealValue(v) {
 }
 
 // ! Create the table rows
-function appendRow(tbody, row, columns) {
+function appendRow(tbody, row, columns, dataset) {
     const tr = document.createElement('tr');
 
     const isNewRecord = row.isNew === true;
@@ -319,8 +319,21 @@ function appendRow(tbody, row, columns) {
                 const visible = `<a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a>`;
                 return renderAccessibleCell(visible, `${c.label}: Download link available`);
             }
+
             const visible = `<i class="bi bi-slash-circle-fill"></i>`;
             return renderAccessibleCell(visible, `${c.label}: No download link available`);
+        }
+
+        if (c.renderTeletext) {
+            if (!hasRealValue(row.Teletext_Sample) || !hasRealValue(row.IA_ID)) {
+                const visible = `<i class="bi bi-slash-circle-fill"></i>`;
+                return renderAccessibleCell(visible, `${c.label}: Teletext stream not available for viewing`);
+            }
+
+            const iaID = String(row.IA_ID).trim();
+            const viewerPath = `teletext-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
+            const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><i class="bi bi-tv-fill"></i></a>`;
+            return renderAccessibleCell(visible, `${c.label}: View teletext stream`);
         }
 
         // Displaying the thumbnail for all teletext services
