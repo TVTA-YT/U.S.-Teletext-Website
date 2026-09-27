@@ -235,9 +235,21 @@ function pageNumberFromHash() {
 }
 
 
+// Filenames for each image heading
+const BANNER_NAMES = {
+    datavizion: "DaTaVizion",
+    electra: "Electra",
+    keyfax: "Keyfax",
+    sssTeletext: "SSS_Teletext",
+    virtext: "Virtext",
+    wisconsinInfotextTeletext: "WISINFOTEXT"
+};
+
+
 // & Show the service's banner in the page heading
 function showServiceBanner(service) {
-    const bannerService = service.toLowerCase();
+    const bannerService = BANNER_NAMES[service];
+    if (!bannerService) return;
 
     if (elements.lightImageBanner) {
         elements.lightImageBanner.src = `../images/banners/light/${bannerService}_light.png`;
