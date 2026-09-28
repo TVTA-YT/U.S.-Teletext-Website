@@ -1,0 +1,25 @@
+# Files that stay in the repo but are never published to the site
+.git
+.github
+.gitignore
+.assetsignore
+.wrangler
+node_modules
+depreciated
+TODO
+json
+.DS_Store
+
+# Worker and config
+worker.js
+wrangler.jsonc
+package.json
+package-lock.json
+
+# Sources and scripts
+*.scss
+
+# Leftovers from GitHub Pages
+CNAME
+.nojekyll
+README.md

@@ -1,12 +1,20 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "account_id": "d995bd56c0b97564ac35e9a7d87dd7de",
     "name": "us-teletext-website",
     "main": "worker/src/index.js",
-    "compatibility_date": "2026-09-10",
-    "observability": {
-        "enabled": true
+    "compatibility_date": "2026-09-28",
+
+    "assets": {
+        "directory": "./",
+        "binding": "ASSETS",
+        "not_found_handling": "404-page",
+        "run_worker_first": ["/api/*", "/files/*"]
     },
+
+    "routes": [
+        { "pattern": "nateletext.com", "custom_domain": true },
+        { "pattern": "www.nateletext.com", "custom_domain": true }
+    ],
+
     "d1_databases": [
         {
             "binding": "DB",
