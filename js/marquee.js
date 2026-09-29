@@ -1,5 +1,5 @@
 // API base URL
-const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev";
+const API_BASE = "";
 
 // Default section labels
 const SECTION_LABELS = {
@@ -210,6 +210,10 @@ async function initMarquee() {
             fetch(`${API_BASE}/api/marquee/updates`),
             fetch(`${API_BASE}/api/marquee/headlines`),
         ]);
+
+        if (!updateRes.ok || !headlineRes.ok) {
+            throw new Error(`Marquee API returned ${updateRes.status} / ${headlineRes.status}`);
+        }
 
         // Convert response to JSON
         const updateData = await updateRes.json();

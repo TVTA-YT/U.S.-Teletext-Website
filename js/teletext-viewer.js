@@ -1,6 +1,5 @@
 "use strict";
 
-// Length of one tick of the viewer's clock. Everything else that follows below is counted in ticks
 const TICK_MS = 100;
 
 // Flashing text changes phase every half second
@@ -17,11 +16,8 @@ const SUBPAGE_TICKS = 100;
 const SEARCH_MIN_TICKS = 4;
 const SEARCH_MAX_TICKS = 12;
 
-// If page is not in sample, show a "page not found" message after 3 seconds
 const NOT_FOUND_TICKS = 30;
-
-
-const PAGES_API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev/api/teletext";
+const PAGES_API_BASE = "/api/teletext";
 const SAFE_KEY_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 
 const RENDER_SCALE = 2;
@@ -64,11 +60,14 @@ const elements = {
     rollingOption: getElement("optRolling"),
     flashOption: getElement("optFlash"),
     aspectOption: getElement("optAspect"),
+    reconstructOption: getElement("optReconstruct"),
+    realSearchOption: getElement("optRealSearch"),
+    rowRevealOption: getElement("optRowReveal"),
+    lightImageBanner: getElement("lightImageBanner"),
+    darkImageBanner: getElement("darkImageBanner"),
     sampleTitle: getElement("sample-title"),
     contributor: getElement("contributor"),
-    contributorName: getElement("contributor-name"),
-    lightImageBanner: getElement("lightImageBanner"),
-    darkImageBanner: getElement("darkImageBanner")
+    contributorName: getElement("contributor-name")
 };
 
 // & Create a 40-byte row from the provided control codes and text
@@ -92,10 +91,16 @@ const viewer = {
     pagesByNumber: new Map(),
     pageNumbers: [],
     headersByMagazine: new Map(),
+    rollingPagesByMagazine: new Map(),
     headerPositions: new Map(),
     requestedNumber: "100",
     displayed: null,
     headerSource: null,
+    headerNumber: null,
+    headerTemplates: new Map(),
+    clockStartSeconds: 0,
+    loadedAt: 0,
+    reveal: null,          // { startedAt, oldRows } while a page is being drawn row by row
     entryDigits: "",
     isHolding: false,
     isRevealing: false,
@@ -166,14 +171,28 @@ function loadSample(data, sourceName) {
         if (!viewer.headersByMagazine.has(magazine)) viewer.headersByMagazine.set(magazine, []);
 
         for (const subpage of pagesByNumber.get(number)) {
-            if (subpage.rows[0]) viewer.headersByMagazine.get(magazine).push(subpage.rows[0]);
+            if (subpage.rows[0]) viewer.headersByMagazine.get(magazine).push({ row: subpage.rows[0], number });
         }
+    }
+
+    // The order pages come round in the rolling header: every page in the magazine once, in page order.
+    // Pages whose header wasn't received still take their turn, so a search can always reach them
+    viewer.rollingPagesByMagazine = new Map();
+    for (const number of viewer.pageNumbers) {
+        const magazine = number[0];
+        if (!viewer.rollingPagesByMagazine.has(magazine)) viewer.rollingPagesByMagazine.set(magazine, []);
+
+        const row = pagesByNumber.get(number).find(subpage => subpage.rows[0])?.rows[0] ?? null;
+        viewer.rollingPagesByMagazine.get(magazine).push({ number, row });
     }
 
     viewer.loadState = "loaded";
     viewer.sourceName = sourceName;
     viewer.displayed = null;
     viewer.headerSource = null;
+    viewer.headerNumber = null;
+    viewer.headerTemplates = buildHeaderTemplates(viewer.headersByMagazine);
+    viewer.loadedAt = Date.now();
     viewer.search = null;
     viewer.entryDigits = "";
     viewer.isHolding = false;
@@ -186,6 +205,11 @@ function loadSample(data, sourceName) {
 
     // Start with P100; otherwise, start with first page
     const startNumber = pageNumberFromHash() ?? (pagesByNumber.has("100") ? "100" : viewer.pageNumbers[0]);
+
+    // Start the rolling header just before the first page, so it doesn't take a whole cycle to appear
+    const startPages = viewer.rollingPagesByMagazine.get(startNumber[0]) ?? [];
+    viewer.headerPositions.set(startNumber[0], startPages.findIndex(page => page.number === startNumber) - 1);
+
     goToPage(startNumber);
 }
 
@@ -211,7 +235,8 @@ async function openSample({ service, sample }) {
         if (response.status === 404) throw new Error("No available data for this sample.");
         if (!response.ok) throw new Error(`The server responded with ${response.status}.`);
         const data = await response.json();
-        showSampleDetails(data.sample, service);
+        showServiceBanner(service);                // banner file names are looked up by dataset key (electra, keyfax…)
+        showSampleDetails(data.sample, service);   // title, date and contributor from the Worker
         loadSample(data, data.source || label);
     } catch (error) {
         showLoadError(label, error);
@@ -304,7 +329,7 @@ function goToPage(number) {
     viewer.entryDigits = "";
     const isFound = viewer.pagesByNumber.has(number);
 
-    // If viewer has checked the option for rolling page headers, animate it. If page is not found, continue animating the header
+    // If viewer has checked the option for rolling page headers, animate if. If page is not found, continue animating the header
     if (elements.rollingOption.checked) {
         viewer.search = { ticksLeft: isFound ? randomBetween(SEARCH_MIN_TICKS, SEARCH_MAX_TICKS) : Infinity, tickWaited: 0, isFound };
     } else {
@@ -318,14 +343,60 @@ function goToPage(number) {
 }
 
 
+// & Draw rows as they "arrive", top to bottom, like how a decoder would've received the page (inspired by VHS-Teletext's viewer).
+// NOTE: Rows not yet drawn show what was on screen before: nothing after a page change, or the previous subpage when the carousel moves on, unless the new subpage has the erase flag (C4)
+
+// This value is per row, so loading a full page takes about 0.6 seconds
+const ROW_REVEAL_MS = 25;
+const ERASE_FLAG = 4;
+
+
+// & Start revealing the page
+function startReveal(oldRows) {
+    if (!elements.rowRevealOption?.checked) {
+        viewer.reveal = null;
+        return;
+    }
+
+    const isFirstFrame = viewer.reveal === null;
+    viewer.reveal = { startedAt: performance.now(), oldRows: oldRows ?? blankRows() };
+    if (isFirstFrame) requestAnimationFrame(stepReveal);
+}
+
+
+// & Incrementally step the revealing ("drawing") of the page
+function stepReveal() {
+    if (!viewer.reveal) return;
+    render();
+
+    if (revealedRowCount() < ROW_COUNT) requestAnimationFrame(stepReveal);
+    else {
+        viewer.reveal = null;
+        render();
+    }
+}
+
+const revealedRowCount = () => Math.floor((performance.now() - viewer.reveal.startedAt) / ROW_REVEAL_MS) + 1;
+
+
+// & The body rows to draw right now: received rows up to the reveal point, the old screen below it
+function rowsOnScreen(rows) {
+    if (!viewer.reveal) return rows;
+    const shownRows = revealedRowCount();
+    return rows.map((rowBytes, rowNumber) => (rowNumber <= shownRows ? rowBytes : viewer.reveal.oldRows[rowNumber]));
+}
+
+
 // & Show requested page (first subpage if page has subpages)
 function showPage(number) {
     viewer.displayed = { number, subpageIndex: 0 };
     viewer.search = null;
     viewer.subpageTicks = 0;
     viewer.headerSource = displayedSubpage().rows[0];
+    viewer.headerNumber = number;
 
     history.replaceState(null, "", `#${number}`);
+    startReveal(null);   // a new page starts from a blank screen
     renderPageDetails();
 
     const subpageCount = displayedSubpages().length;
@@ -359,9 +430,14 @@ function stepSubpage(direction, { isManual = true } = {}) {
     if (!subpages || subpages.length < 2) return;
 
     const count = subpages.length;
+    const previousRows = displayedSubpage()?.rows ?? null;
     viewer.displayed.subpageIndex = (viewer.displayed.subpageIndex + direction + count) % count;
+    startReveal(displayedSubpage().flags.includes(ERASE_FLAG) ? null : previousRows);
     viewer.subpageTicks = 0;
-    if (!elements.rollingOption.checked) viewer.headerSource = displayedSubpage().rows[0];
+    if (!elements.rollingOption.checked) {
+        viewer.headerSource = displayedSubpage().rows[0];
+        viewer.headerNumber = viewer.displayed.number;
+    }
 
     renderPageDetails();
     render();
@@ -431,17 +507,21 @@ function toggleBoxedView() {
 }
 
 
-// & Create rolling header and show the next page header that was transmiited in the requested page's magazine
+// & Roll the header on to the next page transmitted in the requested page's magazine
+// * Pages come round in page order and wrap back to the start of the magazine, as in a real transmission cycle
 function rollHeader() {
     const magazine = viewer.requestedNumber[0];
-    const headers = viewer.headersByMagazine.get(magazine);
+    const pages = viewer.rollingPagesByMagazine.get(magazine);
 
     // Keep header as it is if there is nothing in a magazine
-    if (!headers?.length) return false;
+    if (!pages?.length) return false;
 
-    const position = ((viewer.headerPositions.get(magazine) ?? -1) + 1) % headers.length;
+    const position = ((viewer.headerPositions.get(magazine) ?? -1) + 1) % pages.length;
     viewer.headerPositions.set(magazine, position);
-    viewer.headerSource = headers[position];
+
+    const { number, row } = pages[position];
+    viewer.headerNumber = number;
+    if (row) viewer.headerSource = row;    // keep the last received header text if this page's wasn't received
     return true;
 }
 
@@ -468,13 +548,20 @@ function tick() {
     const isFrozen = viewer.isHolding || viewer.entryDigits.length > 0 || !hasCapture();
 
     if (!isFrozen) {
-        if (elements.rollingOption.checked && viewer.tickCount % HEADER_TICKS === 0 && rollHeader()) needsDraw = true;
+        const hasRolled = elements.rollingOption.checked && viewer.tickCount % HEADER_TICKS === 0 && rollHeader();
+        if (hasRolled) needsDraw = true;
 
         if (viewer.search) {
             viewer.search.tickWaited++;
             viewer.search.ticksLeft--;
 
-            if (viewer.search.ticksLeft <= 0) {
+            // Realistic search: the page appears when the rolling header reaches it. Otherwise it appears after a short wait
+            const waitsForPage = elements.rollingOption.checked && elements.realSearchOption?.checked;
+            const hasArrived = waitsForPage
+                ? viewer.search.isFound && hasRolled && viewer.headerNumber === viewer.requestedNumber
+                : viewer.search.ticksLeft <= 0;
+
+            if (hasArrived) {
                 showPage(viewer.requestedNumber);
                 needsDraw = true;
             } else if (!viewer.search.isFound && viewer.search.tickWaited === NOT_FOUND_TICKS) {
@@ -486,14 +573,206 @@ function tick() {
         }
     }
 
+    // The reconstructed clock needs a redraw once a second
+    if (elements.reconstructOption?.checked && hasCapture() && viewer.tickCount % (1000 / TICK_MS) === 0) needsDraw = true;
+
     if (needsDraw) render();
+}
+
+
+/* ---- Reconstructed header ---- */
+
+const HEADER_TEXT_START = 8;                        // columns 8-39 carry the service's header text
+const SERVICE_NAME_START = 32;                      // .t34 rows can lose columns 32-39
+const CLOCK_PATTERN = /^\d\d\D\d\d\D\d\d$/;       // 18:47:59, 18:39.28, 12 45/12 (any separators)
+const SECONDS_PER_DAY = 24 * 60 * 60;
+
+const headerText = row => String.fromCharCode(...row.map(byteValue => byteValue & SEVEN_BIT_MASK));
+
+// & The most common value in a list
+function mostCommon(values) {
+    const counts = new Map();
+    let best = SPACE;
+    let bestCount = 0;
+
+    for (const value of values) {
+        const count = (counts.get(value) ?? 0) + 1;
+        counts.set(value, count);
+        if (count > bestCount) {
+            best = value;
+            bestCount = count;
+        }
+    }
+
+    return best;
+}
+
+// & Build a clean header by taking the most common byte in each column across many damaged copies
+function voteHeader(rows) {
+    const template = makeRows("");
+    for (let column = HEADER_TEXT_START; column < COLUMN_COUNT; column++) {
+        template[column] = mostCommon(rows.map(row => row[column] & SEVEN_BIT_MASK));
+    }
+    return template;
+}
+
+const clockToSeconds = ([hours, minutes, seconds]) => hours * 3600 + minutes * 60 + seconds;
+
+// & Read "HH?MM?SS" at a column as seconds since midnight, or null if it isn't a real time
+function readClock(row, column) {
+    const clockText = headerText(row).slice(column, column + 8);
+    if (!CLOCK_PATTERN.test(clockText)) return null;
+
+    const [hours, minutes, seconds] = [0, 3, 6].map(offset => Number(clockText.slice(offset, offset + 2)));
+    if (hours > 23 || minutes > 59 || seconds > 59) return null;
+    return clockToSeconds([hours, minutes, seconds]);
+}
+
+
+// & Find the clock: the time-shaped field whose value changes between headers.
+// * A date such as 04.24.84 is the same shape, but "84" isn't a valid number of seconds and a date doesn't change
+function findClock(template, rows, pageColumn) {
+    let best = null;
+
+    for (let column = HEADER_TEXT_START; column <= COLUMN_COUNT - 8; column++) {
+        // Skip anything overlapping the page number, whose digits also change between headers
+        const overlapsPage = pageColumn !== null && column < pageColumn + 3 && column + 8 > pageColumn;
+        if (overlapsPage || readClock(template, column) === null) continue;
+
+        const times = rows.map(row => readClock(row, column)).filter(seconds => seconds !== null);
+        const changes = new Set(times).size > 1 || rows.length === 1;
+
+        if (changes && times.length > (best?.times.length ?? 0)) best = { column, times };
+    }
+
+    return best;
+}
+
+
+// & Find the page number: the 3-character field that matches the page each header was received with.
+// * Works with or without a "P" in front (P100 or 100)
+function findPageColumn(headers) {
+    let bestColumn = null;
+    let bestMatches = 0;
+
+    for (let column = HEADER_TEXT_START; column <= COLUMN_COUNT - 3; column++) {
+        const matches = headers.filter(header => headerText(header.row).slice(column, column + 3).toUpperCase() === header.number).length;
+        if (matches > bestMatches) {
+            bestColumn = column;
+            bestMatches = matches;
+        }
+    }
+
+    // Needs to match at least half the headers, so a stray number elsewhere isn't mistaken for it
+    return bestMatches * 2 >= headers.length ? bestColumn : null;
+}
+
+
+// & Where the clock and page number sit in a template, and every clock time read from the received headers
+function describeTemplate(template, headers) {
+    const rows = headers.map(header => header.row);
+    const pageColumn = findPageColumn(headers);
+    const clock = findClock(template, rows, pageColumn);
+
+    return {
+        template,
+        clockColumn: clock?.column ?? null,
+        times: clock?.times ?? [],
+        pageColumn
+    };
+}
+
+// & Full screen for the TV screen. Safari on older iPads needs the "webkit" versions
+const canUseFullscreen = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fullscreenElement = () => document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
+
+function toggleFullscreen() {
+    if (!canUseFullscreen) return;
+
+    const action = fullscreenElement()
+        ? (document.exitFullscreen ?? document.webkitExitFullscreen).call(document)
+        : (elements.screen.requestFullscreen ?? elements.screen.webkitRequestFullscreen).call(elements.screen);
+
+    Promise.resolve(action).catch(() => announce("Full screen isn't available right now."));
+}
+
+// & Keep the button in step however full screen was entered or left (including the Esc key)
+function handleFullscreenChange() {
+    const isFullscreen = fullscreenElement() === elements.screen;
+    document.querySelectorAll('[data-command="fullscreen"]').forEach(button => button.setAttribute("aria-pressed", String(isFullscreen)));
+
+    // Focus the screen so the arrow keys work straight away
+    if (isFullscreen) elements.screen.focus();
+    announce(isFullscreen ? "Full screen on. Press Escape to exit." : "Full screen off.");
+}
+
+document.addEventListener("fullscreenchange", handleFullscreenChange);
+document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+// Hide the button where full screen isn't supported (iPhone Safari)
+document.querySelectorAll('[data-command="fullscreen"]').forEach(button => { button.hidden = !canUseFullscreen; });
+
+
+// & One reconstructed header per magazine
+function buildHeaderTemplates(headersByMagazine) {
+    const allRows = [...headersByMagazine.values()].flat().map(header => header.row);
+
+    // Headers that still have their last 8 columns, for magazines that lost them
+    const hasServiceName = row => row.slice(SERVICE_NAME_START).some(byteValue => (byteValue & SEVEN_BIT_MASK) !== SPACE);
+    const completeRows = allRows.filter(hasServiceName);
+    const serviceName = completeRows.length ? voteHeader(completeRows).slice(SERVICE_NAME_START) : null;
+
+    const templates = new Map();
+    const allTimes = [];
+
+    for (const [magazine, headers] of headersByMagazine) {
+        const rows = headers.map(header => header.row);
+        const template = voteHeader(rows);
+        const details = describeTemplate(template, headers);
+
+        // Only rebuild magazines whose header has a clock; anything else keeps its received headers
+        if (details.clockColumn === null) continue;
+        if (serviceName && !hasServiceName(template)) template.splice(SERVICE_NAME_START, serviceName.length, ...serviceName);
+
+        templates.set(magazine, details);
+        allTimes.push(...details.times);
+    }
+
+    // One clock for the whole sample, so it doesn't jump between magazines. Start from the middle time received
+    allTimes.sort((first, second) => first - second);
+    viewer.clockStartSeconds = allTimes[Math.floor(allTimes.length / 2)] ?? 0;
+
+    return templates;
+}
+
+// & A clean header for this page, with a running clock that starts from the capture's time
+function reconstructedHeader(pageNumber) {
+    const details = viewer.headerTemplates.get(pageNumber[0]);
+    if (!details) return null;
+
+    const row = details.template.slice();
+
+    const elapsed = Math.floor((Date.now() - viewer.loadedAt) / 1000);
+    const total = (viewer.clockStartSeconds + elapsed) % SECONDS_PER_DAY;
+    const digits = [Math.floor(total / 3600), Math.floor(total / 60) % 60, total % 60]
+        .map(value => String(value).padStart(2, "0")).join("");
+
+    // Keep the service's own separators (":" or ".") and only replace the digits
+    [0, 1, 3, 4, 6, 7].forEach((offset, index) => { row[details.clockColumn + offset] = digits.charCodeAt(index); });
+
+    if (details.pageColumn !== null) {
+        [...pageNumber].forEach((character, index) => { row[details.pageColumn + index] = character.charCodeAt(0); });
+    }
+
+    return row;
 }
 
 
 // & Build header row; columns 0-7 show the page number the user requested (e.g. "P1...") or "HOLD" when hold is enabled
 // * Columns 8-39 comes from whichever page header was last received
 function buildHeaderRow() {
-    const sourceHeader = viewer.headerSource ?? displayedSubpage()?.rows[0] ?? null;
+    const reconstructed = elements.reconstructOption?.checked ? reconstructedHeader(viewer.headerNumber ?? viewer.requestedNumber) : null;
+    const sourceHeader = reconstructed ?? viewer.headerSource ?? displayedSubpage()?.rows[0] ?? null;
     const row = sourceHeader ? sourceHeader.slice() : makeRows("");
 
     let label = `P${viewer.requestedNumber}`;
@@ -524,7 +803,7 @@ function render() {
     }
 
     const subpage = displayedSubpage();
-    const bodyRows = subpage?.rows ?? blankRows();
+    const bodyRows = rowsOnScreen(subpage?.rows ?? blankRows());
     const flags = subpage?.flags ?? [];
     const isBoxedPage = flags.includes(NEWSFLASH_FLAG) || flags.includes(SUBTITLE_FLAG);
 
@@ -584,7 +863,6 @@ function renderControls() {
 
     const flags = displayedSubpage()?.flags ?? [];
     const isBoxedPage = flags.includes(NEWSFLASH_FLAG) || flags.includes(SUBTITLE_FLAG);
-
     document.querySelectorAll('[data-command="boxed"]').forEach(button => {
         button.disabled = !isBoxedPage;
         button.setAttribute("aria-pressed", String(isBoxedPage && viewer.showBoxedOnly));
@@ -595,7 +873,7 @@ function renderControls() {
 }
 
 
-// & Render each found page in the page selection form
+// & Render the selected page
 function renderPageSelect() {
     elements.pageSelect.innerHTML = "";
 
@@ -619,7 +897,8 @@ const commands = {
     "next-page": () => stepPage(1),
     "prev-page": () => stepPage(-1),
     "next-subpage": () => stepSubpage(1),
-    "prev-subpage": () => stepSubpage(-1)
+    "prev-subpage": () => stepSubpage(-1),
+    "fullscreen": toggleFullscreen
 };
 
 
@@ -644,6 +923,7 @@ document.addEventListener("keydown", event => {
     if (/^[0-9a-fA-F]$/.test(key)) typeDigit(key);
     else if (key === ".") toggleHold();
     else if (key === "r" || key === "R") toggleReveal();
+    else if (key === "v" || key === "V") toggleFullscreen();
     else if (key === "x" || key === "X") toggleBoxedView();
     else if (key === "Escape") cancelEntry();
     else if (key === "+" || key === "PageUp") stepPage(1);
@@ -657,10 +937,8 @@ document.addEventListener("keydown", event => {
     event.preventDefault();
 });
 
-// If picking a page from the dropdown menu, make the viewer behave the same way as typing the page number; go to that page
 elements.pageSelect.addEventListener("change", () => goToPage(elements.pageSelect.value));
 
-// If the rolling headers box is unchecked, end any page search and restore displayed page's own header
 elements.rollingOption.addEventListener("change", () => {
     if (elements.rollingOption.checked) return;
 
@@ -673,8 +951,11 @@ elements.rollingOption.addEventListener("change", () => {
     }
 
     viewer.headerSource = displayedSubpage()?.rows[0] ?? null;
+    viewer.headerNumber = viewer.displayed?.number ?? null;
     render();
 });
+
+elements.reconstructOption?.addEventListener("change", render);
 
 
 // Change aspect ratio of viewer
@@ -683,7 +964,6 @@ elements.aspectOption.addEventListener("change", () => {
 });
 
 
-// Go to the page that follows the URL hash (e.g. #110) when it's edited or if a page link is clicked
 window.addEventListener("hashchange", () => {
     const number = pageNumberFromHash();
     if (number && number !== viewer.displayed?.number) goToPage(number);
@@ -694,6 +974,7 @@ window.addEventListener("hashchange", () => {
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     elements.rollingOption.checked = false;
     elements.flashOption.checked = false;
+    if (elements.rowRevealOption) elements.rowRevealOption.checked = false;
 }
 elements.screen.classList.toggle("tv-aspect", elements.aspectOption.checked);
 
@@ -708,7 +989,4 @@ document.fonts?.load(VIEWER_FONT).then(() => {
 }).catch(() => { });
 
 const requestedSample = sampleFromURL();
-if (requestedSample) {
-    showServiceBanner(requestedSample.service);
-    openSample(requestedSample);
-}
+if (requestedSample) openSample(requestedSample);

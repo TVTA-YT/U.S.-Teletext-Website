@@ -2,8 +2,7 @@ async function renderRecentAdditions() {
     const container = document.getElementById("recent-additions");
     if (!container) return;
 
-    const API_URL =
-        "https://us-teletext-website.us-teletext-archive.workers.dev/api/recent-additions";
+    const API_URL = "/api/recent-additions";
 
     const serviceImages = {
         "ABC-PLUS": "images/ABC_white.png",

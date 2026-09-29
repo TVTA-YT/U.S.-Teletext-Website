@@ -46,7 +46,7 @@ async function renderTotalRecordCount() {
 
     if (!countElements.some(Boolean)) return;
 
-    const API_URL = "https://us-teletext-website.us-teletext-archive.workers.dev/api/counts";
+    const API_URL = "/api/counts";
 
     try {
         const response = await fetch(API_URL);

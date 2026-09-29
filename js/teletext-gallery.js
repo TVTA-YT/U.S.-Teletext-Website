@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    const API_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev/api";
+    const API_BASE = "";
     const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
     const PAGE_PATTERN = /^Page-(\d+)-(\d+)$/i;
 
@@ -315,7 +315,7 @@
         });
 
         // Sort images in order by page number, by page number and subpage number, or by index if page numbers are identical
-        frames.sort((a, b) => a.pageNumber - b.pageNumber || a.subIndex - b.subIndex) || (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0);
+        frames.sort((a, b) => a.pageNumber - b.pageNumber || a.subIndex - b.subIndex || (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0));
 
         let i = 0;
 
@@ -982,7 +982,7 @@
 
         // Construct API URL for the gallery manifest
         streamId = stream;
-        const manifestUrl = `${API_BASE}/gallery/${encodeURIComponent(stream)}`;
+        const manifestUrl = `${API_BASE}/api/gallery/${encodeURIComponent(stream)}`;
 
         try {
             const response = await fetch(manifestUrl);

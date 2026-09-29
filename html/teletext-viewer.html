@@ -60,6 +60,23 @@
                 outline-offset: 3px;
             }
 
+            .viewer-screen:fullscreen {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                border-radius: 0;
+            }
+
+            /* Largest size that fits the display: 480 × 500 as drawn, or 4:3 like a TV */
+            .viewer-screen:fullscreen canvas {
+                width: min(100vw, 100vh * 480 / 500);
+            }
+
+            .viewer-screen.viewer-screen.aspect-ratio:fullscreen canvas {
+                width: min(100vw, 100vh * 4 / 3);
+            }
+
             .viewer-screen canvas {
                 display: block;
                 width: 100%;
@@ -72,7 +89,7 @@
             }
 
             .entry-display {
-                font-family: "Bedstead Regular", monospace;
+                font-family: "Teletext50", monospace;
                 font-size: 1.75rem;
                 letter-spacing: 0.1em;
                 background: #000;
@@ -204,9 +221,18 @@
                     </li>
                     <li class="nav-item dropdown desktop-link">
                         <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
-                            Other Teletext Pages <i class="dropdown-toggle"></i>
+                            Other Pages <i class="dropdown-toggle"></i>
                         </a>
                         <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
                                     Affiliates That Altered VBI
@@ -214,9 +240,6 @@
                             </li>
                             <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
-                            </li>
-                            <li class="dropdown-options">
-                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings *NEW*</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -225,9 +248,18 @@
                     </li>
                     <li class="nav-item dropdown mobile-link">
                         <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
-                            Other Teletext Pages <i class="dropdown-toggle"></i>
+                            Other Pages <i class="dropdown-toggle"></i>
                         </a>
                         <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
                                     Affiliates That Altered VBI
@@ -235,9 +267,6 @@
                             </li>
                             <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
-                            </li>
-                            <li class="dropdown-options">
-                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings *NEW*</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -346,6 +375,14 @@
                             >
                                 Newsflash Box Only
                             </button>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary w-100 mb-3"
+                                data-command="fullscreen"
+                                aria-pressed="false"
+                            >
+                                <i class="bi bi-fullscreen" aria-hidden="true"></i> Full screen
+                            </button>
                             <label for="pageSelect" class="form-label">Pages in this sample</label>
                             <select class="form-select" id="pageSelect" disabled></select>
                         </section>
@@ -360,6 +397,22 @@
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="optRolling" checked />
                                 <label for="optRolling" class="form-check-label">Rolling header and page search</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="optRealSearch" checked />
+                                <label class="form-check-label" for="optRealSearch">
+                                    Wait for the page to come round (realistic search)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="optReconstruct" checked />
+                                <label class="form-check-label" for="optReconstruct">
+                                    Reconstructed header (clean text, running clock)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="optRowReveal" checked />
+                                <label class="form-check-label" for="optRowReveal">Draw rows as they arrive</label>
                             </div>
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="optFlash" checked />

@@ -783,6 +783,7 @@ async function handleApi(request, env) {
     ! This is used to generate a manifest for a new record.
     */
     if (url.pathname.startsWith("/api/gallery/generate/")) {
+        if (url.searchParams.get("key") !== env.ADMIN_KEY) return errorResponse("Forbidden", 403);
         const identifier = decodeURIComponent(url.pathname.slice("/api/gallery/generate/".length)).trim();
 
         if (!identifier) return errorResponse("Missing Internet Archive identifier", 400);
@@ -805,6 +806,7 @@ async function handleApi(request, env) {
     ! This was used to generate all manifests for each record before pushing the code to the site.
     */
     if (url.pathname === "/api/gallery/generate-all") {
+        if (url.searchParams.get("key") !== env.ADMIN_KEY) return errorResponse("Forbidden", 403);
 
         // Again, this is optional; used to force updates to all manifests
         const force = url.searchParams.get("force") === "1";
@@ -975,23 +977,28 @@ export default {
             return handleApi(request, env);
         }
 
-        // Getting TEXT service HTML files from R2
-        const key = url.pathname.replace(/^\/+/, "");
+        // Text service HTML files and StarSight JSON from R2: /files/<Service>/<Year>/<file>
+        if (url.pathname.startsWith("/files/")) {
+            const key = url.pathname.slice("/files/".length);
+            const isJson = key.toLowerCase().endsWith(".json");
 
-        const bucket = key.toLowerCase().endsWith(".json") ? env.EPG : env.TEXT_ARCHIVE;
-        const object = await bucket.get(key);
-        if (!object) return new Response("Not found", { status: 404 });
+            const bucket = isJson ? env.EPG : env.TEXT_ARCHIVE;
+            const object = await bucket.get(key);
+            if (!object) return new Response("Not found", { status: 404 });
 
-        const headers = new Headers(corsHeader());
-        object.writeHttpMetadata(headers);
-        headers.set("etag", object.httpEtag);
+            const headers = new Headers({ "Access-Control-Allow-Origin": "*" });
+            object.writeHttpMetadata(headers);
+            headers.set("etag", object.httpEtag);
 
-        if (!headers.has("content-type")) {
-            headers.set("content-type", key.toLowerCase().endsWith(".json")
-                ? "application/json; charset=utf-8"
-                : "text/html; charset=utf-8");
+            if (!headers.has("content-type")) {
+                headers.set("content-type", isJson
+                    ? "application/json; charset=utf-8"
+                    : "text/html; charset=utf-8");
+            }
+
+            return new Response(object.body, { headers });
         }
 
-        return new Response(object.body, { headers });
+        return new Response("Not found", { status: 404 });
     }
 };

@@ -17,7 +17,7 @@ const HEADER_CONTROL_COLUMNS = 8;
 // NOTE: Double height text does not have an effect on rows 0, 23, and 24
 const LAST_DOUBLE_HEIGHT_ROW = 22;
 
-const VIEWER_FONT_FAMILY = '"Bedstead Regular", monospace';
+const VIEWER_FONT_FAMILY = '"Teletext50", monospace';
 
 // This asks the browser to load the font
 const VIEWER_FONT = `${CELL_HEIGHT}px ${VIEWER_FONT_FAMILY}`;

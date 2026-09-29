@@ -19,8 +19,8 @@ const TAPE_VALUE_MAPS = {
     },
 };
 
-// Base URL
-const WORKER_BASE = "https://us-teletext-website.us-teletext-archive.workers.dev";
+// Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
+const WORKER_BASE = "";
 
 // API call
 const API_BASE = `${WORKER_BASE}/api`;
@@ -245,7 +245,7 @@ function renderTable(rows, columns, groupByField, container, dataset) {
 // visibleHtml: the raw HTML that should be seen but not spoken
 // spokenText: the plain text a screen reader should say instead
 function renderAccessibleCell(visibleHtml, spokenText, extraAttributes = '') {
-    return `<td${extraAttributes}><span class="cell-wrap"><span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span></span></td$>`;
+    return `<td${extraAttributes}><span class="cell-wrap"><span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span></span></td>`;
 }
 
 // Prevent any null or undefined values from being treated as real data
@@ -266,8 +266,8 @@ function appendRow(tbody, row, columns, dataset) {
     const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
-    const nonTeletextDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
-    const epgDirectory = `${WORKER_BASE}/${encodeURIComponent(row.Service_Name)}/`;
+    const nonTeletextDirectory = `files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
+    const epgDirectory = `files/${encodeURIComponent(row.Service_Name)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KCET and KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
@@ -275,7 +275,7 @@ function appendRow(tbody, row, columns, dataset) {
         if (c.renderHTML) {
             if (!row.HTML_Link) {
                 const visible = `<i class="bi bi-slash-circle-fill"></i>`;
-                return renderAccessibleCell(visible, `${c.label}: HTML file available`);
+                return renderAccessibleCell(visible, `${c.label}: No HTML file available`);
             }
             const htmlPath = nonTeletextDirectory + row.HTML_Link;
             const visible = `<a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
@@ -332,7 +332,7 @@ function appendRow(tbody, row, columns, dataset) {
 
             const iaID = String(row.IA_ID).trim();
             const viewerPath = `teletext-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
-            const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><i class="bi bi-tv-fill"></i></a>`;
+            const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><img src="../images/teletext-icon.png" class="mw-100 w-25" /></a>`;
             return renderAccessibleCell(visible, `${c.label}: View teletext stream`);
         }
 
@@ -344,7 +344,7 @@ function appendRow(tbody, row, columns, dataset) {
             }
             const imagePath = row.Thumbnail;
             const visible = `<img src="${escapeHtml(imagePath)}" alt="" role="presentation" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">`;
-            return renderAccessibleCell(visible, `${c.label}: ${escapeHtml(row.Service_Name)} index page from ${escapeHtml(row.Date)}`, ' class="thumbnail-column"');
+            return renderAccessibleCell(visible, `${c.label}: ${row.Service_Name} index page from ${row.Date}`, ' class="thumbnail-column"');
         }
 
         // Screen reader guide

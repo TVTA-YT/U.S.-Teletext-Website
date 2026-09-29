@@ -9,6 +9,12 @@ depreciated
 TODO
 json
 .DS_Store
+test.html
+penntext.html
+penntext-results.html
+teletext-editor.html
+silent-radio.html
+t42-decode.js
 
 # Worker and config
 worker.js
