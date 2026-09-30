@@ -108,6 +108,14 @@
     .navbar-nav {
         margin-left: 0% !important;
     }
+
+    #teletext-editor {
+        display: none;
+    }
+
+    #teletext-editor-notice {
+        display: block;
+    }
 }
 
 /* * SERVICE TV IMAGES AND EPG TABLE * */
@@ -119,6 +127,10 @@
 
     .starsight-title {
         font-size: 3em;
+    }
+
+    #teletext-editor-notice {
+        display: none;
     }
 }
 

@@ -1,0 +1,1124 @@
+<!doctype html>
+<!-- Created September 24, 2026, 14:49 -->
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Edit a T34 WST teletext stream to produce a clean sample." />
+        <!-- Open Graph URLs -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="North American Teletext Archive - T34 Teletext Editor" />
+        <meta property="og:description" content="Edit a T34 WST teletext stream to produce a clean sample.." />
+        <meta property="og:url" content="https://nateletext.com/html/sss-teletext.html" />
+        <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
+        <meta property="og:image:alt" content="North American Teletext Archive" />
+        <meta property="og:site_name" content="North American Teletext Archive" />
+        <meta property="og:locale" content="en_US" />
+        <link rel="canonical" href="https://nateletext.com/html/sss-teletext.html" />
+        <link rel="icon" href="../images/favicons/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../images/favicons/apple-touch-icon.png" />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/media.css" />
+        <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="../css/color-overrides.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+        <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+        <title>SSS Teletext</title>
+        <style>
+            .container {
+                padding-top: 110px;
+            }
+
+            .btn {
+                border-radius: 24px;
+            }
+            :root {
+                --editor-panel-bg: #2b00ff;
+                --editor-panel-text: #fff;
+                --editor-accent-color: var(--bs-primary);
+                --editor-row-missing: rgba(220, 53, 69, 0.35); /* rows absent from a page */
+                --editor-row-differs: rgba(255, 193, 7, 0.3); /* rows that differ by version */
+                --bs-btn-active-bg: #000 !important;
+            }
+
+            .editor-panel {
+                font-family: "Bedstead Regular";
+            }
+            .editor-panel-blue {
+                background: var(--editor-panel-bg);
+                color: var(--editor-panel-text);
+            }
+            .editor-page-list {
+                max-height: 45vh; /* long page lists scroll inside the sidebar */
+                overflow-y: auto;
+            }
+
+            /* Teletext screens stay black in both themes */
+            .editor-screen canvas,
+            .editor-version-thumbnails canvas,
+            #charMap canvas {
+                width: 100%;
+                height: auto;
+                display: block;
+                image-rendering: pixelated;
+                background: #000;
+            }
+            .editor-screen canvas {
+                border: 2px solid var(--bs-border-color);
+                border-radius: 0.25rem;
+                /* Never taller than the window allows, so the row comparison fits underneath.
+                   1.004 keeps the canvas's 502 x 500 shape. */
+                width: min(100%, calc((100vh - 330px) * 1.004));
+            }
+            .editor-screen canvas:focus-visible {
+                outline: 3px solid var(--editor-accent-color);
+                outline-offset: 2px;
+            }
+
+            /* Version thumbnails (buttons created by teletext-editor.js) */
+            .editor-version-thumbnails {
+                flex: 0 0 auto;
+                width: 150px;
+                padding: 0.35rem;
+                border: 2px solid var(--bs-border-color);
+                border-radius: 0.25rem;
+                background: var(--bs-body-bg);
+                color: inherit;
+                text-align: left;
+            }
+            .editor-version-thumbnails[aria-pressed="true"] {
+                border-color: var(--editor-accent-color);
+            }
+
+            /* Character map: as many cells per row as fit, each 32-44px wide (Bootstrap's row-cols-* stops at 6) */
+            #charMap {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(32px, 44px));
+                gap: 2px;
+            }
+            #charMap button {
+                padding: 0;
+                border: 1px solid var(--bs-border-color);
+                border-radius: 0;
+                background: #000;
+                line-height: 0;
+            }
+
+            /* Row comparison table: scrolls in its own box, with the headings kept in view */
+            .editor-different-versions {
+                max-height: 170px;
+                overflow-y: auto;
+            }
+            .editor-different-versions thead th {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+                background: var(--bs-body-bg);
+            }
+            .row-missing td,
+            .row-missing th {
+                background: var(--editor-row-missing) !important;
+            }
+            .row-differs td,
+            .row-differs th {
+                background: var(--editor-row-differs) !important;
+            }
+
+            /* Override Bootstrap's default styles for checked buttons */
+            .btn-check + .btn {
+                --bs-btn-active-bg: #000;
+                --bs-btn-active-border-color: #fff;
+                --bs-btn-active-color: #fff;
+            }
+
+            /* The styles above only apply to the "Text" and "Mosaic" buttons */
+            .btn-check[name="cmSet"]:checked + .btn {
+                background-color: #000;
+                border-color: #fff;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="logo">
+                <a href="../index.html" class="navbar-brand">
+                    <!-- <?xml version="1.0" encoding="UTF-8"?> -->
+                    <svg class="site-logo" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 699 221.14">
+                        <defs>
+                            <style>
+                                .cls-1 {
+                                    fill: #fff;
+                                    font-family: TinyandChunky, "Tiny and Chunky";
+                                    font-size: 12px;
+                                }
+
+                                .cls-2 {
+                                    fill: #fff800;
+                                }
+
+                                .cls-3 {
+                                    fill: #0019ff;
+                                }
+                            </style>
+                        </defs>
+                        <rect class="cls-3" x="6.17" y="87.19" width="692.83" height="29.92" />
+                        <rect class="cls-3" x="6.17" width="692.83" height="12.96" />
+                        <rect class="cls-3" x="6.17" y="191.34" width="692.83" height="12.96" />
+                        <g>
+                            <polygon
+                                class="cls-2"
+                                points="619.35 142.1 619.22 159.13 558.09 159.14 557.78 142.11 547.78 141.91 547.79 122.2 537.07 121.79 537.51 56.62 527 56.67 526.95 159.17 475.91 159.08 475.9 45.11 567.92 45.11 568.06 65.07 578.31 65.2 578.34 85.08 588.35 85.19 588.84 101.97 598.86 102.35 598.85 121.9 608.85 122.15 609 142.14 619.35 142.1"
+                            />
+                            <polygon
+                                class="cls-2"
+                                points="445.03 159 393.99 159.21 393.9 56.54 373.3 56.5 373.28 45.12 465.28 45.1 465.41 56.54 445.01 56.59 445.03 159"
+                            />
+                            <g>
+                                <polygon
+                                    class="cls-2"
+                                    points="218.96 159.08 157.89 159.16 157.72 94.88 157.91 56.59 147.46 56.67 147.47 159.11 86.01 159.14 85.83 94.04 86.06 45.11 188.04 45.1 188.58 56.55 208.81 56.57 208.93 73.54 218.95 73.7 219.2 121.39 218.96 159.08"
+                                />
+                                <polygon
+                                    class="cls-2"
+                                    points="373.07 159.15 311.78 159.13 311.68 142.19 301.38 141.72 301.26 122.12 291.19 121.81 291.19 56.61 280.46 56.64 280.75 118.16 280.43 159.11 229.74 159.14 229.53 93.85 229.79 45.11 321.64 45.11 321.8 65.08 332.06 65.12 332.22 85.05 342.28 85.23 342.3 101.95 352.35 102.38 352.44 122.08 362.74 122.21 362.74 142.12 373.11 142.14 373.07 159.15"
+                                />
+                            </g>
+                        </g>
+                        <text class="cls-1" transform="translate(154.03 181.27)">
+                            <tspan x="0" y="0">North American Teletext Archive</tspan>
+                        </text>
+                    </svg>
+                </a>
+            </div>
+            <button
+                class="navbar-toggler mx-4"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services
+                            <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services
+                            <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
+                            <li class="dropdown-options">
+                                <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
+                            <li class="dropdown-options">
+                                <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <!-- * PRIMARY CONTAINER -->
+            <div class="container">
+                <h1>
+                    <span class="visually-hidden">T34/T42 Teletext Editor</span>
+                    <img
+                        src="../images/banners/light/Teletext-Editor_light.png"
+                        alt=""
+                        class="mw-100 light-mode-image"
+                        id="lightImageBanner"
+                        aria-hidden="true"
+                    />
+                    <img
+                        src="../images/banners/dark/Teletext-Editor.png"
+                        alt=""
+                        class="mw-100 dark-mode-image"
+                        id="darkImageBanner"
+                        aria-hidden="true"
+                    />
+                </h1>
+                <hr aria-hidden="true" />
+                <p class="text-center">
+                    Use the editor below to edit the found pages in the converted T34 (T42) file. For help, refer to the guide below.
+                </p>
+                <div class="text-center pb-4">
+                    <button
+                        type="button"
+                        class="btn w-75"
+                        id="editor-guide-button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#teletextEditorGuide"
+                        style="background-color: #fe3838; color: #fff"
+                    >
+                        T42 Teletext Editor Guide
+                    </button>
+                </div>
+                <p id="teletext-editor-notice">
+                    <strong>NOTE: The editor is not available on mobile. Please use a desktop or laptop computer to use the editor.</strong>
+                </p>
+                <!-- * GUIDE MODAL * -->
+                <div
+                    class="modal fade"
+                    id="teletextEditorGuide"
+                    tabindex="-1"
+                    aria-labelledby="teletextEditorGuideLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title h3" id="teletextEditorGuideLabel">Using the T42 Teletext Editor</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Welcome to the T42 Teletext Editor! This guide will help teach you how to use this editor to clean up
+                                    teletext pages.
+                                </p>
+                                <hr aria-hidden="true" />
+                                <section id="getting-started">
+                                    <h2 class="h4">Getting Started</h2>
+                                    <p>
+                                        To get started, you must first convert your T34 NTSC WST file to a T42 PAL WST file. The code use
+                                        for this editor is based on an existing teletext editor used for the Teletext Archive website; the
+                                        GitHub repository is <a href="https://github.com/grim-fandango/teletext-recovery-editor">here</a>.
+                                        To convert your T34 to T32, simply use the C# (C-Sharp) script found
+                                        <a href="https://github.com/TVTA-YT/NTSC-WST-Teletext-Resources/releases">here</a>. If you want to
+                                        save your work for later editing, click the "Save Work" file. A JSON file will be exported and
+                                        saved. To continue where you left off, simply import that JSON file into the editor.
+                                    </p>
+                                </section>
+                                <hr aria-hidden="true" />
+                                <section id="actions">
+                                    <h2 class="h4">Actions</h2>
+                                    <section id="open-t42_open-session-json">
+                                        <h2 class="h5">Open T42/Session JSON File</h2>
+                                        <h2 class="h6">Open T42</h2>
+                                        <p>
+                                            After the conversion, a new T42 file will be produced. When you have this file, use the "Open
+                                            T42/Session JSON File" button to select it. The editor will populate with all the pages found in
+                                            the teletext stream.
+                                        </p>
+                                        <h2 class="h6">Open Session JSON</h2>
+                                        <p>
+                                            Open the JSON file saved from a previous session. You may notice a "Save Work" button this
+                                            section. The next point talks about what that does and what a session JSON file is.
+                                        </p>
+                                    </section>
+                                    <h2 class="h5">Save Work</h2>
+                                    <p>
+                                        You can save your progress, which include all edits, at anytime by clicking this button. A JSON file
+                                        with the extension <code>.session.json</code> will be saved to your computer. When you're ready to
+                                        work with the file again, use the same "Open" button and select the session JSON file.
+                                        <strong>Note that this is NOT the final file that will be used with the teletext viewer.</strong> To
+                                        export the final JSON, see the next point in this list.
+                                    </p>
+                                    <h2 class="h5">Export</h2>
+                                    <h2 class="h6">All pages as JSON</h2>
+                                    <p>
+                                        When you have finished making all the edits you wanted to make, click this option to genreate the
+                                        final JSON file that will be used with the teletext viewer.
+                                        <strong>
+                                            It is recommended that you also export the session JSON file for safe keeping in case you want
+                                            to go back and make additional edits to any of the pages.
+                                        </strong>
+                                        You <strong>cannot</strong> open the final JSON file, saved as <code>.final.json</code>, in the
+                                        editor.
+                                    </p>
+                                    <h2 class="h6">This page as PNG (960 x 1000)</h2>
+                                    <p>To save only the current page as a PNG file, click this option.</p>
+                                    <h2 class="h6">All pages as PNGs (ZIP)</h2>
+                                    <p>Use this option to save all pages as PNG files. These will be downloaded as a ZIP file.</p>
+                                </section>
+                                <hr aria-hidden="true" />
+                                <section id="using-the-editor">
+                                    <h2 class="h4">Using the Editor</h2>
+                                    <p>Here's a rundown on how to use the editor:</p>
+                                    <section id="additional-actions">
+                                        <h2 class="h5">Additional Actions</h2>
+                                        <h2 class="h6">Highlight missing rows</h2>
+                                        <p>
+                                            The editor will highlight empty rows missing from the final page in red. This is enabled by
+                                            default, but can be disabled if you so choose. Not adding empty rows does not affect the final
+                                            result.
+                                        </p>
+                                        <h2 class="h6">Reveal concealed text</h2>
+                                        <p>
+                                            Some pages may have hidden text that can only be revealed by pressing a "Reveal" key on a
+                                            teletext keypad, such as answers to a quiz. Enabling this option will show that concealed text.
+                                        </p>
+                                        <h2 class="h6">Treat each transmission as a subpage</h2>
+                                        <p>
+                                            The final page is a combined page made from the various versions of a specific page that were
+                                            seen in the T42. While the code accounts for pages with subpages and will display them, there
+                                            may be a couple of pages that the code claims to not have subpages, yet they actually do. This
+                                            can be verified by looking through each page version at the top of the editing viewers (more on
+                                            that later).
+                                        </p>
+                                        <p>
+                                            Use this option to separate each page, including the final versions, into their own subpage.
+                                            Choose the subpages, then click the "Separate as own subpage" button in the "Pages" section to
+                                            save those specific pages as editable subpages.
+                                        </p>
+                                        <h2 class="h6">Sort out subpages automatically</h2>
+                                        <p>
+                                            This option, enabled be default, automatically sorts subpages based on the page's subcode.
+                                            Subpages are sorted by number ("Subpage 1," "Subage 2," etc.)
+                                        </p>
+                                        <p>
+                                            The code also looks for damaged subcodes whose pages contain very similar content, fixes the
+                                            subcode, and merges that page into the correct subpage (or page). For example, for subpages, say
+                                            P118 has 2 subpages (P118/0001 and P118/0002). However, damaged headers cause there to be a
+                                            third subpage (P118/0701) that contains the same content (albeit less readable) from subpage 1
+                                            (P118/0001). The code fixes the damaged header and chooses which subpage to merge the data into
+                                            based on the content on the page. While this works as expected, some headers may be too damaged
+                                            or content too garbled, so the code will still output pages with incorrect subcodes (); these
+                                            can be removed.
+                                        </p>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="transmitted-versions">
+                                        <h2 class="h5">Transmitted Versions</h2>
+                                        <p>
+                                            To visually see the different versions of each page you're editing, use the provided image
+                                            gallery. Clicking on a page version will show it in the comparison viewer.
+                                        </p>
+                                        <p>
+                                            <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong>: Click on a page in the "Pages"
+                                            section first, then click on the various page versions in the "Transmitted Versions" gallery to
+                                            apply edits to the page you initially clicked on.
+                                        </p>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="pages">
+                                        <h2 class="h5">Pages</h2>
+                                        <ol>
+                                            <li>You can filter pages by page numbers (e.g., 110).</li>
+                                            <li>
+                                                All pages and subpages (if applicable) will be displayed in a list. Click on a page to view
+                                                it.
+                                            </li>
+                                            <li>
+                                                To view all page versions (and subpages for a certain page number), enable the "Treat each
+                                                transmission as a subpage". The list will update and allow you to select each individual
+                                                version. Refer to the article <a href="">above</a> for more information.
+                                            </li>
+                                        </ol>
+                                        <h2 class="h6">Managing Pages</h2>
+                                        <p>Use the options in this section to to modify the various pages in the teletext stream.</p>
+                                        <ol>
+                                            <li><strong>Remove from list</strong>: Remove the selected page from the final list.</li>
+                                            <li>
+                                                <strong>Remove checked</strong>: Removed only the pages whose checkboxes have been checked.
+                                            </li>
+                                            <li>
+                                                <strong>Separate page as own subpage</strong>: Save the current page as a subpage. To save
+                                                multiple pages, check the checkboxes for each page.
+                                                <strong
+                                                    >This is mainly used when the "Treat each transmission as a subpage" switch is
+                                                    enabled.</strong
+                                                >
+                                            </li>
+                                            <li>
+                                                <strong>Restore last removed</strong>: Restores the previously removed page. Click again to
+                                                go back another step.
+                                            </li>
+                                            <li><strong>Restore all removed</strong>: Brings back every removed page at once.</li>
+                                        </ol>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="cursor">
+                                        <h2 class="h4">Cursor</h2>
+                                        <ol>
+                                            <li>
+                                                This section shows the current position of the cursor and the value of the selected byte.
+                                            </li>
+                                            <li>
+                                                You can update the byte's value by typing it into the input field, then clicking "Update".
+                                            </li>
+                                        </ol>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="viewers">
+                                        <h2 class="h4">Teletext Page Viewers</h2>
+                                        <h2 class="h5">Teletext Comparison Viewer</h2>
+                                        <ol>
+                                            <li>
+                                                <strong>Final page (editable)</strong>: This is the editable page where characters can be
+                                                added or deleted.
+                                            </li>
+                                            <li>
+                                                To add text characters, just type them. You can also use the "Character Map" section at the
+                                                bottom.
+                                            </li>
+                                            <li>To add mosaics, refer to the "Character Map" <a href="">article</a>.</li>
+                                            <li>
+                                                <strong>Compared version</strong>: This is the page you're comparing the final version to.
+                                            </li>
+                                            <li>
+                                                Content from this comparison page can be copied and pasted into the final page. You can also
+                                                copy and paste characters from within the final page display.
+                                            </li>
+                                        </ol>
+                                        <p>
+                                            To edit information in the editor window, put the cursor where you want it, then begin typing or
+                                            inserting characters. Keyboard commands are supported. A list is below:
+                                        </p>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Keys</th>
+                                                    <th scope="col">Page Window</th>
+                                                    <th scope="col">Function</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Arrow keys</td>
+                                                    <td>Final page</td>
+                                                    <td>Move the cursor</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Arrow keys / Shift + arrows</td>
+                                                    <td>Comparison view</td>
+                                                    <td>Move / Extend the selection</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ctrl/&#8984; + C</td>
+                                                    <td>Comparison view</td>
+                                                    <td>Copy the selection</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ctrl/&#8984; + A</td>
+                                                    <td>Comparison view</td>
+                                                    <td>Select the whole page</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Esc</td>
+                                                    <td>Comparison view</td>
+                                                    <td>Clear the selection</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ctrl/&#8984; + V</td>
+                                                    <td>Final page</td>
+                                                    <td>Paste at cursor position</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Shift + Ctrl/&#8984; + V</td>
+                                                    <td>Final page</td>
+                                                    <td>Paste at the same position</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ctrl/&#8984; + Z</td>
+                                                    <td>Final page</td>
+                                                    <td>Undo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Backspace/Delete (macOS)</td>
+                                                    <td>Final page</td>
+                                                    <td>Clear character before the cursor</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p>There are also buttons below the viewer that perform the same copy/paste functions.</p>
+                                        <hr aria-hidden="true" />
+                                        <h2 class="h5">Editor Color Codes</h2>
+                                        <p>
+                                            Both viewers make uses of a few colors to note changes between the final edited page and the
+                                            page used for comparison. The comparison viewer is the priamry viewer to pay attention to.
+                                            Here's what each color means:
+                                        </p>
+                                        <ol>
+                                            <li>
+                                                <strong>Red (solid rectangle)</strong>: The row seen in the final page is missing from this
+                                                version of the page. Refer to the "Highlight missing rows" <a href="">article</a> for more
+                                                information.
+                                            </li>
+                                            <li>
+                                                <strong>Green (outline)</strong>: A compared version of the page has data in a row that the
+                                                final page is missing; this is likely data missing needed for the final page.
+                                            </li>
+                                            <li>
+                                                <strong>Yellow (outline)</strong>: Both page versions have data in this row, but the data in
+                                                the comparison row differs; compare both rows and consider whether the final page needs
+                                                updated.
+                                            </li>
+                                        </ol>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="row-comparison">
+                                        <h2 class="h4">Row Comparison</h2>
+                                        <p>
+                                            This shows any different, missing, or new rows that are not present in the final page, but are
+                                            present in the comparison page. To only insert one row, click the "Use this row" button. To
+                                            insert all missing rows, click the "Fill all missing rows" button.
+                                        </p>
+                                    </section>
+                                    <hr aria-hidden="true" />
+                                    <section id="page">
+                                        <h2 class="h4">Page</h2>
+                                        <h2 class="h5">Number / Subcode</h2>
+                                        <p>This shows the current page's number and subcode. This cannot be edited.</p>
+                                        <h2 class="h5">Character Map</h2>
+                                        <p>
+                                            This shows all current available characters in the font. "Text" characters are shown by default.
+                                            To insert mosaic characters, click the "Mosaic" option.
+                                        </p>
+                                        <h2 class="h5">Color Codes</h2>
+                                        <p>
+                                            To change the text color, click on the icon (shown as a capital "A") above the color square.
+                                            Place the cursor <strong>before</strong> where you want to change the text color. To change the
+                                            color of a mosaic character, click on the color square.
+                                        </p>
+                                        <p>
+                                            To change a row's background color, put the cursor at the beginning of the row you want to
+                                            change (column 1), then click on one of the text color icons to insert the color code. This will
+                                            change the color of the entire row and keep the current color of the text inside the row. To add
+                                            a new row, put the cursor in column 1, insert a text color code, then click the "New" button to
+                                            insert a new row with that color. To insert a black row, do the same steps, but click the
+                                            "Black" button instead.
+                                        </p>
+                                    </section>
+                                </section>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- * EDITOR* -->
+            <div class="container-fluid px-3 px-xl-4 pb-4" id="teletext-editor">
+                <h2 class="text-center">Actions</h2>
+                <div
+                    class="d-flex flex-wrap align-items-center justify-content-center gap-5 mb-3 pt-3 pb-3 border rounded-4"
+                    style="border: 1px solid #0019ff !important"
+                    role="toolbar"
+                    aria-label="Editor tools"
+                >
+                    <button type="button" class="btn btn-sm" data-action="open" style="background-color: #33c5ff; color: #000">
+                        <i class="bi bi-folder2-open" aria-hidden="true"></i> Open T42/Session JSON File
+                    </button>
+                    <input type="file" id="fileInput" accept=".t42,.json" hidden />
+                    <button type="button" class="btn btn-sm" data-action="save-session" style="background-color: #e882ff; color: #000">
+                        <i class="bi bi-save" aria-hidden="true"></i> Save Work
+                    </button>
+                    <div class="dropdown">
+                        <button
+                            type="button"
+                            class="btn btn-sm dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            style="background-color: #6373ff; color: #fff"
+                        >
+                            <i class="bi bi-download" aria-hidden="true"></i> Export
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button type="button" class="dropdown-item" data-action="export-all-json">All pages as JSON</button></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <button type="button" class="dropdown-item" data-action="export-png">
+                                    This page as PNG (960 &times; 1000)
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item" data-action="export-all-png">All pages as PNGs (.zip)</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-sm" data-action="rebuild" style="background-color: #0019ff">
+                        <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Rebuild Final Page
+                    </button>
+                </div>
+                <section class="pt-4" id="additional-actions-section">
+                    <h2 class="text-center">Additional Actions</h2>
+                    <div
+                        class="d-flex flex-wrap align-items-center justify-content-center gap-5 mb-3 pt-3 pb-3 border rounded-4"
+                        style="border: 1px solid #0019ff !important"
+                    >
+                        <div class="form-check form-switch ms-lg-2 mb-0">
+                            <input type="checkbox" class="form-check-input" id="optMissing" role="switch" checked />
+                            <label for="optMissing" class="form-check-label small">Highlight missing rows</label>
+                        </div>
+                        <div class="form-check form-switch mb-0">
+                            <input type="checkbox" class="form-check-input" id="optReveal" role="switch" />
+                            <label for="optReveal" class="form-check-label small">Reveal concealed text</label>
+                        </div>
+                        <div class="form-check form-switch mb-0">
+                            <input type="checkbox" class="form-check-input" id="optSplit" role="switch" />
+                            <label for="optSplit" class="form-check-label small">Treat each transmission as a subpage</label>
+                        </div>
+                        <div class="form-check form-switch mb-0">
+                            <input type="checkbox" class="form-check-input" id="optGroup" role="switch" checked />
+                            <label for="optGroup" class="form-check-label small">Sort out subpages automatically</label>
+                        </div>
+                    </div>
+                </section>
+                <div
+                    class="border rounded-4 px-3 py-2 mt-3 mb-4 text-center sticky-bottom"
+                    role="status"
+                    aria-live="polite"
+                    id="status"
+                    style="background-color: #333333"
+                >
+                    Ready.
+                </div>
+                <section class="editor-panel mt-3" aria-labelledby="versionsHeading">
+                    <h2 class="h6 text-uppercase" id="versionsHeading">Transmitted versions</h2>
+                    <div
+                        class="d-flex gap-3 overflow-x-auto pb-2 mb-3"
+                        id="versionStrip"
+                        role="group"
+                        aria-labelledby="versionsHeading"
+                    ></div>
+                </section>
+                <div class="row g-3">
+                    <div class="col-12 col-xl-2 col-lg-3 d-flex flex-column gap-3">
+                        <section class="editor-panel editor-panel-blue border rounded-4 p-3" aria-labelledby="pagesHeading">
+                            <h2 id="pagesHeading" class="h6 text-uppercase">Pages</h2>
+                            <label for="pageFilter" class="visually-hidden">Filter Pages</label>
+                            <input
+                                type="search"
+                                class="form-control form-control-sm mb-2"
+                                id="pageFilter"
+                                placeholder="Filter pages (e.g. 100)"
+                            />
+                            <div class="editor-page-list list-group list-group-flush small" id="pageList"></div>
+                            <div class="pb-3" id="page-edit-buttons">
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="remove-from-list"
+                                        data-action="remove-page"
+                                        style="background-color: #fff800; color: #000"
+                                    >
+                                        <i class="bi bi-x-lg" aria-hidden="true"></i> Remove from list
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="remove-duplicates"
+                                        data-action="remove-duplicates"
+                                        style="background-color: #fff800; color: #000"
+                                    >
+                                        <i class="bi bi-files" aria-hidden="true"></i> Remove duplicates
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="removeCheckedButton"
+                                        data-action="remove-checked"
+                                        style="background-color: #fff800; color: #000"
+                                        disabled
+                                    >
+                                        <i class="bi bi-check2-square" aria-hidden="true"></i> Remove checked (<span class="checked-count"
+                                            >0</span
+                                        >)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="pb-3" id="subpage-buttons">
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="separate-subpage"
+                                        data-action="separate-transmission"
+                                        style="background-color: #d388ff; color: #000"
+                                    >
+                                        Separate as own subpage
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="rejoin"
+                                        data-action="rejoin-transmission"
+                                        style="background-color: #d388ff; color: #000"
+                                    >
+                                        Rejoin
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pb-3" id="restore-buttons">
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="restore-last-removed"
+                                        data-action="restore-pages"
+                                        style="background-color: #ff54b5; color: #000"
+                                    >
+                                        <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Restore last removed
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm w-100"
+                                        id="restore-all-removed"
+                                        data-action="restore-all-pages"
+                                        style="background-color: #ff54b5; color: #000"
+                                    >
+                                        <i class="bi bi-arrow-repeat" aria-hidden="true"></i> Restore all removed
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                        <fieldset class="editor-panel editor-panel-blue border rounded-4 p-3 m-0">
+                            <legend class="h6 text-uppercase float-none w-auto">Cursor</legend>
+                            <div class="small mb-2">Column <span id="curX">0</span>, row <span id="curY">0</span></div>
+                            <label for="curHex" class="form-label small">Byte (hex)</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control" id="curHex" maxlength="2" />
+                                <button type="button" class="btn btn-outline-light" data-action="update-hex">Update</button>
+                            </div>
+                            <div class="small mt-1">With parity bit: <span id="curParity">--</span></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-12 col-xl-10 col-lg-9 pt-4">
+                        <section class="editor-panel" aria-label="Page editor">
+                            <div class="row g-3 mb-3">
+                                <figure class="editor-screen col-12 col-lg-6 m-0">
+                                    <figcaption class="small fw-semibold mb-1" id="finalCaption">Final page (editable)</figcaption>
+                                    <canvas
+                                        id="finalCanvas"
+                                        tabindex="0"
+                                        role="img"
+                                        aria-labelledby="finalCaption"
+                                        aria-describedby="finalText"
+                                    ></canvas>
+                                    <pre class="visually-hidden" id="finalText"></pre>
+                                </figure>
+                                <figure class="editor-screen col-12 col-lg-6 m-0">
+                                    <figcaption class="small fw-semibold mb-1" id="compareCaption">Comparison view</figcaption>
+                                    <canvas
+                                        id="compareCanvas"
+                                        tabindex="0"
+                                        role="img"
+                                        aria-labelledby="compareCaption"
+                                        aria-describedby="compareHelp compareText"
+                                    ></canvas>
+                                    <p class="visually-hidden" id="compareHelp">
+                                        Arrow keys move the selection, Shift plus arrows extends it, Control or Command C copies. In the
+                                        final page, Control or Command V pastes at the cursor, and Shift plus Control or Command V pastes at
+                                        the same position it was copied from.
+                                    </p>
+                                    <pre class="visually-hidden" id="compareText"></pre>
+                                </figure>
+                            </div>
+                            <div class="text-center pb-3">
+                                <span class="small text-body-secondary" id="clipInfo">
+                                    Drag across the comparison viewer to select characters.
+                                </span>
+                            </div>
+                            <div class="row" aria-label="Copy and paste">
+                                <div class="col-xl-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h2 class="h6 text-uppercase m-0">Row comparison</h2>
+                                    </div>
+                                    <div class="table-responsive editor-different-versions">
+                                        <table class="table table-sm align-middle small">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Row</th>
+                                                    <th scope="col">Final</th>
+                                                    <th scope="col">Current Version</th>
+                                                    <th scope="col">
+                                                        <span class="visually-hidden">Action</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="diffBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-center gap-5 mb-3">
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm w-100"
+                                                id="copy-selection"
+                                                data-action="copy"
+                                                style="background-color: #88bfff; color: #000"
+                                            >
+                                                Copy selection
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm w-100"
+                                                data-action="paste-cursor"
+                                                style="background-color: #8effe8; color: #000"
+                                            >
+                                                Paste at cursor
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm w-100"
+                                                data-action="paste-same"
+                                                style="background-color: #88ff90; color: #000"
+                                            >
+                                                Paste at same position
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm w-100"
+                                                data-action="undo"
+                                                style="background-color: #ff8888; color: #000"
+                                            >
+                                                Undo
+                                            </button>
+                                            <button
+                                                class="btn btn-sm w-100"
+                                                data-action="fill-missing"
+                                                style="background-color: #9c88ff; color: #000"
+                                            >
+                                                Fill all missing rows
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <aside class="editor-panel editor-panel-blue border rounded-4 p-3" aria-label="Page details and character map">
+                            <fieldset class="mb-3">
+                                <legend class="h6 text-uppercase">Page</legend>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label for="pageNum" class="form-label small">Number</label>
+                                        <input class="form-control form-control-sm font-monospace" id="pageNum" disabled />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="subcode" class="form-label small">Subcode</label>
+                                        <input class="form-control form-control-sm font-monospace" id="subcode" disabled />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="mb-3">
+                                <legend class="h6 text-uppercase">Character Map</legend>
+                                <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Character set">
+                                    <input type="radio" class="btn-check" name="cmSet" id="cmAlpha" value="alpha" checked />
+                                    <label for="cmAlpha" class="btn btn-outline-light" id="text-button-text">Text</label>
+                                    <input type="radio" class="btn-check" name="cmSet" id="cmMosaic" value="mosaic" />
+                                    <label for="cmMosaic" class="btn btn-outline-light" id="mosaic-button-text">Mosaic</label>
+                                </div>
+                                <div id="charMap"></div>
+                            </fieldset>
+                            <fieldset class="mb-0">
+                                <legend class="h6 text-uppercase">Color Codes</legend>
+                                <p class="small mb-2">
+                                    Click a color to put its code at the cursor. The code shows as a space and colors everything to its
+                                    right, up to the next code. To recolor existing text, put the cursor on the code (or a space) just
+                                    before it.
+                                </p>
+                                <div id="colorCodes"></div>
+                            </fieldset>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+            <!-- Floating theme button, bottom-right -->
+
+            <button
+                id="themeFab"
+                type="button"
+                class="btn btn-outline-secondary rounded-circle shadow"
+                style="position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; z-index: 1050"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#themeOffcanvas"
+                aria-controls="themeOffcanvas"
+                title="Theme"
+            >
+                <span class="theme-icon">
+                    <i class="bi bi-circle-half"></i>
+                </span>
+            </button>
+
+            <!-- Offcanvas panel -->
+            <div
+                class="offcanvas offcanvas-end"
+                tabindex="-1"
+                id="themeOffcanvas"
+                aria-labelledby="themeOffcanvasLabel"
+                style="width: 260px"
+            >
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="light">
+                            <i class="bi bi-brightness-high-fill"></i> Light
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="dark">
+                            <i class="bi bi-moon-fill"></i> Dark
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="auto">
+                            <i class="bi bi-display-fill"></i> Match system
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="end-footer pt-4 text-center">
+            <div id="footer-site-links">
+                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
+                <p>
+                    Issues? &nbsp;
+                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
+                </p>
+                <p>
+                    Have questions or information? &nbsp;
+                    <a href="contact.html">Contact us.</a>
+                </p>
+                <p>
+                    Looking for a specific page? &nbsp;
+                    <a href="sitemap.html">Site map.</a>
+                </p>
+                <p class="pb-4">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                </p>
+            </div>
+            <div class="pt-4">
+                <small class="text-white">Website <span aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small>
+                <br />
+                <br />
+                <small class="text-white">
+                    The names, logos, and trademarks of featured broadcast networks are the property of their respectful owners. Any and all
+                    properties are used solely for navigational purposes to help visitors of the website select the teletext or text service
+                    associated with each broadcaster and easily identify the network the teletext or text service data was sourced from.
+                    This website is not affiliated with, endorsed by, sponsored by, or officially connected with any of the broadcast
+                    networks featured on this website.
+                </small>
+                <br />
+                <br />
+                <small class="text-white">
+                    <strong>This site respects your privacy &mdash; we use no cookies and no ad tracking.</strong>
+                </small>
+            </div>
+        </footer>
+        <script src="../js/color-modes.js"></script>
+        <script src="../js/teletext-editor.js"></script>
+        <script src="../js/t42-decode.js"></script>
+    </body>
+</html>
