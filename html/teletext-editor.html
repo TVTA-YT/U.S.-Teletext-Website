@@ -4,17 +4,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Edit a T34 WST teletext stream to produce a clean sample." />
+        <meta name="description" content="Edit a T42 WST teletext stream to produce a clean export of all pages." />
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content="North American Teletext Archive - T34 Teletext Editor" />
-        <meta property="og:description" content="Edit a T34 WST teletext stream to produce a clean sample.." />
-        <meta property="og:url" content="https://nateletext.com/html/sss-teletext.html" />
+        <meta property="og:description" content="Edit a converted T34 (T42) WST teletext stream to produce a clean export of all pages." />
+        <meta property="og:url" content="https://nateletext.com/html/teletext-editor.html" />
         <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
         <meta property="og:image:alt" content="North American Teletext Archive" />
         <meta property="og:site_name" content="North American Teletext Archive" />
         <meta property="og:locale" content="en_US" />
-        <link rel="canonical" href="https://nateletext.com/html/sss-teletext.html" />
+        <link rel="canonical" href="https://nateletext.com/html/teletext-editor.html" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
@@ -82,8 +82,6 @@
             .editor-screen canvas {
                 border: 2px solid var(--bs-border-color);
                 border-radius: 0.25rem;
-                /* Never taller than the window allows, so the row comparison fits underneath.
-                   1.004 keeps the canvas's 502 x 500 shape. */
                 width: min(100%, calc((100vh - 330px) * 1.004));
             }
             .editor-screen canvas:focus-visible {
@@ -120,7 +118,7 @@
                 line-height: 0;
             }
 
-            /* Row comparison table: scrolls in its own box, with the headings kept in view */
+            /* Row comparison table */
             .editor-different-versions {
                 max-height: 170px;
                 overflow-y: auto;
