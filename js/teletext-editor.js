@@ -1295,35 +1295,6 @@ function looksLikeSameSubpage(firstVersion, secondVersion) {
 }
 
 
-// & Keep the selected transmission and remove the other transmissions of the same subpage
-function removeDuplicatesOfSelectedPage() {
-    const page = getSelectedPage();
-    if (page.baseVersionIndex === undefined) {
-        announceStatus("Enable \"Treat each transmission as a subpage\" to remove duplicate transmissions.");
-        return;
-    }
-
-    const keptVersion = page.versions[page.baseVersionIndex];
-    const duplicates = editorState.pages.filter(otherPage =>
-        otherPage !== page
-        && otherPage.number === page.number
-        && otherPage.subcode === page.subcode
-        && otherPage.baseVersionIndex !== undefined
-        && looksLikeSameSubpage(keptVersion, otherPage.versions[otherPage.baseVersionIndex]));
-
-    if (duplicates.length === 0) {
-        announceStatus(`No other transmissions of ${pageLabel(page)} look like the same subpage.`);
-        return;
-    }
-
-    const removedCount = removeEntries(new Set(duplicates.map(pageKey)));
-    if (removedCount) {
-        const removedList = duplicates.map(duplicate => `#${duplicate.transmission}`).join(", ");
-        announceStatus(`Kept ${pageLabel(page)} and removed ${removedCount} duplicate transmission(s): ${removedList}. Use Restore last removed to undo.`);
-    }
-}
-
-
 // & Put back the pages taken out by the most recent removal (click again to go further back)
 function restoreLastRemoval() {
     const lastStep = editorState.removalSteps.pop();
@@ -2322,7 +2293,6 @@ const menuActions = {
     "rebuild": () => selectPage(editorState.selectedPageIndex, { startOver: true }),
     "remove-page": removeSelectedPage,
     "remove-checked": removeCheckedPages,
-    "remove-duplicates": removeDuplicatesOfSelectedPage,
     "separate-transmission": separateTransmission,
     "rejoin-transmission": rejoinTransmission,
     "restore-pages": restoreLastRemoval,
@@ -2350,7 +2320,9 @@ const isShortcut = (event, letter) => (event.ctrlKey || event.metaKey) && event.
 // & Convert mouse position on page canvas to character cell
 function getCellFromPointer(canvas, pointerEvent) {
     const canvasBounds = canvas.getBoundingClientRect();
-    const gutterWidth = canvas.width - PAGE_WIDTH;   // 0 when the canvas has no row numbers
+
+    // This is 0 when the canvas has now row numbers
+    const gutterWidth = canvas.width - PAGE_WIDTH;
 
     // Convert from screen pixels (the canvas is scaled by CSS) to canvas pixels
     const canvasX = (pointerEvent.clientX - canvasBounds.left) / canvasBounds.width * canvas.width;
@@ -2462,8 +2434,7 @@ elements.groupOption?.addEventListener("change", rebuildPageListKeepingNumber);
 document.querySelectorAll('input[name="cmSet"]').forEach(radio => radio.addEventListener("change", renderCharacterMap));
 
 
-// Final rendered page with cursor and editing abilities
-// Click puts the cursor there; dragging selects characters to copy (the cursor stays where the drag began)
+// Final rendered page with cursor and editing abilities. A click puts the cursor there and dragging selects characters to copy (the cursor stays where the drag began)
 let isDraggingFinalSelection = false;
 
 elements.finalCanvas.addEventListener("pointerdown", event => {
