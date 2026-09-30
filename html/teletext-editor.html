@@ -7,7 +7,7 @@
         <meta name="description" content="Edit a T42 WST teletext stream to produce a clean export of all pages." />
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="North American Teletext Archive - T34 Teletext Editor" />
+        <meta property="og:title" content="North American Teletext Archive - T42 Teletext Editor" />
         <meta property="og:description" content="Edit a converted T34 (T42) WST teletext stream to produce a clean export of all pages." />
         <meta property="og:url" content="https://nateletext.com/html/teletext-editor.html" />
         <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
@@ -39,7 +39,7 @@
             crossorigin="anonymous"
         ></script>
         <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <title>SSS Teletext</title>
+        <title>T42 Teletext Editor</title>
         <style>
             .container {
                 padding-top: 110px;
@@ -150,6 +150,10 @@
                 background-color: #000;
                 border-color: #fff;
                 color: #fff;
+            }
+
+            .background-button:hover {
+                color: #000 !important;
             }
         </style>
     </head>
@@ -337,7 +341,7 @@
             <!-- * PRIMARY CONTAINER -->
             <div class="container">
                 <h1>
-                    <span class="visually-hidden">T34/T42 Teletext Editor</span>
+                    <span class="visually-hidden">T42 Teletext Editor</span>
                     <img
                         src="../images/banners/light/Teletext-Editor_light.png"
                         alt=""
@@ -743,7 +747,7 @@
                             </li>
                         </ul>
                     </div>
-                    <button type="button" class="btn btn-sm" data-action="rebuild" style="background-color: #0019ff">
+                    <button type="button" class="btn btn-sm" data-action="rebuild" style="background-color: #0019ff; color: #fff">
                         <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Rebuild Final Page
                     </button>
                 </div>
@@ -776,7 +780,7 @@
                     role="status"
                     aria-live="polite"
                     id="status"
-                    style="background-color: #333333"
+                    style="background-color: #333333; color: #fff"
                 >
                     Ready.
                 </div>
@@ -873,14 +877,17 @@
                             </div>
                         </section>
                         <fieldset class="editor-panel editor-panel-blue border rounded-4 p-3 m-0">
-                            <legend class="h6 text-uppercase float-none w-auto">Cursor</legend>
-                            <div class="small mb-2">Column <span id="curX">0</span>, row <span id="curY">0</span></div>
-                            <label for="curHex" class="form-label small">Byte (hex)</label>
+                            <h2 id="pagesHeading" class="h6 text-uppercase">Cursor</h2>
+                            <div class="small mb-2">
+                                Column <span class="cursor-position-text" id="curX">0</span>, row
+                                <span class="cursor-position-text" id="curY">0</span>
+                            </div>
+                            <label for="curHex" class="form-label small text-white">Byte (hex)</label>
                             <div class="input-group input-group-sm">
                                 <input class="form-control" id="curHex" maxlength="2" />
                                 <button type="button" class="btn btn-outline-light" data-action="update-hex">Update</button>
                             </div>
-                            <div class="small mt-1">With parity bit: <span id="curParity">--</span></div>
+                            <div class="small mt-1">With parity bit: <span class="cursor-position-text" id="curParity">--</span></div>
                         </fieldset>
                     </div>
                     <div class="col-12 col-xl-10 col-lg-9 pt-4">
@@ -993,11 +1000,11 @@
                                 <legend class="h6 text-uppercase">Page</legend>
                                 <div class="row g-2">
                                     <div class="col-6">
-                                        <label for="pageNum" class="form-label small">Number</label>
+                                        <label for="pageNum" class="form-label small text-white">Number</label>
                                         <input class="form-control form-control-sm font-monospace" id="pageNum" disabled />
                                     </div>
                                     <div class="col-6">
-                                        <label for="subcode" class="form-label small">Subcode</label>
+                                        <label for="subcode" class="form-label small text-white">Subcode</label>
                                         <input class="form-control form-control-sm font-monospace" id="subcode" disabled />
                                     </div>
                                 </div>
@@ -1006,15 +1013,15 @@
                                 <legend class="h6 text-uppercase">Character Map</legend>
                                 <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Character set">
                                     <input type="radio" class="btn-check" name="cmSet" id="cmAlpha" value="alpha" checked />
-                                    <label for="cmAlpha" class="btn btn-outline-light" id="text-button-text">Text</label>
+                                    <label for="cmAlpha" class="btn btn-outline-light text-white" id="text-button-text">Text</label>
                                     <input type="radio" class="btn-check" name="cmSet" id="cmMosaic" value="mosaic" />
-                                    <label for="cmMosaic" class="btn btn-outline-light" id="mosaic-button-text">Mosaic</label>
+                                    <label for="cmMosaic" class="btn btn-outline-light text-white" id="mosaic-button-text">Mosaic</label>
                                 </div>
                                 <div id="charMap"></div>
                             </fieldset>
                             <fieldset class="mb-0">
                                 <legend class="h6 text-uppercase">Color Codes</legend>
-                                <p class="small mb-2">
+                                <p class="small mb-2 text-white">
                                     Click a color to put its code at the cursor. The code shows as a space and colors everything to its
                                     right, up to the next code. To recolor existing text, put the cursor on the code (or a space) just
                                     before it.

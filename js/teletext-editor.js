@@ -1127,7 +1127,7 @@ function renderColorCodeButtons() {
         group.setAttribute("aria-label", `${label} color codes`);
 
         const heading = document.createElement("span");
-        heading.className = "small me-1";
+        heading.className = "small me-1 page-section-text";
         heading.style.minWidth = "6em";
         heading.textContent = label;
         group.append(heading);
@@ -1135,8 +1135,8 @@ function renderColorCodeButtons() {
         choices.forEach(({ code, name, content, style }) => {
             const button = document.createElement("button");
             button.type = "button";
-            button.className = "btn btn-sm p-0 border";
-            button.style.cssText = `min-width: 2rem; height: 2rem; border-radius: 0.25rem; ${style}`;
+            button.className = "btn btn-sm btn-outline-light p-0 border background-button";
+            button.style.cssText = `min-width: 2rem; height: 2rem; border-radius: 0.25rem; ${style}; color: #fff`;
             button.innerHTML = content;
             button.title = `${name} (0x${toHexString(code)})`;
             button.setAttribute("aria-label", `Insert ${name} code, 0x${toHexString(code)}`);
