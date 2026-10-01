@@ -74,7 +74,9 @@ const ControlCode = {
     CONTIGUOUS_MOSAIC: 0x19,
     SEPARATED_MOSAIC: 0x1a,
     BLACK_BACKGROUND: 0x1c,
-    NEW_BACKGROUND: 0x1d
+    NEW_BACKGROUND: 0x1d,
+    HOLD_MOSAICS: 0x1e,
+    RELEASE_MOSAICS: 0x1f
 };
 
 const WHITE = 7;
@@ -103,7 +105,10 @@ const ENGLISH_CHARACTER_SUBS = {
 const HIGHLIGHT_ROW_MISSING_FROM_FINAL = "#20c997";
 
 // Row-number gutter drawn down the left of the two viewers
-const PAGE_WIDTH = COLUMN_COUNT * CELL_WIDTH;  // ^ The teletext page itself, in canvas pixels
+
+// ^ The teletext page itself, in canvas pixels
+const PAGE_WIDTH = COLUMN_COUNT * CELL_WIDTH;
+
 const ROW_NUMBER_GUTTER_WIDTH = 22;
 const ROW_NUMBER_FONT = "11px monospace";
 const ROW_NUMBER_COLOR = "#8a8a8a";
@@ -225,21 +230,36 @@ function drawRow(context, rowBytes, top, revealConcealed) {
     let isSeparated = false;
     let isConcealed = false;
 
+    // Hold Graphics (1E): while it's on, a control-code cell shows the last block graphic instead of a blank block
+    // * Services use it to change color or background mid-shape without a gap
+    let isHoldingMosaics = false;
+    let heldByte = SPACE;
+    let heldSeparated = false;
+
     for (let column = 0; column < COLUMN_COUNT; column++) {
         const byteValue = rowBytes[column] & SEVEN_BIT_MASK;
         const left = column * CELL_WIDTH;
 
         if (isControlCode(byteValue)) {
+            // Set-at codes take effect in this cell
             if (byteValue === ControlCode.NEW_BACKGROUND) backgroundColor = foregroundColor;
             else if (byteValue === ControlCode.BLACK_BACKGROUND) backgroundColor = BLACK;
+            else if (byteValue === ControlCode.HOLD_MOSAICS) isHoldingMosaics = true;
 
-            drawCell(context, left, top, SPACE, foregroundColor, backgroundColor, false, false);
+            if (isHoldingMosaics && isMosaic) {
+                drawCell(context, left, top, heldByte, foregroundColor, backgroundColor, true, heldSeparated);
+            } else {
+                drawCell(context, left, top, SPACE, foregroundColor, backgroundColor, false, false);
+            }
 
+            // Set-after codes take effect from the next cell. Switching between text and graphics forgets the held block
             if (isAlphaColorCode(byteValue)) {
+                if (isMosaic) heldByte = SPACE;
                 foregroundColor = byteValue;
                 isMosaic = false;
                 isConcealed = false;
             } else if (isMosaicColorCode(byteValue)) {
+                if (!isMosaic) heldByte = SPACE;
                 foregroundColor = byteValue - ControlCode.MOSAIC_BLACK;
                 isMosaic = true;
                 isConcealed = false;
@@ -249,8 +269,16 @@ function drawRow(context, rowBytes, top, revealConcealed) {
                 isSeparated = false;
             } else if (byteValue === ControlCode.SEPARATED_MOSAIC) {
                 isSeparated = true;
+            } else if (byteValue === ControlCode.RELEASE_MOSAICS) {
+                isHoldingMosaics = false;
             }
             continue;
+        }
+
+        // Remember the last block graphic for Hold Graphics
+        if (isMosaic && isMosaicShape(byteValue)) {
+            heldByte = byteValue;
+            heldSeparated = isSeparated;
         }
 
         const byteToDraw = isConcealed && !revealConcealed ? SPACE : byteValue;
@@ -281,7 +309,7 @@ function drawPage(canvas, pageRows, options = {}) {
         selection = null,
         pastePreview = null,
         showRowNumbers = false,
-        scale = 1                 // 2 draws everything twice the size, e.g. for PNG export
+        scale = 1  // 2 draws everything twice the size (e.g. for PNG export)
     } = options;
 
     const gutterWidth = showRowNumbers ? ROW_NUMBER_GUTTER_WIDTH : 0;
@@ -459,7 +487,7 @@ const singleCellSelection = (column, row) => ({
 })
 
 
-// ! Undo
+// & Create snapshot of current page before making a change so that the change can be undone if requested
 function saveUndoStep() {
     editorState.undoHistory.push(editorState.finalPageRows.map(rowBytes => rowBytes ? rowBytes.slice() : null));
     if (editorState.undoHistory.length > MAX_UNDO_STEPS) editorState.undoHistory.shift();
@@ -553,7 +581,7 @@ function codesToSwitch(fromAttributes, toAttributes) {
 const hasVisibleCharacters = rowBytes => rowBytes.some(byteValue => (byteValue & SEVEN_BIT_MASK) > SPACE);
 
 
-// & After new bytes that end just before 'column', put the row back into the mode it had there before the change so the rest of the row keeps its original look.
+// & After new bytes that end just before 'column', put the row back into the mode it had there before the change so the rest of the row keeps its original look
 /*
 * NOTE: The code is only written over a space.
 * This Returns false if it was needed but there was no space for it
@@ -733,7 +761,7 @@ function isSameRowText(firstCopy, secondCopy) {
 /*
 * First, sort the copites of the row into families of the same text and keep the one with the mot copies.
 * Next, inside that family, iterate each character and vote on it. Each chaeracter is whichever value most page copies agree on
-* If a row only turns up a few transmissions, the row is dropped
+* If a row only turns up a few transmissions, the row is dropped.
 */
 const MIN_VERSIONS_TO_DROP_STRAY_ROWS = 4;
 
@@ -821,7 +849,7 @@ const exportFileName = page => pageLabel(page).replace(/[\/ #]+/g, "-");
 const subpageCount = page => editorState.pages.filter(otherPage => otherPage.number === page.number).length;
 
 
-// & Text for an entry in the page list. Under a "P199 · ..." heading, the page number is already shown, so the entry only needs its subcode or transmission. If also on its own, it needs the page number as well
+// & Text for an entry in the page list. Under a "P199 ..." heading, the page number is already shown, so the entry only needs its subcode or transmission. If also on its own, it needs the page number as well
 function entryLabel(page, isUnderHeading) {
     if (isUnderHeading) return page.transmission ? `#${page.transmission}` : subpageName(page);
     return page.transmission ? `P${page.number} #${page.transmission}` : `P${page.number}`;
@@ -1378,11 +1406,44 @@ const MAX_MERGE_DIFFERENCE = 0.45;
 // ^ Once voted, real subpages differ by more thatn this (noise levels under 0.2)
 const DIFFERENT_SUBPAGE_LIMIT = 0.25;
 
+// ^ Even on a clean capture, two copies of one page can differ by a stray character
+// * Never merge less leniently than this or those copies stay apart and get filed under a different page
+const MIN_MERGE_DIFFERENCE = 0.02;
+
+
+// & Check if the page counters on subpages are different; if they do, these are not the same subpage
+// * Counters with different totals (e.g. "4/4" and "1/2") don't count because that means one of them is damaged
+function countersDiffer(firstRows, secondRows) {
+    const firstCounter = readSubpageCounter(firstRows);
+    const secondCounter = readSubpageCounter(secondRows);
+    return Boolean(firstCounter && secondCounter
+        && firstCounter.total === secondCounter.total && firstCounter.number !== secondCounter.number);
+}
+
+// True if a transmission received at least one display row (rows 1–24), not just a header
+const hasDisplayRows = version => version.rows.slice(1).some(Boolean);
+
+// & The subpage holding the transmission sent closest in time to this one
+function nearestInBroadcastOrder(subpages, version) {
+    let nearest = subpages[0];
+    let nearestGap = Infinity;
+    for (const group of subpages) {
+        for (const other of group) {
+            const gap = Math.abs((other.transmissionNumber ?? 0) - (version.transmissionNumber ?? 0));
+            if (gap < nearestGap && hasDisplayRows(other)) {
+                nearestGap = gap;
+                nearest = group;
+            }
+        }
+    }
+    return nearest;
+}
+
 
 // & Sort a page's transmissions into subpages by how alike they are
 /*
-* Every transmission starts on its own. The two most alike groups keep merging until what's left differs by more than the capture's noise
-* Copies of one subpage differ only by errors, while different subpages differ in their actual text content
+* Every transmission starts on its own. The two most alike groups keep merging until what's left differs by more than the capture's noise,
+* Copies of one subpage differ only by errors, while different subpages differ in their actual text content.
 */
 function groupVersionsBySubpage(versions) {
     const count = Math.min(versions.length, MAX_VERSIONS_TO_CLUSTER);
@@ -1405,7 +1466,7 @@ function groupVersionsBySubpage(versions) {
     const noiseLevel = closestDifferences[Math.floor(closestDifferences.length / 2)];
 
     // Merge anything within a couple of times the noise level (a clean capture merges only exact matches)
-    const mergeLimit = Math.min(MAX_MERGE_DIFFERENCE, noiseLevel * 2.5 + 0.002);
+    const mergeLimit = Math.min(MAX_MERGE_DIFFERENCE, Math.max(MIN_MERGE_DIFFERENCE, noiseLevel * 2.5 + 0.002));
 
     // The average difference between two groups over the pairs that could be compared
     const groupDifference = (firstGroup, secondGroup) => {
@@ -1448,30 +1509,47 @@ function groupVersionsBySubpage(versions) {
     }
     if (leftovers.length > 0 && subpages.length > 1) {
         const votedPages = subpages.map(group => ({ rows: buildFinalPageFromVersions(group) }));
+        const withoutText = [];
         for (const version of leftovers) {
-            let closestIndex = 0;
+            let closestIndex = -1;
             let closestDifference = Infinity;
+            let comparable = false;
             votedPages.forEach((votedPage, groupIndex) => {
-                const difference = differenceRate(votedPage, version) ?? 1;
+                const difference = differenceRate(votedPage, version);
+                if (difference === null) return;
+                comparable = true;
+
+                // Pages with different counts (e.g. "1/3" and "2/3") cannot be joined together
+                if (countersDiffer(votedPage.rows, version.rows)) return;
                 if (difference < closestDifference) {
                     closestDifference = difference;
                     closestIndex = groupIndex;
                 }
             });
-            subpages[closestIndex].push(version);
+
+            // A damaged copy joins the subpage it's closest to
+            // * One whose counter matches none of them is a page seen only once, so it keeps its own entry
+            // * One with nothing to compare (such as a header with no rows) goes with the transmission next to it in broadcast order
+            if (closestIndex >= 0) subpages[closestIndex].push(version);
+            else if (comparable) subpages.push([version]);
+            else withoutText.push(version);
         }
+        withoutText.forEach(version => nearestInBroadcastOrder(subpages, version).push(version));
     } else if (leftovers.length > 0) {
         subpages[0].push(...leftovers);
     }
 
     // Subpages must actually have different text content.
-    // * Noise, missing rows, or a lost last 8 columns can split one page into several groups that read the same once each is voted, so merge any that do.
+    // * Noise, missing rows, or a lost last 8 columns can split one page into several groups that read the same once each is voted, so merge any that do
     const votedSubpages = subpages.map(group => ({ rows: buildFinalPageFromVersions(group) }));
     while (subpages.length > 1) {
         let closest = null;
         for (let first = 0; first < subpages.length; first++) {
             for (let second = first + 1; second < subpages.length; second++) {
-                const difference = differenceRate(votedSubpages[first], votedSubpages[second]) ?? 1;
+                // * Groups with no rows in common (partial transmissions, as on P287) can't disagree, so they count as the same
+                const difference = countersDiffer(votedSubpages[first].rows, votedSubpages[second].rows)
+                    ? 1
+                    : differenceRate(votedSubpages[first], votedSubpages[second]) ?? 0;
                 if (!closest || difference < closest.difference) closest = { first, second, difference };
             }
         }
@@ -1498,6 +1576,21 @@ const SAME_PAGE_LIMIT_FOR_DAMAGED_SUBCODES = 0.55;
 const RARE_SUBCODE_VERSIONS = 2;
 const RARE_SUBCODE_SHARE = 0.15;
 const HIGHEST_USUAL_SUBCODE = 0x00ff;
+
+// Two different subcodes that both look like real ones (0001-00FF), and were each sent a fair share of the time, are separate subpages unless their text is almost identical
+// * Pages that look alike, such as the scrambled sports pages, would otherwise be merged
+// * A real-looking subcode seen far less often than the page's main one is still a damaged header
+const SAME_PAGE_LIMIT_FOR_USUAL_SUBCODES = 0.05;
+const RARE_USUAL_SUBCODE_SHARE = 0.2;   // seen at most this share as often as the page's most-sent subcode
+const isUsualSubcode = page => parseInt(page.subcode, 16) <= HIGHEST_USUAL_SUBCODE;
+
+// & How different two sets of transmissions can be and still count as the same page
+function samePageLimit(page, realPage, mostSent) {
+    if (looksDamaged(page)) return SAME_PAGE_LIMIT_FOR_DAMAGED_SUBCODES;
+    const isRare = page.versions.length <= mostSent * RARE_USUAL_SUBCODE_SHARE;
+    if (!isRare && isUsualSubcode(page) && isUsualSubcode(realPage) && page.subcode !== realPage.subcode) return SAME_PAGE_LIMIT_FOR_USUAL_SUBCODES;
+    return SAME_PAGE_LIMIT;
+}
 const looksDamaged = page =>
     page.versions.length <= RARE_SUBCODE_VERSIONS && parseInt(page.subcode, 16) > HIGHEST_USUAL_SUBCODE;
 
@@ -1560,7 +1653,38 @@ function orderSubpages(groups) {
         else used.add(number);
     });
 
-    // If there's one subpage with an unreadable counter and one number left over, then that's its number
+    // A subpage with no readable counter, such as a title page, takes its number from where it sits in the rotation.
+    // * for example, if sent right before 2/7, it is 1/7, and if sent right after 6/7, it is 7/7. Repeat this so a run of several can be worked out
+    if (total) {
+        const broadcastOrder = groups
+            .flatMap((versions, groupIndex) => versions.filter(hasDisplayRows).map(version => ({ groupIndex, at: version.transmissionNumber ?? 0 })))
+            .sort((first, second) => first.at - second.at)
+            .map(entry => entry.groupIndex)
+            .filter((groupIndex, position, order) => position === 0 || order[position - 1] !== groupIndex);   // one entry per run
+        let changed = true;
+        while (changed) {
+            changed = false;
+            numbers.forEach((number, groupIndex) => {
+                if (number !== null) return;
+                const votes = new Map();
+                broadcastOrder.forEach((entry, position) => {
+                    if (entry !== groupIndex) return;
+                    const next = numbers[broadcastOrder[position + 1]];
+                    const previous = numbers[broadcastOrder[position - 1]];
+                    if (next != null) { const guess = next === 1 ? total : next - 1; votes.set(guess, (votes.get(guess) ?? 0) + 1); }
+                    if (previous != null) { const guess = previous === total ? 1 : previous + 1; votes.set(guess, (votes.get(guess) ?? 0) + 1); }
+                });
+                const [best] = [...votes].filter(([guess]) => !used.has(guess)).sort((first, second) => second[1] - first[1])[0] ?? [];
+                if (best !== undefined) {
+                    numbers[groupIndex] = best;
+                    used.add(best);
+                    changed = true;
+                }
+            });
+        }
+    }
+
+    // If there's still one subpage with an unreadable counter and one number left over, then that's its number
     const unknown = numbers.flatMap((number, groupIndex) => (number === null ? [groupIndex] : []));
     const free = total ? Array.from({ length: total }, (_, index) => index + 1).filter(number => !used.has(number)) : [];
     if (unknown.length === 1 && free.length === 1) numbers[unknown[0]] = free[0];
@@ -1573,7 +1697,6 @@ function orderSubpages(groups) {
         .sort((first, second) => (first.number ?? Infinity) - (second.number ?? Infinity) || first.subpageId - second.subpageId)
         .map(({ versions, subpageId, number }) => ({ versions, subpageId, subpage: number ?? ++nextSpare }));
 }
-
 
 // & Clean up how a capture's transmissions are filed into pages and subpages
 function sortOutSubpages(pages) {
@@ -1594,10 +1717,10 @@ function sortOutSubpages(pages) {
             let closest = null;
             for (const realPage of realPages) {
                 const difference = setDifference(versions, realPage.versions);
+                if (difference > samePageLimit(page, realPage, bySize[0].versions.length)) continue;
                 if (!closest || difference < closest.difference) closest = { realPage, difference };
             }
-            const limit = looksDamaged(page) ? SAME_PAGE_LIMIT_FOR_DAMAGED_SUBCODES : SAME_PAGE_LIMIT;
-            if (closest && closest.difference <= limit) closest.realPage.versions.push(...versions);
+            if (closest) closest.realPage.versions.push(...versions);
             else realPages.push({ ...page, versions });
         }
         realPages.sort((first, second) => first.subcode.localeCompare(second.subcode));
@@ -1608,9 +1731,9 @@ function sortOutSubpages(pages) {
             page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; });
         });
 
-        // Next, if there is 1 real subcode, separate its subpages by content.
-        // * Damaged subcodes that were too scrambled to join in step 1 (P134/3700) don't count as a second subcode.
-        // * Their transmissions are sorted in with the rest and join the nearest subpage.
+        // Next, if there is 1 real subcode, separate its subpages by content
+        // * Damaged subcodes that were too scrambled to join in step 1 (P134/3700) don't count as a second subcode
+        // * Their transmissions are sorted in with the rest and join the nearest subpage
         const mostSent = Math.max(...realPages.map(page => page.versions.length));
         const isStray = page => looksDamaged(page)
             || (parseInt(page.subcode, 16) > HIGHEST_USUAL_SUBCODE && page.versions.length <= mostSent * RARE_SUBCODE_SHARE);
@@ -1634,8 +1757,8 @@ function sortOutSubpages(pages) {
 }
 
 
-// & Move each hand-separated transmission out of its entry and into a new subpage entry.
-// sortedPages is left as it was; entries that change are copied.
+// & Move each hand-separated transmission out of its entry and into a new subpage entry
+// * "sortedPage"s" is left as it was. Entries that change are copied
 function applySeparatedTransmissions(sortedPages) {
     if (editorState.separatedTransmissions.size === 0) return sortedPages;
 
@@ -1910,12 +2033,216 @@ function moveCursor(columnStep, rowStep) {
 }
 
 
+/*
+* *** ! SportScreen descrambling ! ***
+* On Later Electra samples, there are pages for sports subscription services: SportScreen, HSW, SuperSCREEN, and CSW.
+* Rows 1-22 were scrambled so only their own decoders could read them. The scrambled lines appear as random text and mosaic characters.
+* These services shared the same encryption system.
+* Each 7-bit character is XORed with a 20-column pattern that starts at column 3; nothing else changes it. XOR undoes itself, so the same step scrambles the page again
+*/
+
+// ! Key for descrambling SportScreen pages
+const SPORTSCREEN_KEY = [
+    0x04, 0x05, 0x3e, 0x06,
+    0x0a, 0x08, 0x09, 0x09,
+    0x08, 0x0a, 0x06, 0x3e,
+    0x05, 0x04, 0x03, 0x20,
+    0x01, 0x01, 0x20, 0x03
+];
+
+// ! The first and last rows to look at
+const SPORTSCREEN_FIRST_ROW = 1;
+const SPORTSCREEN_LAST_ROW = 22;
+
+// ! Row 23 is partially left alone because the phone number is plaintext, but the text before it is de-scrambled
+const SPORTSCREEN_FOOTER_ROW = 23;
+
+const sportScreenKeyFor = column => SPORTSCREEN_KEY[(column - 3 + SPORTSCREEN_KEY.length) % SPORTSCREEN_KEY.length];
+
+// & Count blank cells both ways: plain spaces and spaces scrambled with their column's key
+function countSportScreenBlanks(pageRows) {
+
+    // Get raw row counts
+    let readableBlanks = 0;
+    let scrambledBlanks = 0;
+
+    // Examine only the SportScreen rows
+    for (let rowNumber = SPORTSCREEN_FIRST_ROW; rowNumber <= SPORTSCREEN_LAST_ROW; rowNumber++) {
+
+        // Examine each row. Defensive programming applied so an empty array is used if "pageRows[rowNumber]" doesn't exist
+        (pageRows[rowNumber] ?? []).forEach((byteValue, column) => {
+
+            // Strip high bit and keep only the row 7 bits
+            const value = byteValue & SEVEN_BIT_MASK;
+
+            // If a space (0x20), count them
+            if (value === SPACE) readableBlanks++;
+
+            // Detect a scrambled space
+            else if (value === (SPACE ^ sportScreenKeyFor(column))) scrambledBlanks++;
+        });
+    }
+    return { readableBlanks, scrambledBlanks };
+}
+
+// & Figure out if the current page is a scrambled page
+// * Row 23 is never changed by unscrambling and every one of these services ends it with two scrambled spaces (bytes 00 21 in columns 38-39). Older SportScreen footers also name the service
+// * A page still scrambled is also recognized by at least a row's worth of scrambled spaces
+function isSportScreenPage(pageRows) {
+
+    // ^ 1. Check for a scrambled footer
+    const footer = (pageRows[SPORTSCREEN_FOOTER_ROW] ?? []).map(byteValue => byteValue & SEVEN_BIT_MASK);
+
+    // ^ 2. If there are scrambled bits at columns 38 and 39 in the footer row, the page is a SportScreen page
+    if (footer[38] === (SPACE ^ sportScreenKeyFor(38)) && footer[39] === (SPACE ^ sportScreenKeyFor(39))) return true;
+
+    // ^ 3. Check and see if the footer includes "SportScreen" in plaintext
+    if (String.fromCharCode(...footer).includes("SportScreen")) return true;
+
+    // If none of those 3 worked, fall back to statistical detection
+    const { readableBlanks, scrambledBlanks } = countSportScreenBlanks(pageRows);
+    return scrambledBlanks >= COLUMN_COUNT && scrambledBlanks > readableBlanks;
+}
+
+// & If the page is currently scrambled, a space becomes its column's key value XOR space. Blank cells are mostly spaces when readable
+function isSportScreenScrambled(pageRows) {
+    const { readableBlanks, scrambledBlanks } = countSportScreenBlanks(pageRows);
+    return scrambledBlanks > readableBlanks;
+}
+
+// ^ There are 8 columns in the SportScreen footer that are scrambled. Store only these columns
+const SPORTSCREEN_CODE_COLUMNS = 8;
+
+// ^ 3 categories of valid code characters: spaces (0x20), numbers (0x30 - 0x39), and uppercase letters (A-Z)
+const isCodeCharacter = byteValue => byteValue === SPACE || (byteValue >= 0x30 && byteValue <= 0x39) || (byteValue >= 0x41 || byteValue <= 0x5a);
+
+// ^ Apply the XOR de-scrambling code only those specific columns in the footer
+const toggledFooterCode = footer => footer.map((byteValue, column) => column < SPORTSCREEN_CODE_COLUMNS ? (byteValue & SEVEN_BIT_MASK) ^ sportScreenKeyFor(column) : byteValue);
+
+// & Determine if the code is scrambled
+function isFooterCodeScrambled(footer) {
+
+    // Take first 8 bytes, keep only bytes that look like valid characters, then count them
+    const codeCharacters = rowBytes => rowBytes.slice(0, SPORTSCREEN_CODE_COLUMNS).filter(byteValue => isCodeCharacter(byteValue & SEVEN_BIT_MASK)).length;
+
+    // Compare columns before and after toggling
+    return codeCharacters(toggledFooterCode(footer)) > codeCharacters(footer);
+}
+
+
+/*
+* *** ! Mel Stewart's Picks descrambling ! *** ----
+* On later Electra samples, Mel Stewart's Picks used a different encryption scheme.
+* Each character's last three bits are swapped in pairs (1 becomes 4, 2 becomes 7, and 3 becomes 6, for example; this is based on XOR 5.
+* Characters ending in 0 or 5 are left alone. So "CJJQGDII" is FOOTBALL, while spaces, P, H, E and M look untouched.
+* It applies to every row except the header.
+* These pages have no noticeable blank pattern, so they are recognized by words; this means that un-swapping must turn up common words such as these: "THE", "FOR", "CALL", and "FINAL").
+*/
+
+// ^ Start with the first and last rows
+const LETTER_SWAP_FIRST_ROW = 1;
+const LETTER_SWAP_LAST_ROW = 24;
+
+// ^ 3 recognizable words must be detected at minimum for decryption to be applied
+const LETTER_SWAP_MIN_WORDS = 3;
+
+// ! This is required for the letter swap. If this wasn't here, every row would be affected regardless of whether it used letter-swap
+const LETTER_SWAP_WORDS = new Set(`THE AND FOR OF TO IS IN ON AT BY OR NOT ARE ALL CALL CALLS FREE NEWS ONLY WITH FROM THIS
+    THAT YOUR YOU OUR DAY DAYS WEEK TODAY TIME TIMES LINE LINES OPEN FINAL SCORE SCORES GAME GAMES PICKS PICK BEST PLAY PLAYS
+    SPORTS FOOTBALL BASKETBALL BASEBALL HOCKEY COLLEGE NFL NBA NHL OVER UNDER TOTAL EASTERN INFORMATION MATTER LAWS`.split(/\s+/)
+);
+
+// ^ Swap the binary bits. Only the last low 7 bits need to be XOR'd. Flip only bits 0 and 2 (e.g. 010 becomes 111 and 011 becomes 110)
+// * Control characters are not to be swapped. If the bottom 3 bits are 000 and 101, leave it alone
+const swapLetterBits = byteValue => (byteValue < SPACE || [0, 5].includes(byteValue & 7) ? byteValue : byteValue ^ 5);
+
+// & How many common words a page's text contains
+function countCommonWords(rows) {
+    let text = "";
+
+    // Extract rows 1-24
+    for (let rowNumber = LETTER_SWAP_FIRST_ROW; rowNumber <= LETTER_SWAP_LAST_ROW; rowNumber++) {
+        text += String.fromCharCode(...(rows[rowNumber] ?? []).map(byteValue => {
+
+            // Converted to printable ASCII characters
+            const value = byteValue & SEVEN_BIT_MASK;
+            return value >= SPACE && value < 0x7f ? value : SPACE;
+        })) + " ";
+    }
+
+    // Extract letter sequences then count how many of those words appear in the known word list
+    return (text.match(/[A-Za-z]+/g) ?? []).filter(word => LETTER_SWAP_WORDS.has(word.toUpperCase())).length;
+}
+
+// ^ Create rows with the letter swap applied
+const letterSwappedRows = rows => rows.map((rowBytes, rowNumber) =>
+    // !
+    rowBytes && rowNumber >= LETTER_SWAP_FIRST_ROW && rowNumber <= LETTER_SWAP_LAST_ROW
+        ? rowBytes.map(byteValue => swapLetterBits(byteValue & SEVEN_BIT_MASK))
+        : rowBytes);
+
+// & Figure out if the current page is scrambled with letter-swap. The page must reveal many more common words than it currently shows
+function isLetterSwapped(rows) {
+
+    // Get how many recognizable words are visible
+    const shownWords = countCommonWords(rows);
+
+    // Get how many recognizable words appear if the letter-swap is applied
+    const swappedWords = countCommonWords(letterSwappedRows(rows));
+
+    // Return the swapped words
+    return swappedWords >= LETTER_SWAP_MIN_WORDS && swappedWords > shownWords * 2;
+}
+
+
+// & Unscramble or re-scramble the final page
+function toggleSportScreenScrambling() {
+
+    // ^ If the current page is a Mel Stewart (letter-swap) page and not a SportScreen (XOR) page
+    if (!isSportScreenPage(editorState.finalPageRows) && isLetterSwapped(editorState.finalPageRows)) {
+        saveUndoStep();
+        letterSwappedRows(editorState.finalPageRows).forEach((rowBytes, rowNumber) => { editorState.finalPageRows[rowNumber] = rowBytes; });
+        rememberEdits();
+        renderEverything();
+        announceStatus(`${pageLabel(getSelectedPage())} is unscrambled using letter-swap. Undo to go back.`);
+        return;
+    }
+
+    // ^ If the current page is not a SportScreen page, leave it alone
+    if (!isSportScreenPage(editorState.finalPageRows)) {
+        announceStatus("This page isn't scrambled. It isn't one of the scrambles subcarrier services (SportScreen, HSW, SuperSCREEN, CSW) or a letter-swapped page (Mel Stewart's Picks).");
+        return;
+    }
+
+    saveUndoStep();
+
+    const isUnscrambling = isSportScreenScrambled(editorState.finalPageRows);
+
+    // ^ If the current page is a SportScreen page, apply descrambling
+    for (let rowNumber = SPORTSCREEN_FIRST_ROW; rowNumber <= SPORTSCREEN_LAST_ROW; rowNumber++) {
+        const rowBytes = editorState.finalPageRows[rowNumber];
+        if (!rowBytes) continue;
+
+        // Process every byte with XOR
+        rowBytes.forEach((byteValue, column) => { rowBytes[column] = (byteValue & SEVEN_BIT_MASK) ^ sportScreenKeyFor(column); });
+    }
+
+    const footer = editorState.finalPageRows[SPORTSCREEN_FOOTER_ROW];
+    if (footer && isFooterCodeScrambled(footer) === isUnscrambling) editorState.finalPageRows[SPORTSCREEN_FOOTER_ROW] = toggledFooterCode(footer);
+
+    renderEverything();
+
+    announceStatus(isSportScreenScrambled(editorState.finalPageRows)
+        ? `${pageLabel(getSelectedPage())} has been re-scrambled, as was seen by those without a decoder. Undo to go back.`
+        : `${pageLabel(getSelectedPage())} is unscrambled. Rows 1-22 now read as how those with a decoder saw them; Undo to go back.`);
+}
+
+
 // & Fill rows missing in final version with rows from the compared version
 function fillMissingRowsFromComparedVersion() {
     const comparedRows = getComparedRows();
     saveUndoStep();
     let filledCount = 0;
-
     for (let rowNumber = 0; rowNumber < ROW_COUNT; rowNumber++) {
         if (!editorState.finalPageRows[rowNumber] && comparedRows[rowNumber]) {
             editorState.finalPageRows[rowNumber] = comparedRows[rowNumber].slice();
@@ -2298,6 +2625,7 @@ const menuActions = {
     "restore-pages": restoreLastRemoval,
     "restore-all-pages": restoreAllRemovedPages,
     "fill-missing": fillMissingRowsFromComparedVersion,
+    "unscramble-sportscreen": toggleSportScreenScrambling,
     "copy": copyLatestSelection,
     "paste-cursor": () => pasteClipboard(editorState.cursor.column, editorState.cursor.row),
     "paste-same": pasteAtOriginalPosition,

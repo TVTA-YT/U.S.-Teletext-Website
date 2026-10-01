@@ -63,6 +63,7 @@ const elements = {
     reconstructOption: getElement("optReconstruct"),
     realSearchOption: getElement("optRealSearch"),
     rowRevealOption: getElement("optRowReveal"),
+    unscrambleOption: getElement("optUnscramble"),
     lightImageBanner: getElement("lightImageBanner"),
     darkImageBanner: getElement("darkImageBanner"),
     sampleTitle: getElement("sample-title"),
@@ -100,7 +101,7 @@ const viewer = {
     headerTemplates: new Map(),
     clockStartSeconds: 0,
     loadedAt: 0,
-    reveal: null,          // { startedAt, oldRows } while a page is being drawn row by row
+    reveal: null,
     entryDigits: "",
     isHolding: false,
     isRevealing: false,
@@ -175,8 +176,8 @@ function loadSample(data, sourceName) {
         }
     }
 
-    // The order pages come round in the rolling header: every page in the magazine once, in page order.
-    // Pages whose header wasn't received still take their turn, so a search can always reach them
+    // The order pages come round in the rolling header. Every page in the magazine once, in page order.
+    // * Pages whose header wasn't received still take their turn so a search can always reach them
     viewer.rollingPagesByMagazine = new Map();
     for (const number of viewer.pageNumbers) {
         const magazine = number[0];
@@ -235,8 +236,12 @@ async function openSample({ service, sample }) {
         if (response.status === 404) throw new Error("No available data for this sample.");
         if (!response.ok) throw new Error(`The server responded with ${response.status}.`);
         const data = await response.json();
-        showServiceBanner(service);                // banner file names are looked up by dataset key (electra, keyfax…)
-        showSampleDetails(data.sample, service);   // title, date and contributor from the Worker
+
+        // The image heading banner to show is determined by the dataset key (e.g. "electra", "keyfax", etc.)
+        showServiceBanner(service);
+
+        // The sample title, sample date, and sample contributor come from R2
+        showSampleDetails(data.sample, service);
         loadSample(data, data.source || label);
     } catch (error) {
         showLoadError(label, error);
@@ -311,7 +316,12 @@ function formatDate(dateString) {
     }
 
     const [, year, month, day] = match;
-    const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+    const months = [
+        "Jan.", "Feb.", "Mar.",
+        "Apr.", "May", "June",
+        "July", "Aug.", "Sept.",
+        "Oct.", "Nov.", "Dec."
+    ];
     const monthIndex = Number(month) - 1;
     if (monthIndex < 0 || monthIndex > 11) {
         return String(dateString);
@@ -329,7 +339,7 @@ function goToPage(number) {
     viewer.entryDigits = "";
     const isFound = viewer.pagesByNumber.has(number);
 
-    // If viewer has checked the option for rolling page headers, animate if. If page is not found, continue animating the header
+    // If viewer has checked the option for rolling page headers, animate it. If page is not found, continue animating the header
     if (elements.rollingOption.checked) {
         viewer.search = { ticksLeft: isFound ? randomBetween(SEARCH_MIN_TICKS, SEARCH_MAX_TICKS) : Infinity, tickWaited: 0, isFound };
     } else {
@@ -343,8 +353,203 @@ function goToPage(number) {
 }
 
 
+/*
+* *** ! SportScreen descrambling ! ***
+* On Later Electra samples, there are pages for sports subscription services: SportScreen, HSW, SuperSCREEN, and CSW.
+* Rows 1-22 were scrambled so only their own decoders could read them. The scrambled lines appear as random text and mosaic characters.
+* These services shared the same encryption system.
+* Each 7-bit character is XORed with a 20-column pattern that starts at column 3; nothing else changes it. XOR undoes itself, so the same step scrambles the page again
+*/
+
+// ! Key for descrambling SportScreen pages
+const SPORTSCREEN_KEY = [
+    0x04, 0x05, 0x3e, 0x06,
+    0x0a, 0x08, 0x09, 0x09,
+    0x08, 0x0a, 0x06, 0x3e,
+    0x05, 0x04, 0x03, 0x20,
+    0x01, 0x01, 0x20, 0x03
+];
+
+// ! The first and last rows to look at
+const SPORTSCREEN_FIRST_ROW = 1;
+const SPORTSCREEN_LAST_ROW = 22;
+
+// ! Row 23 is partially left alone because the phone number is plaintext, but the text before it is de-scrambled
+const SPORTSCREEN_FOOTER_ROW = 23;
+
+const sportScreenKeyFor = column => SPORTSCREEN_KEY[(column - 3 + SPORTSCREEN_KEY.length) % SPORTSCREEN_KEY.length];
+
+// & Count blank cells both ways: plain spaces, and spaces scrambled with their column's key
+function countSportScreenBlanks(rows) {
+
+    // Get raw row counts
+    let readableBlanks = 0;
+    let scrambledBlanks = 0;
+
+    // Examine only the SportScreen rows
+    for (let rowNumber = SPORTSCREEN_FIRST_ROW; rowNumber <= SPORTSCREEN_LAST_ROW; rowNumber++) {
+
+        // Examine each row. Defensive programming applied so an empty array is used if "pageRows[rowNumber]" doesn't exist
+        (rows[rowNumber] ?? []).forEach((byteValue, column) => {
+
+            // Assign normal spaces to "readableBlanks"
+            if (byteValue === SPACE) readableBlanks++;
+
+            // Detect a scrambled space
+            else if (byteValue === (SPACE ^ sportScreenKeyFor(column))) scrambledBlanks++;
+        });
+    }
+    return { readableBlanks, scrambledBlanks };
+}
+
+// & Determine if the current page is a scrambled page, regardless of whether it has been unscrambled (bytes 00 21 in columns 38-39)
+// * A page still scrambled is also recognized by a row's worth of scrambled spaces
+function isSportScreenPage(rows) {
+    const footer = rows[SPORTSCREEN_FOOTER_ROW] ?? [];
+    if (footer[38] === (SPACE ^ sportScreenKeyFor(38)) && footer[39] === (SPACE ^ sportScreenKeyFor(39))) return true;
+    if (String.fromCharCode(...footer).includes("SportScreen")) return true;
+
+    const { readableBlanks, scrambledBlanks } = countSportScreenBlanks(rows);
+    return scrambledBlanks >= COLUMN_COUNT && scrambledBlanks > readableBlanks;
+}
+
+// & Scrambled pages show their blank cells as each column's key XOR space instead of spaces
+function isSportScreenScrambled(rows) {
+    const { readableBlanks, scrambledBlanks } = countSportScreenBlanks(rows);
+    return scrambledBlanks > readableBlanks;
+}
+
+// ^ There are 8 columns in the SportScreen footer that are scrambled. Store only these columns
+const SPORTSCREEN_CODE_COLUMNS = 8;
+
+// ^ 3 categories of valid code characters: spaces (0x20), numbers (0x30 - 0x39), and uppercase letters (A-Z)
+const isCodeCharacter = byteValue => byteValue === SPACE || (byteValue >= 0x30 && byteValue <= 0x39) || (byteValue >= 0x41 && byteValue <= 0x5a);
+
+// ^ Apply the XOR de-scrambling code only those specific columns in the footer
+const toggledFooterCode = footer => footer.map((byteValue, column) => column < SPORTSCREEN_CODE_COLUMNS ? byteValue ^ sportScreenKeyFor(column) : byteValue);
+
+// & Determine if the code is scrambled
+function isFooterCodeScrambled(footer) {
+
+    // Take first 8 bytes, keep only bytes that look like valid characters, then count them
+    const codeCharacters = rowBytes => rowBytes.slice(0, SPORTSCREEN_CODE_COLUMNS).filter(isCodeCharacter).length;
+
+    // Compare columns before and after toggling
+    return codeCharacters(toggledFooterCode(footer)) > codeCharacters(footer);
+}
+
+/*
+* *** ! Mel Stewart's Picks descrambling ! *** ----
+* On later Electra samples, Mel Stewart's Picks used a different encryption scheme.
+* Each character's last three bits are swapped in pairs (1 becomes 4, 2 becomes 7, and 3 becomes 6, for example; this is based on XOR 5.
+* Characters ending in 0 or 5 are left alone. So "CJJQGDII" is FOOTBALL, while spaces, P, H, E and M look untouched.
+* It applies to every row except the header.
+* These pages have no noticeable blank pattern, so they are recognized by words; this means that un-swapping must turn up common words such as these: "THE", "FOR", "CALL", and "FINAL").
+*/
+
+// ^ Start with the first and last rows
+const LETTER_SWAP_FIRST_ROW = 1;
+const LETTER_SWAP_LAST_ROW = 24;
+
+// ^ 3 recognizable words must be detected at minimum for decryption to be applied
+const LETTER_SWAP_MIN_WORDS = 3;
+
+// ! This is required for the letter swap. If this wasn't here, every row would be affected regardless of whether it used letter-swap
+const LETTER_SWAP_WORDS = new Set(`THE AND FOR OF TO IS IN ON AT BY OR NOT ARE ALL CALL CALLS FREE NEWS ONLY WITH FROM THIS
+    THAT YOUR YOU OUR DAY DAYS WEEK TODAY TIME TIMES LINE LINES OPEN FINAL SCORE SCORES GAME GAMES PICKS PICK BEST PLAY PLAYS
+    SPORTS FOOTBALL BASKETBALL BASEBALL HOCKEY COLLEGE NFL NBA NHL OVER UNDER TOTAL EASTERN INFORMATION MATTER LAWS`.split(/\s+/)
+);
+
+// ^ Swap the binary bits. Only the last low 7 bits need to be XOR'd. Flip only bits 0 and 2 (e.g. 010 becomes 111 and 011 becomes 110)
+// * Control characters are not to be swapped. If the bottom 3 bits are 000 and 101, leave it alone
+const swapLetterBits = byteValue => (byteValue < SPACE || [0, 5].includes(byteValue & 7) ? byteValue : byteValue ^ 5);
+
+// & How many common words a page's text contains
+function countCommonWords(rows) {
+    let text = "";
+
+    // Extract rows 1-24
+    for (let rowNumber = LETTER_SWAP_FIRST_ROW; rowNumber <= LETTER_SWAP_LAST_ROW; rowNumber++) {
+        text += String.fromCharCode(...(rows[rowNumber] ?? []).map(byteValue => {
+
+            // Converted to printable ASCII characters
+            const value = byteValue & SEVEN_BIT_MASK;
+            return value >= SPACE && value < 0x7f ? value : SPACE;
+        })) + " ";
+    }
+    return (text.match(/[A-Za-z]+/g) ?? []).filter(word => LETTER_SWAP_WORDS.has(word.toUpperCase())).length;
+}
+
+// ^ Create rows with the letter swap applied
+const letterSwappedRows = rows => rows.map((rowBytes, rowNumber) =>
+    rowBytes && rowNumber >= LETTER_SWAP_FIRST_ROW && rowNumber <= LETTER_SWAP_LAST_ROW
+        ? rowBytes.map(byteValue => swapLetterBits(byteValue & SEVEN_BIT_MASK))
+        : rowBytes);
+
+// & Figure out if the current page is scrambled with letter-swap. The page must reveal many more common words than it currently shows
+function isLetterSwapped(rows) {
+
+    // Get how many recognizable words are visible
+    const shownWords = countCommonWords(rows);
+
+    // Get how many recognizable words appear if the letter-swap is applied
+    const swappedWords = countCommonWords(letterSwappedRows(rows));
+
+    // Return the swapped words
+    return swappedWords >= LETTER_SWAP_MIN_WORDS && swappedWords > shownWords * 2;
+}
+
+
+// Remember which subpages are letter-swapped, since the word check would otherwise run on every frame
+const letterSwapCheck = new WeakMap();
+const isLetterSwappedSubpage = subpage => {
+    if (!letterSwapCheck.has(subpage)) letterSwapCheck.set(subpage, isLetterSwapped(subpage.rows));
+    return letterSwapCheck.get(subpage);
+};
+
+// & The rows to show for a subpage: scrambled pages are unscrambled or scrambled to match the option
+// * A letter-swapped page already unscrambled in the editor can't be told apart from ordinary text, so it stays readable
+function displayRowsFor(subpage) {
+
+    // User preferences
+    const rows = subpage?.rows;
+    const wantsReadable = elements.unscrambleOption?.checked ?? true;
+
+    // If a letter-swapped page, decode using the letter-swap method and return decoded text
+    if (rows && !isSportScreenPage(rows) && isLetterSwappedSubpage(subpage)) return wantsReadable ? letterSwappedRows(rows) : rows;
+
+    // Ignore pages that don't require de-scrambling
+    if (!rows || !isSportScreenPage(rows)) return rows ?? null;
+
+    // Toggle the decoder depending on the user's input (keep original or de-scramble)
+    const togglesBody = isSportScreenScrambled(rows) === wantsReadable;
+
+    // Do the same as above, but for the footer row
+    const footer = rows[SPORTSCREEN_FOOTER_ROW];
+    const togglesCode = Boolean(footer) && isFooterCodeScrambled(footer) === wantsReadable;
+
+    // Return original rows if nothing needs to be changed
+    if (!togglesBody && !togglesCode) return rows;
+
+    // Create new copy of the page with decoded text and graphics
+    return rows.map((rowBytes, rowNumber) => {
+
+        // Preserve missing rows
+        if (!rowBytes) return rowBytes;
+
+        // Apply separate de-scrambling for the footer since it's a mix of XOR and plaintext
+        if (rowNumber === SPORTSCREEN_FOOTER_ROW) return togglesCode ? toggledFooterCode(rowBytes) : rowBytes;
+
+        // XOR relevant rows and return them
+        return togglesBody && rowNumber >= SPORTSCREEN_FIRST_ROW && rowNumber <= SPORTSCREEN_LAST_ROW
+            ? rowBytes.map((byteValue, column) => byteValue ^ sportScreenKeyFor(column))
+            : rowBytes;
+    });
+}
+
+
 // & Draw rows as they "arrive", top to bottom, like how a decoder would've received the page (inspired by VHS-Teletext's viewer).
-// NOTE: Rows not yet drawn show what was on screen before: nothing after a page change, or the previous subpage when the carousel moves on, unless the new subpage has the erase flag (C4)
+// * NOTE: Rows not yet drawn show what was on screen before: nothing after a page change, or the previous subpage when the carousel moves on, unless the new subpage has the erase flag (C4)
 
 // This value is per row, so loading a full page takes about 0.6 seconds
 const ROW_REVEAL_MS = 25;
@@ -430,7 +635,7 @@ function stepSubpage(direction, { isManual = true } = {}) {
     if (!subpages || subpages.length < 2) return;
 
     const count = subpages.length;
-    const previousRows = displayedSubpage()?.rows ?? null;
+    const previousRows = displayRowsFor(displayedSubpage());
     viewer.displayed.subpageIndex = (viewer.displayed.subpageIndex + direction + count) % count;
     startReveal(displayedSubpage().flags.includes(ERASE_FLAG) ? null : previousRows);
     viewer.subpageTicks = 0;
@@ -507,6 +712,15 @@ function toggleBoxedView() {
 }
 
 
+// & De-scramble or re-scrambled certain scrambled pages
+function toggleUnscramble() {
+    if (!elements.unscrambleOption) return;
+    elements.unscrambleOption.checked = !elements.unscrambleOption.checked;
+    elements.unscrambleOption.dispatchEvent(new Event("change"));
+    announce(elements.unscrambleOption.checked ? "Showing scrambled pages as unscrambled, as seen with a required decoder." : "Showing scrambled pages as seen without a decoder.");
+}
+
+
 // & Roll the header on to the next page transmitted in the requested page's magazine
 // * Pages come round in page order and wrap back to the start of the magazine, as in a real transmission cycle
 function rollHeader() {
@@ -521,7 +735,9 @@ function rollHeader() {
 
     const { number, row } = pages[position];
     viewer.headerNumber = number;
-    if (row) viewer.headerSource = row;    // keep the last received header text if this page's wasn't received
+
+    // Keep the last received header text if this page's wasn't received
+    if (row) viewer.headerSource = row;
     return true;
 }
 
@@ -580,11 +796,17 @@ function tick() {
 }
 
 
-/* ---- Reconstructed header ---- */
+// *** ! Reconstructed header ! ***
 
-const HEADER_TEXT_START = 8;                        // columns 8-39 carry the service's header text
-const SERVICE_NAME_START = 32;                      // .t34 rows can lose columns 32-39
+// ^ Columns 8-39 carry the service's header text
+const HEADER_TEXT_START = 8;
+
+// ^ T34 rows can lose columns 32-39
+const SERVICE_NAME_START = 32;
+
+// ^ The clock pattern to replicate. This can slightly differ (e.g. "18:47:00", "18:47.00", or "18 47/00")
 const CLOCK_PATTERN = /^\d\d\D\d\d\D\d\d$/;       // 18:47:59, 18:39.28, 12 45/12 (any separators)
+
 const SECONDS_PER_DAY = 24 * 60 * 60;
 
 const headerText = row => String.fromCharCode(...row.map(byteValue => byteValue & SEVEN_BIT_MASK));
@@ -803,7 +1025,7 @@ function render() {
     }
 
     const subpage = displayedSubpage();
-    const bodyRows = rowsOnScreen(subpage?.rows ?? blankRows());
+    const bodyRows = rowsOnScreen(displayRowsFor(subpage) ?? blankRows());
     const flags = subpage?.flags ?? [];
     const isBoxedPage = flags.includes(NEWSFLASH_FLAG) || flags.includes(SUBTITLE_FLAG);
 
@@ -850,7 +1072,7 @@ function renderPageDetails() {
     }
 
     elements.canvas.setAttribute("aria-label", `Teletext page ${subpage.number}. The text version follows below the viewer.`);
-    elements.pageText.textContent = pageToText(subpage.rows, { revealConcealed: viewer.isRevealing }) || "This page has no text to display.";
+    elements.pageText.textContent = pageToText(displayRowsFor(subpage), { revealConcealed: viewer.isRevealing }) || "This page has no text to display.";
     elements.pageSelect.value = subpage.number;
     renderControls();
 }
@@ -923,6 +1145,7 @@ document.addEventListener("keydown", event => {
     if (/^[0-9a-fA-F]$/.test(key)) typeDigit(key);
     else if (key === ".") toggleHold();
     else if (key === "r" || key === "R") toggleReveal();
+    else if (key === "u" || key === "U") toggleUnscramble();
     else if (key === "v" || key === "V") toggleFullscreen();
     else if (key === "x" || key === "X") toggleBoxedView();
     else if (key === "Escape") cancelEntry();
@@ -956,6 +1179,13 @@ elements.rollingOption.addEventListener("change", () => {
 });
 
 elements.reconstructOption?.addEventListener("change", render);
+
+elements.unscrambleOption?.addEventListener("change", () => {
+    render();
+
+    // The plaintext version of the page also follows the option
+    renderPageDetails();
+});
 
 
 // Change aspect ratio of viewer
