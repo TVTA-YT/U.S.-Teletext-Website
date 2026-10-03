@@ -1410,6 +1410,10 @@ const DIFFERENT_SUBPAGE_LIMIT = 0.25;
 // * Never merge less leniently than this or those copies stay apart and get filed under a different page
 const MIN_MERGE_DIFFERENCE = 0.02;
 
+// ^ A transmission that matches no subpage starts its own (Keyfax sends each subpage only about once a minute, so many are seen once or twice).
+// * Unless the page's biggest subpage was seen at least 4 times as often: then it's a stray, such as another page with a damaged page number
+const RARE_LEFTOVER_SHARE = 0.25;
+
 
 // & Check if the page counters on subpages are different; if they do, these are not the same subpage
 // * Counters with different totals (e.g. "4/4" and "1/2") don't count because that means one of them is damaged
@@ -1507,8 +1511,10 @@ function groupVersionsBySubpage(versions) {
             subpages = large;
         }
     }
-    if (leftovers.length > 0 && subpages.length > 1) {
+    if (leftovers.length > 0) {
         const votedPages = subpages.map(group => ({ rows: buildFinalPageFromVersions(group) }));
+        const largestSize = Math.max(...subpages.map(group => group.length));
+        const leftoverSubpages = new Set();
         const withoutText = [];
         for (const version of leftovers) {
             let closestIndex = -1;
@@ -1530,13 +1536,39 @@ function groupVersionsBySubpage(versions) {
             // A damaged copy joins the subpage it's closest to
             // * One whose counter matches none of them is a page seen only once, so it keeps its own entry
             // * One with nothing to compare (such as a header with no rows) goes with the transmission next to it in broadcast order
-            if (closestIndex >= 0) subpages[closestIndex].push(version);
-            else if (comparable) subpages.push([version]);
+            // * One that matches no subpage at all is a subpage seen only once or twice (Keyfax sends each one about once a minute), so it starts its own
+            if (closestIndex >= 0 && closestDifference <= MAX_MERGE_DIFFERENCE) subpages[closestIndex].push(version);
+            else if (comparable) {
+                const group = [version];
+                subpages.push(group);
+                votedPages.push({ rows: version.rows });   // later leftovers can join it
+                leftoverSubpages.add(group);
+            }
             else withoutText.push(version);
         }
         withoutText.forEach(version => nearestInBroadcastOrder(subpages, version).push(version));
-    } else if (leftovers.length > 0) {
-        subpages[0].push(...leftovers);
+
+        // New subpages seen far less often than the biggest one are strays, so each of their transmissions joins the closest of the original subpages after all
+        for (const group of leftoverSubpages) {
+            if (group.length >= largestSize * RARE_LEFTOVER_SHARE) continue;
+            const groupIndex = subpages.indexOf(group);
+            subpages.splice(groupIndex, 1);
+            votedPages.splice(groupIndex, 1);
+
+            for (const version of group) {
+                let closestIndex = 0;
+                let closestDifference = Infinity;
+                votedPages.forEach((votedPage, index) => {
+                    if (leftoverSubpages.has(subpages[index])) return;
+                    const difference = differenceRate(votedPage, version);
+                    if (difference !== null && difference < closestDifference) {
+                        closestDifference = difference;
+                        closestIndex = index;
+                    }
+                });
+                subpages[closestIndex].push(version);
+            }
+        }
     }
 
     // Subpages must actually have different text content.

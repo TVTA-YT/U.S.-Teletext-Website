@@ -100,6 +100,11 @@
                 font-size: 1.2em;
             }
 
+            code {
+                color: #7d8aff;
+                font-size: 1em;
+            }
+
             #electra-shutdown-1994_tempo-1995_2026-08-26 {
                 scroll-margin-top: 90px;
             }
@@ -334,11 +339,538 @@
                         <h2 class="section pt-4">Teletext News</h2>
                         <p>Newest updates will be highlighted</p>
                         <hr aria-hidden="true" />
+                        <article id="electra-sportscreen_2026-10-02">
+                            <p>October 2, 2026</p>
+                            <h1 class="story text-primary">
+                                NEW: Scrambled SportScreen and other sports pages on later Electra samples have been decoded
+                            </h1>
+                            <p>
+                                On later Electra samples, currently only noticed in 1992 samples, new pages were added to the TEMPO
+                                magazine, which starts at P200. These pages were from a service called SportScreen and featured sport scores
+                                and betting lines. This was a subscription service, meaning that a decoder was required to view the pages.
+                                What this in turn means is that the pages, while the can technically be viewed, would show only random text
+                                and mosaic characters, no readable text. Another section was called "Mel Stewart's Picks," and had similar
+                                content as SportScreen; however, these pages were scrambled differently. On these pages, you could see that
+                                there were actual words and sentences on the page, but they used random letters to obscure the words (e.g.
+                                "<code>KDQLJKDI CJJQGDII GDVNEQGDII DKA...</code>").
+                            </p>
+                            <p>
+                                A couple days ago (as of this post), I began trying to figure out how these pages could be decoded. Here's
+                                what I discovered.
+                            </p>
+                            <section id="sportscreen-pages">
+                                <h4>SportScreen Pages</h4>
+                                <p>
+                                    I was initially stuck concerning the SportScreen pages, but while editing an Electra sample dated
+                                    December 13, 1992, I noticed something interesting. The editor has a section that shows the hex value of
+                                    the character where the cursor is placed (e.g. <code>20</code> for a space). I normally don't pay
+                                    attention to that, but when I moved the cursor around in an empty row on one of the SportScreen pages, I
+                                    saw that the hex values didn't stay at <code>20</code>, but they kept changing, which I found odd. I
+                                    then took note of the hex value I was seeing and came up with this:
+                                </p>
+                                <p>
+                                    <code>
+                                        21 00 23 24 25 1e 26 2a 28 29 29 28 2a 26 1e 25 24 23 00 21 21 00 23 24 25 1e 26 2a 28 29 29 28 2a
+                                        26 1e 25 24 23 00 21
+                                    </code>
+                                </p>
+                                <p>
+                                    This meant that these weren't ordinary spaces, but different characters and control codes. It turns out
+                                    the text was colored black to blend in with the background. Coloring that text produced the characters
+                                    occupying the rows (control codes ignored):
+                                </p>
+                                <p>
+                                    <code
+                                        >! £$% &amp;*&lpar;&rpar;&rpar;&lpar;*&amp; %$£ !! £$% &amp;*&lpar;&rpar;&rpar;&lpar;*&amp;
+                                        £$%</code
+                                    >
+                                </p>
+                                <p>
+                                    I was initially unsure of what to make of this, but the thing I noticed was that "blank" rows all had
+                                    this same line of characters, so I knew it had to mean <em>something</em>. I used some online
+                                    calculators to try to figure out if I could try to get something useful out of that line of characters.
+                                    To help with that, I used <a href="https://gchq.github.io/CyberChef/" target="_blank">this</a> website
+                                    to help figure out the encryption scheme. I was still getting nothing because I didn't have a decryption
+                                    key, so I had to think harder about how to find this key. While examining various encrypted and standard
+                                    (non-SportScreen pages) rows, I thought about the thing I mentioned earlier about normal spaces having a
+                                    hex value of <code>20</code>. Maybe that came into view somehow. I researched some of the available
+                                    encryption/decryption ciphers on the website linked earlier and found one that might match what I'm
+                                    looking for: XOR.
+                                </p>
+                                <p>
+                                    If I wanted to try the XOR decryption, I still needed a key. In the website linked above, when applying
+                                    an XOR calculation, there's an input for a key; of course, I didn't have a key, so I just tried
+                                    inputting a couple different hex values to convert that row of characters into a different hex string.
+                                    One of these character was <code>20</code>, the hex code for a space. This was the breakthrough.
+                                </p>
+                                <p>Using <code>20</code> as the XOR key converted the hex above to this hex string:</p>
+                                <p>
+                                    <code>
+                                        01 20 03 04 05 3e 06 0a 08 09 09 08 0a 06 3e 05 04 03 20 01 01 20 03 04 05 3e 06 0a 08 09 09 08 0a
+                                        06 3e 05 04 03 20 01
+                                    </code>
+                                </p>
+                                <p>
+                                    I thought that this might be they key I'm looking for. To try it out, I typed the hex values from a line
+                                    that has encrypted text and converted it to Base64. To my surprise, <strong>it worked</strong>. Take a
+                                    look at some examples below (spaces and control codes ignored in final output for this table).
+                                </p>
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th scope="col" style="width: 50%">Raw Hex</th>
+                                            <th scope="col">Base 64</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <code>
+                                                    05 3d 04 4a 47 7f 26 46 41 47 4c 5b 2a 40 71 57 24 32 12 2e 30 12 23 24 2e 1e 3b 2a 40
+                                                    48 45 4e 2a 26 0f 55 45 33 10 2b
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <code>NBA LINES FOR 12/12 + = HALF 1PA00*</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>
+                                                    02 3d 07 24 34 09 26 3a 31 39 39 01 38 37 0d 25 0d 4e 49 6d 76 41 76 6f 60 37 34 3b 3a
+                                                    29 00 3a 3b 35 1e oc 36 32 14 21
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <code>17 0900 213 Milwauke 212 213 214</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>
+                                                    05 3d 05 4a 4d 72 26 2a 44 40 47 4d 59 26 78 57 4b 4e 00 55 49 65 23 57 51 7f 54 2a 4d
+                                                    5a 5d 28 2a 26 0c 55 45 33 10 2b
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <code>NHL LINES FROM THE STAR EST 2PA00*</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>
+                                                    07 3d 07 24 25 07 26 3a 39 39 39 01 2a 32 1e oc 54 6a 54 75 72 42 76 76 62 56 26 03 28
+                                                    3a 22 01 2a 35 15 0c 24 30 0b 08
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <code>9 0100 4 Pittsburgh 3+ 3+ 3+</code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>
+                                    The control codes determined the color of a row. For example, in the converted hex,
+                                    <code>05</code> became <code>04</code>, the value used for a blue row, and <code>07</code> became
+                                    <code>06</code>, the value used for a cyan row.
+                                </p>
+                                <p>
+                                    I then worked on adding a decoder to the JS for both the WST teletext editor and viewer. After taking a
+                                    day or so to do that, it's now available on both pages. An example is below.
+                                </p>
+                                <div class="row justify-content-center text-center">
+                                    <div class="col-6">
+                                        <figure class="figure">
+                                            <img
+                                                src="../images/decoded-pages/Electra_SportScreen_1992-12-13_scrambled.png"
+                                                alt="Scrambled SportScreen page"
+                                                class="figure-img mw-100 rounded border border-white electra-images"
+                                                data-bs-target="#imageModal"
+                                                data-bs-caption="Scrambled SportScreen page as originally seen on Electra (December 13, 1992)"
+                                            />
+                                            <figcaption class="figure-caption">
+                                                Scrambled SportScreen page as originally seen on Electra (December 13, 1992).
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="col-6">
+                                        <figure class="figure">
+                                            <img
+                                                src="../images/decoded-pages/Electra_SportScreen_1992-12-13_decoded.png"
+                                                alt="Decoded SportScreen page"
+                                                class="figure-img mw-100 rounded border border-white electra-images"
+                                                data-bs-target="#imageModal"
+                                                data-bs-caption="Decoded version of the page as originally seen only by those with a decoder."
+                                            />
+                                            <figcaption class="figure-caption">
+                                                Decoded version of the page as originally seen only by those with a decoder.
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </section>
+                            <section id="mel-stewart-pages">
+                                <h4>Mel Stewart Pages</h4>
+                                <p>
+                                    After tackling the SportScreen pages, there was another section of pages I needed to look at in the same
+                                    1992 Electra sample. These pages were part of a section called "Mel Stewart's Picks". This section was
+                                    easier to work with than the SportScreen section.
+                                </p>
+                                <p>
+                                    These pages use a different decryption scheme than the SportScreen pages. Unlike the SportScreen pages,
+                                    you can clearly make out words and sentences on these pages, but each word is a mixture of random
+                                    alphanumeric characters. Let's focus on one of the first sentences on the first page, specifically the
+                                    first 2 words:
+                                    <code><u>CJW QHE</u> GEVQ PID&half;V JC QHE AD&half; FDII?</code>
+                                </p>
+                                <p>
+                                    You can clearly see there's something there, but it's not decipherable. A discussion about these pages
+                                    happened in the Teletext Discord group at the beginning of September. I went back and read through the
+                                    messages. It appeared that these pages used letter substitution. One user provided a few examples (only
+                                    6 listed here):
+                                </p>
+                                <ul>
+                                    <li><code>C</code> &rarr; <code>F</code></li>
+                                    <li><code>J</code> &rarr; <code>O</code></li>
+                                    <li><code>W</code> &rarr; <code>R</code></li>
+                                    <li><code>Q</code> &rarr; <code>T</code></li>
+                                    <li><code>H</code> &rarr; <code>unchanged</code></li>
+                                    <li><code>E</code> &rarr; <code>unchanged</code></li>
+                                </ul>
+                                <p>
+                                    According to this user, the first line read, in part, <code>FOR THE...</code>. While we had part of the
+                                    first line, there were still about 20 more rows of text to be decoded, and we still didn't know (or have
+                                    a list of) known letter substitutions. After reading those messages, I decided to figure this out as
+                                    well.
+                                </p>
+                                <p>
+                                    It turns out that the cipher is a letter substitution cipher, specifically a variation of XOR 5. First,
+                                    let's start with the raw hex values for a row on the first page, row 4:
+                                </p>
+                                <p>
+                                    <code>
+                                        0d 20 20 20 20 20 20 20 20 20 20 4d 45 49 20 56 51 45 52 44 57 51 22 56 20 50 4c 46 4e 56 20 20 20
+                                        20 20 20 20 20 20 20
+                                    </code>
+                                </p>
+                                <p>
+                                    As you can see, there are a lot of <code>20</code> values, those being normal, unencrypted spaces, so no
+                                    special key is required. It's just a matter of figuring out which characters go where. What made this
+                                    interesting was that some letters, such as <code>E</code> and <code>H</code>, did not change. This
+                                    likely meant there were other characters that didn't change, which added a bit of complexity. In the
+                                    end, this was how the cipher was decoded:
+                                </p>
+                                <p>
+                                    To find out what characters go where, this first involves converting the hex values to binary. If we
+                                    take the hex values for row 4 (above), ignoring the values for spaces and control codes, and convert
+                                    them to binary, we get this:
+                                </p>
+                                <p>
+                                    <code>
+                                        01001101 01000101 01001001 01010110 01010001 01000101 01010010 01000100 01010111 01010001 00100010
+                                        01010110 01010000 01001100 01000110 01001110 01010110
+                                    </code>
+                                </p>
+                                <p>
+                                    To decipher the letters, this will involve bit-swapping, specifically looking at the last 3 bits of each
+                                    binary value. Let's look at the first 3 binary values in the binary above:
+                                    <code>01001101 01000101 01001001</code>. The key thing to know is that binary values that end with
+                                    <code>000</code> or <code>101</code> do not change. As you can see, the first 2 values end with
+                                    <code>101</code>, so these do not change. The binary values correspond to the letters <code>M</code> and
+                                    <code>E</code>, meaning those letters in the encrypted output do not change. The last value, however,
+                                    does change.
+                                </p>
+                                <p>
+                                    In the encrypted output, this value corresponds to <code>I</code>. Using bit-swapping, we can figure out
+                                    the true letter that goes in its place. To do this, we only need to swap the
+                                    <strong>first and third</strong> bits, like so:
+                                </p>
+                                <p>
+                                    <code><u>0</u>0<u>1</u> &rarr; <u>1</u>0<u>0</u></code>
+                                </p>
+                                <p>
+                                    Every bit before the last 3 bits stays the same, so after the swapping, we have the value
+                                    <code>01001100</code>, which corresponds to <code>L</code>. This means that the first word in row 4 is
+                                    <code>MEL</code>.
+                                </p>
+                                <p>
+                                    Let's look at another example from the same line. This time, the second word, written in the encrypted
+                                    output as "<code>VQERDWQ&quot;V</code>". Here's the binary (without spaces and control codes) for those
+                                    characters:
+                                </p>
+                                <p>
+                                    <code>01010110 01010001 01000101 01010010 01000100 01010111 01010001 00100010 01010110</code>
+                                </p>
+                                <p>
+                                    Remember, if the last 3 bits end with <code>000</code> or <code>101</code>, the bits do not change. That
+                                    happens for only 1 character, which is once again <code>E</code>. We use the same method to convert
+                                    these bytes, only swapping the first and third bits.
+                                </p>
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Original Binary</th>
+                                            <th>Original Letter</th>
+                                            <th>Converted Binary</th>
+                                            <th>Converted Letter</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>1</span>1<span>0</span></code>
+                                            </td>
+                                            <td><code>V</code></td>
+                                            <td>
+                                                <code>01010<span>0</span>1<span>1</span></code>
+                                            </td>
+                                            <td><code>S</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>0</span>0<span>1</span></code>
+                                            </td>
+                                            <td><code>Q</code></td>
+                                            <td>
+                                                <code>01010<span>1</span>0<span>0</span></code>
+                                            </td>
+                                            <td><code>T</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01000<span>1</span>0<span>1</span></code>
+                                            </td>
+                                            <td><code>E</code></td>
+                                            <td>
+                                                <code>NO CHANGE</code>
+                                            </td>
+                                            <td><code>E</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>0</span>1<span>0</span></code>
+                                            </td>
+                                            <td><code>R</code></td>
+                                            <td>
+                                                <code>01010<span>1</span>1<span>1</span></code>
+                                            </td>
+                                            <td><code>W</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01000<span>1</span>0<span>0</span></code>
+                                            </td>
+                                            <td><code>D</code></td>
+                                            <td>
+                                                <code>01000<span>0</span>0<span>1</span></code>
+                                            </td>
+                                            <td><code>A</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>1</span>1<span>1</span></code>
+                                            </td>
+                                            <td><code>W</code></td>
+                                            <td>
+                                                <code>01010<span>0</span>1<span>0</span></code>
+                                            </td>
+                                            <td><code>R</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>0</span>0<span>1</span></code>
+                                            </td>
+                                            <td><code>G</code></td>
+                                            <td>
+                                                <code>01010<span>1</span>0<span>0</span></code>
+                                            </td>
+                                            <td><code>T</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>00100<span>0</span>1<span>0</span></code>
+                                            </td>
+                                            <td><code>&quot;</code></td>
+                                            <td>
+                                                <code>00100<span>1</span>1<span>1</span></code>
+                                            </td>
+                                            <td><code>&apos;</code></td>
+                                        </tr>
+                                        <tr class="fs-3">
+                                            <td>
+                                                <code>01010<span>1</span>1<span>0</span></code>
+                                            </td>
+                                            <td><code>V</code></td>
+                                            <td>
+                                                <code>01010<span>0</span>1<span>1</span></code>
+                                            </td>
+                                            <td><code>S</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>
+                                    Converting the entirety of row 4 using this method, it produces: <code>MEL STEWART'S PICKS</code>. The
+                                    same 3-bit substitution works across each Mel Stewart page. After figuring that out, all that was left
+                                    was to add it to the JS used for the editor and viewer, which is now available on both pages. An example
+                                    is below.
+                                </p>
+                                <div class="row justify-content-center text-center">
+                                    <div class="col-6">
+                                        <figure class="figure">
+                                            <img
+                                                src="../images/decoded-pages/Electra_Mel-Stewart_1992-12-13_scrambled.png"
+                                                alt="Scrambled Mel Stewart page"
+                                                class="figure-img mw-100 rounded border border-white electra-images"
+                                                data-bs-target="#imageModal"
+                                                data-bs-caption="Scrambled page for Mel Stewart's Picks as originally seen on Electra (December 13, 1992)"
+                                            />
+                                            <figcaption class="figure-caption">
+                                                Scrambled for Mel Stewart's Picks as originally seen on Electra (December 13, 1992).
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="col-6">
+                                        <figure class="figure">
+                                            <img
+                                                src="../images/decoded-pages/Electra_Mel-Stewart_1992-12-13_decoded.png"
+                                                alt="Decoded Mel Stewart page"
+                                                class="figure-img mw-100 rounded border border-white electra-images"
+                                                data-bs-target="#imageModal"
+                                                data-bs-caption="Decoded version of the page as originally seen only by those with a decoder."
+                                            />
+                                            <figcaption class="figure-caption">
+                                                Decoded version of the page as originally seen only by those with a decoder.
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </section>
+                        </article>
+                        <hr aria-hidden="true" />
+                        <article id="teletext-editor-viewer_2026-10-02">
+                            <p>October 2, 2026</p>
+                            <h1 class="story text-primary">
+                                NEW: New pages for editing and viewing WST teletext samples; new way to convert T34 files to T42
+                            </h1>
+                            <p>
+                                This new is a few days old, but I'm just getting around to adding this article to this page. Anyway, we
+                                previously had no way to view our WST (T34) samples in an actual software-based viewer, nor was there a way
+                                to modify the pages in the teletext stream to correct errors, such as spelling mistakes or garbled and/or
+                                incomplete graphics. Now, we've got both.
+                            </p>
+                            <h4>A New Teletext Viewer</h4>
+                            <p>
+                                <a href="https://github.com/ali1234/vhs-teletext" target="_blank">VHS-Teletext</a>, software tools for
+                                decoding and viewing T42 teletext files, has been around for about 10 years now, but us here in NTSC
+                                countries couldn't use it because it only worked with T42 files, not T34 files. With the conversion script,
+                                we can now use these tools, and that's what I did after producing the first T42 files from samples I had.
+                                The tools include recording the VBI from a videotape, deconvolving the VBI file to a T42 file, examining
+                                headers, splitting the capture into different services, displaying all copies of a single page, squashing
+                                duplicate pages, generating HTML pages, and an interactive viewer that allows you to view the entire
+                                teletext stream at once by navigating to different pages.
+                            </p>
+                            <p>
+                                The interactive viewer caught my eye, so I tried it, and it was great. I could simply type a page number and
+                                it would go to that page. I knew then that I wanted to add something like that to this website, but I wasn't
+                                sure how. I then began figuring that out.
+                            </p>
+                            <p>
+                                This, however, would be harder than the teletext editor because the code was written in Python, a language I
+                                have no familiarity with. If I wanted to add the viewer, it would need to be rewritten in JS. The Python
+                                code was only 215 lines long, so it was quite short, but I knew JS would require a lot more since this would
+                                be added to the website; the Python viewer is its own standalone application. I looked through the code and,
+                                as best as I could understand, noted what each function block did. With my layout created, I could start
+                                working on the editor, but I didn't know what JS method correspond to the existing Python methods.
+                            </p>
+                            <p>
+                                Disclaimer: I had some assistance from AI tools to help me translate existing Python methods, such as
+                                <code>setstyle</code>, <code>_pos</code>, <code>getmaxyx</code>, and <code>inputtmp</code> into equivalent
+                                JS methods since I had no idea how some of the Python methods worked. Once these translations were figured
+                                ou and noted, I began to work on an equivalent web-based viewer that not only kept the same functionality,
+                                but added a bit more to it. This took a few days to work on and test,
+                            </p>
+                            <p>
+                                On September 27, the teletext viewer was made public. The viewer is not linked in the navigation menu; to
+                                view a sample inside the editor, view available results from any WST service (DaTaVizion, Electra, Keyfax,
+                                SSS Teletext, Virtext, and Wisconsin Infotext) and look for the teletext icon (a TV-style icon with 3
+                                horizontal bars inside) and click on it. This icon is within a new table column titled "View Teletext
+                                Sample".
+                                <a
+                                    href="https://nateletext.com/html/teletext-viewer?service=electra&sample=USTT_WTBS-19921213_1#100"
+                                    target="_blank"
+                                >
+                                    Here's
+                                </a>
+                                a current example from Electra dated December 13, 1992.
+                            </p>
+                            <p>
+                                A big thanks to the people that worked on VHS-Teletext for helping give me inspiration and ideas needed to
+                                work on the viewer!
+                            </p>
+                            <h4>A New Teletext Editor</h4>
+                            <p>We've now got a teletext viewer, now we needed an editor. Once again, existing code came to the rescue.</p>
+                            <p>
+                                About a week and a half ago, I, along with someone else, began to figure out how how to incorporate an
+                                editor into this website. I had the idea but needed some help with it. That's when I was pointed to
+                                <a href="https://github.com/grim-fandango/teletext-shared-resources" target="_blank">this</a> GitHub
+                                repository. In the repository was code used by the
+                                <a href="https://www.teletextarchive.com" target="_blank">Teletext Archive</a> website for a T42 (PAL-based
+                                WST) teletext editor (big thanks to them for making the code available!). I had seen a screenshot of the
+                                editor days before and really loved the design and its overall function and wanted to add something like
+                                that to this website. I previously didn't know the code was on GitHub.
+                            </p>
+                            <p>
+                                With that, we looked through it and saw that the code was written in C# (C-sharp). This made things a bit
+                                easier for me because I had some familiarity with C# since I took classes in college where C# was used.
+                                However, the editor as it was couldn't be used because the C# worked in conjunction with a Windows Form. My
+                                primary OS is macOS, so I didn't have a way to test the form except uploading the code to WASM (Web
+                                Assembly), which I've never used before. While all the code was there, something else needed to be done.
+                            </p>
+                            <p>
+                                The decision was to rewrite the code in JavaScript (JS). Not only does this skip Web Assembly and Windows
+                                Forms, meaning less extra steps, but it also means that the editor would work in any browser on any OS.
+                                After looking through the code and reading it's comments, it was time to build the editor.
+                            </p>
+                            <p>
+                                This took about 6 or so days to work on. Converting C# to JS wasn't all that difficult. There was vigorous
+                                testing of the editor during the building process. I enlisted the help of a couple others to help test the
+                                editor and report any bugs they found. I managed to keep almost everything the original editor did. On
+                                September 29, the editor was finally made available; it can be found under the "Other Pages" navigation
+                                dropdown option. <strong>Please note that the editor is not available on mobile devices.</strong>
+                            </p>
+                            <h4>Converting T34 to T42</h4>
+                            <p>We've now got an editor and viewer, but something else was still missing.</p>
+                            <p>
+                                While some modifications were applied to the original teletext editor code, one thing remained unchanged:
+                                the editor can only read T42 (PAL) files. This was something I decided to keep even though none of us have
+                                T42 files, only T34 files. Let me explain why I didn't change that.
+                            </p>
+                            <p>
+                                The original plan was going to be making the edited code read T34 files, but that would've required
+                                rewriting a lot of the code. I then had a thought: keep the code as is, but create a separate script to
+                                convert the T34 NTSC files to T42 PAL files. After more perusing, there was another GitHub repository with
+                                code used on the Teletext Archive website. I forked the code to my GitHub account to look through it. In one
+                                of the files, again mostly C#, was code that read a T42 file. Using this information, plus some information
+                                about T34 packets I had previously saved, I worked on creating a new conversion script.
+                            </p>
+                            <p>
+                                The sole purpose of this script would be to take an existing T34 file and convert it to T42 &ndash; that's
+                                all. None of the page data itself would be touched in any way. This was the quickest script to work on. I
+                                decided to not use JS for this and instead used C# because this script would be hosted on GitHub, not
+                                included as part of the website. That script is complete and works on all major OSes; the script can be
+                                found <a href="https://github.com/TVTA-YT/NTSC-WST-Teletext-Resources/releases" target="_blank">here</a>.
+                                After a converted T42 file is created, it can be imported into the teletext editor.
+                            </p>
+                            <h4>Thanks Are in Order</h4>
+                            <p>
+                                I couldn't have added these pages without the help of preexisting code, so a big thank you to the developers
+                                of VHS-Teletext and the Teletext Archive website for making the code publicly available!
+                            </p>
+                        </article>
+                        <hr aria-hidden="true" />
                         <article id="silent-radio-decoded_2026-09-26">
                             <p>September 26, 2026</p>
-                            <h1 class="story text-primary">
-                                BREAKING: Silent Radio data has been decoded; first sample and new page coming soon
-                            </h1>
+                            <h1 class="story">Silent Radio data has been decoded; first sample and new page coming soon</h1>
                             <p>
                                 Today, another milestone in decoding VBI data has been achieved: data from Silent Radio has officially been
                                 decoded. This has been on our to-do list for a few weeks, the same list that initially included StarSight.
@@ -387,7 +919,7 @@
                         <hr aria-hidden="true" />
                         <article id="virtext-1989_2026-09-20">
                             <p>September 21, 2026</p>
-                            <h1 class="story">NEW: Virtext (WGN Teletext) from June 1989 discovered</h1>
+                            <h1 class="story">Virtext (WGN Teletext) from June 1989 discovered</h1>
                             <p>
                                 WGN's Virtext (later WGN-TV Teletext) is a bit of a unknown here. We have very little samples (soon to be 2)
                                 and we didn't know approximately when the service launched or shut down. However, on September 19, WGN
@@ -451,7 +983,7 @@
                         <hr aria-hidden="true" />
                         <article id="starsight-coming-soon_2026-09-17">
                             <p>September 17, 2026</p>
-                            <h1 class="story">NEW / COMING SOON: StarSight EPG data has been decoded; new page coming soon</h1>
+                            <h1 class="story">StarSight EPG data has been decoded; new page coming soon</h1>
                             <h4>StarSight EPG data has been decoded</h4>
                             <p>
                                 For the last few days, myself and a few others have been researching information about a VBI service called
