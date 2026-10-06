@@ -266,8 +266,8 @@ function appendRow(tbody, row, columns, dataset) {
     const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
-    const nonTeletextDirectory = `files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
-    const epgDirectory = `files/${encodeURIComponent(row.Service_Name)}/`;
+    const nonTeletextDirectory = `/files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
+    const epgDirectory = `/files/${encodeURIComponent(row.Service_Name)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KCET and KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
