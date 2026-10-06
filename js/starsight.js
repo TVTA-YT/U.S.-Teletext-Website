@@ -22,8 +22,10 @@ const VISIBLE_SLOTS = 48;
 // For now, the schedule starts at 12:00am
 const DAY_START_MINUTES = 0;
 
-// The time format in the JSON it UTC. UTC is 8 hours ahead of PST; the only JSON I have was recorded from KCET in CA, which uses PST/PDT.
-const UTC_OFFSET_MINUTES = -480;
+// Standard (non-DST) UTC offset for this station's time zone.
+// KCET and KQED are both California stations, so Pacific Standard Time (UTC-8) is the baseline.
+const STANDARD_UTC_OFFSET_MINUTES = -480;
+const DST_ADJUSTMENT_MINUTES = 60;
 
 let currentData = null;
 let currentDateString = null;
@@ -93,11 +95,27 @@ function formatDayColumnLabel(dateString) {
     });
 }
 
+// & Check whether a given UTC timestamp falls inside one of the capture's daylight saving windows
+function isDuringDaylightSaving(isoString, daylightSavingChanges) {
+    const t = new Date(isoString).getTime();
+    return daylightSavingChanges.some(change => {
+        const start = new Date(change.starts).getTime();
+        const end = new Date(change.ends).getTime();
+        return t >= start && t < end;
+    });
+}
+
+// & Determine the correct UTC offset for a specific listing, accounting for daylight saving
+function getUtcOffsetMinutes(isoString, data) {
+    const inDst = isDuringDaylightSaving(isoString, data.daylightSavingChanges || []);
+    return STANDARD_UTC_OFFSET_MINUTES + (inDst ? DST_ADJUSTMENT_MINUTES : 0);
+}
+
 // & Create clickable list of available dates in the JSON
 function buildDaySelection(data) {
 
-    // Again, only get the dates from the date/time string
-    const dates = [...new Set(data.listings.map(l => l.start.slice(0, 10)))].sort();
+    // Use the same local-date logic as everything else, so date buttons match what's actually rendered
+    const dates = [...new Set(data.listings.map(l => listingLocalDate(l.start, data)))].sort();
     const container = document.querySelector(".day-selection");
     container.innerHTML = "";
 
@@ -127,28 +145,27 @@ function buildDaySelection(data) {
 }
 
 // & Convert ISO date/time string into minutes since midnight
-function listingStartMinutes(isoString) {
+function listingStartMinutes(isoString, data) {
 
     // Convert ISO into JS Date object
     const utcDate = new Date(isoString);
+    const offset = getUtcOffsetMinutes(isoString, data);
 
     // Convert UTC time (e.g. 1994-05-03T13:00:00Z) into time since midnight
-    // Get hours (13), multiply (60 mins in 1 hour = 750), add UTC minutes (00), add UTC offset minutes (750 + (-480) = 270 (5:00am))
-    const localMinutesOfDay = utcDate.getUTCHours() * 60 + utcDate.getUTCMinutes() + UTC_OFFSET_MINUTES;
+    const localMinutesOfDay = utcDate.getUTCHours() * 60 + utcDate.getUTCMinutes() + offset;
 
     /*
     * Convert number of minutes into value representing time of day which wraps around at midnight; also works for negative numbers
     * Keep time between 0 and 1439 minutes even when timezone conversion produces a negative value
-    * e.g. -60 % 1440 = -60. Adding 1440 = 1380. The remainder of that (1380 % 1440) = 1380 (11:00pm).
     */
     return ((localMinutesOfDay % 1440) + 1440) % 1440
 }
 
-function listingLocalDate(isoString) {
+function listingLocalDate(isoString, data) {
     const date = new Date(isoString);
-    date.setUTCMinutes(date.getUTCMinutes() + UTC_OFFSET_MINUTES);
+    const offset = getUtcOffsetMinutes(isoString, data);
+    date.setUTCMinutes(date.getUTCMinutes() + offset);
     return date.toISOString().slice(0, 10);
-
 }
 
 // & Determine where each program should be placed inside the schedule
@@ -171,8 +188,7 @@ function buildChannelSchedules(data, targetDataString) {
     data.listings.forEach(listing => {
 
         // Only keep listings that belong to the date selected in the schedule
-        // if (!listing.start.startsWith(targetDataString)) return;
-        if (listingLocalDate(listing.start) !== targetDataString) return;
+        if (listingLocalDate(listing.start, data) !== targetDataString) return;
 
         // Store the program title. If one doesn't exist, skip it
         const program = programByID.get(listing.program);
@@ -191,7 +207,7 @@ function buildChannelSchedules(data, targetDataString) {
         channelSchedules[key].push({
             program,
             description: listing.description ? descriptionByID.get(listing.description) : null,
-            startMinutes: listingStartMinutes(listing.start),
+            startMinutes: listingStartMinutes(listing.start, data),
             durationMinutes: listing.durationMinutes,
         });
     });
@@ -398,7 +414,7 @@ function showProgramModal(entry) {
     document.getElementById("programModalTitle").textContent = entry.program.title;
     document.getElementById("programModalDescription").textContent = entry.description ? entry.description.text : "No description available";
     document.getElementById("programModalCaptioned").textContent = entry.program.closedCaptioned ? "Yes" : "No";
-    document.getElementById("programModalColor").textContent = entry.program.blackAndWhite ? "Yes" : "No";
+    document.getElementById("programModalColor").textContent = entry.program.blackAndWhite ? "No" : "Yes";
     document.getElementById("programModalAudio").textContent = entry.program.stereo ? "Stereo" : "Mono";
     document.getElementById("programModalRating").textContent = entry.description && entry.description.rating != null ? `System: ${entry.description.ratingSystem}, code ${entry.description.rating}` : "Not Rated";
     document.getElementById("programModalYear").textContent = entry.description && entry.description.year ? entry.description.year : "Unknown";
@@ -417,6 +433,7 @@ window.addEventListener("resize", () => {
 // Load data from the JSON and build the EPG
 loadData().then(data => {
     if (!data) return;
+    window.debugData = data;
     buildTimeRow();
     syncServiceColumnScroll();
 
