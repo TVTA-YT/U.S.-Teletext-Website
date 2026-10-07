@@ -303,7 +303,7 @@ function buildMobileGuide(data, dateString) {
         const channel = channelsById.get(Number(channelId));
         const header = document.createElement("div");
         header.className = "channel-header";
-        header.textContent = (channel && channel.name) ? channel.name : `CH: ${channelId}`;
+        header.textContent = getChannelDisplayName(channel, channelId)
         header.style.gridRow = "1";
         header.style.gridColumn = String(i + 2);
         container.appendChild(header);
@@ -373,6 +373,16 @@ function buildMobileGuide(data, dateString) {
     });
 }
 
+// & Resolve the best available display name for a channel
+function getChannelDisplayName(channel, channelId) {
+    if (channel && channel.label) return channel.label;
+
+    // Older captures (e.g. KCET-VBI) used "name"
+    if (channel && channel.name) return channel.name;
+    if (channel && channel.callSign) return channel.callSign;
+    return `CH ${channelId}`;
+}
+
 // & Rendering and refreshing the EPG data
 function renderGuideData(data, dateString) {
 
@@ -395,7 +405,7 @@ function renderGuideData(data, dateString) {
     channelIds.forEach(channelId => {
         const channel = channelsById.get(Number(channelId));
         const label = document.createElement("div");
-        label.textContent = (channel && channel.name) ? channel.name : `CH ${channelId}`;
+        label.textContent = getChannelDisplayName(channel, channelId)
         serviceColumn.appendChild(label);
     });
 
