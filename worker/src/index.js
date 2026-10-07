@@ -421,7 +421,10 @@ async function listSamplesWithPages(env, datasetKey) {
 
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
 const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
-const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+|P\d{3}-[0-9A-F]{4}(?:-subpage-\d+)?)\.(?:png|jpg|jpeg|gif)$/i;
+
+// Accepted names: Record-3-12-v1 (NABTS), Page-100-2 (WST), and editor exports such as P100-0000, P110-0000-subpage-1 or Page-101-0000-version-1-of-7
+const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+|(?:P|Page-)\d{3}-[0-9A-F]{4}(?:-subpage-\d+)?(?:-version-\d+-of-\d+)?)\.(?:png|jpg|jpeg|gif)$/i;
+
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 
 // Get metadata from IA

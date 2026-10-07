@@ -4,6 +4,9 @@
     const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
     const PAGE_PATTERN = /^Page-(\d+)-(\d+)$/i;
 
+    // Images exported from the site's teletext editor
+    const EDITOR_PATTERN = /^(?:P|Page-)(\d{3})-([0-9A-F]{4})(?:-subpage-(\d+))?(?:-version-(\d+)-of-(\d+))?$/i;
+
     // Images exported from the teletext editor
     // * Page number, then the 4-digit hex subcode, then an optional subpage number
     const EDITOR_PATTERN = /^P(\d{3})-([0-9A-F]{4})(?:-subpage-(\d+))?$/i;
@@ -296,22 +299,25 @@
 
         // This is used for images exported from the teletext editor on the site. These pages start with "P" and the page number
         if (editorMatch) {
-            const [, page, subcode, subpage] = editorMatch;
+            const [, page, subcode, subpage, version, versionCount] = editorMatch;
             const subpageNumber = subpage !== undefined ? parseInt(subpage, 10) : 0;
+            const versionNumber = version !== undefined ? parseInt(version, 10) : 0;
+            const totalVersions = versionCount !== undefined ? parseInt(versionCount, 10) : 0;
             const hasSubcode = subcode !== "0000";
 
             // For subpages (e.g. "110 subpage 2", "110/0003", or just "100")
             let displayNumber = page;
             if (hasSubcode) displayNumber += `/${subcode.toUpperCase()}`;
             if (subpageNumber) displayNumber += ` subpage ${subpageNumber}`;
+            if (versionNumber && totalVersions > 1) displayNumber += ` (${versionNumber} of ${totalVersions})`;
 
             return {
                 kind: "editor",
                 pageNumber: parseInt(page, 10),
                 displayNumber,
 
-                // Sort by subcode first, then subpage (P110-0000, P110-0000-subpage-1, P110-0000-subpage-2, P110-0001, etc)
-                subIndex: parseInt(subcode, 16) * 1000 + subpageNumber,
+                // Sort by subcode first, then subpage (P110-0000, P110-0000-subpage-1, P110-0000-subpage-2, Page-110-0000-version-1-of-2, P110-0001, etc)
+                subIndex: parseInt(subcode, 16) * 1000000 + subpageNumber * 1000 + versionNumber,
                 collapse: false,
             };
         }
