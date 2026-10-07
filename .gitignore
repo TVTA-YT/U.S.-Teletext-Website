@@ -1,10 +1,11 @@
 test.html
-penntext.html
-penntext-results.html
 silent-radio.html
+wavetop.html
+wavetop-results.html
 package-lock.json
+WaveTop.png
+WaveTop_light.png
 package.json
-json/
 depreciated/
 node_modules/
 TODO/

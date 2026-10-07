@@ -84,6 +84,14 @@ const tables = {
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
     },
+    penntext: {
+        table: "PENNTEXT",
+        idField: "ID",
+        type: "nonTeletext",
+        dateField: "Date",
+        sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
+    },
     sssTeletext: {
         table: "SSS_Teletext",
         idField: "ID",

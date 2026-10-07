@@ -1,26 +1,20 @@
 <!doctype html>
-<!-- Created August 15, 2026, 01:31 -->
+<!-- Created August 15, 2026, 12:27 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
-        />
+        <meta name="description" content="Search for archived samples from the PENNTEXT text service." />
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="North American Teletext Archive - Other Text Services" />
-        <meta
-            property="og:description"
-            content="Search for archived samples from non-teletext services, including ABC PLUS and Kentucky Educational Television's AgText service."
-        />
-        <meta property="og:url" content="https://nateletext.com/html/other-text-services.html" />
+        <meta property="og:title" content="North American Teletext Archive - PENNTEXT" />
+        <meta property="og:description" content="Search for archived samples from the PENNTEXT text service." />
+        <meta property="og:url" content="https://nateletext.com/html/penntext.html" />
         <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
         <meta property="og:image:alt" content="North American Teletext Archive" />
         <meta property="og:site_name" content="North American Teletext Archive" />
         <meta property="og:locale" content="en_US" />
-        <link rel="canonical" href="https://nateletext.com/html/other-text-services.html" />
+        <link rel="canonical" href="https://nateletext.com/html/penntext.html" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
@@ -45,23 +39,14 @@
             crossorigin="anonymous"
         ></script>
         <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <title>Other Text Services</title>
+        <title>PENNTEXT</title>
         <style>
             .container {
                 padding-top: 110px;
             }
 
-            .mobile-blue-border {
-                border: 4px solid #152de3 !important;
-            }
-
-            th,
-            td {
-                background-color: transparent !important;
-            }
-
-            figure {
-                text-align: center;
+            .btn {
+                border-radius: 24px;
             }
         </style>
     </head>
@@ -165,7 +150,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -195,7 +180,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -248,150 +233,23 @@
         <main>
             <div class="container">
                 <h1>
-                    <span class="visually-hidden">Other Text Services</span>
-                    <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
+                    <span class="visually-hidden">Pennsylvania Public Television Network PennText</span>
+                    <img src="../images/banners/light/PENNTEXT_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/PENNTEXT.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
-                <p class="fs-5 text-center">
-                    While some stations didn't have teletext, they did have other text services. Check them out below.
-                </p>
-                <hr aria-hidden="true" />
-                <div class="pt-4" id="sumbission-count">
-                    <table class="table text-center submission-count-table">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Total Submissions:
-                                    <span id="total-record-count-non-teletext"></span>
-                                </td>
-                                <td>
-                                    Samples Available:
-                                    <span id="available-sample-count-non-teletext"></span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="pt-4 pb-4" id="sample-availability-count">
-                    <p class="fs-3 text-center">Available Samples by Service</p>
-                    <table class="table table-bordered text-center submission-count-table sample-availability-count-table text-m">
-                        <thead>
-                            <tr class="align-middle">
-                                <th>ABC PLUS</th>
-                                <th>KCET</th>
-                                <th>
-                                    <span aria-hidden="true">KET AGTEXT</span>
-                                    <span class="sr-only">Kentucky Educational Television AgText</span>
-                                </th>
-                                <th>
-                                    <span aria-hidden="true">IPTV AGIDS</span>
-                                    <span class="sr-only">Iowa Public Television Agricultural InfoData Service</span>
-                                </th>
-                                <th>
-                                    <span aria-hidden="true">Wis. Infotext</span>
-                                    <span class="sr-only"><span class="sr-only">Wisconsin Infotext</span></span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row-color">
-                                <td>
-                                    <span class="sr-only">Available ABC PLUS samples:</span>
-                                    <span class="fw-bolder" id="abc-plus-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available KCET samples:</span>
-                                    <span class="fw-bolder" id="kcet-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Kentucky Educational Television AgText samples:</span>
-                                    <span class="fw-bolder" id="ket-agtext-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Iowa Public Television Agricultural InfoData Service samples:</span>
-                                    <span class="fw-bolder" id="iptv-agids-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Wisconsin InfoText (text service) samples:</span>
-                                    <span class="fw-bolder" id="wisconsin-infotext-text-count"></span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row justify-content-center pb-4">
-                    <!-- ABC PLUS -->
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/ABC-PLUS_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/ABC-PLUS.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="abc-plus.html" aria-label="ABC PLUS">
-                            <img src="../images/ABC-PLUS-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/ABC-PLUS-TV.png" alt="" class="mw-100 dark-mode-image" />
-                        </a>
+                <hr />
+                <p>Use the form below to search for available pages by year.</p>
+                <form action="penntext-results.html" method="get">
+                    <div class="mb-3">
+                        <label for="year" class="form-label">Select a year</label>
+                        <select name="year" id="year" class="form-select">
+                            <option value=""></option>
+                            <option value="1990">1990</option>
+                        </select>
                     </div>
-                    <!-- KCET -->
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding">
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/KCET_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/KCET.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="kcet-text.html">
-                            <span class="visually-hidden">KCET</span>
-                            <img src="../images/KCET-TV_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                            <img src="../images/KCET-TV.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
-                        </a>
-                    </div>
-                    <!-- KET AGTEXT -->
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding">
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/KET_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/KET.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="ket-agtext.html" aria-label="Kentucky Educational Television AgText">
-                            <img src="../images/KET-AGTEXT-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/KET-AGTEXT-TV.png" alt="" class="mw-100 dark-mode-image" />
-                        </a>
-                    </div>
-                    <!-- IPTV AGIDS -->
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-new-row-top-padding">
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/IPTV-AGIDS_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/IPTV-AGIDS.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="iptv-agids.html" aria-label="Iowa Public Television Agricultural InfoData Service">
-                            <img src="../images/IPTV-AGIDS-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/IPTV-AGIDS-TV.png" alt="" class="mw-100 dark-mode-image" />
-                        </a>
-                    </div>
-                    <!-- PENNTEXT -->
-                    <div
-                        class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
-                    >
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/PENNTEXT_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/PENNTEXT.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="penntext.html" aria-label="Iowa Public Television Agricultural InfoData Service">
-                            <img src="../images/PENNTEXT-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/PENNTEXT-TV.png" alt="" class="mw-100 dark-mode-image" />
-                        </a>
-                    </div>
-                    <!-- Wisconsin Infotext -->
-                    <div
-                        class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
-                    >
-                        <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/WISINFOTEXT_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/WISINFOTEXT.png" alt="" class="mw-100 pb-4 dark-mode-image" />
-                        </div>
-                        <a href="wisconsin-infotext.html" aria-label="Wisconsin InfoText">
-                            <img src="../images/Wisconsin-Infotext-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/Wisconsin-Infotext-TV.png" alt="" class="mw-100 dark-mode-image" />
-                        </a>
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                    <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
+                </form>
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"
@@ -474,42 +332,5 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
-        <script src="../js/total-count.js"></script>
-        <script>
-            // Heading banner animation
-            const pageHeadingImage = document.getElementById("page-heading-image");
-            const imageSets = {
-                light: ["../images/banners/light/Other-Text-Services_light.png", "../images/banners/light/Other-Text-Services-2_light.png"],
-                dark: ["../images/banners/dark/Other-Text-Services.png", "../images/banners/dark/Other-Text-Services-2.png"],
-            };
-
-            Object.values(imageSets)
-                .flat()
-                .forEach((src) => {
-                    new Image().src = src;
-                });
-
-            function getTheme() {
-                return document.documentElement.getAttribute("data-bs-theme" || "light");
-            }
-
-            let i = 0;
-            pageHeadingImage.src = imageSets[getTheme()][0];
-
-            setInterval(() => {
-                i = (i + 1) % 2;
-                pageHeadingImage.src = imageSets[getTheme()][i];
-            }, 1000);
-
-            const observer = new MutationObserver(() => {
-                pageHeadingImage.src = imageSets[getTheme()][i];
-            });
-
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ["data-bs-theme"],
-            });
-        </script>
     </body>
 </html>
