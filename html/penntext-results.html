@@ -392,10 +392,11 @@
         <script src="../js/render-results.js"></script>
         <script>
             renderResults({
-                jsonPath: "../json/penntext_data.json",
+                dataset: "penntext",
                 filterParam: "year",
                 filterField: "Year",
                 serviceLabel: "PENNTEXT",
+                stationLabel: "PPTN",
                 groupByField: "Month",
                 groupOrder: [
                     "January",
@@ -422,8 +423,8 @@
                     { label: "Program", key: "Program_Title" },
                     { label: "Tape", key: "Tape_Type", accessibleMap: "BMAX_Name" },
                     { label: "Speed", key: "Tape_Speed", accessibleMap: "BMAX_Speed" },
-                    { label: "TEXT1", key: "TEXT1", renderPenntext: true },
-                    { label: "TEXT2", key: "TEXT2", renderPenntext: true },
+                    { label: "TEXT1", key: "TEXT1", renderABCPlus: true },
+                    { label: "TEXT2", key: "TEXT2", renderABCPlus: true },
                     { label: "Contributor", key: "Recovered_By" },
                     { label: "Date Added", key: "Date_Added" },
                 ],

@@ -282,7 +282,7 @@ function appendRow(tbody, row, columns, dataset) {
             return renderAccessibleCell(visible, `${c.label}: HTML file available`);
         }
 
-        // For ABC PLUS and Wisconsin Infotext, which use TEXT1 and TEXT2
+        // For ABC PLUS, PENNTEXT, and Wisconsin Infotext, which use TEXT1 and TEXT2
         if (c.renderABCPlus || c.renderWisconsinInfotext) {
             const value = row[c.key];
 
