@@ -5,6 +5,7 @@ const SERVICE_SPOKEN_LABELS = {
     IPTV: "Iowa Public Television",
     AGIDS: "Agricultural InfoData Service",
     Infotext: "InfoText",
+    DaTaVizion: "Data Vision"
 };
 
 const TAPE_VALUE_MAPS = {
