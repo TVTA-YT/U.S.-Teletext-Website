@@ -375,11 +375,11 @@ function buildMobileGuide(data, dateString) {
 
 // & Resolve the best available display name for a channel
 function getChannelDisplayName(channel, channelId) {
-    if (channel && channel.label) return channel.label;
+    if (channel && channel.callSign) return channel.callSign;
 
     // Older captures (e.g. KCET-VBI) used "name"
     if (channel && channel.name) return channel.name;
-    if (channel && channel.callSign) return channel.callSign;
+    if (channel && channel.label) return channel.label;
     return `CH ${channelId}`;
 }
 
