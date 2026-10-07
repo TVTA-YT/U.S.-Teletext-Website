@@ -7,10 +7,6 @@
     // Images exported from the site's teletext editor
     const EDITOR_PATTERN = /^(?:P|Page-)(\d{3})-([0-9A-F]{4})(?:-subpage-(\d+))?(?:-version-(\d+)-of-(\d+))?$/i;
 
-    // Images exported from the teletext editor
-    // * Page number, then the 4-digit hex subcode, then an optional subpage number
-    const EDITOR_PATTERN = /^P(\d{3})-([0-9A-F]{4})(?:-subpage-(\d+))?$/i;
-
     // Load 30 thumbnail images per requests
     const IMAGES_PER_LOAD = 30;
 
