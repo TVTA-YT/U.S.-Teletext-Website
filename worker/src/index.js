@@ -422,6 +422,104 @@ async function listSamplesWithPages(env, datasetKey, extension = "json") {
     return ids.sort();
 }
 
+
+/* RECENTLY VIEWABLE SAMPLES */
+
+// Number of rows shown in the homepage "Recently Viewable Samples" table
+const RECENT_VIEWABLE_LIMIT = 25;
+
+// List every stream file in R2 for one dataset, along with when it was uploaded
+async function listStreamObjects(env, datasetKey, extension) {
+    const objects = [];
+    let cursor;
+
+    do {
+        const listing = await env.TELETEXT.list({ prefix: `${datasetKey}/`, cursor });
+
+        for (const object of listing.objects) {
+            const name = object.key.slice(datasetKey.length + 1);
+            if (!name.toLowerCase().endsWith(`.${extension}`)) continue;
+
+            // WST: file name is the IA ID. NABTS: file name is the "NABTS_Stream" value
+            objects.push({ fileID: name.slice(0, -(extension.length + 1)), uploaded: object.uploaded });
+        }
+
+        cursor = listing.truncated ? listing.cursor : undefined;
+    } while (cursor);
+
+    return objects;
+}
+
+// Find the newest stream files across all teletext datasets and attach their database details
+async function getRecentViewableSamples(env) {
+    const teletextDatasets = Object.entries(tables).filter(([, config]) => config.type === "teletext");
+
+    // List each dataset's folder in R2 concurrently
+    const perDataset = await Promise.all(teletextDatasets.map(async ([key, config]) => {
+        const extension = config.isNabts ? "t33" : "json";
+        const objects = await listStreamObjects(env, key, extension);
+        return objects.map(object => ({ ...object, key, config }));
+    }));
+
+    // Newest uploads first, then keep only what the table shows
+    const newest = perDataset.flat()
+        .sort((a, b) => b.uploaded.getTime() - a.uploaded.getTime())
+        .slice(0, RECENT_VIEWABLE_LIMIT);
+
+    if (newest.length === 0) return [];
+
+    // Group the newest files by dataset so each table is queried once
+    const byDataset = new Map();
+    for (const item of newest) {
+        if (!byDataset.has(item.key)) byDataset.set(item.key, []);
+        byDataset.get(item.key).push(item);
+    }
+
+    const lookups = new Map();
+
+    await Promise.all([...byDataset].map(async ([key, items]) => {
+        const config = items[0].config;
+
+        // NABTS_Stream may be stored with or without ".t33", and in any case; compare lowercased without the extension
+        const matchExpr = config.isNabts
+            ? `REPLACE(LOWER(TRIM(CAST(NABTS_Stream AS TEXT))), '.t33', '')`
+            : `TRIM(CAST(IA_ID AS TEXT))`;
+
+        const fileIDs = items.map(item => config.isNabts ? item.fileID.toLowerCase() : item.fileID);
+        const placeholders = fileIDs.map(() => "?").join(", ");
+
+        const { results } = await env.DB.prepare(`
+            SELECT ${config.dateField || "Date"} AS Date, Service_Name, Recovered_By, IA_ID, ${matchExpr} AS File_ID
+            FROM ${config.table}
+            WHERE ${matchExpr} IN (${placeholders})
+        `).bind(...fileIDs).all();
+
+        for (const row of results ?? []) {
+            const lookupKey = `${key}:${row.File_ID}`;
+            if (!lookups.has(lookupKey)) lookups.set(lookupKey, row);
+        }
+    }));
+
+    return newest.map(item => {
+        const lookupID = item.config.isNabts ? item.fileID.toLowerCase() : item.fileID;
+        const row = lookups.get(`${item.key}:${lookupID}`);
+
+        return {
+            Dataset: item.key,
+
+            // Both viewers look samples up by IA ID
+            IA_ID: row?.IA_ID ?? (item.config.isNabts ? null : item.fileID),
+            Format: item.config.isNabts ? "T33" : "T34",
+            Date: row?.Date ?? null,
+            Service_Name: row?.Service_Name ?? null,
+            Recovered_By: row?.Recovered_By ?? null,
+
+            // Upload date in Eastern Time, matching the "Date_Added" format (YYYY-MM-DD)
+            Date_Viewable: item.uploaded.toLocaleDateString("en-CA", { timeZone: "America/New_York" })
+        };
+    });
+}
+
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
 const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
 
@@ -788,6 +886,23 @@ async function handleApi(request, env) {
         } catch (error) {
             console.error("D1 recent additions query failed:", error);
             return errorResponse(`Database recent additions query failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
+    * API CALL: /api/recent-viewable-samples
+    * This is called on the homepage.
+    * This fetches the newest stream files uploaded to the the R2, meaning they can now be opened in the WST (T34) or NABTS (T33) viewer
+    */
+    if (url.pathname === "/api/recent-viewable-samples") {
+        try {
+            const recent = await getRecentViewableSamples(env);
+            const response = jsonResponse(recent);
+            response.headers.set("cache-control", "public, max-age=300");
+            return response;
+        } catch (error) {
+            console.error("Recent viewable samples lookup failed:", error);
+            return errorResponse(`Recent viewable samples lookup failed: ${error.message}`, 500);
         }
     }
 
