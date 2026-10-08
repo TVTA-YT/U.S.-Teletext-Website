@@ -85,6 +85,7 @@ const tables = {
         dateField: "Date",
         sampleCondition: `(Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != '') OR (NABTS_Stream IS NOT NULL AND TRIM(CAST(NABTS_Stream AS TEXT)) != '')`,
         isNabts: true,
+        r2Folder: "nbcteletext",
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "NABTS_Stream"]
     },
     penntext: {
@@ -395,9 +396,14 @@ async function getStarSightManifest(env, identifier) {
 // ID pattern for fetching teletext JSON files
 const SAMPLE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 
+// R2 folder name for NBC Teletext
+function r2Folder(dataset) {
+    return dataset.config.r2Folder ?? dataset.key;
+}
+
 // Generate R2 object path for teletext JSON
-function pagesKey(datasetKey, iaID, extension) {
-    return `${datasetKey}/${iaID}.${extension}`;
+function pagesKey(folder, fileID, extension) {
+    return `${folder}/${fileID}.${extension}`;
 }
 
 // List all samples that have available JSON files in the R2
@@ -406,14 +412,14 @@ async function listSamplesWithPages(env, datasetKey, extension = "json") {
     let cursor;
 
     do {
-        const listing = await env.TELETEXT.list({ prefix: `${datasetKey}/`, cursor });
+        const listing = await env.TELETEXT.list({ prefix: `${folder}/`, cursor });
 
         for (const object of listing.objects) {
             const name = object.key.slice(datasetKey.length + 1);
             if (!name.endsWith(`.${extension}`)) continue;
 
             const iaID = name.slice(0, -(extension.length + 1));
-            if (SAMPLE_ID_PATTERN.test(iaID)) ids.push(iaID);
+            if (SAMPLE_ID_PATTERN.test(fileID)) ids.push(fileID);
         }
 
         cursor = listing.truncated ? listing.cursor : undefined;
@@ -1027,7 +1033,7 @@ async function handleApi(request, env) {
             const extension = dataset.config.isNabts ? "t33" : "json";
 
             if (!id) {
-                const ids = await listSamplesWithPages(env, dataset.key, extension);
+                const ids = await listSamplesWithPages(env, r2Folder(dataset), extension);
                 return jsonResponse({ dataset: dataset.key, ids });
             }
 
@@ -1059,7 +1065,7 @@ async function handleApi(request, env) {
                 if (!fileKeyID) return errorResponse("No T33 filename noted for this sample.", 404)
             }
 
-            const object = await env.TELETEXT.get(pagesKey(dataset.key, fileKeyID, extension));
+            const object = await env.TELETEXT.get(pagesKey(r2Folder(dataset), fileKeyID, extension));
             if (!object) return errorResponse("No pages found for this sample", 404);
 
             // NABTS (.t33) is binary — return it raw rather than parsing as JSON
