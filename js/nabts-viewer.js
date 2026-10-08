@@ -20,7 +20,7 @@
     const BANNER_NAMES = {
         edutel: "Edutel",
         extravision: "CBS-ExtraVision",
-        nbcTeletext: "NBC-Teletext"
+        nbcteletext: "NBC-Teletext"
     };
 
     // & Show the service's banner in the page heading
