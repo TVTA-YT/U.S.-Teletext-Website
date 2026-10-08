@@ -179,10 +179,6 @@
         font-size: 1.5em;
     }
 
-    #site-introduction-paragraphs-column {
-        border-right: 2px solid #152de3;
-    }
-
     #encoded-extravision-image {
         width: 30%;
         float: right;
@@ -251,10 +247,6 @@
         font-size: 1.5em;
     }
 
-    #site-introduction-paragraphs-column {
-        border-right: 2px solid #152de3;
-    }
-
     #encoded-extravision-image {
         width: 30%;
         float: right;
@@ -313,10 +305,6 @@
 
     #submission-page-alert-text {
         font-size: 1.3em;
-    }
-
-    #site-introduction-paragraphs-column {
-        border-right: 2px solid #152de3;
     }
 
     #encoded-extravision-image {
@@ -389,11 +377,6 @@
 
     #submission-page-alert-text {
         font-size: 1.2em;
-    }
-
-    #site-introduction-paragraphs-column {
-        border-bottom: 2px solid #152de3;
-        padding-bottom: 20px;
     }
 
     #encoded-extravision-image {
@@ -498,13 +481,9 @@
         font-size: 1.1em;
     }
 
-    #site-introduction-paragraphs-column {
-        border-bottom: 2px solid #152de3;
-        padding-bottom: 20px;
-    }
-
-    #recent-additions-column {
-        padding-top: 20px;
+    #recent-additions-column,
+    #newest-viewable-teletext-column {
+        padding-top: 50px;
     }
 
     #encoded-extravision-image {
@@ -583,13 +562,9 @@
         font-size: 1em;
     }
 
-    #site-introduction-paragraphs-column {
-        border-bottom: 2px solid #152de3;
-        padding-bottom: 20px;
-    }
-
-    #recent-additions-column {
-        padding-top: 20px;
+    #recent-additions-column,
+    #newest-viewable-teletext-column {
+        padding-top: 50px;
     }
 
     #footer-site-links {
@@ -674,13 +649,9 @@
         font-size: 1em;
     }
 
-    #site-introduction-paragraphs-column {
-        border-bottom: 2px solid #152de3;
-        padding-bottom: 20px;
-    }
-
-    #recent-additions-column {
-        padding-top: 20px;
+    #recent-additions-column,
+    #newest-viewable-teletext-column {
+        padding-top: 50px;
     }
 
     #footer-site-links {

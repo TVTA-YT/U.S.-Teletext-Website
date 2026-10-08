@@ -295,7 +295,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -325,7 +325,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -500,30 +500,31 @@
                 </div>
             </div>
             <div class="container" style="margin-top: 20px !important; margin-bottom: 20px !important">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12" id="site-introduction-paragraphs-column">
-                        <p class="site-introduction">
-                            On this website is a collection of newly decoded pages from North American teletext from various services such
-                            as the CBS's
-                            <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS (then SuperStation
-                            WTBS and SuperStation TBS). We're also now including samples from various text-based (non-teletext) services,
-                            both national (ABC PLUS) and local (Kentucky Educational Television's AgText).
-                        </p>
-                        <p class="site-introduction mb-0">
-                            <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality
-                            examples of these services, specifically the teletext services. This site aims to change that by acting as a
-                            repository, providing access to individual archives from these services, archives provided by those who have the
-                            capacity to decode these services.
-                        </p>
-                    </div>
-                    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12" id="recent-additions-column">
+                <div id="site-introduction-paragraphs-column">
+                    <p class="site-introduction">
+                        On this website is a collection of newly decoded pages from North American teletext from various services such as
+                        the CBS's
+                        <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS (then SuperStation
+                        WTBS and SuperStation TBS). We're also now including samples from various text-based (non-teletext) services, both
+                        national (ABC PLUS) and local (Kentucky Educational Television's AgText).
+                    </p>
+                    <p class="site-introduction mb-0">
+                        <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality examples of
+                        these services, specifically the teletext services. This site aims to change that by acting as a repository,
+                        providing access to individual archives from these services, archives provided by those who have the capacity to
+                        decode these services.
+                    </p>
+                </div>
+                <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
+                <div class="row pt-4">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" id="recent-additions-column">
                         <h3 class="text-center display-6 fw-bold">25 Newest Additions</h3>
                         <p class="text-center">
-                            Click on the sample date to view images from each sample (teletext only). Scroll table to view more results.
+                            Click on the sample date to view each sample (teletext only). Scroll table to view more results.
                         </p>
-                        <div id="recent-additions"></div>
+                        <!-- <div id="recent-additions"></div> -->
                         <!-- * Local development table * -->
-                        <!-- <div class="table-responsive">
+                        <div class="table-responsive">
                             <table class="table table-bordered table-custom-blue table-striped align-middle text-center text-white">
                                 <thead>
                                     <tr class="align-middle">
@@ -560,7 +561,53 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div> -->
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" id="newest-viewable-teletext-column">
+                        <h3 class="text-center display-6 fw-bold">New Viewable Samples</h3>
+                        <p class="text-center">
+                            Click on the sample date to view images from each sample (teletext only). Scroll table to view more results.
+                        </p>
+                        <!-- <div id="recent-additions"></div> -->
+                        <!-- * Local development table * -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-custom-blue table-striped align-middle text-center text-white">
+                                <thead>
+                                    <tr class="align-middle">
+                                        <th scope="col" style="width: 25%">Service</th>
+                                        <th scope="col">Sample Date</th>
+                                        <th scope="col">Date Added</th>
+                                        <th scope="col">Contributor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="additions-table-logo-row">
+                                            <img src="images/KET_white.png" alt="" class="mw-100 agtext-logo" />
+                                        </td>
+                                        <td>0000-00-00</td>
+                                        <td>0000-00-00</td>
+                                        <td>Submission Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="additions-table-logo-row">
+                                            <img src="images/ExtraVision_white.png" alt="" class="mw-100 extravision-logo" />
+                                        </td>
+                                        <td>0000-00-00</td>
+                                        <td>0000-00-00</td>
+                                        <td>Submission Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="additions-table-logo-row">
+                                            <img src="images/WGN9_white.png" alt="" class="mw-100 virtext-logo" />
+                                        </td>
+                                        <td>0000-00-00</td>
+                                        <td>0000-00-00</td>
+                                        <td>Submission Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -735,7 +782,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white">Website <span aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small>
+                <small class="text-white"
+                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
+                >
                 <br />
                 <br />
                 <small class="text-white">

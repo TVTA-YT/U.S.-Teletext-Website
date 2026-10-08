@@ -169,7 +169,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -199,7 +199,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -283,6 +283,7 @@
                                 <option value="IPTV">Iowa Public Television</option>
                                 <option value="KET">Kentucky Educational Television</option>
                                 <option value="NBC">NBC</option>
+                                <option value="PBS">PBS</option>
                                 <option value="TBS">TBS</option>
                                 <option value="WFLD">WFLD-TV</option>
                                 <option value="WGN">WGN</option>
@@ -299,19 +300,24 @@
                             <input type="text" name="affiliate" id="affiliate" class="form-control affiliate-input" disabled />
                         </div>
                         <div class="mb-3 service-select-options-input">
-                            <label for="service" class="form-label">Text/Teletext service</label>
+                            <label for="service" class="form-label">Text/Teletext/VBI service</label>
                             <select name="service" id="service" class="form-select service-select" disabled required>
                                 <option value="" disabled selected hidden></option>
                                 <option value="ABCPLUS">ABC PLUS (Text)</option>
                                 <option value="DaTaVizion">DaTaVizion (Teletext)</option>
                                 <option value="Electra">Electra (Teletext)</option>
                                 <option value="ExtraVision">ExtraVision (Teletext)</option>
+                                <option value="GemStar">GemStar (EPG via VBI)</option>
                                 <option value="IPTVAGIDS">Iowa Pubic Television AGIDS (Text)</option>
                                 <option value="KETAGTEXT">KET AgText (Text)</option>
                                 <option value="Keyfax">Keyfax (Teletext)</option>
                                 <option value="NBCTeletext">NBC Teletext (Teletext)</option>
+                                <option value="PENNTEXT">PENNTEXT (Text)</option>
+                                <option value="SilentRadio">Silent Radio (Data via VBI)</option>
                                 <option value="SSSTeletext">SSS Teletext (Teletext)</option>
+                                <option value="StarSight">StarSight (EPG via VBI)</option>
                                 <option value="Virtext">Virtext (Teletext)</option>
+                                <option value="WaveTop">WavePhore WaveTop (IP via VBI)</option>
                                 <option value="WisInfotext-Text">Wisconsin Infotext (Text)</option>
                                 <option value="WisInfotext-Teletext">Wisconsin Infotext (Teletext)</option>
                             </select>
@@ -473,7 +479,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white">Website <span aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small>
+                <small class="text-white"
+                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
+                >
                 <br />
                 <br />
                 <small class="text-white">

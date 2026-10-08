@@ -11,12 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         'IPTV': ['IPTVAGIDS'],
         'KET': ['KETAGTEXT'],
         'NBC': ['NBCTeletext'],
+        'PBS': ['GemStar', 'SilentRadio', 'StarSight', 'WaveTop'],
         'TBS': ['Electra', 'Keyfax', 'SSSTeletext'],
         'WGN': ["Virtext"],
-        'WHA': ['WisInfotext-Text', 'WisInfotext-Teletext']
+        'WHA': ['WisInfotext-Text', 'WisInfotext-Teletext'],
+        'WHYY': ["PENNTEXT"],
     };
 
-    const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC'];
+    const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC', 'PBS'];
 
     const FIELD_NAMES = [
         'network',
@@ -118,10 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             serviceSelect.dataset.optionsCached = 'true';
         }
 
-        /*
-        If the user chooses "Other", disable the service options, remove the "required" attribute,
-        hide the TBS hint, and show a new form input field for the name of the network
-        */
+        // If the user chooses "Other", disable the service options, remove the "required" attribute, hide the TBS hint, and show a new form input field for the name of the network
         if (networkSelect.value === 'Other') {
             serviceSelectOptions.hidden = true;
             serviceSelect.disabled = true;
@@ -159,14 +158,18 @@ document.addEventListener('DOMContentLoaded', () => {
             serviceSelect.disabled = true;
             hint.hidden = true;
 
-            // For TBS: let someone choose between Electra, Keyfax, or SSS Teletext. There is no default option since TBS used both services.
-            // Do the same for WHA-TV, but choosing between the text/teletext versions of Wisconsin Infotext
+            // For PBS, TBS, and WHA-TV
+            /*
+            * TBS: Choose between Electra, Keyfax, or SSS Teletext.
+            * PBS: Choose between GemStar, Silent Radio, StarSight, or WaveTop.
+            * WHA-TV: Choose between teletext or text versions of Wisconsin Infotext.
+            * There is no default option since these networks used multiple services.
+            */
         } else if (validServices.length > 1) {
             serviceSelect.value = validServices.includes(currentValue) ? currentValue : '';
             serviceSelect.disabled = false;
             hint.hidden = false;
 
-            // No network chosen yet.
         } else {
             serviceSelect.value = '';
             serviceSelect.disabled = true;
@@ -174,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // If ABC, CBS, or NBC are chosen, enable the form affiliate input form field
+    // If ABC, CBS, NBC, or PBS are chosen, enable the form affiliate input form field
     function updateAffiliateField(scope) {
         const networkSelect = scope.querySelector('.network-select');
         const affiliateInput = scope.querySelector('.affiliate-input');

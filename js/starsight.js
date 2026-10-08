@@ -2,9 +2,105 @@ function getQueryParameters() {
     return new URLSearchParams(window.location.search);
 }
 
+// Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
+const WORKER_BASE = "";
+
+// API call
+const API_BASE = `${WORKER_BASE}/api/poster`;
+
+// Cache poster lookups so the same program title isn't fetched more than once per session
+const posterCache = new Map();
+
+// & Some programs use an ampersand, but the data uses the word "and"; swap them if there is no exact match
+function swapAmpersand(title) {
+    if (/\band\b/i.test(title)) {
+        return title.replace(/\band\b/i, "&");
+    }
+    if (title.includes("&")) {
+        return title.replace("&", "and");
+    }
+    return null;
+}
+
+// & Look up a poster URL for a program title using the Worker's "/api/poster" route
+async function fetchPosterUrl(title, year) {
+
+    // Check cache first
+    if (posterCache.has(title)) return posterCache.get(title);
+
+    // & Make the API request
+    async function lookup(t) {
+        const params = new URLSearchParams({ title: t });
+        if (year) params.set("year", year);
+        const response = await fetch(`${API_BASE}?${params}`);
+        const result = await response.json();
+        return result.poster ?? null;
+    }
+
+    let posterUrl = null;
+
+    // Find the poster image for the specific program
+    try {
+        posterUrl = await lookup(title);
+
+        // If the exact title didn't match, try swapping "and" for an ampersand
+        if (!posterUrl) {
+            const altTitle = swapAmpersand(title);
+            if (altTitle) posterUrl = await lookup(altTitle);
+        }
+    } catch (err) {
+        console.warn("Poster lookup failed:", title, err);
+    }
+
+    // Save the result in cache
+    posterCache.set(title, posterUrl);
+    return posterUrl;
+}
+
+// ^ Light/dark TV rating icons
+const RATING_ICONS = {
+    "TV-Y": {
+        light: "../images/rating-icons/TV-Y.png",
+        dark: "../images/rating-icons/TV-Y_white.png"
+    },
+    "TV-Y7": {
+        light: "../images/rating-icons/TV-Y7.png",
+        dark: "../images/rating-icons/TV-Y7_white.png"
+    },
+    "TV-Y7-FV": {
+        light: "../images/rating-icons/TV-Y7-FV.png",
+        dark: "../images/rating-icons/TV-Y7-FV_white.png"
+    },
+    "TV-G": {
+        light: "../images/rating-icons/TV-G.png",
+        dark: "../images/rating-icons/TV-G_white.png"
+    },
+    "TV-G": {
+        light: "../images/rating-icons/TV-G.png",
+        dark: "../images/rating-icons/TV-G_white.png"
+    },
+    "TV-14": {
+        light: "../images/rating-icons/TV-14.png",
+        dark: "../images/rating-icons/TV-14_white.png"
+    },
+    "TV-MA": {
+        light: "../images/rating-icons/TV-MA.png",
+        dark: "../images/rating-icons/TV-MA_white.png"
+    }
+};
+
+// & Display light/dark icons based on which is active
+function isDarkModeActive() {
+    return document.documentElement.getAttribute("data-bs-theme") === "dark";
+}
+
+// ^ Image path for the closed captioned icon
+const CC_ICON_PATH = "../images/rating-icons/CC.png";
+
+// & Use local sample data instead
+// ! This is for local development only. This does not run outside of there
 async function loadData() {
     const jsonUrl = getQueryParameters().get("json");
-
     if (!jsonUrl) {
         console.error("Missing 'json' query parameter");
         return null;
@@ -13,17 +109,17 @@ async function loadData() {
     return response.json();
 }
 
-// One EPG time slot is 30 minutes
+// ^ One EPG time slot is 30 minutes
 const SLOT_MINUTES = 30;
 
-// Display 48 time slots (12:00am to 11:30pm)
+// ^ Display 48 time slots (12:00am to 11:30pm)
 const VISIBLE_SLOTS = 48;
 
-// For now, the schedule starts at 12:00am
+// ^ For now, the schedule starts at 12:00am
 const DAY_START_MINUTES = 0;
 
-// Standard (non-DST) UTC offset for this station's time zone.
-// KCET and KQED are both California stations, so Pacific Standard Time (UTC-8) is the baseline.
+// ^ Standard (non-DST) UTC offset for this station's time zone
+// ^ KCET and KQED are both California stations, so Pacific Standard Time (UTC-8) is the baseline
 const STANDARD_UTC_OFFSET_MINUTES = -480;
 const DST_ADJUSTMENT_MINUTES = 60;
 
@@ -35,7 +131,7 @@ function formatTime(minutesOfDay) {
 
     const total = ((minutesOfDay % 1440) + 1440) % 1440;
 
-    // Convert minutes to hours, fetch remaining minutes, convert 24-hour time to 12-hour, then display formatted time.
+    // Convert minutes to hours, fetch remaining minutes, convert 24-hour time to 12-hour, then display formatted time
     let hours = Math.floor(total / 60);
     const mins = total % 60;
     const period = hours >= 12 ? "P" : "A";
@@ -85,6 +181,18 @@ function formatDayButtonLabel(dateString) {
     });
 }
 
+// & Convert the date into a label that includes the year; this is used when searching for a program
+function formatSearchResultDateLabel(dateString) {
+    const date = new Date(dateString + "T00:00:00Z");
+    return date.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC"
+    });
+}
+
 // & Convert the date into a label that will be used for date column to the left of the table
 function formatDayColumnLabel(dateString) {
 
@@ -123,6 +231,7 @@ function buildDaySelection(data) {
     dates.forEach((dateString, index) => {
         const button = document.createElement("div");
         button.textContent = formatDayButtonLabel(dateString);
+        button.style.cursor = "pointer";
 
         // The first date should automatically be selected
         if (index === 0) {
@@ -136,7 +245,15 @@ function buildDaySelection(data) {
             });
 
             button.classList.add("selected");
-            renderGuideData(data, dateString)
+
+            // Show spinner when a date is clicked
+            const overlay = document.getElementById("loadingOverlay");
+            if (overlay) overlay.style.display = "";
+
+            setTimeout(() => {
+                renderGuideData(data, dateString);
+                if (overlay) overlay.style.display = "none"
+            }, 20);
         });
         container.appendChild(button);
     });
@@ -177,6 +294,136 @@ function computeGridPlacement(startMinutes, durationMinutes) {
     return { startCol, span };
 }
 
+// & Format a duration in minutes (e.g. "1 hr 30 min", "30 mins", or "1 hr")
+function formatRuntime(durationMinutes) {
+    const hours = Math.floor(durationMinutes / 60);
+    const minutes = durationMinutes % 60;
+    if (hours === 0) return `${minutes} min`;
+    if (minutes === 0) return `${hours} hr`;
+    return `${hours} hr ${minutes} min`;
+}
+
+// Lookup maps built once per data load, reused by search instead of rebuilding per keystroke
+let programByID = new Map();
+let descriptionByID = new Map();
+let channelsById = new Map();
+
+// & Build lookup maps
+function buildLookupMaps(data) {
+    programByID = new Map(data.programs.map(p => [p.id, p]));
+    descriptionByID = new Map(data.descriptions.map(d => [d.id, d]));
+    channelsById = new Map(data.channels.map(c => [c.id, c]));
+}
+
+// & Find every listing whose program title contains the search query; find across all dates
+function searchPrograms(query, data) {
+
+    // Normalize search query. Do not search anything if no query
+    const q = (query ?? "").trim().toLowerCase();
+    if (!q) return [];
+
+    // Initialize array
+    const matches = [];
+
+    // Loop through every listing in the data
+    for (const listing of data.listings) {
+
+        // Find the program being searched
+        const program = programByID.get(listing.program);
+
+        // Ignore invalid programs
+        if (!program || !program.title) continue;
+
+        // Check whether the program title contains the search query
+        if (!program.title.toLowerCase().includes(q)) continue;
+
+        // Push results into the array
+        matches.push({
+            listing,
+            program,
+            description: listing.description ? descriptionByID.get(listing.description) : null
+        });
+    }
+
+    return matches;
+}
+
+// ^ Limit only to 100 results
+const MAX_SEARCH_RESULTS = 100;
+
+// & Render search results as a clickable list, each program opening its own modal
+function renderSearchResults(matches, data) {
+    const container = document.getElementById("programSearchResults");
+    container.innerHTML = "";
+
+    // If no matches found, display message
+    if (matches.length === 0) {
+        container.innerHTML = "<li>No matching programs found</li>";
+        return;
+    }
+
+    // Limit search results only to first 100
+    matches.slice(0, MAX_SEARCH_RESULTS).forEach(match => {
+
+        // Look up channel, assign display name, get listing date, get program start time, and create the time label
+        const channel = channelsById.get(match.listing.channel);
+        const channelName = getChannelDisplayName(channel, match.listing.channel);
+        const dateString = listingLocalDate(match.listing.start, data);
+        const startMinutes = listingStartMinutes(match.listing.start, data);
+        const timeLabel = formatTime(startMinutes);
+
+        // Create new list element for each program
+        const item = document.createElement("li");
+        item.className = "search-result";
+        item.style.cursor = "pointer";
+        item.textContent = `${match.program.title}  (${channelName} - ${formatSearchResultDateLabel(dateString)}, ${timeLabel})`;
+
+        // When a program is clicked, the content modal will appear with the necessary information
+        item.addEventListener("click", () => {
+            showProgramModal({
+                program: match.program,
+                description: match.description,
+                startMinutes,
+                durationMinutes: match.listing.durationMinutes,
+                channelId: match.listing.channel,
+            });
+        });
+
+        container.appendChild(item);
+    });
+
+    // If more than 100 results, note it at the bottom of the list
+    if (matches.length > MAX_SEARCH_RESULTS) {
+        const notice = document.createElement("li");
+        notice.style.fontStyle = "italic";
+        notice.textContent = `Showing first ${MAX_SEARCH_RESULTS} of ${matches.length} results`;
+        container.appendChild(notice);
+    }
+}
+
+// & Create the search input; do not re-scan data on every keystroke
+function setupProgramSearch(data) {
+    const input = document.getElementById("programSearchInput");
+
+    // Timer variable used below
+    let debounceTimer = null;
+
+    // Event listener that updates the list of programs while a value is being typed
+    input.addEventListener("input", () => {
+
+        // Cancel previous timer
+        clearTimeout(debounceTimer);
+
+        // The timer runs 200 ms after the user stops typing
+        debounceTimer = setTimeout(() => {
+
+            // Search for the programs after typing stops, then display the results
+            const matches = searchPrograms(input.value, data);
+            renderSearchResults(matches, data)
+        }, 200);
+    });
+}
+
 // & Take the data from the JSON and organize the programs by channel ID/name for a selected date
 function buildChannelSchedules(data, targetDataString) {
 
@@ -209,6 +456,7 @@ function buildChannelSchedules(data, targetDataString) {
             description: listing.description ? descriptionByID.get(listing.description) : null,
             startMinutes: listingStartMinutes(listing.start, data),
             durationMinutes: listing.durationMinutes,
+            channelId: key,
         });
     });
 
@@ -245,7 +493,7 @@ function buildProgramRow(scheduleEntries) {
             const filler = document.createElement("div");
             filler.className = "no-data";
             filler.style.gridColumn = `${nextExpectedCol} / span ${startCol - nextExpectedCol}`;
-            filler.textContent = "NO PROGRAM AIRING";
+            filler.textContent = "NO DATA";
             row.appendChild(filler);
         }
         if (startCol > VISIBLE_SLOTS) return;
@@ -302,7 +550,7 @@ function buildMobileGuide(data, dateString) {
     channelIds.forEach((channelId, i) => {
         const channel = channelsById.get(Number(channelId));
         const header = document.createElement("div");
-        header.className = "channel-header";
+        header.classList.add("channel-header", "text-white");
         header.textContent = getChannelDisplayName(channel, channelId)
         header.style.gridRow = "1";
         header.style.gridColumn = String(i + 2);
@@ -313,6 +561,7 @@ function buildMobileGuide(data, dateString) {
     for (let slot = 0; slot < VISIBLE_SLOTS; slot++) {
         const label = document.createElement("div");
         label.className = "time-label";
+        label.classList.add("text-white");
         label.textContent = formatTime(DAY_START_MINUTES + slot * SLOT_MINUTES);
         label.style.gridRow = String(slot + 2);
         label.style.gridColumn = "1";
@@ -338,10 +587,10 @@ function buildMobileGuide(data, dateString) {
             // Fill gaps with no program information
             if (startRow > nextExpectedRow) {
                 const filler = document.createElement("div");
-                filler.className = "no-data";
+                filler.classList.add("no-data", "text-white");
                 filler.style.gridRow = `${nextExpectedRow + 1} / span ${startRow - nextExpectedRow}`;
                 filler.style.gridColumn = String(colIndex + 2);
-                filler.textContent = "NO PROGRAM AIRING";
+                filler.textContent = "NO DATA";
                 container.appendChild(filler);
             }
 
@@ -375,11 +624,11 @@ function buildMobileGuide(data, dateString) {
 
 // & Resolve the best available display name for a channel
 function getChannelDisplayName(channel, channelId) {
-    if (channel && channel.callSign) return channel.callSign;
+    if (channel && channel.label) return channel.label;
 
     // Older captures (e.g. KCET-VBI) used "name"
     if (channel && channel.name) return channel.name;
-    if (channel && channel.label) return channel.label;
+    if (channel && channel.callSign) return channel.callSign;
     return `CH ${channelId}`;
 }
 
@@ -405,6 +654,7 @@ function renderGuideData(data, dateString) {
     channelIds.forEach(channelId => {
         const channel = channelsById.get(Number(channelId));
         const label = document.createElement("div");
+        label.classList.add("text-white");
         label.textContent = getChannelDisplayName(channel, channelId)
         serviceColumn.appendChild(label);
     });
@@ -419,15 +669,140 @@ function renderGuideData(data, dateString) {
     buildMobileGuide(data, dateString);
 }
 
+// & Strip redundant rating-code prefixes some descriptions have baked into their text (e.g. "TVPG Rich Manhattan housewife...")
+function stripRatingPrefix(text) {
+    return text.replace(/^(TVY7FV|TVY7|TVY|TVG|TVPG|TV14|TVMA|TVM)\s+/i, "");
+}
+
+// & Resolve the best available content rating label for a description
+function getRatingLabel(description) {
+    if (!description) return "Not Rated";
+
+    // If a TV rating
+    if (description.tvRating) return description.tvRating;
+
+    // If a movie (MPAA) rating
+    if (description.ratingName) return description.ratingName;
+
+    // Fallback for older samples
+    if (description.ratingSystem && description.rating != null) return `System: ${description.ratingSystem}, code ${description.rating}`;
+
+    return "Not Rated";
+}
+
 // & Bootstrap modal
 function showProgramModal(entry) {
+    const description = entry.description;
+
+    // Program title and description
     document.getElementById("programModalTitle").textContent = entry.program.title;
-    document.getElementById("programModalDescription").textContent = entry.description ? entry.description.text : "No description available";
-    document.getElementById("programModalCaptioned").textContent = entry.program.closedCaptioned ? "Yes" : "No";
-    document.getElementById("programModalColor").textContent = entry.program.blackAndWhite ? "No" : "Yes";
+    document.getElementById("programModalDescription").textContent = description ? stripRatingPrefix(description.text) : "No description available";
+
+    // Program channel name or ID
+    const channel = channelsById.get(Number(entry.channelId));
+    document.getElementById("programModalChannel").textContent = getChannelDisplayName(channel, entry.channelId);
+
+    // Program start and end times
+    const startLabel = formatTime(entry.startMinutes);
+    const endLabel = formatTime(entry.startMinutes + entry.durationMinutes);
+    document.getElementById("programModalTime").textContent = `${startLabel} - ${endLabel} (${formatRuntime(entry.durationMinutes)})`;
+
+    // Closed captioning
+    const ccIconEl = document.getElementById("programModalCCIcon");
+
+    // If a program is closed captioned, display the icon
+    if (entry.program.closedCaptioned) {
+        ccIconEl.src = CC_ICON_PATH;
+        ccIconEl.alt = "Closed Captioned";
+        ccIconEl.style.display = "";
+
+        // Display nothing if it isn't
+    } else {
+        ccIconEl.removeAttribute("src");
+        ccIconEl.alt = "";
+        ccIconEl.style.display = "none";
+    }
+
+    // Whether a program is black & white or color
+    document.getElementById("programModalColor").textContent = entry.program.blackAndWhite ? "Yes" : "No";
+
+    // Whether a program is stereo or mono
     document.getElementById("programModalAudio").textContent = entry.program.stereo ? "Stereo" : "Mono";
-    document.getElementById("programModalRating").textContent = entry.description && entry.description.rating != null ? `System: ${entry.description.ratingSystem}, code ${entry.description.rating}` : "Not Rated";
-    document.getElementById("programModalYear").textContent = entry.description && entry.description.year ? entry.description.year : "Unknown";
+
+    // Ratings
+    const ratingIconEl = document.getElementById("programModalRatingIcon");
+    const ratingLabel = getRatingLabel(description);
+    const ratingIconSet = RATING_ICONS[ratingLabel];
+
+    // If a program has a rating, display the specific icon
+    if (ratingIconSet) {
+        ratingIconEl.src = isDarkModeActive() ? ratingIconSet.dark : ratingIconSet.light;
+        ratingIconEl.alt = ratingLabel;
+        ratingIconEl.style.display = "";
+
+        // If not rated, display nothing
+    } else {
+        ratingIconEl.removeAttribute("src");
+        ratingIconEl.alt = "";
+        ratingIconEl.style.display = "none";
+    }
+
+    // Program year
+    document.getElementById("programModalYear").textContent = description && description.year ? description.year : "Unknown";
+
+    // If a program has a star rating system, display it
+    const starsEl = document.getElementById("programModalStars");
+    if (starsEl) {
+        starsEl.textContent = description && description.stars != null ? "★".repeat(description.stars) + "☆".repeat(4 - description.stars) : "None available";
+    }
+
+    // If a program has advisories, display them
+    const advisoriesEl = document.getElementById("programModalAdvisories");
+    if (advisoriesEl) {
+        advisoriesEl.textContent = description && description.advisories && description.advisories.length
+            ? description.advisories.join(", ")
+            : "No advisories.";
+    }
+
+    // ^ Generic "No Poster Available" placeholder image for when no poster image is found
+    const PLACEHOLDER_POSTER_PATH = "../images/no-poster-available.png";
+
+    // Show a placeholder poster immediately, then swap it in once the lookup resolves
+    const posterEl = document.getElementById("programModalPoster");
+    if (posterEl) {
+        posterEl.removeAttribute("src");
+        posterEl.style.display = "none";
+
+        // If the poster image fails to load, fall back to the placeholder
+        posterEl.onerror = () => {
+
+            // ! Avoid looping if the placeholder fails for some reason
+            posterEl.onerror = null;
+
+            posterEl.src = PLACEHOLDER_POSTER_PATH;
+            posterEl.alt = "No poster available";
+        };
+
+        // ^ Generic titles like these are showing incorrect poster images
+        const GENERIC_TITLES = ["News", "Paid Programming", "To Be Announced"];
+
+        // If the program name is one of the generic titles, display the fallback poster image
+        if (GENERIC_TITLES.includes(entry.program.title)) {
+            posterEl.src = PLACEHOLDER_POSTER_PATH;
+            posterEl.alt = "No poster available";
+            posterEl.style.display = "";
+
+            // Otherwise, display the poster image
+        } else {
+            const year = description && description.year ? description.year : null;
+            fetchPosterUrl(entry.program.title, year).then(url => {
+                if (document.getElementById("programModalTitle").textContent !== entry.program.title) return;
+                posterEl.src = url || PLACEHOLDER_POSTER_PATH;
+                posterEl.alt = url ? `Poster for ${entry.program.title}` : "No poster available";
+                posterEl.style.display = "";
+            });
+        }
+    }
 
     const modal = new bootstrap.Modal(document.getElementById("programModal"));
     modal.show();
@@ -446,8 +821,12 @@ loadData().then(data => {
     window.debugData = data;
     buildTimeRow();
     syncServiceColumnScroll();
+    buildLookupMaps(data);
+    setupProgramSearch(data);
 
     // Create the clickable date, then show listings from the first date on load
     const dates = buildDaySelection(data);
     renderGuideData(data, dates[0]);
+}).finally(() => {
+    document.getElementById("loadingOverlay").style.display = "none";
 })

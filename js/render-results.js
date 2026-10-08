@@ -325,14 +325,21 @@ function appendRow(tbody, row, columns, dataset) {
             return renderAccessibleCell(visible, `${c.label}: No download link available`);
         }
 
+        // Show viewable teletext samples
+        // * NABTS services (Edutel, ExtraVision, and NBC Teletext) have "NABTS_Stream" as the column name
         if (c.renderTeletext) {
-            if (!hasRealValue(row.Teletext_Sample) || !hasRealValue(row.IA_ID)) {
+            const isNabts = row.NABTS_Stream !== undefined;
+            const hasSample = isNabts ? hasRealValue(row.NABTS_Stream) : hasRealValue(row.Teletext_Sample);
+
+            if (!hasSample || !hasRealValue(row.IA_ID)) {
                 const visible = `<i class="bi bi-slash-circle-fill"></i>`;
                 return renderAccessibleCell(visible, `${c.label}: Teletext stream not available for viewing`);
             }
 
             const iaID = String(row.IA_ID).trim();
-            const viewerPath = `teletext-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
+            const viewerPath = isNabts
+                ? `nabts-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`
+                : `teletext-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
             const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><img src="../images/teletext-icon.png" class="mw-100 w-25" /></a>`;
             return renderAccessibleCell(visible, `${c.label}: View teletext stream`);
         }

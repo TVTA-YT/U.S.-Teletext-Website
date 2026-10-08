@@ -6,9 +6,11 @@ package-lock.json
 WaveTop.png
 WaveTop_light.png
 package.json
+seed.sql
 depreciated/
 node_modules/
 TODO/
+json/
 
 # wrangler files
 .wrangler

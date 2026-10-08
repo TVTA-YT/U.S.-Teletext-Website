@@ -25,8 +25,9 @@ const tables = {
         idField: "ID",
         type: "teletext",
         dateField: "Date",
-        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        sampleCondition: `(Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != '') OR (NABTS_Stream IS NOT NULL AND TRIM(CAST(NABTS_Stream AS TEXT)) != '')`,
+        isNabts: true,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "NABTS_Stream"]
     },
     electra: {
         table: "Electra",
@@ -41,8 +42,9 @@ const tables = {
         idField: "ID",
         type: "teletext",
         dateField: "Date",
-        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        sampleCondition: `(Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != '') OR (NABTS_Stream IS NOT NULL AND TRIM(CAST(NABTS_Stream AS TEXT)) != '')`,
+        isNabts: true,
+        columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "NABTS_Stream"]
     },
     iptvAgids: {
         table: "IPTV_AGIDS",
@@ -81,8 +83,9 @@ const tables = {
         idField: "ID",
         type: "teletext",
         dateField: "Date",
-        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID"]
+        sampleCondition: `(Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != '') OR (NABTS_Stream IS NOT NULL AND TRIM(CAST(NABTS_Stream AS TEXT)) != '')`,
+        isNabts: true,
+        columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "NABTS_Stream"]
     },
     penntext: {
         table: "PENNTEXT",
@@ -393,12 +396,12 @@ async function getStarSightManifest(env, identifier) {
 const SAMPLE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 
 // Generate R2 object path for teletext JSON
-function pagesKey(datasetKey, iaID) {
-    return `${datasetKey}/${iaID}.json`;
+function pagesKey(datasetKey, iaID, extension) {
+    return `${datasetKey}/${iaID}.${extension}`;
 }
 
 // List all samples that have available JSON files in the R2
-async function listSamplesWithPages(env, datasetKey) {
+async function listSamplesWithPages(env, datasetKey, extension = "json") {
     const ids = [];
     let cursor;
 
@@ -407,9 +410,9 @@ async function listSamplesWithPages(env, datasetKey) {
 
         for (const object of listing.objects) {
             const name = object.key.slice(datasetKey.length + 1);
-            if (!name.endsWith(".json")) continue;
+            if (!name.endsWith(`.${extension}`)) continue;
 
-            const iaID = name.slice(0, -".json".length);
+            const iaID = name.slice(0, -(extension.length + 1));
             if (SAMPLE_ID_PATTERN.test(iaID)) ids.push(iaID);
         }
 
@@ -899,32 +902,57 @@ async function handleApi(request, env) {
     */
     if (url.pathname.startsWith("/api/teletext/")) {
         try {
-            const [datasetName, id = "", ...extra] = url.pathname.slice("/api/teletext/".length).split("/").map(part => decodeURIComponent(part).trim());
+            const [datasetName, id = "", suffix = "", ...extra] = url.pathname.slice("/api/teletext/".length).split("/").map(part => decodeURIComponent(part).trim());
             const dataset = getDatasetEntry(datasetName);
 
             if (!dataset || dataset.config.type !== "teletext" || extra.length) {
                 return errorResponse(`Unknown teletext dataset: ${datasetName}`, 404);
             }
 
+            const extension = dataset.config.isNabts ? "t33" : "json";
+
             if (!id) {
-                const ids = await listSamplesWithPages(env, dataset.key);
+                const ids = await listSamplesWithPages(env, dataset.key, extension);
                 return jsonResponse({ dataset: dataset.key, ids });
             }
 
+            if (suffix && suffix !== "meta") return errorResponse("Unknown teletext sub-resource", 404);
             if (!SAMPLE_ID_PATTERN.test(id)) return errorResponse("Invalid sample ID", 400);
 
+            const row = await env.DB.prepare(`
+            SELECT Date, Service_Name, Recovered_By${dataset.config.isNabts ? ", NABTS_Stream" : ""}
+            FROM ${dataset.config.table}
+            WHERE IA_ID = ?
+            LIMIT 1
+            `).bind(id).first();
 
-            const [object, row] = await Promise.all([
-                env.TELETEXT.get(pagesKey(dataset.key, id)),
-                env.DB.prepare(`
-                    SELECT Date, Service_Name, Recovered_By
-                    FROM ${dataset.config.table}
-                    WHERE IA_ID = ?
-                    LIMIT 1
-                    `).bind(id).first()
-            ]);
+            // Metadata-only request (used by the NABTS viewer, separately from the binary stream)
+            if (suffix === "meta") {
+                return jsonResponse({
+                    title: row ? `${row.Service_Name} - ${row.Date}` : null,
+                    contributor: row?.Recovered_By ?? null,
+                    fileName: `${id}.${extension}`
+                });
+            }
 
+            // NABTS stream names come from the "NABTS_Stream" column; WST streams names come from the "IA_ID" column
+            let fileKeyID = id;
+
+            // NABTS (.t33) is binary — return it raw rather than parsing as JSON
+            if (dataset.config.isNabts) {
+                fileKeyID = String(row?.NABTS_Stream ?? "").trim().replace(/\.t33$/i, "");
+                if (!fileKeyID) return errorResponse("No T33 filename noted for this sample.", 404)
+            }
+
+            const object = await env.TELETEXT.get(pagesKey(dataset.key, fileKeyID, extension));
             if (!object) return errorResponse("No pages found for this sample", 404);
+
+            // NABTS (.t33) is binary — return it raw rather than parsing as JSON
+            if (dataset.config.isNabts) {
+                const headers = new Headers(corsHeader());
+                headers.set("content-type", "application/octet-stream");
+                return new Response(object.body, { headers });
+            }
 
             const pages = await object.json();
             const response = jsonResponse({
@@ -941,6 +969,30 @@ async function handleApi(request, env) {
         } catch (error) {
             console.error("Teletext sample lookup failed:", error);
             return errorResponse(`Teletext sample lookup failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
+    * API CALL: /api/poster?title=<program title>
+    * This is called on the StarSight EPG page.
+    * This proxies a title lookup to OMDb server-side so the API key is never given to the browser.
+    */
+    if (url.pathname === "/api/poster") {
+        const title = url.searchParams.get("title");
+
+        if (!title) return errorResponse("Missing 'title' query parameter", 400);
+
+        try {
+            const omdbParams = new URLSearchParams({ apikey: env.OMDB_API_KEY, t: title });
+            const omdbResponse = await fetch(`https://www.omdbapi.com/?${omdbParams}`);
+            const result = await omdbResponse.json();
+            const poster = (result.Response === "True" && result.Poster && result.Poster !== "N/A") ? result.Poster : null;
+            const response = jsonResponse({ poster });
+            response.headers.set("cache-control", "public, max-age=86400");
+            return response
+        } catch (error) {
+            console.error("OMDb poster lookup failed:", error);
+            return errorResponse(`Poster lookup failed: ${error.message}`, 500);
         }
     }
 
@@ -988,10 +1040,15 @@ export default {
             return handleApi(request, env);
         }
 
-        // Text service HTML files and StarSight JSON from R2: /files/<Service>/<Year>/<file>
+        // Text service HTML files and StarSight JSON from R2:
         if (url.pathname.startsWith("/files/")) {
             const key = url.pathname.slice("/files/".length);
+
+            // T34 JSON files
             const isJson = key.toLowerCase().endsWith(".json");
+
+            // T33 files
+            const isT33 = key.toLowerCase().endsWith(".t33");
 
             const bucket = isJson ? env.EPG : env.TEXT_ARCHIVE;
             const object = await bucket.get(key);
@@ -1004,7 +1061,9 @@ export default {
             if (!headers.has("content-type")) {
                 headers.set("content-type", isJson
                     ? "application/json; charset=utf-8"
-                    : "text/html; charset=utf-8");
+                    : isT33
+                        ? "application/octet-stream"
+                        : "text/html; charset=utf-8");
             }
 
             return new Response(object.body, { headers });

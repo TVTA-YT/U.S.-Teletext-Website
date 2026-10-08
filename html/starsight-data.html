@@ -45,6 +45,21 @@
                 border-radius: 24px;
                 background-color: rgb(62, 134, 243);
             }
+
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+            }
+
+            #programSearchResults {
+                max-height: 300px;
+                overflow-y: auto;
+            }
         </style>
     </head>
     <body>
@@ -147,7 +162,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -177,7 +192,7 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio *NEW*</a>
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
@@ -228,6 +243,11 @@
             </div>
         </nav>
         <main>
+            <div id="loadingOverlay" class="loading-overlay">
+                <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
             <div class="container">
                 <h1 class="page-title data-letter-reveal">
                     <img src="../images/banners/light/StarSight_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
@@ -239,50 +259,70 @@
                     program to view additional program details.
                 </p>
                 <hr aria-hidden="true" />
+                <div class="mb-3 program-search">
+                    <label for="programSearch">Search for a program</label>
+                    <input type="text" class="form-control" id="programSearchInput" />
+                    <ul class="list-unstyled" id="programSearchResults"></ul>
+                </div>
                 <div class="starsight pb-4" id="epg-table">
                     <div class="starsight-title">S T A R S I G H T</div>
                     <div class="starsight-date" id="date"></div>
                     <div class="day-selection"></div>
                     <div class="guide">
-                        <div class="date-column"></div>
+                        <div class="date-column text-white"></div>
                         <div class="service-column">
-                            <div class="service-header" id="services">SERVICE</div>
+                            <div class="service-header text-white" id="services">SERVICE</div>
                         </div>
                         <div class="guide-scroll">
-                            <div class="time-row" id="time"></div>
+                            <div class="time-row text-white" id="time"></div>
                         </div>
                     </div>
                     <div class="starsight-mobile" id="starsight-guide-mobile"></div>
                 </div>
-                <div class="pb-3" id="return-to-form-button">
-                    <a href="starsight.html">
-                        <button type="submit" class="btn form-control">
-                            <span class="button-text">Return to Form</span>
+                <div class="pb-3" id="return-to-available-samples-button">
+                    <a href="starsight-results.html">
+                        <button type="submit" class="btn btn-primary form-control">
+                            <span class="button-text">Return to Available Samples</span>
                         </button>
                     </a>
                 </div>
-                <!-- * BEGIN IMAGE MODAL -->
-                <div class="modal fade" id="programModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <!-- * BEGIN CONTENT MODAL -->
+                <div class="modal fade" id="programModal" tabindex="-1" aria-labelledby="programModalTitle" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="programModalTitle"></h5>
+                                <h5 class="modal-title display-5 fw-bold" id="programModalTitle" style="line-height: 60px"></h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p id="programModalDescription"></p>
-                                <ul class="list-unstyled">
-                                    <li><strong>Captioned:</strong> <span id="programModalCaptioned"></span></li>
-                                    <li><strong>Black &amp; White:</strong> <span id="programModalColor"></span></li>
-                                    <li><strong>Audio:</strong> <span id="programModalAudio"></span></li>
-                                    <li><strong>Rating:</strong> <span id="programModalRating"></span></li>
-                                    <li><strong>Year:</strong> <span id="programModalYear"></span></li>
-                                </ul>
+                                <div class="d-flex gap-3 align-items-center">
+                                    <img class="mw-100" id="programModalPoster" style="width: 150px; object-fit: cover; flex-shrink: 0" />
+                                    <div>
+                                        <p class="mb-0 fs-4"><strong id="programModalChannel"></strong></p>
+                                        <p class="mb-2 text-muted" id="programModalTime"></p>
+                                        <p id="programModalDescription"></p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Black &amp; White:</strong> <span id="programModalColor"></span></li>
+                                            <li><strong>Audio:</strong> <span id="programModalAudio"></span></li>
+                                            <li><strong>Stars:</strong> <span id="programModalStars"></span></li>
+                                            <li><strong>Year:</strong> <span id="programModalYear"></span></li>
+                                            <li><strong>Advisories:</strong> <span id="programModalAdvisories"></span></li>
+                                        </ul>
+                                        <div class="d-flex gap-2">
+                                            <img
+                                                class="mw-100"
+                                                id="programModalRatingIcon"
+                                                style="width: 48px; height: auto; flex-shrink: 0"
+                                            />
+                                            <img class="mw-100" id="programModalCCIcon" style="width: 60px; height: auto; flex-shrink: 0" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- * END IMAGE MODAL -->
+                <!-- * END CONTENT MODAL -->
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"
@@ -347,7 +387,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white">Website <span aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small>
+                <small class="text-white"
+                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
+                >
                 <br />
                 <br />
                 <small class="text-white">
