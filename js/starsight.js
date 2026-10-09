@@ -118,8 +118,8 @@ const VISIBLE_SLOTS = 48;
 // ^ For now, the schedule starts at 12:00am
 const DAY_START_MINUTES = 0;
 
-// ^ Standard (non-DST) UTC offset for this station's time zone
-// ^ KCET and KQED are both California stations, so Pacific Standard Time (UTC-8) is the baseline
+// ^ Standard (non-DST) UTC offset for PTZ stations only
+// ! This is used as a fallback for now
 const STANDARD_UTC_OFFSET_MINUTES = -480;
 const DST_ADJUSTMENT_MINUTES = 60;
 
@@ -211,6 +211,13 @@ function isDuringDaylightSaving(isoString, daylightSavingChanges) {
         const end = new Date(change.ends).getTime();
         return t >= start && t < end;
     });
+}
+
+// & Standard (non-DST) UTC offset reported by the clock used by the transmitting station
+// * If this is absent, fallback to PTZ
+function getStandardOffsetMinutes(data) {
+    const entry = (data.clock || []).find(c => Number(isFinite(c.utcOffsetMinutes)));
+    return entry ? entry.utcOffsetMinutes : STANDARD_UTC_OFFSET_MINUTES;
 }
 
 // & Determine the correct UTC offset for a specific listing, accounting for daylight saving
