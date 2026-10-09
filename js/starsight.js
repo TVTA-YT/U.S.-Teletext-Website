@@ -270,7 +270,7 @@ function buildDaySelection(data) {
 
 // & Convert ISO date/time string into minutes since midnight
 function listingStartMinutes(isoString, data) {
-
+    //
     // Convert ISO into JS Date object
     const utcDate = new Date(isoString);
     const offset = getUtcOffsetMinutes(isoString, data);
