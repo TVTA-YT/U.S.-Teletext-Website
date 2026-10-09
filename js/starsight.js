@@ -216,14 +216,14 @@ function isDuringDaylightSaving(isoString, daylightSavingChanges) {
 // & Standard (non-DST) UTC offset reported by the clock used by the transmitting station
 // * If this is absent, fallback to PTZ
 function getStandardOffsetMinutes(data) {
-    const entry = (data.clock || []).find(c => Number(isFinite(c.utcOffsetMinutes)));
+    const entry = (data.clock || []).find(c => Number.isFinite(c.utcOffsetMinutes));
     return entry ? entry.utcOffsetMinutes : STANDARD_UTC_OFFSET_MINUTES;
 }
 
 // & Determine the correct UTC offset for a specific listing, accounting for daylight saving
 function getUtcOffsetMinutes(isoString, data) {
     const inDst = isDuringDaylightSaving(isoString, data.daylightSavingChanges || []);
-    return STANDARD_UTC_OFFSET_MINUTES + (inDst ? DST_ADJUSTMENT_MINUTES : 0);
+    return getStandardOffsetMinutes(data) + (inDst ? DST_ADJUSTMENT_MINUTES : 0);
 }
 
 // & Create clickable list of available dates in the JSON
