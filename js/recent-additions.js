@@ -17,7 +17,7 @@
     };
 
     const VIEWER_PAGES = {
-        T34: "html/teletext-viewer",
+        T34: "html/wst-viewer",
         T33: "html/nabts-viewer",
     };
 

@@ -1,13 +1,14 @@
 :root {
-  --slot-width: 250px;
+  --slot-width: 125px;
 }
 
 @media (max-width: 767px) {
   :root {
-    --slot-width: 150px;
+    --slot-width: 75px;
   }
 }
-.starsight {
+.starsight,
+.gemstar {
   font-family: "TU 1000x Regular Modified", sans-serif;
   width: 100%;
   max-width: 1500px;
@@ -16,7 +17,8 @@
 
 .starsight-title,
 .starsight-date,
-.date-column {
+.gemstar-title,
+.gemstar-title .date-column {
   padding-left: 6px;
 }
 
@@ -53,7 +55,8 @@
   padding-left: 4px !important;
 }
 
-.starsight-title {
+.starsight-title,
+.gemstar-title {
   text-align: center;
   background-color: #0019ff;
   color: #fff800;
@@ -63,7 +66,8 @@
   z-index: 20;
 }
 
-.starsight-date {
+.starsight-date,
+.gemstar-date {
   font-size: 1.5em;
   text-align: center;
   background-color: #0019ff;
@@ -157,20 +161,31 @@
   background-color: #939dff;
   color: #000;
   border: 1px solid #000;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 .guide .guide-scroll .program-row .no-data {
   color: #fff;
   background-color: #424242;
 }
+.guide .guide-scroll .program-row .short {
+  padding: 2px;
+  font-size: 0.65rem;
+}
 
-.starsight-mobile {
+.starsight-mobile,
+.gemstar-mobile {
   display: grid;
   overflow: auto;
   max-height: 600px;
 }
 .starsight-mobile .corner-cell,
 .starsight-mobile .channel-header,
-.starsight-mobile .time-label {
+.starsight-mobile .time-label,
+.gemstar-mobile .corner-cell,
+.gemstar-mobile .channel-header,
+.gemstar-mobile .time-label {
   position: sticky;
   z-index: 10;
   display: flex;
@@ -180,35 +195,43 @@
   border: 1px solid #fff;
   background-color: #0019ff;
 }
-.starsight-mobile .corner-cell {
+.starsight-mobile .corner-cell,
+.gemstar-mobile .corner-cell {
   top: 0;
   left: 0;
   z-index: 20;
 }
-.starsight-mobile .channel-header {
+.starsight-mobile .channel-header,
+.gemstar-mobile .channel-header {
   top: 0;
   font-size: 0.6em;
 }
-.starsight-mobile .time-label {
+.starsight-mobile .time-label,
+.gemstar-mobile .time-label {
   left: 0;
 }
 .starsight-mobile .program,
-.starsight-mobile .no-data {
+.starsight-mobile .no-data,
+.gemstar-mobile .program,
+.gemstar-mobile .no-data {
   font-size: 0.5em;
   align-content: center;
   text-align: center;
   border: 1px solid #fff;
 }
-.starsight-mobile .program {
+.starsight-mobile .program,
+.gemstar-mobile .program {
   background-color: #939dff;
   color: #000;
 }
-.starsight-mobile .no-data {
+.starsight-mobile .no-data,
+.gemstar-mobile .no-data {
   background-color: #424242;
 }
 
 @media (min-width: 768px) {
-  .starsight-mobile {
+  .starsight-mobile,
+  .gemstar-mobile {
     display: none;
   }
 }

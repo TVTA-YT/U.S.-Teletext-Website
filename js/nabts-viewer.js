@@ -25,7 +25,7 @@
 
     // & Show the service's banner in the page heading
     const showServiceBanner = (service) => {
-        const bannerService = BANNER_NAMES[service];
+        const bannerService = BANNER_NAMES[String(service).toLowerCase()];
         if (!bannerService) return;
 
         const lightBanner = byID('lightImageBanner');
@@ -61,7 +61,10 @@
     const fontSelect = byID('optFont');
     const fontCredit = byID('fontCredit');
     const speedSelect = byID('optSpeed');
+    const mobileGotoForm = byID('mobileGoToPage');
+    const mobilePageInput = byID('mobilePageInput');
     const fullscreenButton = document.querySelector('[data-command="fullscreen"]');
+
 
     // ".matches" is true or false; without it, matchMedia() returns an object, which always counts as true
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -137,10 +140,19 @@
         if (metadata.contributor) byID('contributor-name').textContent = metadata.contributor;
         if (metadata.fileName) setSourceName(metadata.fileName);
 
+        // * For the pre-launch ExtraVision samples from 1983, they will have a modified version of the ExtraVision image heading banner
+        for (const [field, imageID] of [['bannerLight', 'lightImageBanner'], ['bannerDark', 'darkImageBanner']]) {
+            const banner = byID(imageID);
+
+            if (metadata[field] && banner) {
+                banner.src = metadata[field];
+                banner.hidden = false;
+            }
+        }
+
         if (metadata.bannerTitle) byID('bannerTitle').textContent = metadata.bannerTitle;
     };
 
-    // & Load the sample; async/await waits for the download and prevents the page from freezing
     // & Load the sample; async/await waits for the download and prevents the page from freezing
     const loadSample = async () => {
 
@@ -384,6 +396,9 @@
         if (state.typedDigits) entryDisplay.textContent = `${state.typedDigits.padEnd(3, '-')}`;
         else if (record) entryDisplay.textContent = pageNumberOf(record) ? `${pageNumberOf(record)}` : record.addr_text;
         else entryDisplay.textContent = '';
+
+        // The mobile page number box shows the current page as its placeholder
+        if (mobilePageInput) mobilePageInput.placeholder = record ? `${pageNumberOf(record) || record.addr_text}` : '---';
     };
 
     // & Remove unfinished page number entry after 6 seconds
@@ -666,6 +681,40 @@
     // * "?.()" has been added as a failsafe in case a button with an unknown command causes an error
     for (const commandButton of document.querySelectorAll('[data-command]')) {
         commandButton.addEventListener('click', () => COMMANDS[commandButton.dataset.command]?.());
+    }
+
+    // & Mobile page number input
+    const goToTypedPage = () => {
+        const pageNumber = mobilePageInput.value.trim().toUpperCase();
+        if (!pageNumber || !state.records.length) return;
+        const index = findPageNumber(pageNumber);
+
+        // If page is not in sample, keep the number in the box so it can be corrected
+        if (index < 0) {
+            announce(`Page ${pageNumber.padStart(3, '0')} is not in this sample.`);
+            mobilePageInput.select();
+            return;
+        }
+
+        // Clear the box and close the on-screen keyboard
+        mobilePageInput.value = '';
+        mobilePageInput.blur();
+        showRecord(index);
+    };
+
+    if (mobileGotoForm) {
+        mobileGotoForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            goToTypedPage();
+        });
+
+        // Only digits and A-F (page numbers are hexadecimal, e.g. 06B)
+        mobilePageInput.addEventListener('input', () => {
+            mobilePageInput.value = mobilePageInput.value
+                .replace(/[^0-9a-f]/gi, '')
+                .toUpperCase()
+                .slice(0, 3);
+        });
     }
 
     // Choosing page from dropdown menu will show that page

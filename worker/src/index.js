@@ -406,8 +406,8 @@ function pagesKey(folder, fileID, extension) {
     return `${folder}/${fileID}.${extension}`;
 }
 
-// List all samples that have available JSON files in the R2
-async function listSamplesWithPages(env, datasetKey, extension = "json") {
+// List all samples that have available JSON (or T33) files in the R2
+async function listSamplesWithPages(env, folder, extension = "json") {
     const ids = [];
     let cursor;
 
@@ -415,10 +415,10 @@ async function listSamplesWithPages(env, datasetKey, extension = "json") {
         const listing = await env.TELETEXT.list({ prefix: `${folder}/`, cursor });
 
         for (const object of listing.objects) {
-            const name = object.key.slice(datasetKey.length + 1);
+            const name = object.key.slice(folder.length + 1);
             if (!name.endsWith(`.${extension}`)) continue;
 
-            const iaID = name.slice(0, -(extension.length + 1));
+            const fileID = name.slice(0, -(extension.length + 1));
             if (SAMPLE_ID_PATTERN.test(fileID)) ids.push(fileID);
         }
 
@@ -428,6 +428,15 @@ async function listSamplesWithPages(env, datasetKey, extension = "json") {
     return ids.sort();
 }
 
+// ^ Image heading banner for the pre-national launch 1983 ExtraVision samples
+const EXTRAVISION_PRELAUNCH_BANNERS = {
+    "USTT_CBS-19830315_1": {
+        light: "../images/banners/light/ExtraVision-Old_light.png",
+        dark: "../images/banners/dark/ExtraVision-Old.png",
+        title: "ExtraVision, 1983"
+    }
+};
+
 
 /* RECENTLY VIEWABLE SAMPLES */
 
@@ -435,15 +444,15 @@ async function listSamplesWithPages(env, datasetKey, extension = "json") {
 const RECENT_VIEWABLE_LIMIT = 25;
 
 // List every stream file in R2 for one dataset, along with when it was uploaded
-async function listStreamObjects(env, datasetKey, extension) {
+async function listStreamObjects(env, folder, extension) {
     const objects = [];
     let cursor;
 
     do {
-        const listing = await env.TELETEXT.list({ prefix: `${datasetKey}/`, cursor });
+        const listing = await env.TELETEXT.list({ prefix: `${folder}/`, cursor });
 
         for (const object of listing.objects) {
-            const name = object.key.slice(datasetKey.length + 1);
+            const name = object.key.slice(folder.length + 1);
             if (!name.toLowerCase().endsWith(`.${extension}`)) continue;
 
             // WST: file name is the IA ID. NABTS: file name is the "NABTS_Stream" value
@@ -463,7 +472,7 @@ async function getRecentViewableSamples(env) {
     // List each dataset's folder in R2 concurrently
     const perDataset = await Promise.all(teletextDatasets.map(async ([key, config]) => {
         const extension = config.isNabts ? "t33" : "json";
-        const objects = await listStreamObjects(env, key, extension);
+        const objects = await listStreamObjects(env, r2Folder({ key, config }), extension);
         return objects.map(object => ({ ...object, key, config }));
     }));
 
@@ -1049,10 +1058,15 @@ async function handleApi(request, env) {
 
             // Metadata-only request (used by the NABTS viewer, separately from the binary stream)
             if (suffix === "meta") {
+
+                // Only samples listed in EXTRAVISION_PRELAUNCH_BANNERS get a banner; the viewer shows nothing for the rest
+                const banner = EXTRAVISION_PRELAUNCH_BANNERS[id];
+
                 return jsonResponse({
                     title: row ? `${row.Service_Name} - ${row.Date}` : null,
                     contributor: row?.Recovered_By ?? null,
-                    fileName: `${id}.${extension}`
+                    fileName: `${id}.${extension}`,
+                    ...(banner && { bannerLight: banner.light, bannerDark: banner.dark ?? banner.light, bannerTitle: banner.title })
                 });
             }
 

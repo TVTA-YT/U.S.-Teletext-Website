@@ -185,7 +185,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -215,7 +215,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -282,7 +282,9 @@
                                 <option value="CBS">CBS</option>
                                 <option value="IPTV">Iowa Public Television</option>
                                 <option value="KET">Kentucky Educational Television</option>
+                                <option value="MTV">MTV</option>
                                 <option value="NBC">NBC</option>
+                                <option value="Nickelodeon">Nickelodeon</option>
                                 <option value="PBS">PBS</option>
                                 <option value="TBS">TBS</option>
                                 <option value="WFLD">WFLD-TV</option>
@@ -307,7 +309,7 @@
                                 <option value="DaTaVizion">DaTaVizion (Teletext)</option>
                                 <option value="Electra">Electra (Teletext)</option>
                                 <option value="ExtraVision">ExtraVision (Teletext)</option>
-                                <option value="GemStar">GemStar (EPG via VBI)</option>
+                                <option value="Gemstar">Gemstar (EPG via VBI)</option>
                                 <option value="IPTVAGIDS">Iowa Pubic Television AGIDS (Text)</option>
                                 <option value="KETAGTEXT">KET AgText (Text)</option>
                                 <option value="Keyfax">Keyfax (Teletext)</option>
@@ -333,7 +335,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="programTitle" class="form-label">
-                                <span aria-hidden="true">Enter program title(s)</span>
+                                <span aria-hidden="true">Enter program title(s) <i>(enclose multiple in parenthesis)</i></span>
                                 <span class="sr-only">Enter program title or titles</span>
                             </label>
                             <input
@@ -341,7 +343,7 @@
                                 name="programTitle"
                                 id="programTitle"
                                 class="form-control"
-                                placeholder="Program Title"
+                                placeholder="e.g. (Program 1, Program 2)"
                                 required
                             />
                         </div>

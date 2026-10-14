@@ -1,14 +1,15 @@
 :root {
-    --slot-width: 250px;
+    --slot-width: 125px;
 }
 
 @media (max-width: 767px) {
     :root {
-        --slot-width: 150px;
+        --slot-width: 75px;
     }
 }
 
-.starsight {
+.starsight,
+.gemstar {
     font-family: "TU 1000x Regular Modified", sans-serif;
     width: 100%;
     max-width: 1500px;
@@ -17,6 +18,8 @@
 
 .starsight-title,
 .starsight-date,
+.gemstar-title,
+.gemstar-title
 .date-column {
     padding-left: 6px;
 }
@@ -59,7 +62,8 @@
     }
 }
 
-.starsight-title {
+.starsight-title,
+.gemstar-title {
     text-align: center;
     background-color: #0019ff;
     color: #fff800;
@@ -69,7 +73,8 @@
     z-index: 20;
 }
 
-.starsight-date {
+.starsight-date,
+.gemstar-date {
     font-size: 1.5em;
     text-align: center;
     background-color: #0019ff;
@@ -166,18 +171,27 @@
                 background-color: #939dff;
                 color: #000;
                 border: 1px solid #000;
+                min-width: 0;
+                overflow: hidden;
+                overflow-wrap: anywhere;
             }
 
             .no-data {
                 color: #fff;
                 background-color: #424242;
             }
+
+            .short {
+                padding: 2px;
+                font-size: 0.65rem;
+            }
         }
     }
 }
 
 // * Mobile grid
-.starsight-mobile {
+.starsight-mobile,
+.gemstar-mobile {
     display: grid;
     overflow: auto;
     max-height: 600px;
@@ -229,7 +243,8 @@
 }
 
 @media (min-width: 768px) {
-    .starsight-mobile {
+    .starsight-mobile,
+    .gemstar-mobile {
         display: none;
     }
 }

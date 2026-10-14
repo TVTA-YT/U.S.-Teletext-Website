@@ -339,7 +339,7 @@ function appendRow(tbody, row, columns, dataset) {
             const iaID = String(row.IA_ID).trim();
             const viewerPath = isNabts
                 ? `nabts-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`
-                : `teletext-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
+                : `wst-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
             const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><img src="../images/teletext-icon.png" class="mw-100 w-25" /></a>`;
             return renderAccessibleCell(visible, `${c.label}: View teletext stream`);
         }

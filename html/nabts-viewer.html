@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="View a decoded T33 (NABTS) teletext stream." />
+        <meta name="robots" content="noindex, nofollow" />
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content="North American Teletext Archive - T33 (NABTS) Teletext Viewer" />
@@ -125,6 +126,18 @@
                 background: var(--bs-primary);
                 border-color: var(--bs-primary);
                 color: #fff;
+            }
+
+            .mobile-go-to-page .form-control {
+                font-family: "Teletext50", monospace;
+                font-size: 1.25rem;
+                letter-spacing: 0.1em;
+                text-align: center;
+                max-width: 6.5rem;
+            }
+
+            .mobile-go-to-page .btn {
+                min-width: 3rem;
             }
 
             #pageText {
@@ -252,7 +265,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -282,7 +295,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -350,12 +363,48 @@
                             </div>
                             <small class="draw-clock text-body-secondary font-monospace" id="drawClock"></small>
                         </div>
+                        <p class="mt-2 mb-3" id="pageInfo">
+                            No sample chosen. Choose an available teletext sample from one of the results pages.
+                        </p>
+                        <form
+                            class="mobile-go-to-page d-flex d-md-none align-items-center justify-content-center gap-2 mt-3"
+                            id="mobileGoToPage"
+                        >
+                            <button type="button" class="btn btn-outline-secondary" data-command="prev-page" aria-label="Previous page">
+                                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                            </button>
+                            <label for="mobilePageInput" class="visually-hidden">Page number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="mobilePageInput"
+                                inputmode="text"
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                maxlength="3"
+                                placeholder="000"
+                                enterkeyhint="go"
+                            />
+                            <button type="button" class="btn btn-outline-secondary" data-command="next-page" aria-label="Next page">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                            </button>
+                            <button type="submit" class="btn btn-outline-secondary">Go</button>
+                        </form>
+                        <div class="mobile-goto d-flex d-md-none justify-content-center gap-2 mt-2 mb-4" role="group" aria-label="Subpages">
+                            <button type="button" class="btn btn-outline-secondary" data-command="prev-subpage">
+                                <i class="bi bi-chevron-left" aria-hidden="true"></i> Subpage
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="next-subpage">
+                                Subpage <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="more">More</button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="replay">
+                                <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Redraw Page
+                            </button>
+                        </div>
                         <p class="visually-hidden" id="screenHelp">
                             Type a three-digit page number to go to a specific page. With the screen focused, the up and down arrow keys
                             change the page, the left and right arrow keys change the subpage, and "Enter" or "Space" draws the page again.
-                        </p>
-                        <p class="mt-2 mb-3" id="pageInfo">
-                            No sample chosen. Choose an available teletext sample from one of the results pages.
                         </p>
                         <details class="card">
                             <summary class="card-header">Text version of this page</summary>
@@ -365,7 +414,7 @@
                         </details>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                        <section class="mb-4" aria-labelledby="remoteHeading">
+                        <section class="mb-4" id="keypad-section" aria-labelledby="remoteHeading">
                             <h2 id="remoteHeading" class="h5">Keypad</h2>
                             <div class="entry-display mb-3" id="entryDisplay" aria-hidden="true"></div>
                             <div class="keypad mb-3" role="group" aria-label="Page number keys">
@@ -410,6 +459,8 @@
                             >
                                 <i class="bi bi-fullscreen" aria-hidden="true"></i> Full screen
                             </button>
+                        </section>
+                        <section class="mb-4" id="page-selection">
                             <label for="pageSelect" class="form-label">Pages in this sample</label>
                             <select class="form-select" id="pageSelect" disabled></select>
                         </section>
@@ -462,7 +513,7 @@
                                 </div>
                             </div>
                         </section>
-                        <section aria-labelledby="keysHeading">
+                        <section id="keyboard-shortcuts" aria-labelledby="keysHeading">
                             <h2 class="h5" id="keysHeading">Keyboard Shortcuts</h2>
                             <table class="table table-sm table-primary table-bordered mb-3 text-center align-middle">
                                 <thead>

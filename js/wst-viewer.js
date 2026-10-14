@@ -68,7 +68,9 @@ const elements = {
     darkImageBanner: getElement("darkImageBanner"),
     sampleTitle: getElement("sample-title"),
     contributor: getElement("contributor"),
-    contributorName: getElement("contributor-name")
+    contributorName: getElement("contributor-name"),
+    mobileGotoForm: getElement('mobileGoToPage'),
+    mobilePageInput: getElement('mobilePageInput')
 };
 
 // & Create a 40-byte row from the provided control codes and text
@@ -1021,6 +1023,7 @@ function render() {
     if (!hasCapture()) {
         drawPage(elements.canvas, blankRows(), { scale: RENDER_SCALE });
         elements.entryDisplay.textContent = "";
+        if (elements.mobilePageInput) elements.mobilePageInput.placeholder = "P---";
         return;
     }
 
@@ -1042,6 +1045,9 @@ function render() {
     elements.entryDisplay.textContent = viewer.entryDigits
         ? `P${viewer.entryDigits.padEnd(3, ".")}`
         : viewer.isHolding ? "HOLD" : `P${viewer.requestedNumber}`;
+
+    // The mobile page number box shows the requested page as its placeholder
+    if (elements.mobilePageInput) elements.mobilePageInput.placeholder = `P${viewer.requestedNumber}`;
 }
 
 
@@ -1159,6 +1165,40 @@ document.addEventListener("keydown", event => {
 
     event.preventDefault();
 });
+
+// & Mobile page number input: go to the typed page after 3 characters or when "Go" is pressed
+function goToTypedPage() {
+    const input = elements.mobilePageInput;
+    const pageNumber = input.value.trim().toUpperCase();
+    if (!pageNumber || !hasCapture()) return;
+
+    // WST page numbers are a magazine digit 1-8 followed by 2 hexadecimal characters (e.g. 100, 1A0)
+    if (!PAGE_NUMBER_PATTERN.test(pageNumber) || !viewer.pagesByNumber.has(pageNumber)) {
+        announce(`Page ${pageNumber} is not in this sample.`);
+        input.select();
+        return;
+    }
+
+    // Clear the box, close the on-screen keyboard, and search for the page like the keypad does
+    input.value = "";
+    input.blur();
+    viewer.isHolding = false;
+    goToPage(pageNumber);
+}
+
+if (elements.mobileGotoForm && elements.mobilePageInput) {
+    elements.mobileGotoForm.addEventListener("submit", event => {
+        event.preventDefault();
+        goToTypedPage();
+    });
+
+    // Only digits and A-F (page numbers are hexadecimal, e.g. 1A0); go to the page once all 3 are typed
+    elements.mobilePageInput.addEventListener("input", () => {
+        const input = elements.mobilePageInput;
+        input.value = input.value.replace(/[^0-9a-f]/gi, "").toUpperCase().slice(0, 3);
+        if (input.value.length === 3) goToTypedPage();
+    });
+}
 
 elements.pageSelect.addEventListener("change", () => goToPage(elements.pageSelect.value));
 

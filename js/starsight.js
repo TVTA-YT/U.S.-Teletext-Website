@@ -75,9 +75,9 @@ const RATING_ICONS = {
         light: "../images/rating-icons/TV-G.png",
         dark: "../images/rating-icons/TV-G_white.png"
     },
-    "TV-G": {
-        light: "../images/rating-icons/TV-G.png",
-        dark: "../images/rating-icons/TV-G_white.png"
+    "TV-PG": {
+        light: "../images/rating-icons/TV-PG.png",
+        dark: "../images/rating-icons/TV-PG_white.png"
     },
     "TV-14": {
         light: "../images/rating-icons/TV-14.png",
@@ -115,6 +115,10 @@ const SLOT_MINUTES = 30;
 // ^ Display 48 time slots (12:00am to 11:30pm)
 const VISIBLE_SLOTS = 48;
 
+const GRID_MINUTES = 15;
+
+const GRID_SLOTS = (24 * 60) / GRID_MINUTES;
+
 // ^ For now, the schedule starts at 12:00am
 const DAY_START_MINUTES = 0;
 
@@ -150,12 +154,13 @@ function syncServiceColumnScroll() {
 function buildTimeRow() {
     const timeRow = document.getElementById("time");
     timeRow.innerHTML = "";
-    document.querySelector(".time-row").style.gridTemplateColumns = `repeat(${VISIBLE_SLOTS}, var(--slot-width))`;
+    document.querySelector(".time-row").style.gridTemplateColumns = `repeat(${GRID_SLOTS}, var(--slot-width))`;
 
     // Loop through the 48 time slots and put them in their own DIV elements. Calculate the timeslot (e.g. 0 minutes is 12:00am)
     for (let i = 0; i < VISIBLE_SLOTS; i++) {
         const div = document.createElement("div");
         div.textContent = formatTime(DAY_START_MINUTES + i * SLOT_MINUTES);
+        div.style.gridColumn = "span 2";
         timeRow.appendChild(div);
     };
 }
@@ -296,9 +301,10 @@ function listingLocalDate(isoString, data) {
 function computeGridPlacement(startMinutes, durationMinutes) {
 
     // Determine grid columns, then how many columns the program should occupy
-    const startCol = Math.round((startMinutes - DAY_START_MINUTES) / SLOT_MINUTES) + 1;
-    const span = Math.round(durationMinutes / SLOT_MINUTES);
-    return { startCol, span };
+    // * Short programs still get one slot, and a start rounding past the last slot (11:45 PM or later) goes in the last slot
+    const startSlot = Math.floor((startMinutes - DAY_START_MINUTES) / GRID_MINUTES);
+    const endSlot = Math.round((startMinutes + durationMinutes - DAY_START_MINUTES) / GRID_MINUTES);
+    return { startCol: startSlot + 1, span: Math.max(1, endSlot - startSlot) };
 }
 
 // & Format a duration in minutes (e.g. "1 hr 30 min", "30 mins", or "1 hr")
@@ -474,7 +480,7 @@ function buildChannelSchedules(data, targetDataString) {
 function buildProgramRow(scheduleEntries) {
     const row = document.createElement("div");
     row.className = "program-row";
-    row.style.gridTemplateColumns = `repeat(${VISIBLE_SLOTS}, var(--slot-width))`;
+    row.style.gridTemplateColumns = `repeat(${GRID_SLOTS}, var(--slot-width))`;
 
     // Copy the "scheduleEntries" array and sort it by start time
     const sorted = [...scheduleEntries].sort((a, b) => a.startMinutes - b.startMinutes);
@@ -487,7 +493,7 @@ function buildProgramRow(scheduleEntries) {
         const { startCol, span } = computeGridPlacement(entry.startMinutes, entry.durationMinutes);
 
         if (!Number.isFinite(startCol) || !Number.isFinite(span) || span <= 0) return;
-        if (startCol > VISIBLE_SLOTS) return;
+        if (startCol > GRID_SLOTS) return;
 
         // Check if a program starts before the previous one has finished
         if (startCol < nextExpectedCol) {
@@ -503,15 +509,17 @@ function buildProgramRow(scheduleEntries) {
             filler.textContent = "NO DATA";
             row.appendChild(filler);
         }
-        if (startCol > VISIBLE_SLOTS) return;
+        if (startCol > GRID_SLOTS) return;
 
         // Calculate how many columns are left in the grid
-        const maxSpan = VISIBLE_SLOTS - startCol + 1;
+        const maxSpan = GRID_SLOTS - startCol + 1;
         const clampedSpan = Math.min(span, maxSpan);
 
         // Create the cells. Create CSS to place each column and make each grid clickable to show other info in a modal
         const cell = document.createElement("div");
         cell.textContent = entry.program.title;
+        cell.title = entry.program.title;
+        if (clampedSpan === 1) cell.classList.add("short");
         cell.style.gridColumn = `${startCol} / span ${clampedSpan}`;
         cell.style.cursor = "pointer";
         cell.addEventListener("click", () => showProgramModal(entry));
@@ -522,10 +530,10 @@ function buildProgramRow(scheduleEntries) {
     });
 
     // Check if there is empty space until the end of the grid. Filler grid occupies everything from the last program to the end of the guide
-    if (nextExpectedCol <= VISIBLE_SLOTS) {
+    if (nextExpectedCol <= GRID_SLOTS) {
         const filler = document.createElement("div");
         filler.className = "no-data";
-        filler.style.gridColumn = `${nextExpectedCol} / span ${VISIBLE_SLOTS - nextExpectedCol + 1}`;
+        filler.style.gridColumn = `${nextExpectedCol} / span ${GRID_SLOTS - nextExpectedCol + 1}`;
         row.appendChild(filler);
     }
 
@@ -544,7 +552,7 @@ function buildMobileGuide(data, dateString) {
 
     // CSS for the mobile grid
     container.style.gridTemplateColumns = `80px repeat(${channelIds.length}, 100px)`;
-    container.style.gridTemplateRows = `40px repeat(${VISIBLE_SLOTS}, 60px)`;
+    container.style.gridTemplateRows = `40px repeat(${GRID_SLOTS}, 30px)`;
 
     // Corner cell that acts as a divider and contains no data
     const corner = document.createElement("div");
@@ -570,7 +578,7 @@ function buildMobileGuide(data, dateString) {
         label.className = "time-label";
         label.classList.add("text-white");
         label.textContent = formatTime(DAY_START_MINUTES + slot * SLOT_MINUTES);
-        label.style.gridRow = String(slot + 2);
+        label.style.gridRow = `${slot * 2 + 2} / span 2`;
         label.style.gridColumn = "1";
         container.appendChild(label);
     }
@@ -589,7 +597,7 @@ function buildMobileGuide(data, dateString) {
 
             // If a starting row of program runtime can't be calculated, skip it
             if (!Number.isFinite(startRow) || !Number.isFinite(span) || span <= 0) return;
-            if (startRow > VISIBLE_SLOTS) return;
+            if (startRow > GRID_SLOTS) return;
 
             // Fill gaps with no program information
             if (startRow > nextExpectedRow) {
@@ -602,7 +610,7 @@ function buildMobileGuide(data, dateString) {
             }
 
             // Calculate how many rows are left in the grid
-            const maxSpan = VISIBLE_SLOTS - startRow + 1;
+            const maxSpan = GRID_SLOTS - startRow + 1;
             const clampedSpan = Math.min(span, maxSpan);
 
             // Create the cells; same as desktop
@@ -619,10 +627,10 @@ function buildMobileGuide(data, dateString) {
         });
 
         // Same as desktop; fill empty cells
-        if (nextExpectedRow <= VISIBLE_SLOTS) {
+        if (nextExpectedRow <= GRID_SLOTS) {
             const filler = document.createElement("div");
             filler.className = "no-data";
-            filler.style.gridRow = `${nextExpectedRow + 1} / span ${VISIBLE_SLOTS - nextExpectedRow}`;
+            filler.style.gridRow = `${nextExpectedRow + 1} / span ${GRID_SLOTS - nextExpectedRow}`;
             filler.style.gridColumn = String(colIndex + 2);
             container.appendChild(filler);
         }

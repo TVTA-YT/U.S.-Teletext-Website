@@ -9,12 +9,12 @@
         <meta property="og:type" content="website" />
         <meta property="og:title" content="North American Teletext Archive - T34 Teletext Viewer" />
         <meta property="og:description" content="View a decoded T34 teletext stream" />
-        <meta property="og:url" content="https://nateletext.com/html/teletext-viewer.html" />
+        <meta property="og:url" content="https://nateletext.com/html/wst-viewer.html" />
         <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
         <meta property="og:image:alt" content="North American Teletext Archive" />
         <meta property="og:site_name" content="North American Teletext Archive" />
         <meta property="og:locale" content="en_US" />
-        <link rel="canonical" href="https://nateletext.com/html/teletext-viewer.html" />
+        <link rel="canonical" href="https://nateletext.com/html/wst-viewer.html" />
         <link rel="icon" href="../images/favicons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
@@ -115,6 +115,18 @@
                 background: var(--bs-primary);
                 border-color: var(--bs-primary);
                 color: #fff;
+            }
+
+            .mobile-go-to-page .form-control {
+                font-family: "Teletext50", monospace;
+                font-size: 1.25rem;
+                letter-spacing: 0.1em;
+                text-align: center;
+                max-width: 6.5rem;
+            }
+
+            .mobile-go-to-page .btn {
+                min-width: 3rem;
             }
 
             #pageText {
@@ -242,7 +254,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -272,7 +284,7 @@
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="teletext-editor.html" class="dropdown-item text-dropdown-option">T42 Teletext Editor *NEW*</a>
+                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -343,6 +355,40 @@
                         <p class="mt-2 mb-3" id="pageInfo">
                             No sample chosen. Choose an available teletext sample from one of the results pages.
                         </p>
+                        <form
+                            class="mobile-go-to-page d-flex d-md-none align-items-center justify-content-center gap-2 mt-3"
+                            id="mobileGoToPage"
+                        >
+                            <button type="button" class="btn btn-outline-secondary" data-command="prev-page" aria-label="Previous page">
+                                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                            </button>
+                            <label for="mobilePageInput" class="visually-hidden">Page number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="mobilePageInput"
+                                inputmode="text"
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                maxlength="3"
+                                placeholder="000"
+                                enterkeyhint="go"
+                            />
+                            <button type="button" class="btn btn-outline-secondary" data-command="next-page" aria-label="Next page">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                            </button>
+                            <button type="submit" class="btn btn-outline-secondary">Go</button>
+                        </form>
+                        <div class="mobile-goto d-flex d-md-none justify-content-center gap-2 mt-2 mb-4" role="group" aria-label="Subpages">
+                            <button type="button" class="btn btn-outline-secondary" data-command="prev-subpage">
+                                <i class="bi bi-chevron-left" aria-hidden="true"></i> Subpage
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="next-subpage">
+                                Subpage <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="hold">Hold</button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="reveal">Reveal</button>
+                        </div>
                         <details class="card">
                             <summary class="card-header">Text version of this page</summary>
                             <div class="card-body">
@@ -351,7 +397,7 @@
                         </details>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                        <section class="mb-4" aria-labelledby="remoteHeading">
+                        <section class="mb-4" id="keypad-section" aria-labelledby="remoteHeading">
                             <h2 id="remoteHeading" class="h5">Keypad</h2>
                             <div class="entry-display mb-3" id="entryDisplay" aria-hidden="true"></div>
                             <div class="keypad mb-3" role="group" aria-label="Page number keys">
@@ -437,7 +483,7 @@
                                 <label for="optAspect" class="form-check-label">Aspect ratio (4:3)</label>
                             </div>
                         </section>
-                        <section aria-labelledby="keysHeading">
+                        <section id="keyboard-shortcuts" aria-labelledby="keysHeading">
                             <h2 class="h5" id="keysHeading">Keyboard Shortcuts</h2>
                             <table class="table table-sm table-primary table-bordered mb-3 text-center align-middle">
                                 <thead>
@@ -574,7 +620,7 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/teletext-render.js"></script>
-        <script src="../js/teletext-viewer.js"></script>
+        <script src="../js/wst-render.js"></script>
+        <script src="../js/wst-viewer.js"></script>
     </body>
 </html>

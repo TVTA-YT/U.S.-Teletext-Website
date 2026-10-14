@@ -1,16 +1,25 @@
 test.html
+gemstar.html
+gemstar-data.html
+gemstar-results.html
 silent-radio.html
 wavetop.html
 wavetop-results.html
 package-lock.json
+gemstar.js
+GemStar.png
+GemStar_light.png
 WaveTop.png
 WaveTop_light.png
+VCR-Plus_white.png
+VCR-Plus.png
 package.json
 seed.sql
 depreciated/
 node_modules/
 TODO/
 json/
+images/meta-site-images
 
 # wrangler files
 .wrangler

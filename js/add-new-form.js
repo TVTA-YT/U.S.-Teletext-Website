@@ -10,12 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'CBS': ['ExtraVision'],
         'IPTV': ['IPTVAGIDS'],
         'KET': ['KETAGTEXT'],
+        'MTV': ['Gemstar', 'StarSight'],
         'NBC': ['NBCTeletext'],
-        'PBS': ['GemStar', 'SilentRadio', 'StarSight', 'WaveTop'],
+        'Nickelodeon': ['Gemstar', 'StarSight'],
+        'PBS': ['Gemstar', 'SilentRadio', 'StarSight', 'WaveTop'],
         'TBS': ['Electra', 'Keyfax', 'SSSTeletext'],
-        'WGN': ["Virtext"],
+        'WFLD': ['Keyfax'],
+        'WGN': ['Virtext'],
         'WHA': ['WisInfotext-Text', 'WisInfotext-Teletext'],
-        'WHYY': ["PENNTEXT"],
+        'WHYY': ['PENNTEXT'],
     };
 
     const AFFILIATE_NETWORKS = ['ABC', 'CBS', 'NBC', 'PBS'];
@@ -161,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // For PBS, TBS, and WHA-TV
             /*
             * TBS: Choose between Electra, Keyfax, or SSS Teletext.
-            * PBS: Choose between GemStar, Silent Radio, StarSight, or WaveTop.
+            * PBS: Choose between Gemstar, Silent Radio, StarSight, or WaveTop.
             * WHA-TV: Choose between teletext or text versions of Wisconsin Infotext.
             * There is no default option since these networks used multiple services.
             */
@@ -251,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         samples.forEach((s, i) => {
             const row = document.createElement('div');
-            row.className = "list-group-item d-flex justify-content-between align-items-center";
+            row.className = 'list-group-item d-flex justify-content-between align-items-center';
 
             const networkLabel = s.network === 'Other' ? s.otherNetwork : s.network;
             const serviceLabel = s.service === 'Other' || !s.service ? s.otherService : s.service;

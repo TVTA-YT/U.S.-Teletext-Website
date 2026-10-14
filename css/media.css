@@ -125,7 +125,8 @@
         padding-top: 100px !important;
     }
 
-    .starsight-title {
+    .starsight-title,
+    .gemstar-title {
         font-size: 3em;
     }
 
@@ -152,6 +153,11 @@
 
     .guide {
         grid-template-columns: 120px minmax(0, 1fr) !important;
+    }
+
+    #keypad-section,
+    #keyboard-shortcuts {
+        display: none;
     }
 
     /* .time-row > div {
@@ -415,7 +421,8 @@
         padding-top: 100px !important;
     }
 
-    .starsight-title {
+    .starsight-title,
+    .gemstar-title {
         font-size: 2.5em;
     }
 
@@ -515,7 +522,8 @@
         font-size: 1.2em !important;
     }
 
-    .starsight-title {
+    .starsight-title,
+    .gemstar-title {
         font-size: 2em;
     }
 
@@ -605,7 +613,8 @@
         padding-top: 100px;
     }
 
-    .starsight-title {
+    .starsight-title,
+    .gemstar-title {
         font-size: 1.5em;
     }
 
@@ -693,7 +702,8 @@
         font-size: 0.8em !important;
     }
 
-    .starsight-title {
+    .starsight-title,
+    .gemstar-title {
         font-size: 1em;
     }
 
