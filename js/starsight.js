@@ -388,6 +388,7 @@ function renderSearchResults(matches, data) {
         // Create new list element for each program
         const item = document.createElement("li");
         item.className = "search-result";
+        item.classList.add(hasDescription(match) ? "has-description" : "no-description");
         item.style.cursor = "pointer";
         item.textContent = `${match.program.title}  (${channelName} - ${formatSearchResultDateLabel(dateString)}, ${timeLabel})`;
 
@@ -476,6 +477,18 @@ function buildChannelSchedules(data, targetDataString) {
     return channelSchedules;
 }
 
+// & A description only counts if it has actual text
+function hasDescription(entry) {
+    const text = entry.description?.text;
+    if (!text) return false;
+    return /[A-Za-z0-9]/.test(stripRatingPrefix(text));
+}
+
+// & Assign a program cell one of these classes depending on whether it has a program description
+function applyDescriptionState(cell, entry) {
+    cell.classList.add(hasDescription(entry) ? "has-description" : "no-description");
+}
+
 // & Create one row of program listings for each channel
 function buildProgramRow(scheduleEntries) {
     const row = document.createElement("div");
@@ -519,6 +532,7 @@ function buildProgramRow(scheduleEntries) {
         const cell = document.createElement("div");
         cell.textContent = entry.program.title;
         cell.title = entry.program.title;
+        applyDescriptionState(cell, entry);
         if (clampedSpan === 1) cell.classList.add("short");
         cell.style.gridColumn = `${startCol} / span ${clampedSpan}`;
         cell.style.cursor = "pointer";
@@ -617,6 +631,7 @@ function buildMobileGuide(data, dateString) {
             const cell = document.createElement("div");
             cell.className = "program";
             cell.textContent = entry.program.title;
+            applyDescriptionState(cell, entry);
             cell.style.gridRow = `${startRow + 1} / span ${clampedSpan}`;
             cell.style.gridColumn = String(colIndex + 2);
             cell.style.cursor = "pointer";
@@ -711,7 +726,7 @@ function showProgramModal(entry) {
 
     // Program title and description
     document.getElementById("programModalTitle").textContent = entry.program.title;
-    document.getElementById("programModalDescription").textContent = description ? stripRatingPrefix(description.text) : "No description available";
+    document.getElementById("programModalDescription").textContent = hasDescription(entry) ? stripRatingPrefix(description.text) : "No description available";
 
     // Program channel name or ID
     const channel = channelsById.get(Number(entry.channelId));

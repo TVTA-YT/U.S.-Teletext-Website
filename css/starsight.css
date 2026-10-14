@@ -1,5 +1,7 @@
 :root {
   --slot-width: 125px;
+  --epg-has-description: #939dff;
+  --epg-has-no-description: #c9ccdb;
 }
 
 @media (max-width: 767px) {
@@ -20,6 +22,18 @@
 .gemstar-title,
 .gemstar-title .date-column {
   padding-left: 6px;
+}
+
+#programSearchResults .search-result.has-description {
+  background-color: var(--epg-has-description);
+  color: #000 !important;
+}
+#programSearchResults .search-result.has-description:hover {
+  filter: brightness(1.08);
+}
+#programSearchResults .search-result.no-description {
+  background-color: var(--epg-has-no-description);
+  color: #000 !important;
 }
 
 .time-row div,
@@ -173,6 +187,12 @@
   padding: 2px;
   font-size: 0.65rem;
 }
+.guide .guide-scroll .program-row .has-description {
+  background-color: var(--epg-has-description);
+}
+.guide .guide-scroll .program-row .no-description {
+  background-color: var(--epg-has-no-description);
+}
 
 .starsight-mobile,
 .gemstar-mobile {
@@ -227,6 +247,14 @@
 .starsight-mobile .no-data,
 .gemstar-mobile .no-data {
   background-color: #424242;
+}
+.starsight-mobile .has-description,
+.gemstar-mobile .has-description {
+  background-color: var(--epg-has-description);
+}
+.starsight-mobile .no-description,
+.gemstar-mobile .no-description {
+  background-color: var(--epg-has-no-description);
 }
 
 @media (min-width: 768px) {

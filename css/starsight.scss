@@ -1,5 +1,7 @@
 :root {
     --slot-width: 125px;
+    --epg-has-description: #939dff;
+    --epg-has-no-description: #c9ccdb;
 }
 
 @media (max-width: 767px) {
@@ -22,6 +24,22 @@
 .gemstar-title
 .date-column {
     padding-left: 6px;
+}
+
+#programSearchResults {
+    .search-result.has-description {
+        background-color: var(--epg-has-description);
+        color: #000 !important;
+
+        &:hover {
+            filter: brightness(1.08);
+        }
+    }
+
+    .search-result.no-description {
+        background-color: var(--epg-has-no-description);
+        color: #000 !important;
+    }
 }
 
 .time-row,
@@ -185,6 +203,14 @@
                 padding: 2px;
                 font-size: 0.65rem;
             }
+
+            .has-description {
+                background-color: var(--epg-has-description);
+            }
+
+            .no-description {
+                background-color: var(--epg-has-no-description);
+            }
         }
     }
 }
@@ -239,6 +265,14 @@
 
     .no-data {
         background-color: #424242;
+    }
+
+    .has-description {
+        background-color: var(--epg-has-description);
+    }
+
+    .no-description {
+        background-color: var(--epg-has-no-description);
     }
 }
 
