@@ -269,6 +269,7 @@ function pageNumberFromHash() {
 
 // Filenames for each image heading
 const BANNER_NAMES = {
+    acquire: "Acquire",
     datavizion: "DaTaVizion",
     electra: "Electra",
     keyfax: "Keyfax",

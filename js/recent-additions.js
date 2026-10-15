@@ -1,6 +1,7 @@
 (() => {
     const SERVICE_IMAGES = {
         "ABC-PLUS": "images/ABC_white.png",
+        "Acquire": "images/Acquire_white.png",
         "AGTEXT": "images/KET_white.png",
         "CBS ExtraVision": "images/ExtraVision_white.png",
         "DaTaVizion": "images/DaTaVizion_white.png",
