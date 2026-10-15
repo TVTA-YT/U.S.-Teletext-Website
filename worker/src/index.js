@@ -12,6 +12,14 @@ const tables = {
         sampleCondition: `TEXT1 IS NOT NULL AND TRIM(CAST(TEXT1 AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "TEXT1", "TEXT2", "Network", "Service_Name", "Notes", "Recovered_By", "Date_Added"]
     },
+    acquire: {
+        table: "Acquire",
+        idField: "ID",
+        type: "teletext",
+        dateField: "Date",
+        sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+    },
     datavizion: {
         table: "DaTaVizion",
         idField: "ID",
@@ -536,7 +544,7 @@ async function getRecentViewableSamples(env) {
 }
 
 // Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
-const GALLERY_TABLES = ["DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
+const GALLERY_TABLES = ["Acquire", "DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
 
 // Accepted names: Record-3-12-v1 (NABTS), Page-100-2 (WST), and editor exports such as P100-0000, P110-0000-subpage-1 or Page-101-0000-version-1-of-7
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+|(?:P|Page-)\d{3}-[0-9A-F]{4}(?:-subpage-\d+)?(?:-version-\d+-of-\d+)?)\.(?:png|jpg|jpeg|gif)$/i;

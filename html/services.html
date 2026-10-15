@@ -275,6 +275,7 @@
                         <table class="table table-bordered text-center submission-count-table sample-availability-count-table">
                             <thead>
                                 <tr class="align-middle">
+                                    <th>Acquire</th>
                                     <th>DaTaVizion</th>
                                     <th>Edutel</th>
                                     <th>Electra</th>
@@ -288,6 +289,10 @@
                             </thead>
                             <tbody>
                                 <tr class="table-row-color">
+                                    <td>
+                                        <span class="sr-only">Available Acquire samples:</span>
+                                        <span class="fw-bolder" id="acquire-count"></span>
+                                    </td>
                                     <td>
                                         <span class="sr-only">Available DataVision samples:</span>
                                         <span class="fw-bolder" id="datavizion-count"></span>
@@ -330,8 +335,20 @@
                     </div>
                 </div>
                 <div class="row justify-content-center pb-4">
-                    <!-- DaTaVizion -->
+                    <!-- Acquire -->
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+                        <div class="heading-images" aria-hidden="true">
+                            <img src="../images/banners/light/Acquire_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
+                            <img src="../images/banners/dark/Acquire.png" alt="" class="mw-100 pb-4 dark-mode-image" />
+                        </div>
+                        <a href="acquire.html">
+                            <span class="visually-hidden">Acquire</span>
+                            <img src="../images/Acquire-TV_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                            <img src="../images/Acquire-TV.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                        </a>
+                    </div>
+                    <!-- DaTaVizion -->
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding">
                         <div class="heading-images" aria-hidden="true">
                             <img src="../images/banners/light/DaTaVizion_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
                             <img src="../images/banners/dark/DaTaVizion.png" alt="" class="mw-100 pb-4 dark-mode-image" />
@@ -367,7 +384,9 @@
                         </a>
                     </div>
                     <!-- ExtraVision -->
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-new-row-top-padding">
+                    <div
+                        class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
+                    >
                         <div class="heading-images" aria-hidden="true">
                             <img src="../images/banners/light/CBS-ExtraVision_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
                             <img src="../images/banners/dark/CBS-ExtraVision.png" alt="" class="mw-100 pb-4 dark-mode-image" />

@@ -6,6 +6,7 @@ async function renderTotalRecordCount() {
     const teletextSampleCountEl = document.getElementById("available-sample-count");
     const nonTeletextSampleCountEl = document.getElementById("available-sample-count-non-teletext");
 
+    const acquireCountEl = document.getElementById("acquire-count");
     const datavizionCountEl = document.getElementById("datavizion-count");
     const edutelCountEl = document.getElementById("edutel-count");
     const electraCountEl = document.getElementById("electra-count");
@@ -28,6 +29,7 @@ async function renderTotalRecordCount() {
         nonTeletextCountEl,
         teletextSampleCountEl,
         nonTeletextSampleCountEl,
+        acquireCountEl,
         datavizionCountEl,
         edutelCountEl,
         electraCountEl,
@@ -93,6 +95,10 @@ async function renderTotalRecordCount() {
          * counts.datasets.datavizion.availableSamples
          */
         const datasetCounts = counts.datasets ?? {};
+
+        const acquireSamples = Number(
+            datasetCounts.acquire?.availableSamples ?? 0
+        );
 
         const datavizionSamples = Number(
             datasetCounts.datavizion?.availableSamples ?? 0
@@ -169,6 +175,10 @@ async function renderTotalRecordCount() {
         }
 
         // Individual sample counts
+        if (acquireCountEl) {
+            acquireCountEl.textContent = acquireSamples.toLocaleString();
+        }
+
         if (datavizionCountEl) {
             datavizionCountEl.textContent = datavizionSamples.toLocaleString();
         }
