@@ -1,6 +1,10 @@
 // API base URL
 const API_BASE = "";
 
+// Temporary override — set to a string to replace the entire ticker with one message.
+// Set back to null to restore normal behavior.
+const TICKER_OVERRIDE = "SUBMISSIONS ARE CLOSED UFN...";
+
 // Default section labels
 const SECTION_LABELS = {
     intro: {
@@ -48,9 +52,9 @@ function startMarqueeEntrance() {
     // Get rendered width of marquee track as measured in pixels
     const trackWidth = track.getBoundingClientRect().width;
 
-    // Loop duration is every 50 seconds.
-    const loopDurationSec = 30;
-    const pxPerSecond = trackWidth / loopDurationSec;
+    // Loop duration is every 30 seconds.
+    const loopDurationSec = 5;
+    const pxPerSecond = Math.max(trackWidth, window.innerWidth) / loopDurationSec;
 
     // Calculate how long it takes the marquee to scroll into the visible area; add custom CSS property and assign class to start animation
     const enterDurationSec = window.innerWidth / pxPerSecond;
@@ -206,6 +210,21 @@ setInterval(updateMarqueeDateTime, 1000);
 // & Get data and construct the marquee
 async function initMarquee() {
     try {
+        if (TICKER_OVERRIDE) {
+            const html = renderMarqueeHTML([
+                {
+                    text: TICKER_OVERRIDE,
+                    color: "#ff0000",
+                    font: "Bedstead Bold",
+                    nbsp: 25,
+                },
+            ]);
+            document.querySelectorAll(".updates-marquee-track").forEach((track) => {
+                track.innerHTML = html;
+            });
+            return;
+        }
+
         const [updateRes, headlineRes] = await Promise.all([
             fetch(`${API_BASE}/api/marquee/updates`),
             fetch(`${API_BASE}/api/marquee/headlines`),
