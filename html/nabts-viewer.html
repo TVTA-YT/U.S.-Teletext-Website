@@ -38,7 +38,6 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"
         ></script>
-        <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
         <title>T33 (NABTS) Teletext Viewer</title>
         <style>
             .container {
@@ -374,7 +373,7 @@
                         </p>
                         <form
                             class="mobile-go-to-page d-flex d-md-none align-items-center justify-content-center gap-2 mt-3"
-                            id="mobileGoToPage"
+                            id="mobileGoTo"
                         >
                             <button type="button" class="btn btn-outline-secondary" data-command="prev-page" aria-label="Previous page">
                                 <i class="bi bi-chevron-left" aria-hidden="true"></i>
@@ -459,7 +458,12 @@
                             <p class="visually-hidden" id="moreHelp">
                                 The "MORE" key ends the page's next long pause or shows its continuation page.
                             </p>
-                            <div class="d-grid gap-2 mb-3" style="grid-template-columns: 1fr 1fr 1fr" role="group" aria-label="Index keys">
+                            <div
+                                class="d-grid gap-2 mb-3 index-keys"
+                                style="grid-template-columns: repeat(3, minmax(0, 1fr))"
+                                role="group"
+                                aria-label="Index keys"
+                            >
                                 <button type="button" class="btn btn-outline-secondary" data-command="magazine">Magazine</button>
                                 <button type="button" class="btn btn-outline-secondary" data-command="index">Index</button>
                                 <button type="button" class="btn btn-outline-secondary" data-command="master-index">M.Index</button>

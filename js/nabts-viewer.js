@@ -63,6 +63,13 @@
     const speedSelect = byID('optSpeed');
     const mobileGotoForm = byID('mobileGoto');
     const mobilePageInput = byID('mobilePageInput');
+
+    // A form around the page number box must never be sent: the browser would reload the viewer without its
+    // ?service=&sample= (or ?src=) and show "No sample chosen". Stopped here, at the start, whatever the form's id,
+    // so it holds even if something later in the script fails; the Go handler below does the page change
+    document.addEventListener('submit', (event) => {
+        if (mobilePageInput && event.target instanceof HTMLFormElement && event.target.contains(mobilePageInput)) event.preventDefault();
+    }, true);
     const fullscreenButton = document.querySelector('[data-command="fullscreen"]');
 
 
@@ -744,12 +751,23 @@
         announce(`Index: ${describeRecord(state.records[target], target).name}.`);
     };
 
+    // On iPhones, two quick taps on a button zoom the page (Safari's double-tap zoom), and a row whose buttons are
+    // wider than the screen makes Safari scale the page out to fit it. The viewer's buttons opt out of double-tap
+    // zoom, and the index row's three columns may shrink below their text (which is cut short, not pushed out)
+    const touchStyle = document.createElement('style');
+    touchStyle.textContent = `
+        .keypad .btn, [data-command], [data-digit], .mobile-goto .btn { touch-action: manipulation; }
+        .index-keys { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+        .index-keys .btn { min-width: 0; padding-left: 0.25rem; padding-right: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }`;
+    document.head.appendChild(touchStyle);
+
     // The three buttons come from the HTML (data-command="magazine", "index", "master-index"); only if they're
     // missing are they added here, in a row under the More button
     const moreButton = document.querySelector('[data-command="more"]');
+    document.querySelector('[data-command="magazine"]')?.parentElement?.classList.add('index-keys');
     if (moreButton && !document.querySelector('[data-command="magazine"]')) {
         const row = document.createElement('div');
-        row.className = 'd-grid gap-2 mb-3';
+        row.className = 'd-grid gap-2 mb-3 index-keys';
         row.style.gridTemplateColumns = '1fr 1fr 1fr';
         row.setAttribute('role', 'group');
         row.setAttribute('aria-label', 'Index keys');
@@ -816,8 +834,9 @@
         showRecord(index);
     };
 
-    if (mobileGotoForm) {
-        mobileGotoForm.addEventListener('submit', (event) => {
+    const gotoForm = mobileGotoForm || mobilePageInput?.form;
+    if (gotoForm && mobilePageInput) {
+        gotoForm.addEventListener('submit', (event) => {
             event.preventDefault();
             goToTypedPage();
         });
@@ -878,7 +897,7 @@
         if (savedReconstruct !== null) state.reconstruct = savedReconstruct === 'true';
     } catch { /* storage unavailable: keep the defaults */ }
     // The options come from the HTML (#optPace, #optReconstruct); only if they're missing are they added here
-    const speedRow = speedSelect.closest('.row');
+    const speedRow = speedSelect?.closest('.row');
     if (!byID('optPace') && speedRow) {
         const options = document.createElement('div');
         options.className = 'mt-2';
