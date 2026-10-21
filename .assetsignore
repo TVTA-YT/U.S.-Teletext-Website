@@ -4,6 +4,7 @@
 .gitignore
 .assetsignore
 .wrangler
+.dev.vars
 node_modules
 depreciated
 TODO
@@ -14,6 +15,7 @@ meta-site-images
 gemstar.js
 VCR-Plus_white.png
 VCR-Plus.png
+.vscode
 
 
 # Worker and config
@@ -24,6 +26,7 @@ package-lock.json
 
 # Sources and scripts
 *.scss
+*.sql
 
 # Leftovers from GitHub Pages
 CNAME

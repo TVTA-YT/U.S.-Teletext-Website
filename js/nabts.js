@@ -103,10 +103,17 @@
     const decodePacket = (packetBytes) => {
         const packet = { valid: false };
         const prefixNibbles = [];
+        let correctedBytes = 0;
         for (let i = 0; i < PREFIX_SIZE; i++) {
             prefixNibbles.push(HAMMING_VALUE[packetBytes[i]]);
             if (prefixNibbles[i] < 0) return packet;
+            if (!HAMMING_CLEAN[packetBytes[i]]) correctedBytes++;
         }
+        // decode-orc PR #328 refuses a video line whose five prefix bytes all needed correction (a test signal read
+        // as data) before it becomes a packet; a .t33 holds packets already, and decode-orc's own replay of one keeps
+        // them, so they are only counted here
+        packet.all_corrected = correctedBytes === PREFIX_SIZE;
+        packet.whole = correctedBytes === 0;
         packet.valid = true;
         packet.channel = (prefixNibbles[0] << 8) | (prefixNibbles[1] << 4) | prefixNibbles[2];
         packet.attested = !!(HAMMING_CLEAN[packetBytes[0]] && HAMMING_CLEAN[packetBytes[1]] && HAMMING_CLEAN[packetBytes[2]]);
@@ -117,8 +124,10 @@
         packet.not_full = !!(structure & 2);
         packet.suffix = (((structure >> 3) & 1) << 1) | ((structure >> 2) & 1);   // 0 none, 1 LRC, 2 LRC+spare, 3 burst
         const dataLength = MAX_BLOCK - [0, 1, 2, MAX_BLOCK][packet.suffix];
-        if (packet.sync && dataLength === 0) { packet.valid = false; return packet; }
-        const data = Array.from(packetBytes.subarray(PREFIX_SIZE, PREFIX_SIZE + dataLength));
+        // A synchronizing packet with no data block (PS says a 28-byte suffix) carries no group header; it is kept,
+        // as decode-orc keeps it, so its continuity index still counts (a group open on its channel takes it as an
+        // empty block)
+        const data = packetBytes.slice(PREFIX_SIZE, PREFIX_SIZE + dataLength);
         packet.integrity = 'unchecked';
         if (packet.suffix === 1 || packet.suffix === 2) {
             const block = packetBytes.subarray(PREFIX_SIZE, PREFIX_SIZE + MAX_BLOCK);
@@ -128,7 +137,7 @@
             if (syndrome === 0) packet.integrity = 'clean';
             else if ((syndrome & (syndrome - 1)) === 0) {      // a single bit is wrong …
                 const badParity = [];
-                block.forEach((byte, position) => { if (!ODD_PARITY[byte]) badParity.push(position); });
+                for (let position = 0; position < block.length; position++) if (!ODD_PARITY[block[position]]) badParity.push(position);
                 if (badParity.length === 1) {                    // … and parity says which byte
                     if (badParity[0] < dataLength) data[badParity[0]] ^= syndrome;
                     packet.integrity = 'corrected';
@@ -136,11 +145,13 @@
             } else packet.integrity = 'damaged';
         }
         packet.data = data;
+        // The whole 28-byte block as received, so a group can re-read a block whose PS byte was misread
+        packet.block = packetBytes.subarray(PREFIX_SIZE, PREFIX_SIZE + MAX_BLOCK);
         return packet;
     };
 
     // * * * Data groups (§4) * * *
-    const GROUP_HEADER_SIZE = 8, MAX_FURTHER_PACKETS = 67, MAX_OPEN_GROUPS = 32;
+    const GROUP_HEADER_SIZE = 8, MAX_FURTHER_PACKETS = 67, MAX_OPEN_GROUPS = 32, LOOSE_RUN_MAX_GAP = 2, MAX_OPEN_LOOSE_RUNS = 8;
 
     const decodeGroupHeader = (bytes, lowNibbleFirst = false) => {
         if (bytes.length < GROUP_HEADER_SIZE) return null;
@@ -153,7 +164,8 @@
         }
         const byteFrom = (first, second) => (lowNibbleFirst ? (second << 4) | first : (first << 4) | second);
         return {
-            attested, type: nibbles[0], ci: nibbles[1], rep: nibbles[2], further: byteFrom(nibbles[3], nibbles[4]),
+            attested, type_attested: !!HAMMING_CLEAN[bytes[0]],
+            type: nibbles[0], ci: nibbles[1], rep: nibbles[2], further: byteFrom(nibbles[3], nibbles[4]),
             final_bytes: byteFrom(nibbles[5], nibbles[6]), routing: nibbles[7]
         };
     };
@@ -180,26 +192,61 @@
             // unknown; a gap named by the continuity index is taken as it is.
             this.lineCountKnown = lineCountKnown;
             this.openGroups = new Map();
+            this.looseRuns = new Map();                // channel → packets arriving with no group open (for salvage)
+            this.onLoose = null;
+            this.teletextChannels = new Set();         // channels seen carrying type-0 groups as transmitted
+            this.idleFillChannels = new Set();
             this.clock = 0;
             this.stats = {
-                packets: 0, prefix_bad: 0, header_bad: 0, orphans: 0,
-                complete: 0, superseded: 0, unfinished: 0, foreign: 0
+                packets: 0, prefix_bad: 0, prefix_test_signal: 0, prefix_whole: 0, header_bad: 0, orphans: 0,
+                complete: 0, superseded: 0, unfinished: 0, foreign: 0,
+                sync_misreads: 0, type_misreads: 0, width_misreads: 0, idle_fill: 0, loose_runs: 0, loose_packets: 0
             };
+        }
+
+        /** A block the suffix check vouches for: corrected, or clean with every byte passing parity (type 0). */
+        static _vouched(group, packet) {
+            if (packet.integrity === 'corrected') return true;
+            if (packet.integrity !== 'clean') return false;
+            if (group.header.type !== 0) return true;
+            return packet.data.every((byte) => ODD_PARITY[byte]);
         }
 
         static _tallyIntegrity(group, packet) {
             if (packet.integrity === 'damaged') group.damaged += 1;
             else if (packet.integrity === 'unchecked' && packet.data.length > 0) group.unchecked += 1;
+            // A clean longitudinal check with a byte failing parity: two wrong bits in one column
+            else if (packet.integrity === 'clean' && !GroupAssembler._vouched(group, packet)) group.damaged += 1;
+        }
+
+        /** decode-orc PR #328: a block whose PS byte names another width than its group's is read at the group's width. */
+        _atGroupWidth(group, packet) {
+            if (!packet.data.length || !group.nominalLength || packet.data.length === group.nominalLength) return packet;
+            this.stats.width_misreads += 1;
+            return { ...packet, data: packet.block.slice(0, group.nominalLength), integrity: 'damaged' };
         }
 
         _appendPacket(group, packet) {
             if (!packet.data.length) return;
             group.lastOffset = group.stream.length;
             group.lastLength = packet.data.length;
+            // 0 lost, 1 arrived, 2 vouched for by the block's suffix check
+            const level = group.placeable ? (GroupAssembler._vouched(group, packet) ? 2 : 1) : 0;
             for (const byte of packet.data) {
                 group.stream.push(byte);
-                group.present.push(group.placeable ? 1 : 0);
+                group.present.push(level);
             }
+        }
+
+        /** Norpak's byte-serial test pattern (idle fill): each byte is the one before shifted right by one. */
+        static _isIdleFill(data, present) {
+            let pairs = 0, steps = 0;
+            for (let i = 0; i + 1 < data.length; i++) {
+                if (!present[i] || !present[i + 1] || data[i] === data[i + 1]) continue;
+                pairs++;
+                if ((data[i + 1] & 0x3F) === ((data[i] >> 1) & 0x3F)) steps++;
+            }
+            return { pairs, pattern: pairs >= 64 && steps * 100 >= pairs * 50 };
         }
 
         _appendHole(group, missingPackets) {
@@ -208,6 +255,13 @@
         }
 
         _emit(channel, group, outcome) {
+            // decode-orc PR #328: a group that ended short keeps the length its header declared, the missing
+            // blocks held open as a hole at its tail, so later links of a linked series keep their offsets
+            if (outcome !== 'complete' && group.header.further > group.packetsSeen && group.nominalLength > 0) {
+                this._appendHole(group, group.header.further - group.packetsSeen);
+                group.lastOffset = group.stream.length - group.nominalLength;
+                group.lastLength = group.nominalLength;
+            }
             let end = group.lastOffset + group.lastLength;
             if (group.header.final_bytes === 0) end = group.lastOffset;
             else if (group.header.final_bytes < group.lastLength) end = group.lastOffset + group.header.final_bytes;
@@ -222,6 +276,11 @@
             };
             this.stats[outcome] += 1;
             if (outcome === 'complete' && group.header.type !== 0) this.stats.foreign += 1;
+            // An encoder's idle fill is not passed on as records
+            const fill = GroupAssembler._isIdleFill(finished.data, finished.present);
+            if (fill.pattern) this.idleFillChannels.add(channel);
+            if (fill.pattern || (fill.pairs < 64 && this.idleFillChannels.has(channel))) { this.stats.idle_fill += 1; return; }
+            if (group.header.type === 0 && group.header.type_attested && group.attested) this.teletextChannels.add(channel);
             this.onGroup(finished);
         }
 
@@ -229,12 +288,34 @@
             this.stats.packets += 1;
             this.clock += 1;
             if (!packet.valid) { this.stats.prefix_bad += 1; return; }
+            if (packet.all_corrected) this.stats.prefix_test_signal += 1;
+            if (packet.whole) this.stats.prefix_whole += 1;
             if (packet.sync) this._begin(packet); else this._extend(packet);
         }
 
         _begin(packet) {
             const header = decodeGroupHeader(packet.data, this.lowNibbleFirst);
-            if (!header) { this.stats.header_bad += 1; return; }
+            if (!header) {
+                // A data packet whose PS byte was misread as synchronizing: if the open group expects exactly
+                // this continuity index next, the packet is that group's next block (decode-orc PR #328)
+                const open = this.openGroups.get(packet.channel);
+                if (open && packet.ci === (open.lastIndex + 1) % 16) {
+                    this.stats.sync_misreads += 1;
+                    this._extend({ ...packet, sync: false });
+                    return;
+                }
+                this.stats.header_bad += 1;
+                // With no group open, the packet is a group's start with its header damaged, or a data packet of a
+                // group whose start was lost: either way the head of whatever follows it on the channel
+                if (!open) { this._endLoose(packet.channel); this._extendLoose(packet, true); }
+                return;
+            }
+            // A teletext channel carries nothing but type 0: a type corrected into another value there is a misread
+            if (header.type !== 0 && !header.type_attested && this.teletextChannels.has(packet.channel)) {
+                header.type = 0;
+                this.stats.type_misreads += 1;
+            }
+            this._endLoose(packet.channel);              // whatever ran loose on the channel ended before this group
             if (header.further > MAX_FURTHER_PACKETS) return;
             if (this.openGroups.has(packet.channel)) {
                 const previous = this.openGroups.get(packet.channel);
@@ -269,7 +350,7 @@
 
         _extend(packet) {
             const group = this.openGroups.get(packet.channel);
-            if (!group) { this.stats.orphans += 1; return; }
+            if (!group) { this.stats.orphans += 1; this._extendLoose(packet, false); return; }
             const linesBetween = this.lineCountKnown ? this.clock - group.lastLine - 1 : 15;
             const missing = this._missingPackets(group, packet, linesBetween);
             if (missing) {
@@ -280,8 +361,9 @@
             }
             group.lastIndex = (group.lastIndex + 1 + missing) % 16;
             group.lastLine = this.clock;
-            GroupAssembler._tallyIntegrity(group, packet);
-            this._appendPacket(group, packet);
+            const block = this._atGroupWidth(group, packet);
+            GroupAssembler._tallyIntegrity(group, block);
+            this._appendPacket(group, block);
             group.packetsSeen += 1;
             if (group.packetsSeen >= group.header.further) {
                 this.openGroups.delete(packet.channel);
@@ -295,6 +377,60 @@
                 this.openGroups.delete(channel);
                 this._emit(channel, group, 'unfinished');
             }
+            for (const channel of [...this.looseRuns.keys()]) this._endLoose(channel);
+        }
+
+        /**
+         * decode-orc PR #328: packets of a teletext channel that arrive with no group open — the body of a group
+         * whose synchronizing packet was lost — are collected as a loose run, with a hole wherever the continuity
+         * index says up to two packets went missing, for salvage to find the record they belong to.
+         */
+        _extendLoose(packet, starts) {
+            if (!this.onLoose || !packet.data.length || !this.teletextChannels.has(packet.channel)) return;
+            const append = (open) => {
+                const { run } = open, width = run.block_bytes, atWidth = packet.data.length === width;
+                let vouched = atWidth && (packet.integrity === 'corrected' || packet.integrity === 'clean');
+                if (vouched && packet.integrity === 'clean') {
+                    for (let i = 0; i < width; i++) if (!ODD_PARITY[packet.data[i]]) { vouched = false; break; }
+                }
+                const level = vouched ? 2 : 1;
+                for (let i = 0; i < width; i++) {
+                    run.data.push(i < packet.data.length ? packet.data[i] : packet.block[i]);
+                    run.present.push(level);
+                }
+                run.packets += 1;
+                open.lastIndex = packet.ci;
+            };
+            const open = this.looseRuns.get(packet.channel);
+            if (open && !starts) {
+                const gap = pythonMod(packet.ci - (open.lastIndex + 1), 16);
+                const lines = this.lineCountKnown ? this.clock - open.lastLine - 1 : Infinity;
+                const blocks = open.run.data.length / open.run.block_bytes;
+                if (gap <= LOOSE_RUN_MAX_GAP && gap <= lines && blocks + gap + 1 <= MAX_FURTHER_PACKETS + 1) {
+                    for (let i = 0; i < gap * open.run.block_bytes; i++) { open.run.data.push(0); open.run.present.push(0); }
+                    append(open);
+                    open.lastLine = this.clock;
+                    return;
+                }
+            }
+            if (open) this._endLoose(packet.channel);
+            if (this.looseRuns.size >= MAX_OPEN_LOOSE_RUNS) return;
+            const fresh = {
+                run: { channel: packet.channel, data: [], present: [], packets: 0, starts_sync: starts, block_bytes: packet.data.length, clock: 0 },
+                lastIndex: packet.ci, lastLine: this.clock
+            };
+            append(fresh);
+            this.looseRuns.set(packet.channel, fresh);
+        }
+
+        _endLoose(channel) {
+            const open = this.looseRuns.get(channel);
+            if (!open) return;
+            this.looseRuns.delete(channel);
+            this.stats.loose_runs += 1;
+            this.stats.loose_packets += open.run.packets;
+            open.run.clock = this.clock;
+            if (this.onLoose) this.onLoose(open.run);
         }
     }
 
@@ -402,13 +538,37 @@
         constructor(onMessage) {
             this.onMessage = onMessage;
             this.openSeries = new Map();
+            this.reservedSeries = new Set();
             this.sequence = 0;
             this.stats = { groups: 0, foreign: 0, header_bad: 0, records: 0 };
             this.foreign = new Map();
         }
 
+        /** A group of a reserved type that plainly carries a page: clean identity, presentation type, opens with SO. */
+        static _carriesPage(group) {
+            if (!group.channel_attested || !group.hdr.attested) return null;
+            const header = decodeRecordHeader(group.data);
+            if (!header || !header.attested || !isPresentation(header.type)) return null;
+            if (header.header_bytes >= group.data.length || group.data[header.header_bytes] !== 0x0E ||
+                !group.present[header.header_bytes]) return null;
+            return header;
+        }
+
         add(group) {
             this.stats.groups += 1;
+            if (group.hdr.type !== 0) {
+                // decode-orc PR #328: a page a service sent in a group of a reserved type, and the later records of its series
+                const seriesKey = (header) => `${group.channel},${group.hdr.type},${header.address}`;
+                const page = RecordAssembler._carriesPage(group);
+                if (page) this.reservedSeries.add(seriesKey(page));
+                let isPage = !!page;
+                if (!isPage && group.channel_attested && group.hdr.attested) {
+                    const header = decodeRecordHeader(group.data);
+                    isPage = !!(header && header.attested && header.linked && header.order > 0 &&
+                        this.reservedSeries.has(seriesKey(header)));
+                }
+                if (isPage) return this._addRecord(group);
+            }
             if (group.hdr.type !== 0) {                          // not teletext (another data service)
                 this.stats.foreign += 1;
                 if (group.channel_attested && group.hdr.attested) {
@@ -417,6 +577,10 @@
                 }
                 return;
             }
+            this._addRecord(group);
+        }
+
+        _addRecord(group) {
             const header = decodeRecordHeader(group.data);
             if (!header) { this.stats.header_bad += 1; return; }
             this.stats.records += 1;
@@ -426,11 +590,13 @@
                 this.onMessage({
                     channel: group.channel, address: header.address, long_form: header.long_form, type: header.type,
                     flags: { ...header.flags }, version: header.version, extensions: header.extensions,
-                    data, present, complete: true, intact: group.intact, attested,
+                    data, present, complete: true, intact: group.intact, attested, header_attested: header.attested,
                     aligned: true, records: 1, clock: group.clock
                 });
                 return;
             }
+            // A linked record that is both first and last is a later record whose link order was misread as 0
+            if (header.order === 0 && !header.more_links) { this.stats.misread_first = (this.stats.misread_first || 0) + 1; return; }
             const key = `${group.channel},${header.address},${header.version}`;
             let series = this.openSeries.get(key);
             if (!series) {
@@ -446,7 +612,7 @@
                 series = {
                     channel: group.channel, address: header.address, long_form: header.long_form, type: header.type,
                     flags: { ...header.flags }, version: header.version, extensions: header.extensions, parts: new Map(),
-                    final: 999, intact: true, attested: false, sequence: this.sequence++
+                    final: 999, intact: true, attested: false, header_attested: false, sequence: this.sequence++
                 };
                 this.openSeries.set(key, series);
             }
@@ -455,9 +621,12 @@
             }
             if (!group.intact) series.intact = false;
             if (attested) series.attested = true;
+            if (header.attested) series.header_attested = true;
             if (!header.more_links) series.final = header.order;
             series.parts.set(header.order, [data, present]);
             series.clock = group.clock;
+            // No record comes after the last one: a part held under a higher order had its order misread
+            if (series.final <= 127) for (const order of [...series.parts.keys()]) if (order > series.final) series.parts.delete(order);
             if (series.final <= 127 && series.parts.size === series.final + 1) {
                 this.openSeries.delete(key);
                 this._emit(series, true);
@@ -465,6 +634,8 @@
         }
 
         _emit(series, complete) {
+            // A series that never received its first record is no message anyone was shown (decode-orc PR #328)
+            if (!series.parts.has(0)) { this.stats.without_first = (this.stats.without_first || 0) + 1; return; }
             series.complete = complete;
             series.aligned = complete;
             series.records = series.parts.size;
@@ -494,7 +665,7 @@
     // Record catalog and voting of damaged copies
     // A copy is [dataBytes, presentFlags]; presentFlags[i] is 0 where byte i was lost.
     // ---------------------------------------------------------------------------
-    const MAX_COPIES = 16;
+    const MAX_COPIES = 64;                            // decode-orc PR #328 keeps 64 copies per record
 
     /** The length most copies agree on (ties go to the longer one). */
     const votedLength = (copies, included) => {
@@ -513,37 +684,58 @@
         return bestLength;
     };
 
-    /** Byte-by-byte majority vote; odd parity wins over even, then weight, then the newest copy. */
-    const voteOverCopies = (copies, included) => {
+    /**
+     * Byte-by-byte vote in three tiers (decode-orc PR #328): a byte whose block the suffix check vouched for
+     * beats a parity-clean one, which beats a corrupt one; within a tier the most copies win, then the newest.
+     * `vouching` (one flag per copy) says whose vouched bytes count as vouched; null = none.
+     */
+    const voteOverCopies = (copies, included, vouching = null) => {
         const length = votedLength(copies, included);
-        const data = new Array(length).fill(0), present = new Array(length).fill(0), ties = [];
+        const data = new Array(length).fill(0), present = new Array(length).fill(0), ties = [], contested = [], alternatives = [];
         for (let position = 0; position < length; position++) {
-            const weight = new Map(), newestCopy = new Map();
+            const weight = new Map(), newestCopy = new Map(), vouchedWeight = new Map(), vouchedNewest = new Map();
             copies.forEach(([copyData, copyPresent], copyIndex) => {
                 if (included && !included[copyIndex]) return;
                 if (position >= copyData.length || (position < copyPresent.length && !copyPresent[position])) return;
                 const value = copyData[position];
                 weight.set(value, (weight.get(value) || 0) + 255);
                 newestCopy.set(value, copyIndex);
+                if (vouching && vouching[copyIndex] && copyPresent[position] === 2) {
+                    vouchedWeight.set(value, (vouchedWeight.get(value) || 0) + 255);
+                    vouchedNewest.set(value, copyIndex);
+                }
             });
             if (!weight.size) continue;
+            if (weight.size > 1) alternatives.push([position, [...weight.entries()]]);
+            const tierOf = (value) => (vouchedWeight.has(value) ? 2 : ODD_PARITY[value]);
+            const weightOf = (value) => (tierOf(value) === 2 ? vouchedWeight.get(value) : weight.get(value));
+            const newestOf = (value) => (tierOf(value) === 2 ? vouchedNewest.get(value) : newestCopy.get(value));
             let winner = null;
-            for (const [value, valueWeight] of weight) {
+            for (const value of weight.keys()) {
                 if (winner === null) { winner = value; continue; }
-                const winnerOdd = ODD_PARITY[winner], valueOdd = ODD_PARITY[value];
-                if (winnerOdd && !valueOdd) continue;
-                const beatsWinner = valueWeight > weight.get(winner) ||
-                    (valueWeight === weight.get(winner) && newestCopy.get(value) > newestCopy.get(winner));
-                if (winnerOdd === valueOdd && !beatsWinner) continue;
+                const tier = tierOf(value), winnerTier = tierOf(winner);
+                if (tier < winnerTier) continue;
+                if (tier === winnerTier && !(weightOf(value) > weightOf(winner) ||
+                    (weightOf(value) === weightOf(winner) && newestOf(value) > newestOf(winner)))) continue;
                 winner = value;
             }
             data[position] = winner;
-            present[position] = 1;
+            present[position] = tierOf(winner) === 2 ? 2 : 1;
             const tied = [...weight.keys()].filter((value) => value !== winner &&
-                ODD_PARITY[value] === ODD_PARITY[winner] && weight.get(value) === weight.get(winner));
+                tierOf(value) === tierOf(winner) && weightOf(value) === weightOf(winner));
             if (tied.length) ties.push([position, [winner, ...tied]]);
+            // JS-only: a reading outvoted but held by two or more copies and at least a sixth of the winner's weight,
+            // passing parity as well, is kept as a contender the grammar may prefer (see settleContestedByGrammar)
+            else {
+                let runnerUp = null;
+                for (const value of weight.keys()) {
+                    if (value === winner || tierOf(value) !== tierOf(winner)) continue;
+                    if (runnerUp === null || weightOf(value) > weightOf(runnerUp)) runnerUp = value;
+                }
+                if (runnerUp !== null && weightOf(runnerUp) >= 2 * 255 && weightOf(runnerUp) * 6 >= weightOf(winner)) contested.push([position, [winner, runnerUp]]);
+            }
         }
-        return [data, present, ties];
+        return [data, present, ties, contested, alternatives];
     };
 
     /** [bytes compared, bytes equal] between a copy (shifted by `slip`) and the vote. */
@@ -559,6 +751,8 @@
         return [compared, agreed];
     };
     const isOutlier = ([compared, agreed]) => compared >= 16 && agreed * 100 < compared * 50;
+    // A copy's vouched bytes outrank the rest only if it agrees with nearly all of the provisional vote
+    const vouches = ([compared, agreed]) => compared > 0 && agreed * 100 >= compared * 90;
     const agreesBetter = ([comparedA, agreedA], [comparedB, agreedB]) =>
         agreedA * Math.max(1, comparedB) > agreedB * Math.max(1, comparedA);
     const shiftCopy = ([copyData, copyPresent], slip) => {
@@ -568,9 +762,71 @@
             const source = position + slip;
             if (source < 0 || source >= copyData.length || (source < copyPresent.length && !copyPresent[source])) continue;
             data[position] = copyData[source];
-            present[position] = 1;
+            present[position] = source < copyPresent.length ? copyPresent[source] : 1;
         }
         return [data, present];
+    };
+
+    /**
+     * decode-orc PR #328: a copy whose group closed up over a block it lost without a hole agrees as far as that
+     * block and holds the next block after it. Where fewer than half the copies reaching a position hold a byte, a
+     * copy that (at the nearest 8 settled positions on one side) disagrees with the vote as it stands but agrees with
+     * it one to three blocks further on abstains there. Returns, per copy, the positions to leave out (or null).
+     */
+    const CLOSED_UP_SHIFTS = [26, 27, 28, 52, 54, 56, 78, 81, 84], ALIGNMENT_WITNESSES = 8;
+    const closedUpBytes = (copies, [voteData, votePresent], included) => {
+        const length = voteData.length, holding = new Uint32Array(length), reaching = new Uint32Array(length);
+        const has = ([data, present], position) => position < data.length && (position >= present.length || present[position] !== 0);
+        copies.forEach((copy, c) => {
+            if (included && !included[c]) return;
+            const reach = Math.min(length, copy[0].length);
+            for (let position = 0; position < reach; position++) {
+                reaching[position]++;
+                if (has(copy, position)) holding[position]++;
+            }
+        });
+        const settled = (position) => votePresent[position] !== 0 && holding[position] >= 2 && holding[position] * 2 >= reaching[position];
+        let any = false;
+        for (let position = 0; position < length && !any; position++) any = holding[position] > 0 && !settled(position);
+        if (!any) return null;
+        const lanes = CLOSED_UP_SHIFTS.length + 1;
+        let out = null;
+        copies.forEach((copy, c) => {
+            if (included && !included[c]) return;
+            const [data] = copy, reach = Math.min(length, data.length), witnesses = [];
+            const agreed = Array.from({ length: lanes }, () => [0]), judged = Array.from({ length: lanes }, () => [0]);
+            for (let position = 0; position < reach; position++) {
+                if (!has(copy, position) || !settled(position)) continue;
+                witnesses.push(position);
+                for (let lane = 0; lane < lanes; lane++) {
+                    const at = position + (lane === 0 ? 0 : CLOSED_UP_SHIFTS[lane - 1]);
+                    const counts = at < length && settled(at);
+                    judged[lane].push(judged[lane][judged[lane].length - 1] + (counts ? 1 : 0));
+                    agreed[lane].push(agreed[lane][agreed[lane].length - 1] + (counts && data[position] === voteData[at] ? 1 : 0));
+                }
+            }
+            const majority = (lane, from, to) => {
+                const count = judged[lane][to] - judged[lane][from];
+                return count >= ALIGNMENT_WITNESSES / 2 && (agreed[lane][to] - agreed[lane][from]) * 2 >= count;
+            };
+            const moved = (from, to) => {
+                const count = judged[0][to] - judged[0][from];
+                if (count < ALIGNMENT_WITNESSES / 2 || majority(0, from, to)) return false;
+                for (let lane = 1; lane < lanes; lane++) if (majority(lane, from, to)) return true;
+                return false;
+            };
+            let next = 0;
+            for (let position = 0; position < reach; position++) {
+                while (next < witnesses.length && witnesses[next] < position) next++;
+                if (!has(copy, position) || settled(position)) continue;
+                const before = next > ALIGNMENT_WITNESSES ? next - ALIGNMENT_WITNESSES : 0;
+                const after = Math.min(witnesses.length, next + ALIGNMENT_WITNESSES);
+                if (!moved(before, next) && !moved(next, after)) continue;
+                if (!out) out = copies.map(() => []);
+                out[c].push(position);
+            }
+        });
+        return out;
     };
 
     /** Vote a record from its damaged copies; copies that slipped by a few bytes are realigned. */
@@ -578,22 +834,32 @@
         if (!copies.length) return [[], []];
         if (copies.length === 1) return copies[0];
         const provisional = voteOverCopies(copies), aligned = [...copies], included = copies.map(() => 1);
+        const vouching = copies.map(() => 0);
         let dropped = 0;
         copies.forEach((copy, i) => {
             const unshifted = agreementWithVote(copy, provisional, 0);
-            if (!isOutlier(unshifted)) return;
+            if (!isOutlier(unshifted)) { vouching[i] = vouches(unshifted) ? 1 : 0; return; }
             let best = unshifted, bestSlip = 0;
             for (let slip = -8; slip <= 8; slip++) {
                 if (slip === 0) continue;
                 const agreement = agreementWithVote(copy, provisional, slip);
                 if (!isOutlier(agreement) && agreesBetter(agreement, best)) { best = agreement; bestSlip = slip; }
             }
-            if (bestSlip) { aligned[i] = shiftCopy(copy, bestSlip); return; }
+            if (bestSlip) { aligned[i] = shiftCopy(copy, bestSlip); vouching[i] = vouches(best) ? 1 : 0; return; }
             included[i] = 0;
             dropped++;
         });
-        if (dropped === 0 || dropped * 2 >= copies.length) return voteOverCopies(aligned);
-        return voteOverCopies(aligned, included);
+        const voters = dropped === 0 || dropped * 2 >= copies.length ? null : included;
+        const closedUp = closedUpBytes(aligned, provisional, voters);
+        if (closedUp) {
+            closedUp.forEach((positions, c) => {
+                if (!positions.length) return;
+                const [data, present] = aligned[c], placed = Array.from({ length: data.length }, (_, i) => (i < present.length ? present[i] : 1));
+                for (const position of positions) placed[position] = 0;
+                aligned[c] = [data, placed];
+            });
+        }
+        return voteOverCopies(aligned, voters, vouching);
     };
 
     /** The "More" successor by the +1 rule on the two low BCD digits (…09 → …10). */
@@ -605,13 +871,27 @@
         return (address - (address % 256)) + ((Math.floor(next / 10) << 4) | (next % 10));
     };
 
-    const moreAddressFromExtensions = (extensions) => {
+    /**
+     * The More record a header extension names (§5.2.8.4): an address on this channel, NO_MORE when it designates
+     * something else (a macro or another channel), or null when no extension redefines the More record.
+     */
+    const NO_MORE = -1;
+    const moreAddressFromExtensions = (extensions, channel = 0) => {
+        const number = (digits) => digits.reduce((value, digit) => value * 16 + (digit & 0xF), 0);
         for (const [meaning, size, digits] of extensions) {
-            if (meaning !== 1) continue;
+            if (meaning !== 1 || digits.length !== size) continue;
             if (size === 0) return 0;
-            if (size === 3 || size === 9) {
-                const value = digits.reduce((address, digit) => address * 16 + (digit & 0xF), 0);
-                return size === 3 ? value * 256 : value;
+            if (size === 3) return number(digits) * 256;
+            if (size === 9) return number(digits);
+            if (size === 2) {
+                const column = digits[0] & 0xF;
+                if (column >= 2 && column <= 7) return NO_MORE;          // a macro, not a record
+                continue;
+            }
+            if (size === 6 || size === 12) {
+                const named = number(digits.slice(0, 3));
+                if (named !== channel) return NO_MORE;
+                return size === 6 ? number(digits.slice(3)) * 256 : number(digits.slice(3));
             }
         }
         return null;
@@ -621,7 +901,20 @@
         'support_needed', 'index', 'more'];
 
     const MAX_GRAMMAR_TRIALS = 32;                   // per record: each trial interprets the whole record
-    let grammarChecker = null;
+    let grammarChecker = null, roleReader = null;
+    const ROLE_UNREAD = 0, ROLE_CONTROL = 1, ROLE_TRANSPARENT = 2, ROLE_TEXT = 3, ROLE_PDI = 4, ROLE_DEFINITION = 5, ROLE_OTHER = 6;
+
+    /** How a receiver freshly reset reads each byte of a record: text, PDI, control … (naplps_read_roles). */
+    const readRoles = (bytes) => {
+        if (!roleReader) {
+            roleReader = new Interpreter([256, 200]);
+            roleReader.checkingOnly = true;
+            roleReader.traceRoles = true;
+        }
+        roleReader.resetDecoder();
+        roleReader.run(bytes);
+        return roleReader.roles;
+    };
 
     const grammarProblems = (bytes) => {
         if (!grammarChecker) {
@@ -630,7 +923,9 @@
         }
         grammarChecker.resetDecoder();
         grammarChecker.run(bytes);
-        return [grammarChecker.lintSevere, grammarChecker.lint, grammarChecker.firstSevereAt];
+        let characters = 0;
+        for (const prim of grammarChecker.prims) if (prim.kind === 'char') characters++;
+        return [grammarChecker.lintSevere, grammarChecker.lint, grammarChecker.firstSevereAt, [...grammarChecker.problemsAt], characters];
     };
 
     const settleTiesByGrammar = (data, ties) => {
@@ -649,7 +944,7 @@
                 const trial = [...best];
                 trial[position] = candidate;
                 const [severe, problems, severeAt] = grammarProblems(trial);
-                if (severe < bestSevere && problems < bestProblems) {
+                if (severe < bestSevere && (problems < bestProblems || severe === 0)) {
                     best = trial; bestSevere = severe; bestProblems = problems; firstSevereAt = severeAt;
                     break;
                 }
@@ -658,67 +953,544 @@
         return bestSevere === 0 ? best : data;       // only a vote that reads cleanly is trusted
     };
 
-    const EDITION_SAME_CONTENT = 0.85, EDITION_SAMPLE_STEP = 3, EDITION_MIN_SAMPLES = 24;
-    const EDITION_CONFIRM = 3, EDITION_LOOK_BACK = 8, EDITION_OLD_RETURNS = 0.1;
-
-    const sampleCopy = (message) => {
-        const length = Math.ceil(message.data.length / EDITION_SAMPLE_STEP);
-        const data = new Uint8Array(length), present = new Uint8Array(length);
-        for (let i = 0, j = 0; i < message.data.length; i += EDITION_SAMPLE_STEP, j++) {
-            data[j] = message.data[i] & 0x7F;
-            present[j] = message.present ? (message.present[i] ? 1 : 0) : 1;
+    /**
+     * JS-only: a byte most copies misread the same way, where a few copies hold another reading that passes parity
+     * too, is settled by the grammar when the other reading takes away a problem and adds no severe one. A
+     * damaged-alike majority is common where a byte's bits sit badly on a worn tape (WIVB's master index: ten copies
+     * read the second stroke of its "W" logo's 0x58 as 0x28, LINE, which broke the stroke and drew a line off the
+     * screen; two held 0x58, as the stroke repeated 32 bytes on has it).
+     */
+    const MAX_CONTESTED_TRIALS = 24;
+    const settleContestedByGrammar = (data, contested) => {
+        let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
+        if (!bestProblems) return data;
+        const untried = new Map(contested);
+        let trials = 0;
+        // Each problem in turn: only a byte read shortly before it can have caused it, most likely the nearest
+        for (let k = 0; k < problemsAt.length && trials < MAX_CONTESTED_TRIALS && bestProblems > 0; k++) {
+            const problemAt = problemsAt[k];
+            const near = [...untried.keys()].filter((at) => at <= problemAt && problemAt - at <= 64).sort((p, q) => q - p);
+            for (const position of near.slice(0, 4)) {
+                if (trials >= MAX_CONTESTED_TRIALS) break;
+                const [, candidate] = untried.get(position);
+                untried.delete(position);
+                trials++;
+                const trial = [...best];
+                trial[position] = candidate;
+                const [severe, problems] = grammarProblems(trial);
+                if (severe <= bestSevere && problems < bestProblems) {
+                    best = trial; bestSevere = severe; bestProblems = problems;
+                    break;
+                }
+            }
         }
-        return { clock: message.clock, data, present };
+        return best;
     };
 
-    const sampleAgreement = (a, b) => {
-        let compared = 0, same = 0;
-        for (let i = 0; i < Math.min(a.data.length, b.data.length); i++) {
-            if (!a.present[i] || !b.present[i]) continue;
-            compared++;
-            if (a.data[i] === b.data[i]) same++;
+    /**
+     * JS-only: a byte the whole recording tends to misread one way (WIVB's tape reads 0x58 as 0x28, LINE, again
+     * and again) is put back where every copy of a record misread it alike: just before a grammar problem, a PDI
+     * opcode the recording usually confuses with an operand byte is tried as that operand, and kept when it takes
+     * the problem away and adds no severe one.
+     */
+    const CONFUSION_MIN_COUNT = 8, CONFUSION_REACH = 24, MAX_CONFUSION_TRIALS = 32, CONFUSION_TEXT_SLACK = 0;
+    const repairByConfusions = (data, present, partners) => {
+        let best = data, [bestSevere, bestProblems, , problemsAt, bestCharacters] = grammarProblems(data);
+        if (!bestProblems) return data;
+        const tried = new Set();
+        let trials = 0;
+        for (let k = 0; k < problemsAt.length && trials < MAX_CONFUSION_TRIALS && bestProblems > 0; k++) {
+            const problemAt = problemsAt[k];
+            let fixed = false;
+            for (let position = problemAt; position >= Math.max(0, problemAt - CONFUSION_REACH) && !fixed; position--) {
+                if (tried.has(position) || (present && present[position] === 0)) continue;
+                // Only a PDI opcode misread from an operand byte, or the other way round: the opcode cuts a figure
+                // short and sends the rest of its operands to another command, the operand runs one figure on into the
+                // next (WIVB's 0x24, POINT SET, read as 0x64), and the grammar sees both; it can't judge other
+                // readings (text, controls) as well. Never RESET (0x20): it clears the screen and the state
+                const value = best[position] & 0x7F, opcode = value >= 0x20 && value <= 0x3F;
+                if (value < 0x20) continue;
+                const list = (partners.get(value) || []).filter(([partner]) => (opcode ? partner >= 0x40 : partner > 0x20 && partner <= 0x3F));
+                if (!list.length) continue;
+                tried.add(position);
+                for (const [partner] of list.slice(0, 2)) {
+                    if (trials++ >= MAX_CONFUSION_TRIALS) break;
+                    const trial = [...best];
+                    trial[position] = withOddParity(partner);
+                    const [severe, problems, , , characters] = grammarProblems(trial);
+                    // ... and the text stays: a repair that loses characters has turned text into figure data
+                    if (severe <= bestSevere && problems < bestProblems && characters >= bestCharacters - CONFUSION_TEXT_SLACK) {
+                        best = trial; bestSevere = severe; bestProblems = problems; bestCharacters = characters; fixed = true;
+                        break;
+                    }
+                }
+            }
         }
-        return compared >= EDITION_MIN_SAMPLES ? same / compared : NaN;
+        return best;
     };
 
-    const findEditionChanges = (copies) => {
-        const changes = [];
-        const agrees = (a, b) => sampleAgreement(a, b) >= EDITION_SAME_CONTENT;
-        const matchesAny = (copy, group) => group.some((other) => agrees(copy, other));
-        let start = 0;
-        for (let t = start + EDITION_CONFIRM; t + EDITION_CONFIRM <= copies.length; t++) {
-            const run = copies.slice(t, t + EDITION_CONFIRM);
-            if (!run.every((copy, i) => run.every((other, j) => i === j || agrees(copy, other)))) continue;
-            const before = copies.slice(Math.max(start, t - EDITION_LOOK_BACK), t);
-            if (run.some((copy) => matchesAny(copy, before))) continue;
-            if (!before.some((copy) => before.filter((other) => other !== copy && agrees(copy, other)).length >= EDITION_CONFIRM - 1)) continue;
-            const after = copies.slice(t);
-            const oldReturns = after.filter((copy) => matchesAny(copy, before)).length;
-            if (oldReturns > EDITION_OLD_RETURNS * after.length) continue;
-            changes.push(copies[t].clock);
-            start = t;
-            t = start + EDITION_CONFIRM - 1;
-        }
-        return changes;
+    /**
+     * JS-only: a contested byte inside a POINT SET's coordinate, which the grammar can't judge (any value is a
+     * coordinate), is settled by the drawing: pages repeat a figure at another place (WIVB's three suns), and the
+     * reading that puts the point where the figure's other copies have theirs, relative to the points either side,
+     * is taken. Ten copies of the Extended Forecast read one of the middle sun's rays a few pixels low; two had it.
+     */
+    const MAX_MOTIF_TRIALS = 32, MOTIF_TOLERANCE = 1 / 1024;
+    const pointTraceOf = (bytes) => {
+        if (!grammarChecker) grammarProblems([]);
+        grammarChecker.pointTrace = [];
+        const [severe, problems] = grammarProblems(bytes);
+        const trace = grammarChecker.pointTrace;
+        grammarChecker.pointTrace = null;
+        return [trace, severe, problems];
     };
+    /** Whether the point at `k` sits, relative to its neighbors, where another copy of the figure puts it. */
+    const inMotif = (points, k) => {
+        if (k < 1 || k + 1 >= points.length) return null;
+        const near = (a, b) => Math.abs(a - b) <= MOTIF_TOLERANCE;
+        for (let j = 1; j + 1 < points.length; j++) {
+            if (j === k) continue;
+            const dx = points[j][0] - points[k][0], dy = points[j][1] - points[k][1];
+            if (Math.abs(dx) < MOTIF_TOLERANCE && Math.abs(dy) < MOTIF_TOLERANCE) continue;
+            if (near(points[j - 1][0] - points[k - 1][0], dx) && near(points[j - 1][1] - points[k - 1][1], dy) &&
+                near(points[j + 1][0] - points[k + 1][0], dx) && near(points[j + 1][1] - points[k + 1][1], dy)) return true;
+        }
+        return false;
+    };
+    const settleContestedByMotif = (data, contested) => {
+        let [trace, bestSevere, bestProblems] = pointTraceOf(data);
+        if (trace.length < 6) return data;
+        let best = data, trials = 0;
+        for (const [position, [, candidate]] of contested) {
+            if (trials >= MAX_MOTIF_TRIALS) break;
+            const index = trace.findIndex((entry) => position > entry.from && position < entry.to);
+            if (index < 0 || trace[index].points.length !== 1) continue;
+            const points = trace.map((entry) => entry.points[0]);
+            if (inMotif(points, index) !== false) continue;
+            trials++;
+            const trial = [...best];
+            trial[position] = candidate;
+            const [trialTrace, severe, problems] = pointTraceOf(trial);
+            if (trialTrace.length !== trace.length || severe > bestSevere || problems > bestProblems) continue;
+            if (inMotif(trialTrace.map((entry) => entry.points[0]), index)) {
+                best = trial; trace = trialTrace; bestSevere = severe; bestProblems = problems;
+            }
+        }
+        return best;
+    };
+
+    /**
+     * JS-only: a word whose letters the copies read differently is settled by the recording's own vocabulary, the
+     * words its pages show where every copy agreed: of the readings the copies give ("Uovjet", "[ovjet", "Sovjet",
+     * "Soviet" …), the one the recording spells elsewhere is taken ("Soviet officials" on the same page). Only
+     * letters are swapped for letters, so the page's layout can't change; a word no reading of which is in the
+     * vocabulary is left as voted.
+     */
+    const WORD_MIN_LETTERS = 3, WORD_MAX_CONTESTED = 4, WORD_MAX_READINGS = 64;
+    const isLetter = (byte) => { const c = byte & 0x7F; return (c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A); };
+    const wordsOf = (data, roles) => {
+        const words = [];
+        let start = -1;
+        for (let i = 0; i <= data.length; i++) {
+            const inWord = i < data.length && roles[i] === ROLE_TEXT && isLetter(data[i]);
+            if (inWord && start < 0) start = i;
+            if (!inWord && start >= 0) { if (i - start >= WORD_MIN_LETTERS) words.push([start, i]); start = -1; }
+        }
+        return words;
+    };
+    const spell = (data, from, to) => String.fromCharCode(...data.slice(from, to).map((byte) => byte & 0x7F)).toLowerCase();
+    const settleWordsByVocabulary = (records, readingsOf) => {
+        if (!readingsOf.size) return;
+        const vocabulary = new Map(), pending = [];
+        for (const record of records) {
+            if (!record.data || !record.data.length || !isPresentation(record.type)) continue;
+            const roles = readRoles(record.data), readings = new Map(readingsOf.get(record) || []);
+            for (const [from, to] of wordsOf(record.data, roles)) {
+                const contested = [];
+                for (let i = from; i < to; i++) if (readings.has(i)) contested.push(i);
+                if (!contested.length) {
+                    const word = spell(record.data, from, to);
+                    vocabulary.set(word, (vocabulary.get(word) || 0) + 1);
+                } else if (contested.length <= WORD_MAX_CONTESTED) pending.push([record, from, to, contested, readings]);
+            }
+        }
+        // Letter pairs the vocabulary uses: a voted spelling with a pair no agreed word has ("Uovjet": "uo", "vj")
+        // is not a word, and is put right when a reading the vocabulary has twice or more is among the copies'. A
+        // spelling with no such pair may be a real word ("Fare", "Wild") and is let stand
+        const pairs = new Set();
+        for (const word of vocabulary.keys()) for (let i = 0; i + 1 < word.length; i++) pairs.add(word.slice(i, i + 2));
+        const oddPair = (word) => { for (let i = 0; i + 1 < word.length; i++) if (!pairs.has(word.slice(i, i + 2))) return true; return false; };
+        for (const [record, from, to, contested, readings] of pending) {
+            const votedWord = spell(record.data, from, to);
+            if (vocabulary.has(votedWord)) continue;
+            if (!oddPair(votedWord)) continue;
+            const minimumCount = 2;
+            // Every combination of the letters the copies read at the contested positions
+            let combinations = [[]];
+            for (const position of contested) {
+                // A letter of the same case, held by at least a third as many copies as the vote's: a reading the copies
+                // all but ruled out, or one that changes a capital, is not one to choose by spelling
+                const voted = record.data[position], votedWeight = readings.get(position).find(([value]) => value === voted)?.[1] || 0;
+                const upper = (byte) => (byte & 0x7F) < 0x60;
+                const letters = readings.get(position).filter(([value, weight]) => isLetter(value) &&
+                    upper(value) === upper(voted) && weight * 3 >= votedWeight).map(([value]) => value);
+                if (!letters.includes(voted)) letters.push(voted);
+                combinations = combinations.flatMap((partial) => letters.map((letter) => [...partial, letter]));
+                if (combinations.length > WORD_MAX_READINGS) break;
+            }
+            if (combinations.length > WORD_MAX_READINGS) continue;
+            let best = null, bestCount = 0, tie = false;
+            for (const letters of combinations) {
+                const trial = record.data.slice(from, to);
+                contested.forEach((position, k) => { trial[position - from] = letters[k]; });
+                const count = vocabulary.get(spell(trial, 0, trial.length)) || 0;
+                if (count > bestCount) { best = letters; bestCount = count; tie = false; } else if (count && count === bestCount) tie = true;
+            }
+            if (!best || tie || bestCount < minimumCount) continue;
+            const data = record.data.slice();
+            contested.forEach((position, k) => { data[position] = best[k]; });
+            record.data = data;
+        }
+    };
+
+    // ---------------------------------------------------------------------------
+    // Contents (decode-orc PR #328): one identity (channel, address, version) can carry more than one page over a
+    // recording — a carousel's versions come round again with new pages, a page is replaced without its version
+    // moving. A copy that agrees with none of the contents held under its identity starts one of its own.
+    // ---------------------------------------------------------------------------
+    const SAME_CONTENT_PERCENT = 50, MAX_RECORD_SLIP = 8, OUTLIER_MIN_JUDGED = 16;
+    const CONTENT_WINDOW_BYTES = 54, CONTENT_WINDOW_SLIP = 32, CONTENT_WINDOW_MIN_JUDGED = 8, CONTENT_WINDOW_PERCENT = 70;
+    const JOIN_WINDOW_SLIP = 81;
+    const PAGE_DIFFERENCE_BYTES = 32, PAGE_DIFFERENCE_RUN = 4, PAGE_DIFFERENCE_QUIET_REACH = 14, PAGE_DIFFERENCE_QUIET_FAILURES = 2;
+    const PAGE_DIFFERENCE_VOUCHED_BYTES = 6, PAGE_DIFFERENCE_VOUCHED_PERCENT = 8, DISPLACEMENT_CONTEXT = 3, DISPLACEMENT_REACH = 96;
+    const IDENTITY_MIN_JUDGED = 48, MISREAD_VERSION_RATIO = 20, MISREAD_VERSION_MIN_MAIN = 20, MISREAD_VERSION_AGREEMENT = 0.9;
+    const MISADDRESSED_SEEN_RATIO = 4, SAME_IDENTITY_CONTENT = 0.5;
+
+    /** A copy's bytes as the content comparisons read them: each byte where it arrived passing parity, else -1. */
+    const readingCache = new WeakMap();
+    const byteReading = (copy) => {
+        let reading = readingCache.get(copy);
+        if (reading) return reading;
+        const [data, present] = copy, n = data.length;
+        const usable = new Int16Array(n), arrived = new Uint8Array(n), vouched = new Uint8Array(n);
+        for (let i = 0; i < n; i++) {
+            const came = i >= present.length || present[i] !== 0;
+            arrived[i] = came ? 1 : 0;
+            usable[i] = came && ODD_PARITY[data[i] & 0xFF] ? data[i] : -1;
+            vouched[i] = usable[i] >= 0 && i < present.length && present[i] === 2 ? 1 : 0;
+        }
+        reading = { n, usable, arrived, vouched, index: null };
+        readingCache.set(copy, reading);
+        return reading;
+    };
+    /** Where each usable byte value stands in a reading, and a running count of usable bytes (for the fast paths). */
+    const readingIndex = (reading) => {
+        if (reading.index) return reading.index;
+        const { n, usable } = reading, start = new Int32Array(257), prefix = new Int32Array(n + 1);
+        for (let i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + (usable[i] >= 0 ? 1 : 0);
+            if (usable[i] >= 0) start[usable[i] + 1]++;
+        }
+        for (let v = 0; v < 256; v++) start[v + 1] += start[v];
+        const fill = start.slice(0, 256), positions = new Int32Array(prefix[n]);
+        for (let i = 0; i < n; i++) if (usable[i] >= 0) positions[fill[usable[i]]++] = i;
+        reading.index = { start, positions, prefix };
+        return reading.index;
+    };
+    /** First index in positions[lo, hi) holding a value ≥ target. */
+    const lowerBound = (positions, lo, hi, target) => {
+        while (lo < hi) {
+            const mid = (lo + hi) >> 1;
+            if (positions[mid] < target) lo = mid + 1; else hi = mid;
+        }
+        return lo;
+    };
+    let slipCounts = new Int32Array(0);
+    const usableAt = (reading, position) => (position >= 0 && position < reading.n ? reading.usable[position] : -1);
+    const failingAt = (reading, position) => position >= 0 && position < reading.n && reading.arrived[position] === 1 && reading.usable[position] < 0;
+
+    /** [judged, agreed]: `copy`'s byte p + slip read as `held`'s byte p, over the bytes both hold passing parity. */
+    const contentAgreementAt = (held, copy, slip, from = 0, to = Infinity) => {
+        let judged = 0, agreed = 0;
+        const end = Math.min(to, held.n), first = Math.max(from, -slip), last = Math.min(end, copy.n - slip);
+        for (let p = first; p < last; p++) {
+            const a = held.usable[p];
+            if (a < 0) continue;
+            const b = copy.usable[p + slip];
+            if (b < 0) continue;
+            judged++;
+            if (a === b) agreed++;
+        }
+        return [judged, agreed];
+    };
+
+    /**
+     * contentAgreementAt for every slip in [-maxSlip, maxSlip] at once over the whole of `held`: [judged[], agreed[]],
+     * indexed by slip + maxSlip. Counted from where each byte value stands in the copy (same counts, fewer steps).
+     */
+    const allSlipAgreements = (held, copy, maxSlip) => {
+        const span = 2 * maxSlip + 1, judged = new Int32Array(span), agreed = new Int32Array(span);
+        const { start, positions, prefix } = readingIndex(copy), heldBytes = held.usable, copyBytes = copy.usable;
+        const unusable = [];
+        for (let p = 0; p < held.n; p++) {
+            const value = heldBytes[p];
+            if (value < 0) { unusable.push(p); continue; }
+            const end = start[value + 1];
+            for (let i = lowerBound(positions, start[value], end, p - maxSlip); i < end; i++) {
+                const slip = positions[i] - p;
+                if (slip > maxSlip) break;
+                agreed[slip + maxSlip]++;
+            }
+        }
+        for (let slip = -maxSlip; slip <= maxSlip; slip++) {
+            const first = Math.max(0, -slip), last = Math.min(held.n, copy.n - slip);
+            if (last <= first) continue;
+            let count = prefix[last + slip] - prefix[first + slip];
+            for (const p of unusable) if (p >= first && p < last && copyBytes[p + slip] >= 0) count--;
+            judged[slip + maxSlip] = count;
+        }
+        return [judged, agreed];
+    };
+
+    /**
+     * Whether copy's byte q, read as held's byte p, moved rather than changed: the copy's bytes around it
+     * (3 either side, at least 4 usable) agree four in five with held's at some other offset within 96.
+     * Only an offset where at least four context bytes match can pass, so the offsets are found from where the
+     * context bytes stand in held rather than by trying all 192 (same answer, decode-orc does the latter).
+     */
+    const offsetHits = new Int32Array(2 * DISPLACEMENT_REACH + 1), offsetsTouched = [];
+    const displaced = (held, p, copy, q) => {
+        const width = 2 * DISPLACEMENT_CONTEXT + 1, context = new Array(width);
+        let usableContext = 0;
+        for (let k = 0; k < width; k++) {
+            context[k] = usableAt(copy, q + k - DISPLACEMENT_CONTEXT);
+            if (context[k] >= 0) usableContext++;
+        }
+        if (usableContext < 4) return false;
+        const { start, positions } = readingIndex(held);
+        offsetsTouched.length = 0;
+        for (let k = 0; k < width; k++) {
+            const value = context[k];
+            if (value < 0) continue;
+            const base = p + k - DISPLACEMENT_CONTEXT;
+            const end = start[value + 1];
+            for (let i = lowerBound(positions, start[value], end, base - DISPLACEMENT_REACH); i < end; i++) {
+                const offset = positions[i] - base;
+                if (offset > DISPLACEMENT_REACH) break;
+                if (offset === 0) continue;
+                if (offsetHits[offset + DISPLACEMENT_REACH]++ === 0) offsetsTouched.push(offset);
+            }
+        }
+        let found = false;
+        for (const offset of offsetsTouched) {
+            const agreed = offsetHits[offset + DISPLACEMENT_REACH];
+            offsetHits[offset + DISPLACEMENT_REACH] = 0;
+            if (found || agreed < 4) continue;
+            let judged = 0;
+            for (let k = 0; k < width; k++) {
+                if (context[k] >= 0 && usableAt(held, p + k - DISPLACEMENT_CONTEXT + offset) >= 0) judged++;
+            }
+            if (judged >= 4 && agreed * 5 >= judged * 4) found = true;
+        }
+        return found;
+    };
+
+    /** Whether `copy` (its byte p + slip read as held's p) carries something `held` does not: another page's bytes. */
+    const carriesMoreThan = (held, copy, slip) => {
+        const n = held.n;
+        const differs = (p) => {
+            const a = held.usable[p], b = usableAt(copy, p + slip);
+            return a >= 0 && b >= 0 && a !== b;
+        };
+        let vouchedJudged = 0;
+        const vouchedDiffering = [];
+        for (let p = 0; p < n; p++) {
+            const q = p + slip;
+            if (!held.vouched[p] || q < 0 || q >= copy.n || !copy.vouched[q]) continue;
+            vouchedJudged++;
+            if (held.usable[p] !== copy.usable[q]) vouchedDiffering.push(p);
+        }
+        const vouchedEnough = (count) => count >= PAGE_DIFFERENCE_VOUCHED_BYTES && count * 100 >= vouchedJudged * PAGE_DIFFERENCE_VOUCHED_PERCENT;
+        if (vouchedEnough(vouchedDiffering.length)) {
+            let foreign = 0;
+            for (const p of vouchedDiffering) {
+                if (!displaced(held, p, copy, p + slip)) foreign++;
+                if (vouchedEnough(foreign)) return true;          // the count only grows: the answer is settled
+            }
+        }
+        const quiet = (from, to) => {
+            let failing = 0;
+            for (let p = from - PAGE_DIFFERENCE_QUIET_REACH; p < to + PAGE_DIFFERENCE_QUIET_REACH; p++) {
+                if (failingAt(held, p)) failing++;
+                if (failingAt(copy, p + slip)) failing++;
+            }
+            return failing <= PAGE_DIFFERENCE_QUIET_FAILURES;
+        };
+        let foreign = 0;
+        for (let p = 0; p < n && foreign < PAGE_DIFFERENCE_BYTES;) {
+            if (!differs(p)) { p++; continue; }
+            let end = p;
+            while (end < n && differs(end)) end++;
+            if (end - p >= PAGE_DIFFERENCE_RUN && quiet(p, end)) {
+                let run = 0;
+                for (let k = p; k <= end; k++) {
+                    if (k < end && !displaced(held, k, copy, k + slip)) {
+                        run++;
+                        if (run >= PAGE_DIFFERENCE_RUN && foreign + run >= PAGE_DIFFERENCE_BYTES) return true;   // settled
+                        continue;
+                    }
+                    if (run >= PAGE_DIFFERENCE_RUN) foreign += run;
+                    run = 0;
+                }
+            }
+            p = end;
+        }
+        return foreign >= PAGE_DIFFERENCE_BYTES;
+    };
+
+    /** Two pages built on one layout rather than copies of one page: each carries something the other does not. */
+    const differentPages = (a, b, slip) => carriesMoreThan(a, b, slip) && carriesMoreThan(b, a, -slip);
+
+    /**
+     * Agreement window by window, each window at its own best slip within maxSlip. Counted from where each byte
+     * value stands in the copy and a running count of its usable bytes rather than slip by slip (same counts).
+     */
+    const windowedAgreement = (held, copy, maxSlip, needPercent = 0) => {
+        let judged = 0, agreed = 0;
+        const heldBytes = held.usable, copyBytes = copy.usable, span = 2 * maxSlip + 1;
+        const { start, positions, prefix } = readingIndex(copy), heldPrefix = readingIndex(held).prefix;
+        if (slipCounts.length < span) slipCounts = new Int32Array(span);
+        for (let from = 0; from < held.n; from += CONTENT_WINDOW_BYTES) {
+            // Even if every usable byte left were judged and agreed, the share could not reach what is needed:
+            // the answer (fails) is settled, so stop counting
+            if (needPercent > 0) {
+                const left = heldPrefix[held.n] - heldPrefix[from];
+                if ((agreed + left) * 100 < (judged + left) * needPercent) return [judged, agreed];
+            }
+            const to = Math.min(from + CONTENT_WINDOW_BYTES, held.n);
+            let usableHere = 0;
+            const unusable = [];
+            for (let p = from; p < to; p++) if (heldBytes[p] >= 0) usableHere++; else unusable.push(p);
+            if (usableHere < CONTENT_WINDOW_MIN_JUDGED) continue;      // no slip can judge enough here
+            slipCounts.fill(0, 0, span);
+            for (let p = from; p < to; p++) {
+                const value = heldBytes[p];
+                if (value < 0) continue;
+                const end = start[value + 1];
+                for (let i = lowerBound(positions, start[value], end, p - maxSlip); i < end; i++) {
+                    const slip = positions[i] - p;
+                    if (slip > maxSlip) break;
+                    slipCounts[slip + maxSlip]++;
+                }
+            }
+            let bestJudged = -1, bestAgreed = 0;
+            for (let slip = -maxSlip; slip <= maxSlip; slip++) {
+                const first = Math.max(from, -slip), last = Math.min(to, copy.n - slip);
+                if (last <= first) continue;
+                // usable pairs: the copy's usable bytes over the range, less those facing a held byte that is not
+                let windowJudged = prefix[last + slip] - prefix[first + slip];
+                for (const p of unusable) if (p >= first && p < last && copyBytes[p + slip] >= 0) windowJudged--;
+                const windowAgreed = slipCounts[slip + maxSlip];
+                if (windowJudged >= CONTENT_WINDOW_MIN_JUDGED && (bestJudged < 0 ||
+                    windowAgreed * Math.max(1, bestJudged) > bestAgreed * Math.max(1, windowJudged))) {
+                    bestJudged = windowJudged; bestAgreed = windowAgreed;
+                }
+            }
+            if (bestJudged >= 0) { judged += bestJudged; agreed += bestAgreed; }
+        }
+        return [judged, agreed];
+    };
+
+    /** Whether `copy` agrees with `held` as a copy of its content does; returns {agreement, slip} or null. */
+    const agreesAsOneContent = (held, heldIntact, copy, copyIntact, windowSlip) => {
+        const longer = Math.max(held.n, copy.n), shorter = Math.min(held.n, copy.n);
+        if (heldIntact && copyIntact && longer - shorter > MAX_RECORD_SLIP) return null;
+        const same = ([judged, agreed]) => judged < OUTLIER_MIN_JUDGED || agreed * 100 >= judged * SAME_CONTENT_PERCENT;
+        let agreement = contentAgreementAt(held, copy, 0), slip = 0;
+        if (same(agreement)) return { agreement, slip };
+        const [judgedAt, agreedAt] = allSlipAgreements(held, copy, MAX_RECORD_SLIP);
+        for (let candidateSlip = -MAX_RECORD_SLIP; candidateSlip <= MAX_RECORD_SLIP; candidateSlip++) {
+            if (candidateSlip === 0) continue;
+            const candidate = [judgedAt[candidateSlip + MAX_RECORD_SLIP], agreedAt[candidateSlip + MAX_RECORD_SLIP]];
+            if (agreesBetter(candidate, agreement)) { agreement = candidate; slip = candidateSlip; }
+        }
+        if (same(agreement)) return { agreement, slip };
+        const lineUp = ([judged, agreed]) => judged >= OUTLIER_MIN_JUDGED && agreed * 100 >= judged * CONTENT_WINDOW_PERCENT;
+        const overHeld = windowedAgreement(held, copy, windowSlip, CONTENT_WINDOW_PERCENT);
+        if (lineUp(overHeld)) return { agreement: overHeld, slip };
+        const overCopy = windowedAgreement(copy, held, windowSlip, CONTENT_WINDOW_PERCENT);
+        if (lineUp(overCopy)) return { agreement: overCopy, slip };
+        return null;
+    };
+
+    /**
+     * Whether `copy` carries the content `held` does: its agreement, or null when it does not. With `why`, a copy
+     * that agrees but carries another page on the same layout is reported as why.otherPage = true.
+     */
+    const sameContent = (heldCopy, heldIntact, copyOf, copyIntact, windowSlip = CONTENT_WINDOW_SLIP, why = null) => {
+        const held = byteReading(heldCopy), copy = byteReading(copyOf);
+        const found = agreesAsOneContent(held, heldIntact, copy, copyIntact, windowSlip);
+        if (!found) return null;
+        if (differentPages(held, copy, found.slip)) { if (why) why.otherPage = true; return null; }
+        return found.agreement;
+    };
+
+    /** The best agreement of `b` with `a` (slip within ±8): [judged, agreed, slip]. */
+    const bestSlipAgreement = (a, b) => {
+        const [judgedAt, agreedAt] = allSlipAgreements(a, b, MAX_RECORD_SLIP);
+        let best = [judgedAt[MAX_RECORD_SLIP], agreedAt[MAX_RECORD_SLIP]], bestSlip = 0;
+        for (let slip = -MAX_RECORD_SLIP; slip <= MAX_RECORD_SLIP; slip++) {
+            const candidate = [judgedAt[slip + MAX_RECORD_SLIP], agreedAt[slip + MAX_RECORD_SLIP]];
+            if (agreesBetter(candidate, best)) { best = candidate; bestSlip = slip; }
+        }
+        return [best[0], best[1], bestSlip];
+    };
+
+    /** Share of parity-passing bytes two votes agree on (0 below 48 judged, or where they are two pages on one layout). */
+    const voteAgreement = (aCopy, bCopy) => {
+        const a = byteReading(aCopy), b = byteReading(bCopy);
+        const [judged, agreed, slip] = bestSlipAgreement(b, a);
+        if (judged < IDENTITY_MIN_JUDGED) return 0;
+        const share = agreed / judged;
+        if (share >= SAME_IDENTITY_CONTENT && differentPages(b, a, slip)) return 0;
+        return share;
+    };
+    const viewsDifferAsPages = (aCopy, bCopy) => {
+        const a = byteReading(aCopy), b = byteReading(bCopy);
+        return differentPages(a, b, bestSlipAgreement(a, b)[2]);
+    };
+    const copiesAgree = (aCopy, bCopy) => {
+        const [judged, agreed] = bestSlipAgreement(byteReading(aCopy), byteReading(bCopy));
+        return judged >= IDENTITY_MIN_JUDGED && agreed * 2 >= judged;
+    };
+    const usableCount = (copy) => {
+        const reading = byteReading(copy);
+        let count = 0;
+        for (let i = 0; i < reading.n; i++) if (reading.usable[i] >= 0) count++;
+        return count;
+    };
+
+    const FLAG_TALLY = [...FLAGS_VOTED];
 
     class Catalog {
-        constructor(editionChanges = null) {
-            this.entries = new Map();
-            this.editionChanges = editionChanges;
-            this.history = editionChanges ? null : new Map();
+        constructor() {
+            this.entries = new Map();          // `${channel},${address},${version},${content}` → entry
+            this.identities = new Map();       // `${channel},${address},${version}` → [content numbers]
         }
 
-        static baseKey(message) { return `${message.channel},${message.address},${message.version}`; }
+        static identityKey(message) { return `${message.channel},${message.address},${message.version}`; }
 
-        findEditionChanges() {
-            const found = new Map();
-            for (const [baseKey, copies] of this.history) {
-                if (copies.length < 2 * EDITION_CONFIRM) continue;
-                const changes = findEditionChanges(copies);
-                if (changes.length) found.set(baseKey, changes);
-            }
-            return found;
+        /** True unless a record's bytes fail odd parity too often to be final (fewer than 90% odd = not parity data at all). */
+        static parityClean(data) {
+            let odd = 0;
+            for (const byte of data) odd += ODD_PARITY[byte & 0xFF];
+            return data.length === 0 || odd === data.length || odd * 10 < data.length * 9;
+        }
+
+        /** 2 = complete, intact and parity-clean (final); 1 = complete and intact but with bad bytes; 0 = damaged. */
+        static rank(message) {
+            if (!(message.complete && message.intact)) return 0;
+            return Catalog.parityClean(message.data) ? 2 : 1;
         }
 
         static takeMessage(entry, message) {
@@ -727,34 +1499,59 @@
             entry.complete = message.complete;
             entry.data = message.data;
             entry.present = message.present;
-            entry.more_address = moreAddressFromExtensions(message.extensions);
-            entry.kept_intact = !!(message.complete && message.intact);
+            entry.representative = [message.data, message.present];
+            entry.more_address = moreAddressFromExtensions(message.extensions, message.channel);
+            // Teletext Rescue 1.2: an "intact" copy that still has bad-parity bytes supplies the header,
+            // but its bytes go into the vote with the other copies instead of being taken as final
+            entry.kept_rank = Catalog.rank(message);
+            entry.kept_intact = entry.kept_rank === 2;
+            entry.kept_whole = entry.kept_rank >= 1;       // complete and intact: as long as its record
+        }
+
+        /** Which content held under the message's identity it carries, or the next number for a new one. */
+        contentOf(message) {
+            const contents = this.identities.get(Catalog.identityKey(message)) || [];
+            // Captions (§7.3.10.1): a caption's version names it only while it is on air, so every caption sent
+            // under it is a different text. decode-orc keeps them as a stream; here they stay one record per version.
+            if (isPresentation(message.type) && message.flags.caption && (message.attested || message.type === 1)) {
+                return contents.length ? contents[0] : 0;
+            }
+            let next = 0, best = null, bestAgreement = null;
+            const copy = [message.data, message.present], copyWhole = message.complete && message.intact;
+            for (const content of contents) {
+                next = Math.max(next, content + 1);
+                if (!message.aligned) { if (best === null) best = content; continue; }
+                const entry = this.entries.get(`${Catalog.identityKey(message)},${content}`);
+                let agreement = sameContent(entry.representative, entry.kept_whole, copy, copyWhole);
+                for (let held = 0; !agreement && held < entry.copies.length; held++) {
+                    agreement = sameContent(entry.copies[held], false, copy, false);
+                }
+                if (!agreement) continue;
+                if (best === null || bestAgreement === null || agreesBetter(agreement, bestAgreement)) { best = content; bestAgreement = agreement; }
+            }
+            return best === null ? next : best;
         }
 
         merge(message) {
-            const baseKey = Catalog.baseKey(message);
-            let edition = 1;
-            if (this.history) {
-                if (!this.history.has(baseKey)) this.history.set(baseKey, []);
-                this.history.get(baseKey).push(sampleCopy(message));
-            } else {
-                for (const clock of this.editionChanges.get(baseKey) || []) if (message.clock >= clock) edition++;
-            }
-            const key = edition > 1 ? `${baseKey}#${edition}` : baseKey;
+            const identity = Catalog.identityKey(message), content = this.contentOf(message), key = `${identity},${content}`;
+            // §5.2.2 reserves types 4 to 15: a copy carrying one had its header misread and names nothing as transmitted
+            const attested = message.attested && message.type <= 3, headerAttested = message.header_attested && message.type <= 3;
             let entry = this.entries.get(key);
-            const good = message.complete && message.intact;
+            const rank = Catalog.rank(message), good = rank === 2;
             if (!entry) {
                 entry = {
                     channel: message.channel, address: message.address, version: message.version, long_form: message.long_form,
-                    first: message.clock, seen: 0, intact_n: 0, attested_n: 0,
-                    flags_set: Object.fromEntries(FLAGS_VOTED.map((name) => [name, 0])),
-                    flags_att: Object.fromEntries(FLAGS_VOTED.map((name) => [name, 0])),
-                    copies: [], kept_intact: false, edition
+                    content, first: message.clock, seen: 0, intact_n: 0, attested_n: 0, header_attested_n: 0,
+                    flags_set: Object.fromEntries(FLAG_TALLY.map((name) => [name, 0])),
+                    flags_att: Object.fromEntries(FLAG_TALLY.map((name) => [name, 0])),
+                    types: new Array(16).fill(0), types_att: new Array(16).fill(0),
+                    copies: [], kept_intact: false, kept_whole: false, kept_rank: 0
                 };
                 Catalog.takeMessage(entry, message);
                 this.entries.set(key, entry);
-            } else if ((good !== entry.kept_intact && good) ||
-                (good === entry.kept_intact && message.data.length > entry.data.length)) {
+                if (!this.identities.has(identity)) this.identities.set(identity, []);
+                this.identities.get(identity).push(content);
+            } else if (rank > entry.kept_rank || (rank === entry.kept_rank && message.data.length > entry.data.length)) {
                 Catalog.takeMessage(entry, message);
             }
             if (good) entry.copies = [];
@@ -762,42 +1559,238 @@
                 if (entry.copies.length >= MAX_COPIES) entry.copies.shift();
                 entry.copies.push([message.data, message.present]);
             }
-            for (const name of FLAGS_VOTED) {
+            for (const name of FLAG_TALLY) {
                 if (message.flags[name]) {
                     entry.flags_set[name]++;
-                    if (message.attested) entry.flags_att[name]++;
+                    if (attested) entry.flags_att[name]++;
                 }
             }
+            entry.types[message.type & 0xF]++;
+            if (attested) entry.types_att[message.type & 0xF]++;
             entry.last = message.clock;
             entry.seen++;
-            entry.intact_n += good ? 1 : 0;
-            entry.attested_n += message.attested ? 1 : 0;
+            entry.intact_n += message.complete && message.intact ? 1 : 0;
+            entry.attested_n += attested ? 1 : 0;
+            entry.header_attested_n += headerAttested ? 1 : 0;
         }
 
-        /** Identities never received cleanly: fold into a neighbor one digit away, or drop. */
+        /** The type most appearances carried (those that named the identity as transmitted, where any did). */
+        static votedType(entry) {
+            const types = entry.attested_n > 0 ? entry.types_att : entry.types;
+            let chosen = entry.type, most = types[chosen & 0xF];
+            for (let type = 0; type < 16; type++) if (types[type] > most) { most = types[type]; chosen = type; }
+            return chosen;
+        }
+
+        /** What an entry's copies say its record is: their vote, or the kept copy. */
+        static viewOf(entry) {
+            if (!entry.copies.length) return entry.representative;
+            const [data, present] = Catalog.votedCopies(entry);
+            return [data, present];
+        }
+
+        /** The vote over an entry's copies, kept until its copies change (it is asked for more than once). */
+        static votedCopies(entry) {
+            const { copies } = entry, cached = entry.voteCache;
+            if (cached && cached.copies === copies && cached.length === copies.length &&
+                cached.first === copies[0] && cached.last === copies[copies.length - 1]) return cached.result;
+            const result = voteRecord(copies);
+            entry.voteCache = { copies, length: copies.length, first: copies[0], last: copies[copies.length - 1], result };
+            return result;
+        }
+
+        static addTallies(target, source) {
+            target.seen += source.seen;
+            target.intact_n += source.intact_n;
+            target.header_attested_n += source.header_attested_n;
+            for (const name of FLAG_TALLY) target.flags_set[name] += source.flags_set[name];
+            for (let type = 0; type < 16; type++) target.types[type] += source.types[type];
+            target.first = Math.min(target.first, source.first);
+            target.last = Math.max(target.last, source.last);
+        }
+
+        /** A misreading's appearances and copies go to the record it was a misreading of (into the room left). */
+        static foldInto(target, misread) {
+            Catalog.addTallies(target, misread);
+            if (target.kept_intact) return;
+            for (const copy of misread.copies) {
+                if (target.copies.length >= MAX_COPIES) break;
+                target.copies.push(copy);
+            }
+        }
+
+        /** Two contents found to be one: the later one's appearances and copies join the earlier. */
+        static absorb(target, source) {
+            Catalog.addTallies(target, source);
+            target.attested_n += source.attested_n;
+            for (const name of FLAG_TALLY) target.flags_att[name] += source.flags_att[name];
+            for (let type = 0; type < 16; type++) target.types_att[type] += source.types_att[type];
+            if (source.kept_intact && !target.kept_intact) {
+                for (const field of ['type', 'records', 'complete', 'data', 'present', 'representative', 'more_address',
+                    'kept_rank', 'kept_intact', 'kept_whole', 'long_form']) target[field] = source[field];
+                target.copies = [];
+            } else if (!target.kept_intact) {
+                target.copies = target.copies.concat(source.copies);
+                if (target.copies.length > MAX_COPIES) target.copies = target.copies.slice(target.copies.length - MAX_COPIES);
+            }
+        }
+
+        /** Once every copy is in, contents of one identity that turn out to be one page are joined. */
+        joinContents() {
+            for (const [identity, contents] of this.identities) {
+                if (contents.length < 2) continue;
+                const keys = contents.map((content) => `${identity},${content}`);
+                const views = new Array(keys.length).fill(null);
+                const view = (index) => {
+                    if (!views[index]) views[index] = Catalog.viewOf(this.entries.get(keys[index]));
+                    return views[index];
+                };
+                const joined = new Array(keys.length).fill(false);
+                for (let later = 1; later < keys.length; later++) {
+                    const source = this.entries.get(keys[later]);
+                    for (let earlier = 0; earlier < later; earlier++) {
+                        if (joined[earlier]) continue;
+                        const target = this.entries.get(keys[earlier]);
+                        // A copy given holes for blocks it never lost runs two or three blocks late: look that far too
+                        if (sameContent(view(earlier), target.kept_whole, view(later), source.kept_whole) ||
+                            sameContent(view(earlier), target.kept_whole, view(later), source.kept_whole, JOIN_WINDOW_SLIP)) {
+                            Catalog.absorb(target, source);
+                            views[earlier] = null;
+                            joined[later] = true;
+                            break;
+                        }
+                    }
+                }
+                // JS-only: a content that never arrived intact and was seen less often than the identity's most-seen
+                // content is that page's damaged copies, not another page, when it lost bytes or shares its layout (both,
+                // unless it was seen at most a fifth as often) (on the samples nearly all such
+                // contents are copies that lost a stretch of packets). It is no longer listed. Its copies join the main
+                // content's vote only when they are as long as it and it was seen at most a fifth as often (where it was seen
+                // nearly as often, its damaged copies would outvote the few good ones): a copy a block longer or shorter has its bytes out of
+                // place from the damage on, and voted in where few copies hold a byte it does harm.
+                let main = -1;
+                keys.forEach((key, index) => {
+                    if (joined[index]) return;
+                    if (main < 0 || this.entries.get(key).seen > this.entries.get(keys[main]).seen) main = index;
+                });
+                const mainEntry = this.entries.get(keys[main]);
+                keys.forEach((key, index) => {
+                    if (joined[index] || index === main) return;
+                    const entry = this.entries.get(key);
+                    if (entry.intact_n > 0 || entry.seen > mainEntry.seen) return;
+                    // Only a content that lost at least a packet's worth of bytes is taken for damage: one that arrived
+                    // whole but reads differently is another page (a session screen, an updated edition)
+                    const [minorData, minorPresent] = Catalog.viewOf(entry), [mainData, mainPresent] = Catalog.viewOf(mainEntry);
+                    let lostBytes = 0;
+                    for (let i = 0; i < minorData.length; i++) if (minorPresent && i < minorPresent.length && minorPresent[i] === 0) lostBytes++;
+                    const sameLength = minorData.length === mainData.length;
+                    // ... or that is about as long as the main content and shares its layout (a quarter or more of the
+                    // bytes both hold, where pages that differ share a few percent): a copy with blocks misplaced or misread
+                    let sharesLayout = false, damagedLayout = false;
+                    if (Math.abs(minorData.length - mainData.length) <= Math.max(28, mainData.length * 0.06)) {
+                        let judged = 0, agreed = 0;
+                        for (let i = 0; i < Math.min(minorData.length, mainData.length); i++) {
+                            if (!salvageUsable(minorData, minorPresent, i) || !salvageUsable(mainData, mainPresent, i)) continue;
+                            judged++;
+                            if ((minorData[i] & 0x7F) === (mainData[i] & 0x7F)) agreed++;
+                        }
+                        sharesLayout = judged >= 64 && agreed * 4 >= judged;
+                        // Losses blur the layout: with a stretch lost, a sixth or more of the bytes agreeing will do
+                        damagedLayout = judged >= 64 && agreed * 100 >= judged * 15;
+                    }
+                    // Seen at most a fifth as often, losses or a shared layout are enough; seen nearly as often (both
+                    // rare), it takes losses and a layout the damage left recognizable
+                    const rare = entry.seen * 5 <= mainEntry.seen;
+                    if (rare ? lostBytes < 27 && !sharesLayout : lostBytes < 27 || !damagedLayout) return;
+                    Catalog.absorb(mainEntry, sameLength && rare ? entry : { ...entry, copies: [], kept_intact: false });
+                    joined[index] = true;
+                });
+                const renumbered = [];
+                keys.forEach((key, index) => {
+                    const entry = this.entries.get(key);
+                    this.entries.delete(key);
+                    if (joined[index]) return;
+                    entry.content = renumbered.length;
+                    renumbered.push(entry);
+                });
+                renumbered.forEach((entry) => this.entries.set(`${identity},${entry.content}`, entry));
+                this.identities.set(identity, renumbered.map((entry) => entry.content));
+            }
+        }
+
+        /**
+         * A version seen a handful of times inside the span of another version of the same address seen twenty
+         * times as often, and carrying its bytes, is that version with its version nibble misread (§5.2.7.2).
+         */
+        foldMisreadVersions() {
+            for (const [rareKey, rare] of [...this.entries]) {
+                if (!this.entries.has(rareKey)) continue;
+                let into = null, intoShare = 0;
+                for (const [key, main] of this.entries) {
+                    if (main.channel !== rare.channel || main.address !== rare.address || main.version === rare.version) continue;
+                    if (main.seen < MISREAD_VERSION_MIN_MAIN || main.seen < MISREAD_VERSION_RATIO * rare.seen ||
+                        rare.first < main.first || rare.last > main.last) continue;
+                    const share = voteAgreement(Catalog.viewOf(rare), Catalog.viewOf(main));
+                    if (share >= MISREAD_VERSION_AGREEMENT && share > intoShare) { into = key; intoShare = share; }
+                }
+                if (into === null) continue;
+                Catalog.foldInto(this.entries.get(into), rare);
+                this.removeEntry(rareKey);
+            }
+        }
+
+        removeEntry(key) {
+            const entry = this.entries.get(key);
+            if (!entry) return;
+            this.entries.delete(key);
+            const identity = Catalog.identityKey(entry), contents = this.identities.get(identity);
+            if (contents) {
+                const left = contents.filter((content) => content !== entry.content);
+                if (left.length) this.identities.set(identity, left); else this.identities.delete(identity);
+            }
+        }
+
+        /** A record no copy named as transmitted is kept as a page of its own only if it reads as one. */
+        static keepable(entry, view) {
+            if (Catalog.votedType(entry) > 3) return false;
+            if (usableCount(view) < IDENTITY_MIN_JUDGED) return false;
+            if (entry.kept_whole) return true;
+            // Copies of several pages misread onto one name agree with their vote but not with one another
+            for (let a = 0; a < entry.copies.length; a++) {
+                for (let b = a + 1; b < entry.copies.length; b++) if (copiesAgree(entry.copies[a], entry.copies[b])) return true;
+            }
+            return false;
+        }
+
+        static keptByItsHeader(entry, view) {
+            return entry.header_attested_n > 0 && Catalog.votedType(entry) <= 3 && usableCount(view) >= IDENTITY_MIN_JUDGED;
+        }
+
+        /** Identities never received cleanly: fold into the page they carry, keep, or drop (decode-orc PR #328). */
         reconcile() {
+            this.joinContents();
+            this.foldMisreadVersions();
             const identityDigits = (entry) => {
                 const digits = [(entry.channel >> 8) & 0xF, (entry.channel >> 4) & 0xF, entry.channel & 0xF];
                 for (let bits = 32; bits >= 0; bits -= 4) digits.push(shiftRight(entry.address, bits) % 16);
                 digits.push(entry.version & 0xF);
                 return digits;
             };
-            const contentAgreement = (a, b) => {
-                const longer = Math.max(a.length, b.length);
-                if (longer === 0) return NaN;
-                let same = 0;
-                for (let i = 0; i < Math.min(a.length, b.length); i++) if (((a[i] ^ b[i]) & 0x7F) === 0) same++;
-                return same / longer;
-            };
-            const SAME_CONTENT = 0.5, RECURRING = 2;
             const keys = [...this.entries.keys()].sort((x, y) => {
                 const p = this.entries.get(x), q = this.entries.get(y);
-                return p.channel - q.channel || p.address - q.address || p.version - q.version;
+                return p.channel - q.channel || p.address - q.address || p.version - q.version || p.content - q.content;
             });
             const entries = keys.map((key) => this.entries.get(key));
             const digits = entries.map(identityDigits);
             const trusted = entries.map((entry) => entry.attested_n > 0);
-            if (!trusted.some(Boolean)) return [0, 0, 0];
+            const result = { folded: 0, dropped: 0, kept: 0, misaddressed: 0 };
+            if (!trusted.some(Boolean)) return result;
+            const views = entries.map((entry) => Catalog.viewOf(entry));
+            const agreementOf = (u, a) => {
+                if (!views[u][0].length || !views[a][0].length) return NaN;
+                if (u === a) return Catalog.keepable(entries[u], views[u]) ? 1 : NaN;
+                return voteAgreement(views[u], views[a]);
+            };
             const singleDigitNeighbor = (index) => {
                 let found = null;
                 for (let other = 0; other < entries.length; other++) {
@@ -820,8 +1813,8 @@
                 let match = null, matchAgreement = 0, ambiguous = false;
                 for (let a = 0; a < entries.length; a++) {
                     if (!anchor[a] || a === u) continue;
-                    const agree = contentAgreement(entries[u].data, entries[a].data);
-                    if (!(agree >= SAME_CONTENT)) continue;
+                    const agree = agreementOf(u, a);
+                    if (!(agree >= SAME_IDENTITY_CONTENT)) continue;
                     const better = match === null || agree > matchAgreement ||
                         (agree === matchAgreement && entries[a].seen > entries[match].seen);
                     if (better) { match = a; matchAgreement = agree; ambiguous = false; }
@@ -829,63 +1822,627 @@
                 }
                 const neighbor = singleDigitNeighbor(u);
                 if (match !== null && !ambiguous) verdicts[u] = ['fold', match];
-                else if (match === null && entries[u].seen >= RECURRING && entries[u].data.length > 0) {
+                else if (match === null && entries[u].seen >= 2 && !Number.isNaN(agreementOf(u, u))) {
                     verdicts[u] = ['keep'];
                     anchor[u] = true;
                 } else if (neighbor !== null) verdicts[u] = ['fold', neighbor];
                 else verdicts[u] = ['drop'];
             }
-            let folded = 0, dropped = 0, kept = 0;
-            for (let i = 0; i < entries.length; i++) {
-                if (trusted[i]) continue;
-                const entry = entries[i], [action, target] = verdicts[i];
-                if (action === 'keep') { entry.unconfirmed = true; kept++; continue; }
-                this.entries.delete(keys[i]);
-                if (action === 'drop') { dropped++; continue; }
-                const into = entries[target];
-                into.seen += entry.seen;
-                into.intact_n += entry.intact_n;
-                for (const name of FLAGS_VOTED) into.flags_set[name] += entry.flags_set[name];
-                into.first = Math.min(into.first, entry.first);
-                into.last = Math.max(into.last, entry.last);
-                if (!into.kept_intact) {
-                    for (const copy of entry.copies) {
-                        if (into.copies.length >= MAX_COPIES) break;
-                        into.copies.push(copy);
-                    }
-                }
-                folded++;
+            // The service's own data channel: the one most identities named as transmitted are on
+            const attestedOnChannel = new Map(), named = new Set();
+            entries.forEach((entry, i) => {
+                if (!trusted[i]) return;
+                attestedOnChannel.set(entry.channel, (attestedOnChannel.get(entry.channel) || 0) + 1);
+                named.add(Catalog.identityKey(entry));
+            });
+            let serviceChannel = 0, mostAttested = 0;
+            for (const [channel, count] of [...attestedOnChannel].sort((x, y) => x[0] - y[0])) {
+                if (count > mostAttested) { serviceChannel = channel; mostAttested = count; }
             }
-            return [folded, dropped, kept];
+            for (const u of untrusted) {
+                // A sighting folded into another page built on its layout would only blend the two
+                if (verdicts[u][0] === 'fold' && viewsDifferAsPages(views[verdicts[u][1]], views[u])) verdicts[u] = ['drop'];
+                if (verdicts[u][0] === 'drop' && entries[u].channel === serviceChannel && !named.has(Catalog.identityKey(entries[u])) &&
+                    Catalog.keptByItsHeader(entries[u], views[u])) verdicts[u] = ['keep'];
+            }
+            // A record on another data channel, never intact, whose address and version a page of the service's
+            // channel carries seen four times as often, is that page's packets misaddressed
+            const standing = (i) => trusted[i] || verdicts[i][0] === 'keep';
+            const misaddressed = entries.map((entry, i) => {
+                if (entry.channel === serviceChannel || !standing(i) || entry.intact_n > 0) return false;
+                let namesakeSeen = 0;
+                entries.forEach((other, j) => {
+                    if (other.channel === serviceChannel && other.address === entry.address && other.version === entry.version &&
+                        standing(j)) namesakeSeen += other.seen;
+                });
+                return namesakeSeen >= MISADDRESSED_SEEN_RATIO * entry.seen;
+            });
+            for (const u of untrusted) if (verdicts[u][0] === 'fold' && misaddressed[verdicts[u][1]]) verdicts[u] = ['drop'];
+            entries.forEach((entry, i) => {
+                if (trusted[i] || misaddressed[i]) return;
+                const [action, target] = verdicts[i];
+                if (action === 'keep') { entry.unconfirmed = true; result.kept++; return; }
+                if (action === 'fold') { Catalog.foldInto(entries[target], entry); result.folded++; } else result.dropped++;
+                this.removeEntry(keys[i]);
+            });
+            entries.forEach((entry, i) => {
+                if (!misaddressed[i]) return;
+                result.misaddressed++;
+                this.removeEntry(keys[i]);
+            });
+            return result;
         }
 
         records() {
             const entries = [...this.entries.values()];
-            entries.sort((a, b) => a.channel - b.channel || a.address - b.address || a.version - b.version || a.edition - b.edition);
-            const editionCount = new Map();
-            for (const entry of entries) {
-                const baseKey = Catalog.baseKey(entry);
-                editionCount.set(baseKey, (editionCount.get(baseKey) || 0) + 1);
-            }
-            return entries.map((entry) => {
-                const { copies, ...fields } = entry;
+            // Contents of one identity are listed most-seen first, so the page a service kept sending keeps the plain
+            // name (000-004-v0) and a stray sighting with other contents comes after it as an edition (decode-orc
+            // numbers them in order of arrival instead)
+            entries.sort((a, b) => a.channel - b.channel || a.address - b.address || a.version - b.version ||
+                b.seen - a.seen || a.content - b.content);
+            const rank = new Map(), confusions = new Map(), readingsOf = new Map();
+            const built = entries.map((entry) => {
+                const { copies, representative, types, types_att, voteCache, ...fields } = entry;
                 const record = { ...fields };
                 const hasAttested = entry.attested_n > 0;
                 const voters = hasAttested ? entry.attested_n : entry.seen;
                 const flagCounts = hasAttested ? entry.flags_att : entry.flags_set;
                 record.flags = Object.fromEntries(FLAGS_VOTED.map((name) => [name, flagCounts[name] * 2 > voters]));
+                record.type = Catalog.votedType(entry);
                 record.copies_voted = copies.length;
                 record.unconfirmed = !!entry.unconfirmed;
-                record.editions = editionCount.get(Catalog.baseKey(entry));
+                // Pages sent under one identity with different contents are listed once per content, in order of arrival
+                const identity = Catalog.identityKey(entry);
+                rank.set(identity, (rank.get(identity) || 0) + 1);
+                record.edition = rank.get(identity);
+                record.editions = (this.identities.get(Catalog.identityKey(entry)) || [0]).length;
                 if (copies.length) {
-                    const [data, present, ties] = voteRecord(copies);
+                    const [data, present, ties, contested, alternatives] = Catalog.votedCopies(entry);
+                    if (alternatives && alternatives.length) readingsOf.set(record, alternatives);
                     record.data = ties && ties.length ? settleTiesByGrammar(data, ties) : data;
+                    if (contested && contested.length && isPresentation(record.type)) {
+                        record.data = settleContestedByMotif(settleContestedByGrammar(record.data, contested), contested);
+                        for (const [, [winner, runnerUp]] of contested) {
+                            const a = winner & 0x7F, b = runnerUp & 0x7F, key = Math.min(a, b) * 128 + Math.max(a, b);
+                            confusions.set(key, (confusions.get(key) || 0) + 1);
+                        }
+                    }
                     record.present = present;
                 }
                 record.addr_text = !entry.long_form ? addressText(entry.address) : toHex(entry.address, 9);
                 record.purpose = reservedPurpose(entry.channel, entry.address);
                 return record;
             });
+            // JS-only: the misreadings this recording makes again and again (the pairs its contested bytes split
+            // between) are tried where every copy misread a byte alike, and the grammar left a problem just after it
+            const partners = new Map();
+            for (const [key, count] of confusions) {
+                if (count < CONFUSION_MIN_COUNT) continue;
+                const a = Math.floor(key / 128), b = key % 128;
+                for (const [from, to] of [[a, b], [b, a]]) {
+                    if (!partners.has(from)) partners.set(from, []);
+                    partners.get(from).push([to, count]);
+                }
+            }
+            for (const list of partners.values()) list.sort((p, q) => q[1] - p[1]);
+            if (partners.size) {
+                for (const record of built) {
+                    if (record.copies_voted && record.data && record.data.length && isPresentation(record.type)) {
+                        record.data = repairByConfusions(record.data, record.present, partners);
+                    }
+                }
+            }
+            settleWordsByVocabulary(built, readingsOf);
+            return built;
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Salvage of groups whose synchronizing packet was lost (decode-orc PR #328, nabts_salvage.cpp)
+    // ---------------------------------------------------------------------------
+
+    /**
+     * How a service writes NAPLPS, learned from its own records (naplps_dialect_model.cpp): which byte follows which,
+     * in text and in PDI data separately, so a stretch can be scored as the one or the other.
+     */
+    class DialectModel {
+        constructor() {
+            this.textPairs = new Uint32Array(128 * 128);
+            this.pdiPairs = new Uint32Array(128 * 128);
+            this.textFirsts = new Float64Array(128);
+            this.pdiFirsts = new Float64Array(128);
+            this.records = 0;
+        }
+
+        learn(data, present, roles = readRoles(data)) {
+            if (!data.length) return;
+            this.records++;
+            let stretch = 0, previous = -1;                       // 0 none, ROLE_TEXT or ROLE_PDI
+            for (let i = 0; i < roles.length; i++) {
+                const kind = roles[i] === ROLE_TEXT || roles[i] === ROLE_PDI ? roles[i] : 0;
+                if (kind !== stretch) { previous = -1; stretch = kind; }
+                const arrived = data[i] !== 0 && (!present || !present.length || present[i] !== 0);
+                if (!kind || !arrived) { previous = -1; continue; }
+                const byte = data[i] & 0x7F;
+                if (previous >= 0) {
+                    if (kind === ROLE_TEXT) { this.textPairs[previous * 128 + byte]++; this.textFirsts[previous]++; }
+                    else { this.pdiPairs[previous * 128 + byte]++; this.pdiFirsts[previous]++; }
+                }
+                previous = byte;
+            }
+        }
+
+        static score(pairs, firsts, bytes, from, count) {
+            if (count < 2) return 0;
+            let total = 0;
+            for (let i = from + 1; i < from + count; i++) {
+                const a = bytes[i - 1] & 0x7F, b = bytes[i] & 0x7F;
+                total += Math.log((pairs[a * 128 + b] + 0.5) / (firsts[a] + 0.5 * 128));
+            }
+            return total / (count - 1);
+        }
+
+        textScore(bytes, from, count) { return DialectModel.score(this.textPairs, this.textFirsts, bytes, from, count); }
+
+        pdiScore(bytes, from, count) { return DialectModel.score(this.pdiPairs, this.pdiFirsts, bytes, from, count); }
+    }
+
+    const SALVAGE_STRETCH = 6, SALVAGE_MAX_STRETCH_HITS = 32, SALVAGE_ALIGNMENTS_TRIED = 4, SALVAGE_CLEAR_MARGIN = 2.0;
+    const SALVAGE_MIN_RUN_PACKETS = 3, SALVAGE_LONE_PAGE_USABLE = 90, SALVAGE_RESUME_SEARCH = 112;
+    const SALVAGE_MIN_JUDGED = 40, SALVAGE_MIN_AGREE = 85, SALVAGE_MAX_RUNS = 65536, SALVAGE_MAX_BYTES = 32 << 20;
+    const DIALECT_FLOOR_PERCENTILE = 10, DIALECT_FLOOR_MARGIN = 0.25, DIALECT_MIN_RECORDS = 8;
+    const MAX_GROUP_BYTES = 1904, IDENTITY_LOST_BASE = 2 ** 40;
+
+    const salvageUsable = (data, present, i) => (!present || !present.length || present[i] !== 0) && ODD_PARITY[data[i] & 0xFF] === 1;
+    const usableStretch = (data, present, i) => {
+        for (let k = 0; k < SALVAGE_STRETCH; k++) if (!salvageUsable(data, present, i + k)) return false;
+        return true;
+    };
+    /** Six 7-bit bytes as one number (the channel keys an outer map). */
+    const stretchKey = (data, i) => {
+        let key = 0;
+        for (let k = 0; k < SALVAGE_STRETCH; k++) key = key * 128 + (data[i + k] & 0x7F);
+        return key;
+    };
+    const indexStretch = (index, channel, key, entry) => {
+        if (!index.has(channel)) index.set(channel, new Map());
+        const byKey = index.get(channel);
+        let list = byKey.get(key);
+        if (!list) byKey.set(key, list = []);
+        list.push(entry[0], entry[1]);           // flat [target, position, target, position, …]
+    };
+
+    /** Where the index's stretches propose `run` sits: the most proposed placements first. */
+    const salvageProposals = (index, run) => {
+        const byKey = index.get(run.channel);
+        if (!byKey || run.data.length < SALVAGE_STRETCH) return [];
+        const votes = new Map(), n = run.data.length;
+        // Usable bytes in a row ending at each position, so a stretch is tested once rather than byte by byte
+        let streak = 0;
+        for (let end = 0; end < n; end++) {
+            streak = salvageUsable(run.data, run.present, end) ? streak + 1 : 0;
+            if (streak < SALVAGE_STRETCH) continue;
+            const i = end - SALVAGE_STRETCH + 1;
+            const found = byKey.get(stretchKey(run.data, i));
+            if (!found || found.length > 2 * SALVAGE_MAX_STRETCH_HITS) continue;
+            for (let h = 0; h < found.length; h += 2) {
+                // target and offset packed in one number (offset biased to stay positive), so placements sort by both
+                const key = found[h] * 1048576 + (found[h + 1] - i + 524288);
+                votes.set(key, (votes.get(key) || 0) + 1);
+            }
+        }
+        const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+        const out = [];
+        for (let k = 0; k < ranked.length && k < SALVAGE_ALIGNMENTS_TRIED; k++) {
+            const key = ranked[k][0], target = Math.floor(key / 1048576);
+            out.push({ target, offset: key - target * 1048576 - 524288 });
+        }
+        return out;
+    };
+
+    /** [judged, agreed] of `run` against data/present at `offset`, over bytes both hold passing parity. */
+    const salvageAgreement = (run, data, present, offset) => {
+        let judged = 0, agreed = 0;
+        for (let i = 0; i < run.data.length; i++) {
+            const at = offset + i;
+            if (at < 0 || at >= data.length || !salvageUsable(run.data, run.present, i) || !salvageUsable(data, present, at)) continue;
+            judged++;
+            if ((run.data[i] & 0x7F) === (data[at] & 0x7F)) agreed++;
+        }
+        return [judged, agreed];
+    };
+    const salvagePasses = ([judged, agreed]) => judged >= SALVAGE_MIN_JUDGED && agreed * 100 >= judged * SALVAGE_MIN_AGREE;
+    const salvagePercent = ([judged, agreed]) => (judged === 0 ? 0 : 100 * agreed / judged);
+
+    /** A run set against its candidate placements: the best that passes, whether another is close, and all that pass. */
+    const placeRun = (run, candidates, bytesOf) => {
+        const out = { best: null, ambiguous: false, passing: [] };
+        let bestAgreement = null, runnerUp = null;
+        for (const candidate of candidates) {
+            const [data, present] = bytesOf(candidate.target);
+            const agreement = salvageAgreement(run, data, present, candidate.offset);
+            if (!salvagePasses(agreement)) continue;
+            out.passing.push(candidate);
+            if (!out.best || salvagePercent(agreement) > salvagePercent(bestAgreement)) {
+                if (out.best && out.best.target !== candidate.target) runnerUp = salvagePercent(bestAgreement);
+                out.best = candidate;
+                bestAgreement = agreement;
+            } else if (candidate.target !== out.best.target) runnerUp = Math.max(runnerUp ?? 0, salvagePercent(agreement));
+        }
+        out.ambiguous = !!out.best && runnerUp !== null && salvagePercent(bestAgreement) - runnerUp < SALVAGE_CLEAR_MARGIN;
+        return out;
+    };
+
+    /** Clusters found to be one page, each with where its frame sits in its root's (a union-find with offsets). */
+    class ClusterUnion {
+        constructor() { this.parent = []; this.shift = []; this.lo = []; this.hi = []; }
+        add(lo, hi) { this.parent.push(this.parent.length); this.shift.push(0); this.lo.push(lo); this.hi.push(hi); }
+        find(cluster) {
+            let shift = 0, at = cluster;
+            while (this.parent[at] !== at) { shift += this.shift[at]; at = this.parent[at]; }
+            return [at, shift];
+        }
+        extend(cluster, lo, hi) {
+            const [root, shift] = this.find(cluster);
+            this.lo[root] = Math.min(this.lo[root], lo + shift);
+            this.hi[root] = Math.max(this.hi[root], hi + shift);
+        }
+        join(a, b, delta, longest) {
+            const [rootA, shiftA] = this.find(a), [rootB, shiftB] = this.find(b);
+            if (rootA === rootB) return;
+            const moved = delta + shiftA - shiftB;
+            const lo = Math.min(this.lo[rootA], this.lo[rootB] + moved), hi = Math.max(this.hi[rootA], this.hi[rootB] + moved);
+            if (hi - lo > longest) return;
+            this.parent[rootB] = rootA;
+            this.shift[rootB] = moved;
+            this.lo[rootA] = lo;
+            this.hi[rootA] = hi;
+        }
+    }
+
+    /** The mean log-likelihood per byte pair the model gives data, read as a receiver reads it; -Infinity if none. */
+    const dialectScore = (model, data, present) => {
+        const roles = readRoles(data);
+        const arrived = (i) => data[i] !== 0 && (!present || !present.length || present[i] !== 0);
+        let total = 0, pairs = 0, i = 0;
+        while (i < roles.length) {
+            const role = roles[i];
+            if ((role !== ROLE_TEXT && role !== ROLE_PDI) || !arrived(i)) { i++; continue; }
+            let j = i;
+            while (j < roles.length && roles[j] === role && arrived(j)) j++;
+            const count = j - i;
+            if (count >= 2) {
+                const mean = role === ROLE_TEXT ? model.textScore(data, i, count) : model.pdiScore(data, i, count);
+                total += mean * (count - 1);
+                pairs += count - 1;
+            }
+            i = j;
+        }
+        return pairs === 0 ? -Infinity : total / pairs;
+    };
+
+    /**
+     * The packets of groups whose synchronizing packet was lost (decode-orc PR #328). A run that is a copy of a
+     * catalogued record fills that record's holes — never a byte the vote settled. Runs no record holds are grouped,
+     * and a group of two or more, or one clean run, becomes a page of its own listed without its identity
+     * ("LOST1" …), if its code reads like the service's own pages.
+     */
+    /**
+     * The fills a run may make where the record agrees with it right beside the hole (JS-only, not in decode-orc):
+     * a run that agrees with a record overall can still have lost a packet without a gap showing, so its bytes after
+     * that point sit a block out. A run's bytes go into a hole only where the nearest bytes both hold agree on each
+     * side the run reaches, and at least one side vouches for it.
+     */
+    const SALVAGE_EDGE_WITNESSES = 6, SALVAGE_EDGE_REACH = 48, SALVAGE_EDGE_MIN = 4;
+    const salvageVouchedFills = (run, record, offset, fills) => {
+        if (!fills.length) return fills;
+        const present = record.present || [];
+        const side = (from, step) => {
+            let judged = 0, agreed = 0;
+            for (let at = from, walked = 0; walked < SALVAGE_EDGE_REACH && judged < SALVAGE_EDGE_WITNESSES; at += step, walked++) {
+                const i = at - offset;
+                if (i < 0 || i >= run.data.length || at < 0 || at >= record.data.length) break;
+                if (!salvageUsable(run.data, run.present, i) || !salvageUsable(record.data, present, at)) continue;
+                judged++;
+                if ((run.data[i] & 0x7F) === (record.data[at] & 0x7F)) agreed++;
+            }
+            return { judged, agreed };
+        };
+        const kept = [];
+        for (let start = 0; start < fills.length;) {
+            let end = start;
+            while (end + 1 < fills.length && fills[end + 1] === fills[end] + 1) end++;
+            // Widen to the whole hole, so the witnesses are bytes the record holds
+            let first = offset + fills[start], last = offset + fills[end];
+            while (first - 1 >= 0 && present[first - 1] === 0) first--;
+            while (last + 1 < record.data.length && present[last + 1] === 0) last++;
+            const sides = [side(first - 1, -1), side(last + 1, 1)];
+            const ok = sides.every((s) => s.judged === 0 || s.agreed * 6 >= s.judged * 5)
+                && sides.some((s) => s.judged >= SALVAGE_EDGE_MIN && s.agreed * 6 >= s.judged * 5);
+            if (ok) for (let k = start; k <= end; k++) kept.push(fills[k]);
+            start = end + 1;
+        }
+        return kept;
+    };
+
+    class Salvage {
+        constructor() {
+            this.runs = [];
+            this.bytes = 0;
+            this.stats = {
+                runs_held: 0, runs_refused: 0, runs_matched: 0, bytes_filled: 0, records_filled: 0,
+                runs_unmatched: 0, runs_in_pages: 0, pages_found: 0, pages_refused: 0
+            };
+        }
+
+        add(loose) {
+            if (loose.packets < SALVAGE_MIN_RUN_PACKETS || !loose.data.length) return;
+            if (this.runs.length >= SALVAGE_MAX_RUNS || this.bytes + loose.data.length > SALVAGE_MAX_BYTES) { this.stats.runs_refused++; return; }
+            const run = { channel: loose.channel, data: loose.data, present: [...loose.present], clock: loose.clock };
+            if (loose.starts_sync) {
+                // The group header that did not decode, and the record header after it (all Hamming 8/4, which passes
+                // odd parity), are no presentation code
+                let skip = GROUP_HEADER_SIZE;
+                if (run.data.length > skip) {
+                    const header = decodeRecordHeader(run.data.slice(skip));
+                    if (header) skip += header.header_bytes;
+                }
+                skip = Math.min(skip, run.data.length);
+                for (let i = 0; i < skip; i++) run.present[i] = 0;
+            }
+            this.bytes += run.data.length;
+            this.runs.push(run);
+        }
+
+        /** Fill the records' holes from runs that are copies of them, and append the pages the rest make up. */
+        apply(records) {
+            const stats = this.stats;
+            stats.runs_held = this.runs.length;
+            if (!this.runs.length) return stats;
+            const runs = this.runs;
+
+            // Channels a record was named on as transmitted, and the record types there
+            // Captions are not catalogued records in decode-orc (they go to a caption stream), so they neither name a
+            // channel for salvage nor take its runs
+            const isCaption = (record) => !!(record.flags && record.flags.caption) && isPresentation(record.type);
+            const namedChannels = new Map();
+            for (const record of records) {
+                if (record.attested_n > 0 && !record.identity_lost && !isCaption(record)) {
+                    if (!namedChannels.has(record.channel)) namedChannels.set(record.channel, new Map());
+                    const types = namedChannels.get(record.channel);
+                    types.set(record.type, (types.get(record.type) || 0) + 1);
+                }
+            }
+            const presentOf = (record) => record.present || [];
+            const recordIndex = new Map(), named = records.length;
+            for (let r = 0; r < named; r++) {
+                const record = records[r];
+                if (!namedChannels.has(record.channel) || record.data.length < SALVAGE_STRETCH || isCaption(record)) continue;
+                for (let p = 0; p + SALVAGE_STRETCH <= record.data.length; p++) {
+                    if (usableStretch(record.data, presentOf(record), p)) indexStretch(recordIndex, record.channel, stretchKey(record.data, p), [r, p]);
+                }
+            }
+            const recordBytes = (r) => [records[r].data, presentOf(records[r])];
+
+            const readings = new Map(), unmatched = [], taken = new Array(runs.length).fill(false);
+            runs.forEach((run, h) => {
+                if (!namedChannels.has(run.channel)) return;
+                const placed = placeRun(run, salvageProposals(recordIndex, run), recordBytes);
+                if (!placed.passing.length) { unmatched.push(h); return; }
+                taken[h] = true;
+                stats.runs_matched++;
+                if (placed.ambiguous) return;
+                const record = records[placed.best.target], present = record.present;
+                if (!present || !present.length) return;          // arrived whole: nothing to fill
+                const offset = placed.best.offset;
+                const fills = [];
+                for (let i = 0; i < run.data.length; i++) {
+                    const at = offset + i;
+                    if (at < 0 || at >= record.data.length || !salvageUsable(run.data, run.present, i)) continue;
+                    if (present[at] !== 0) continue;              // the vote settled this byte, and a run is one reading
+                    // JS-only: a single reading never supplies a control code (a misread 0x4C read as 0x0C would clear
+                    // the screen); the hole is left for the interpreter, which reads past it
+                    if ((run.data[i] & 0x7F) < 0x20) continue;
+                    fills.push(i);
+                }
+                for (const i of salvageVouchedFills(run, record, offset, fills)) {
+                    const at = offset + i;
+                    const key = `${placed.best.target},${at}`;
+                    if (!readings.has(key)) readings.set(key, new Map());
+                    const values = readings.get(key);
+                    values.set(run.data[i], (values.get(run.data[i]) || 0) + 256);
+                }
+            });
+            // JS-only: a hole is filled only where the runs deliver all of it. A hole half filled leaves the code
+            // mid-command either way, and a run with a gap of its own inside a hole may have lost a packet there too.
+            const wholeHoles = new Set();
+            for (const key of readings.keys()) {
+                const [target, at] = key.split(',').map(Number);
+                const present = records[target].present;
+                if (at > 0 && present[at - 1] === 0) continue;      // not the first byte of its hole
+                let end = at;
+                while (end < present.length && present[end] === 0) end++;
+                let covered = true;
+                for (let k = at; k < end && covered; k++) covered = readings.has(`${target},${k}`);
+                if (covered) for (let k = at; k < end; k++) wholeHoles.add(`${target},${k}`);
+            }
+            const filledPerRecord = new Map();
+            for (const [key, values] of readings) {
+                if (!wholeHoles.has(key)) continue;
+                const [target, at] = key.split(',').map(Number);
+                let chosen = null, most = -1;
+                for (const [value, weight] of [...values].sort((a, b) => a[0] - b[0])) if (weight > most) { chosen = value; most = weight; }
+                const record = records[target];
+                if (!filledPerRecord.has(target)) {
+                    // Copy before writing: the record's bytes may be shared with the catalog's caches
+                    record.data = [...record.data];
+                    record.present = [...record.present];
+                }
+                record.data[at] = chosen;
+                record.present[at] = 1;
+                filledPerRecord.set(target, (filledPerRecord.get(target) || 0) + 1);
+            }
+            for (const [target, count] of filledPerRecord) {
+                records[target].bytes_salvaged = (records[target].bytes_salvaged || 0) + count;
+                stats.bytes_filled += count;
+            }
+            stats.records_filled = filledPerRecord.size;
+            stats.runs_unmatched = unmatched.length;
+
+            // The rest are pages none of the records holds: each run joins the cluster it agrees with best
+            const clusters = [], clusterIndex = new Map(), pagesOf = new ClusterUnion();
+            const takeInto = (cluster, id, h, run, offset) => {
+                const start = Math.min(cluster.base, offset);
+                const end = Math.max(cluster.base + cluster.consensus.length, offset + run.data.length);
+                if (start < cluster.base) {
+                    const grow = cluster.base - start;
+                    cluster.consensus = new Array(grow).fill(0).concat(cluster.consensus);
+                    cluster.known = new Array(grow).fill(0).concat(cluster.known);
+                    cluster.base = start;
+                }
+                while (cluster.consensus.length < end - cluster.base) { cluster.consensus.push(0); cluster.known.push(0); }
+                for (let i = 0; i < run.data.length; i++) {
+                    const p = offset + i - cluster.base;
+                    if (cluster.known[p] === 0 && salvageUsable(run.data, run.present, i)) { cluster.consensus[p] = run.data[i]; cluster.known[p] = 1; }
+                }
+                for (let i = 0; i + SALVAGE_STRETCH <= run.data.length; i++) {
+                    const at = offset + i;
+                    if (usableStretch(run.data, run.present, i) && !cluster.indexed.has(at)) {
+                        cluster.indexed.add(at);
+                        indexStretch(clusterIndex, run.channel, stretchKey(run.data, i), [id, at]);
+                    }
+                }
+                cluster.members.push([h, offset]);
+            };
+            const clusterBytes = (c) => [clusters[c].consensus, clusters[c].known];
+            for (const h of unmatched) {
+                const run = runs[h];
+                const candidates = salvageProposals(clusterIndex, run).map(({ target, offset }) => ({ target, offset: offset - clusters[target].base }));
+                const placed = placeRun(run, candidates, clusterBytes);
+                if (placed.best) {
+                    const cluster = clusters[placed.best.target], start = placed.best.offset + cluster.base;
+                    takeInto(cluster, placed.best.target, h, run, start);
+                    pagesOf.extend(placed.best.target, start, start + run.data.length);
+                    for (const other of placed.passing) {
+                        if (other.target === placed.best.target) continue;
+                        const otherStart = other.offset + clusters[other.target].base;
+                        pagesOf.join(placed.best.target, other.target, start - otherStart, MAX_GROUP_BYTES);
+                    }
+                    continue;
+                }
+                if (clusters.length >= SALVAGE_MAX_RUNS) continue;
+                const id = clusters.length;
+                clusters.push({ channel: run.channel, base: 0, consensus: [], known: [], members: [], indexed: new Set() });
+                pagesOf.add(0, run.data.length);
+                takeInto(clusters[id], id, h, run, 0);
+            }
+            const byRoot = new Map();
+            clusters.forEach((cluster, c) => {
+                const [root, shift] = pagesOf.find(c);
+                if (!byRoot.has(root)) byRoot.set(root, { channel: cluster.channel, members: [] });
+                const page = byRoot.get(root);
+                for (const [h, offset] of cluster.members) page.members.push([h, offset + shift]);
+            });
+
+            // How each channel writes NAPLPS, from its named records, and the floor a page none of them holds must reach
+            const dialects = new Map(), floors = new Map(), recordRoles = new Map();
+            if (byRoot.size) {
+                for (let r = 0; r < named; r++) {
+                    const record = records[r];
+                    if (!namedChannels.has(record.channel) || !isPresentation(record.type) || isCaption(record)) continue;
+                    if (!dialects.has(record.channel)) dialects.set(record.channel, new DialectModel());
+                    const roles = readRoles(record.data);
+                    recordRoles.set(r, roles);
+                    dialects.get(record.channel).learn(record.data, presentOf(record), roles);
+                }
+                for (const [channel, model] of dialects) {
+                    const scores = [];
+                    for (let r = 0; r < named; r++) {
+                        const record = records[r];
+                        if (record.channel !== channel || !isPresentation(record.type) || isCaption(record)) continue;
+                        const score = dialectScore(model, record.data, presentOf(record));
+                        if (Number.isFinite(score)) scores.push(score);
+                    }
+                    if (scores.length < DIALECT_MIN_RECORDS) continue;
+                    scores.sort((a, b) => a - b);
+                    floors.set(channel, scores[Math.floor(scores.length * DIALECT_FLOOR_PERCENTILE / 100)] - DIALECT_FLOOR_MARGIN);
+                }
+            }
+
+            const nextNumber = new Map(), pages = [];
+            for (const page of byRoot.values()) {
+                const first = runs[page.members[0][0]];
+                if (page.members.length < 2 && Salvage.usablePercent(first) < SALVAGE_LONE_PAGE_USABLE) continue;
+                let spanStart = Infinity, spanEnd = -Infinity, firstClock = Infinity, lastClock = 0;
+                for (const [h, offset] of page.members) {
+                    spanStart = Math.min(spanStart, offset);
+                    spanEnd = Math.max(spanEnd, offset + runs[h].data.length);
+                }
+                const span = spanEnd - spanStart, copies = [];
+                for (const [h, offset] of page.members) {
+                    const run = runs[h], data = new Array(span).fill(0), present = new Array(span).fill(0), at = offset - spanStart;
+                    for (let i = 0; i < run.data.length; i++) { data[at + i] = run.data[i]; present[at + i] = run.present[i]; }
+                    copies.push([data, present]);
+                    firstClock = Math.min(firstClock, run.clock);
+                    lastClock = Math.max(lastClock, run.clock);
+                }
+                const [votedData, votedPresent] = voteRecord(copies);
+                let start = votedData.findIndex((_, i) => votedPresent[i] !== 0);
+                if (start < 0) continue;
+                // The record's head went with its synchronizing packet, and with it the shift that set the bytes in
+                // their set: where the first shift the page holds is SI, what comes before it is PDI code, and the
+                // page starts with the SO it must have followed (supplied, and marked as not received)
+                let resumesInPdi = false, firstShift = start, shiftFound = false;
+                for (let i = start; i < votedData.length && i < start + SALVAGE_RESUME_SEARCH; i++) {
+                    if (votedPresent[i] === 0 || !ODD_PARITY[votedData[i] & 0xFF]) continue;
+                    const code = votedData[i] & 0x7F;
+                    if (code === 0x0E || code === 0x0F) { firstShift = i; shiftFound = true; resumesInPdi = code === 0x0F; break; }
+                }
+                const dialect = dialects.get(page.channel), dialectKnown = !!dialect && dialect.records >= DIALECT_MIN_RECORDS;
+                if (!resumesInPdi && dialectKnown) {
+                    const end = shiftFound ? firstShift : Math.min(votedData.length, start + SALVAGE_RESUME_SEARCH);
+                    if (end > start + 1) resumesInPdi = dialect.pdiScore(votedData, start, end - start) > dialect.textScore(votedData, start, end - start);
+                }
+                const number = (nextNumber.get(page.channel) || 0) + 1;
+                const types = namedChannels.get(page.channel);
+                let type = 0, most = -1;
+                for (const [candidate, count] of [...types].sort((a, b) => a[0] - b[0])) if (count > most) { type = candidate; most = count; }
+                const data = new Array(MAX_BLOCK).fill(0), present = new Array(MAX_BLOCK).fill(0);
+                if (resumesInPdi) { data.push(0x0E); present.push(0); }
+                for (let i = start; i < votedData.length; i++) { data.push(votedData[i]); present.push(votedPresent[i]); }
+                if (dialectKnown && floors.has(page.channel) && !(dialectScore(dialect, data, present) >= floors.get(page.channel))) {
+                    stats.pages_refused++;
+                    continue;
+                }
+                nextNumber.set(page.channel, number);
+                stats.runs_in_pages += page.members.length;
+                for (const [h] of page.members) taken[h] = true;
+                pages.push({
+                    channel: page.channel, address: IDENTITY_LOST_BASE + number, addr_text: `LOST${number}`, long_form: true,
+                    version: 0, content: 0, edition: 1, editions: 1, type, records: 1, complete: false, more_address: null,
+                    flags: Object.fromEntries(FLAGS_VOTED.map((name) => [name, false])),
+                    data, present, first: firstClock, last: lastClock, seen: page.members.length, intact_n: 0, attested_n: 0,
+                    header_attested_n: 0, copies_voted: page.members.length, unconfirmed: false, identity_lost: true,
+                    bytes_salvaged: votedData.length - start, purpose: ''
+                });
+            }
+            pages.sort((a, b) => a.channel - b.channel);
+            stats.pages_found = pages.length;
+            for (const page of pages) records.push(page);
+            this.unplaced = runs.filter((_, h) => !taken[h]);
+            this.runs = [];
+            this.bytes = 0;
+            return stats;
+        }
+
+        static usablePercent(run) {
+            let count = 0, arrived = 0;
+            for (let i = 0; i < run.data.length; i++) {
+                if (run.present[i] === 0) continue;
+                arrived++;
+                if (ODD_PARITY[run.data[i] & 0xFF]) count++;
+            }
+            return arrived === 0 ? 0 : Math.floor(count * 100 / arrived);
         }
     }
 
@@ -1128,7 +2685,6 @@
         0x14, 0x15, 0x16, 0x17]);
     // Nominal receiver drawing speed (seconds per primitive; the standard does not set one) and
     // C1 BLINK START timing in tenths of a second (§6.2.8.1: "implementation-dependent").
-    const DRAW_COST = { char: 0.004, point: 0.004, line: 0.012, arc: 0.02, rect: 0.02, poly: 0.02, incr: 0.05 };
     const BLINK_C1 = [5, 5, 0];
     const SET_PRIMARY = 0, SET_SUPPLEMENTARY = 1, SET_PDI = 2, SET_MOSAIC = 3, SET_MACRO = 4, SET_DRCS = 5, SET_NULL = 6;
     const STORAGE_LIMIT = 3072, MAX_MACRO_DEPTH = 8;
@@ -1170,9 +2726,251 @@
     const SPACING_FACTORS = [1.0, 1.25, 1.5, 1.0], ROW_SPACING_FACTORS = [1.0, 1.25, 1.5, 2.0];
     const PATH_DIRECTIONS = [[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0]];
 
+    // Proportional spacing (inter-character spacing code 3) as T.101 Annex D's Addendum, clause 11, has it
+    // (decode-orc PR #328). Width classes 0 (narrowest) to 9 (full width), by row 0-15 and column 2-7 of the
+    // primary (Table 1/T.101) and supplementary (Table 2/T.101) sets; 7/15 is not a character.
+    const PRIMARY_WIDTH_CLASS = [
+        [9, 5, 9, 5, 1, 5], [0, 1, 5, 6, 5, 5], [4, 5, 5, 5, 5, 5], [6, 5, 5, 5, 5, 5], [9, 5, 5, 9, 5, 2], [9, 5, 5, 5, 5, 5],
+        [9, 5, 5, 9, 5, 9], [0, 5, 8, 9, 5, 9], [1, 5, 5, 9, 5, 9], [1, 5, 2, 9, 0, 5], [9, 0, 5, 9, 4, 5], [9, 3, 5, 4, 5, 5],
+        [3, 5, 5, 9, 0, 0], [5, 8, 9, 4, 9, 5], [0, 5, 5, 2, 5, 9], [9, 8, 9, 9, 5, -1]];
+    const SUPPLEMENTARY_WIDTH_CLASS = [
+        [9, 4, 9, 5, 6, 9], [0, 9, 2, 1, 9, 9], [9, 4, 2, 9, 6, 6], [5, 4, 2, 9, 5, 5], [9, 7, 9, 9, 9, 6], [9, 6, 5, 6, 9, 0],
+        [9, 9, 5, 9, 9, 4], [6, 0, 0, 9, 5, 4], [9, 9, 4, 9, 9, 7], [1, 1, 9, 9, 9, 9], [6, 6, 1, 9, 9, 9], [8, 8, 7, 9, 5, 6],
+        [9, 9, 9, 9, 5, 4], [7, 9, 4, 9, 9, 2], [9, 9, 8, 9, 6, 5], [7, 8, 2, 9, 9, -1]];
+    const FULL_WIDTH_CLASS = 9;
+    // Clause 11.5: spacing units by font size 6-11 and width class, for fields narrower than 12/256 (two entries the
+    // printed table gives as 0 are 10, as in CSA T500); clause 11.6: units taken off by class for wider fields
+    const SMALL_FONT_UNITS = [
+        [2, 3, 4, 3, 4, 5, 6, 4, 5, 6], [3, 4, 5, 4, 5, 6, 7, 5, 6, 7], [2, 3, 4, 4, 5, 6, 7, 6, 7, 8],
+        [3, 4, 5, 5, 6, 7, 8, 7, 8, 9], [4, 5, 6, 6, 7, 8, 9, 8, 9, 10], [3, 4, 6, 6, 7, 8, 10, 8, 10, 11]];
+    const LARGE_FONT_UNITS = [6, 5, 4, 4, 3, 2, 1, 2, 1, 0];
+
+    const widthClass = (code, supplementary) => {
+        if (code < 0x20 || code > 0x7F) return FULL_WIDTH_CLASS;
+        const found = (supplementary ? SUPPLEMENTARY_WIDTH_CLASS : PRIMARY_WIDTH_CLASS)[code & 0x0F][(code >> 4) - 2];
+        return found < 0 ? FULL_WIDTH_CLASS : found;
+    };
+
+    /** How far a character of `widthClass` moves the cursor in a field `fieldWidth` wide (clauses 11.2 to 11.6). */
+    const proportionalDisplacement = (cls, fieldWidth) => {
+        const column = Math.min(Math.max(cls, 0), FULL_WIDTH_CLASS);
+        const units = Math.abs(fieldWidth) * 256;
+        if (!(units > 0)) return 0;
+        if (units < 12) {
+            let scale = 1;
+            while (units / scale < 6 && scale > 1 / 1024) scale /= 2;
+            const size = Math.min(Math.max(Math.floor(units / scale + 1e-9), 6), 11);
+            return SMALL_FONT_UNITS[size - 6][column] * scale / 256;
+        }
+        const n = Math.floor(units + 1e-9);
+        const scaleFactor = ((Math.trunc((11 * n - 13) / 13)) | 1) - 1;
+        const reduction = Math.floor((2 * LARGE_FONT_UNITS[column] * scaleFactor + 6) / 12);
+        return (n - reduction) / 256;
+    };
+
+    /**
+     * Whether text is spaced proportionally: spacing code 3 with the path running the way the character reads, as
+     * both receivers of the day applied it (decode-orc PR #328).
+     */
+    const spacedProportionally = (text) => (text.ics & 3) === 3
+        && ((text.rotation === 0 && text.path === 0) || (text.rotation === 1 && text.path === 2)
+            || (text.rotation === 2 && text.path === 1) || (text.rotation === 3 && text.path === 3));
+
+    // ---------------------------------------------------------------------------
+    // Receiver pace (decode-orc PR #328, naplps_receiver_pace.cpp): how long a receiver of the day took over each part
+    // of a page, measured by running each firmware over blocks of identical commands. Times in microseconds.
+    // ---------------------------------------------------------------------------
+    const PACE_TABLES = {
+        // Norpak TTX 650 (1.79 MHz): fills and clears sweep up the screen from the bottom row
+        ttx650: {
+            faceChoice: 'columnsAndRows', character: 3400, largerCharacter: 4000, space: 1550, characterWithBackground: 6500,
+            scaledCharacter: 10000, scaledCharacterRow: 400, scaledCharacterPixel: 0, scaledCharacterPixelCap: 0,
+            scaledSpace: 2000, scaledSpacePixel: 0,
+            point: 300, line: 3000, lineHorizontalPixel: 3.3, lineVerticalPixel: 290, lineSlopingPixel: 300,
+            rectOutline: 6500, rectOutlineHorizontalPixel: 3.0, rectOutlineVerticalPixel: 290,
+            rectFill: 3500, rectFillRow: 320, rectFillPixel: 2.8,
+            polyOutlineVertex: 2800, polyOutlineHorizontalPixel: 3.0, polyOutlineVerticalPixel: 290, polyOutlineSlopingPixel: 300,
+            polyFillVertex: 4100, polyFillRow: 600, polyFillPixel: 3.0,
+            arcOutline: 9200, arcFilled: 12000, arcLengthPixel: 1410, arcFillRow: 500, arcFillPixel: 1.0,
+            incrementalPoints: 3000, incrementalPel: 50, scroll: 50000,
+            clear: 169000, macro: 1000, definitionByte: 200,
+            reset: 2200, domain: 3200, text: 10800, texture: 1000, pointSet: 3600, field: 5900, setColor: 3100, wait: 2000,
+            selectColor: 1100, blink: 2800, drawingCommand: 3500,
+            shift: 300, cursorMove: 900, aps: 1000, nsr: 9800, otherC0: 500,
+            sizeControl: 9500, blinkControl: 1800, otherC1: 1000, sweep: 'up'
+        },
+        // Panasonic TU-2000x (6809 at 1.5 MHz): fills and clears sweep down the screen from the top row
+        tu2000x: {
+            faceChoice: 'rowsAlone', character: 4700, largerCharacter: 4500, space: 3500, characterWithBackground: 5500,
+            scaledCharacter: 4600, scaledCharacterRow: 0, scaledCharacterPixel: 80, scaledCharacterPixelCap: 9600,
+            scaledSpace: 3500, scaledSpacePixel: 4.0,
+            point: 100, line: 1600, lineHorizontalPixel: 180, lineVerticalPixel: 180, lineSlopingPixel: 650,
+            rectOutline: 1700, rectOutlineHorizontalPixel: 180, rectOutlineVerticalPixel: 180,
+            rectFill: 3700, rectFillRow: 770, rectFillPixel: 2.0,
+            polyOutlineVertex: 3500, polyOutlineHorizontalPixel: 180, polyOutlineVerticalPixel: 180, polyOutlineSlopingPixel: 650,
+            polyFillVertex: 10000, polyFillRow: 1000, polyFillPixel: 8.0,
+            arcOutline: 5300, arcFilled: 7600, arcLengthPixel: 790, arcFillRow: 350, arcFillPixel: 0.5,
+            incrementalPoints: 3000, incrementalPel: 50, scroll: 50000,
+            clear: 70000, macro: 1000, definitionByte: 200,
+            reset: 2600, domain: 2500, text: 3900, texture: 1400, pointSet: 2300, field: 3100, setColor: 8400, wait: 2000,
+            selectColor: 1100, blink: 8500, drawingCommand: 2300,
+            shift: 360, cursorMove: 600, aps: 1000, nsr: 3700, otherC0: 500,
+            sizeControl: 2100, blinkControl: 8400, otherC1: 1000, sweep: 'down'
+        }
+    };
+    const PACE_PIXELS_PER_UNIT = 256, PACE_TALLEST_CELL = 200;
+    /** The viewer's original nominal drawing speed (seconds per figure; filled figures twice as long): pace 'classic'. */
+    const CLASSIC_DRAW_COST = { char: 0.004, point: 0.004, line: 0.012, arc: 0.02, rect: 0.02, poly: 0.02, incr: 0.05 };
+
+    const paceOutlineLengths = (points, closed) => {
+        const lengths = { horizontal: 0, vertical: 0, sloping: 0 }, count = points.length;
+        if (count < 2) return lengths;
+        const edges = closed ? count : count - 1;
+        for (let i = 0; i < edges; i++) {
+            const from = points[i], to = points[(i + 1) % count];
+            const dx = Math.abs(to[0] - from[0]) * PACE_PIXELS_PER_UNIT, dy = Math.abs(to[1] - from[1]) * PACE_PIXELS_PER_UNIT;
+            if (dy < 0.5) lengths.horizontal += dx;
+            else if (dx < 0.5) lengths.vertical += dy;
+            else lengths.sloping += Math.max(dx, dy);
+        }
+        return lengths;
+    };
+    const paceSteppedLength = (points, closed) => {
+        let length = 0;
+        for (let i = 0; i + 1 < points.length; i++) {
+            length += Math.max(Math.abs(points[i + 1][0] - points[i][0]), Math.abs(points[i + 1][1] - points[i][1]));
+        }
+        if (closed && points.length > 2) {
+            const first = points[0], last = points[points.length - 1];
+            length += Math.max(Math.abs(first[0] - last[0]), Math.abs(first[1] - last[1]));
+        }
+        return length * PACE_PIXELS_PER_UNIT;
+    };
+    const paceRowsSpanned = (points) => {
+        if (!points.length) return 0;
+        let low = Infinity, high = -Infinity;
+        for (const [, y] of points) { low = Math.min(low, y); high = Math.max(high, y); }
+        return Math.max(Math.min(high, DISPLAY_HEIGHT) - Math.max(low, 0), 0) * PACE_PIXELS_PER_UNIT;
+    };
+    const paceOnScreenPixels = (origin, size) => {
+        const overlap = (from, extent, limit) => Math.max(Math.min(Math.max(from, from + extent), limit) - Math.max(Math.min(from, from + extent), 0), 0);
+        return overlap(origin[0], size[0], 1) * overlap(origin[1], size[1], DISPLAY_HEIGHT) * PACE_PIXELS_PER_UNIT * PACE_PIXELS_PER_UNIT;
+    };
+    const paceEnclosedPixels = (points) => {
+        let twice = 0;
+        for (let i = 0; i < points.length; i++) {
+            const a = points[i], b = points[(i + 1) % points.length];
+            twice += a[0] * b[1] - b[0] * a[1];
+        }
+        return Math.min(Math.abs(twice) / 2, 1) * PACE_PIXELS_PER_UNIT * PACE_PIXELS_PER_UNIT;
+    };
+
+    /** The face the receiver drew a field in, and whether it scaled it (rather than copying it from the ROM). */
+    const paceFaceAtField = (table, columns, rows) => {
+        if (table.faceChoice === 'columnsAndRows') {
+            const face = chooseFace(256, columns, rows);
+            return { face, scaled: columns >= 2 * face[1] || rows >= 2 * face[2] };
+        }
+        const normal = FONT.FACES[0], larger = FONT.FACES.find((face) => face[5]);
+        let face = normal;
+        if (larger && larger[1] <= columns && larger[2] <= rows) {
+            const normalFits = normal[1] <= columns && normal[2] <= rows;
+            if (!normalFits || rows % larger[2] <= rows % normal[2]) face = larger;
+        }
+        return { face, scaled: columns >= 2 * face[1] };
+    };
+
+    const paceCharacter = (table, prim) => {
+        const width = Math.abs(prim.size[0]) * PACE_PIXELS_PER_UNIT, height = Math.abs(prim.size[1]) * PACE_PIXELS_PER_UNIT;
+        const withBackground = prim.mode === 2;
+        const space = prim.char === 0x20 && prim.rep === 'P' && !withBackground && !prim.reverse;
+        const columns = Math.max(1, referencePixels(prim.size[0])), rows = Math.max(1, referencePixels(prim.size[1]));
+        const drawn = paceFaceAtField(table, columns, rows);
+        if (!drawn.scaled) {
+            if (space) return table.space;
+            if (withBackground) return table.characterWithBackground;
+            return drawn.face[5] ? table.largerCharacter : table.character;
+        }
+        const cellRows = Math.min(height, PACE_TALLEST_CELL);
+        const pixels = Math.min(width * cellRows, table.scaledCharacterPixelCap || Infinity);
+        const cappedPixels = table.scaledCharacterPixelCap ? pixels : 0;
+        if (space) return table.scaledSpace + table.scaledSpacePixel * cappedPixels;
+        return table.scaledCharacter + table.scaledCharacterRow * cellRows + table.scaledCharacterPixel * cappedPixels;
+    };
+
+    /** Microseconds the receiver took to draw a figure as the interpreter emits it. */
+    const paceFigure = (table, prim) => {
+        const t = table;
+        switch (prim.kind) {
+            case 'char': return paceCharacter(t, prim);
+            case 'point': return t.point;
+            case 'line': {
+                const lengths = paceOutlineLengths(prim.points, false);
+                return t.line + t.lineHorizontalPixel * lengths.horizontal + t.lineVerticalPixel * lengths.vertical +
+                    t.lineSlopingPixel * lengths.sloping;
+            }
+            case 'rect': {
+                const width = Math.abs(prim.size[0]) * PACE_PIXELS_PER_UNIT, height = Math.abs(prim.size[1]) * PACE_PIXELS_PER_UNIT;
+                if (!prim.filled) return t.rectOutline + t.rectOutlineHorizontalPixel * 2 * width + t.rectOutlineVerticalPixel * 2 * height;
+                const far = [prim.origin[0] + prim.size[0], prim.origin[1] + prim.size[1]];
+                return t.rectFill + t.rectFillRow * paceRowsSpanned([prim.origin, far]) + t.rectFillPixel * paceOnScreenPixels(prim.origin, prim.size);
+            }
+            case 'poly': {
+                const vertices = prim.points.length;
+                if (!prim.filled) {
+                    const lengths = paceOutlineLengths(prim.points, true);
+                    return t.polyOutlineVertex * vertices + t.polyOutlineHorizontalPixel * lengths.horizontal +
+                        t.polyOutlineVerticalPixel * lengths.vertical + t.polyOutlineSlopingPixel * lengths.sloping;
+                }
+                return t.polyFillVertex * vertices + t.polyFillRow * paceRowsSpanned(prim.points) + t.polyFillPixel * paceEnclosedPixels(prim.points);
+            }
+            case 'arc': {
+                const curve = arcToPolyline(prim.points, 1 / 512);
+                if (!prim.filled) return t.arcOutline + t.arcLengthPixel * paceSteppedLength(curve, false);
+                return t.arcFilled + t.arcLengthPixel * paceSteppedLength(curve, true) + t.arcFillRow * paceRowsSpanned(curve) +
+                    t.arcFillPixel * paceEnclosedPixels(curve);
+            }
+            case 'incr': return t.incrementalPoints + t.incrementalPel * (prim.incr ? prim.incr.length : 0);
+            default: return 0;
+        }
+    };
+    const PACE_PDI = {
+        0x20: 'reset', 0x21: 'domain', 0x22: 'text', 0x23: 'texture', 0x24: 'pointSet', 0x25: 'pointSet',
+        0x38: 'field', 0x3C: 'setColor', 0x3D: 'wait', 0x3E: 'selectColor', 0x3F: 'blink'
+    };
+    const pacePdi = (table, opcode) => table[PACE_PDI[opcode] || 'drawingCommand'];
+    const paceC0 = (table, code) => {
+        if (code === 0x1B || code === 0x0C) return 0;                     // ESC: as its C1; CS: as the clear
+        if (code === 0x0E || code === 0x0F || code === 0x19 || code === 0x1D) return table.shift;
+        if (code >= 0x08 && code <= 0x0B || code === 0x0D || code === 0x1E) return table.cursorMove;
+        if (code === 0x1C) return table.aps;
+        if (code === 0x1F) return table.nsr;
+        return table.otherC0;
+    };
+    const paceC1 = (table, control) => {
+        if ((control >= 0x4A && control <= 0x4D) || control === 0x4F) return table.sizeControl;   // the size controls
+        if (control === 0x4E || control === 0x5E) return table.blinkControl;                       // BLINK START / STOP
+        return table.otherC1;
+    };
+    /** Rows a filled figure covers, as [low, high] in unit-screen y, for the sweep. */
+    const paceFillRows = (prim) => {
+        if (!prim.filled) return null;
+        let points = prim.points || [];
+        if (prim.kind === 'rect') points = [prim.origin, [prim.origin[0] + prim.size[0], prim.origin[1] + prim.size[1]]];
+        else if (prim.kind === 'arc') points = arcToPolyline(prim.points, 1 / 512);
+        else if (prim.kind !== 'poly') return null;
+        if (!points.length) return null;
+        let low = Infinity, high = -Infinity;
+        for (const [, y] of points) { low = Math.min(low, y); high = Math.max(high, y); }
+        low = Math.max(low, 0); high = Math.min(high, DISPLAY_HEIGHT);
+        return high > low ? [low, high] : null;
+    };
+
     class Interpreter {
-        constructor(grid = [256, 200], { font = null } = {}) {
+        constructor(grid = [256, 200], { font = null, pace = 'off' } = {}) {
             this.grid = grid;
+            this.paceTable = PACE_TABLES[pace] || null;      // a receiver's drawing times (decode-orc PR #328), or none
+            this.classicPace = pace === 'classic';            // the viewer's original fixed time per figure
             this.decoderFont = resolveDecoderFont(font);
             this.prims = [];
             this.resetDecoder();
@@ -1197,6 +2995,7 @@
             this.cursor = this.home();
             this.dp = [0.0, 0.0];                     // drawing point
             this.blink = new Array(16).fill(null);
+            this.blinkOrder = [];
             this.c1Blink = null;
             this.macros = new Map();
             this.drcs = new Map();
@@ -1240,10 +3039,12 @@
             this.lint = 0;                            // grammar problems, for settling tied votes
             this.lintSevere = 0;
             this.firstSevereAt = -1;
+            this.firstProblemAt = -1;
+            this.problemsAt = [];
             const carried = keepDisplay ? this.prims : [];
             this.prims = carried;
             // Timeline for on-screen playback: primitives with their times, screen clears, color-map
-            // and blink changes. Time = WAIT pauses (§5.3.2.8) + the nominal drawing speed (DRAW_COST).
+            // and blink changes. Time = WAIT pauses (§5.3.2.8) + the receiver's drawing times (`pace`).
             this.clock = 0.0;
             this.events = [];
             for (const prim of carried) { prim.t = 0.0; this.events.push(['p', 0.0, prim]); }
@@ -1263,20 +3064,55 @@
             this.def_frame = 0;
             this.def_had_code = false;
             this.wrap = 0;                            // 0 none, 1 armed, 2 after APR, 3 after APD
-            const corrupt = Array.from(recordBytes, (byte) => !ODD_PARITY[byte & 0xFF]);
-            const corruptCount = corrupt.filter(Boolean).length;
-            this.frames.push({
-                bytes: Array.from(recordBytes, (byte) => byte & 0x7F), position: 0,
-                corrupt: corruptCount && corruptCount < 0.3 * corrupt.length ? corrupt : null
-            });
+            // A byte failing odd parity (§3.3) is known to be wrong. A PDI opcode failing it is skipped, as the
+            // TU-2000x did (decode-orc PR #328). Of the C0 controls only CS and CAN failing it are dropped: decode-orc
+            // drops them all, but in a voted record a control failing parity is often the right control with its
+            // parity bit lost, and on the samples here dropping the rest (APH, SI, ESC …) did more harm than good.
+            // Transparent controls are stripped. A record passed without parity (no byte with b8 set) has nothing to test.
+            const carriesParity = Array.prototype.some.call(recordBytes, (byte) => (byte & 0x80) !== 0);
+            const kept = [], parityFailed = [];
+            // With traceRoles set, how each byte of the record was read is kept in this.roles (see readRoles())
+            // The kept bytes' positions in the record, so a problem found by the grammar check is placed in the record
+            // itself (positions there skip the stripped bytes, the NULs of a lost packet among them)
+            const roles = this.traceRoles ? new Uint8Array(recordBytes.length) : null;
+            const keptIndex = roles || this.checkingOnly ? [] : null;
+            this.keptIndex = keptIndex;
+            for (let i = 0; i < recordBytes.length; i++) {
+                const raw = recordBytes[i], byte = raw & 0x7F, failed = carriesParity && !ODD_PARITY[raw & 0xFF];
+                if (byte < 0x20 && (TRANSPARENT_C0.has(byte) || (failed && (byte === 0x0C || byte === CAN)))) {
+                    if (roles) roles[i] = ROLE_TRANSPARENT;
+                    continue;
+                }
+                kept.push(byte);
+                parityFailed.push(failed);
+                if (keptIndex) keptIndex.push(i);
+            }
+            this.roles = roles;
+            this.frames.push({ bytes: kept, position: 0, parityFailed: carriesParity ? parityFailed : null });
             let steps = 0;
             while (this.frames.length) {
                 steps++;
                 if (steps > 400000) break;              // guard against loops in damaged data
+                let traceFrom = -1, role = ROLE_UNREAD;
+                if (roles && this.frames.length === 1 && this.frames[0].position < kept.length) {
+                    traceFrom = this.frames[0].position;
+                    role = this.roleOf(kept[traceFrom]);
+                }
                 if (!this.step()) {
                     this.frames.pop();
                     if (this.frames.length && this.def_frame >= this.frames.length) this.def_frame = this.frames.length - 1;
                 }
+                if (traceFrom >= 0 && this.frames.length) {
+                    for (let k = traceFrom; k < this.frames[0].position && k < keptIndex.length; k++) roles[keptIndex[k]] = role;
+                }
+            }
+            // A macro definition the record never ends swallows the rest of the page: a misread byte read as ESC 4/0
+            // (DEF MACRO) blanks it. Counted as severe for the grammar check when it takes most of what was left
+            if (this.collecting === 'macro' && !this.def_transmit && this.def_frame === 0 &&
+                this.def_record_length - this.def_began > 64) {
+                this.lintSevere++;
+                const began = this.recordPosition(this.def_began);
+                if (this.firstSevereAt < 0 || began < this.firstSevereAt) this.firstSevereAt = began;
             }
             this.endDefinition();
             this.snapState();
@@ -1288,14 +3124,31 @@
             }
             return {
                 prims: [...this.prims], color_map: [...finalMap], drcs: new Map(this.drcs),
-                masks: [...this.masks], events: this.events, end: this.clock
+                masks: [...this.masks], events: this.events, end: this.clock, sweep: this.paceTable ? this.paceTable.sweep : null
             };
         }
 
+        /** A position among the kept bytes as a position in the record as received. */
+        recordPosition(position) {
+            const index = this.keptIndex;
+            if (!index || !index.length) return position;
+            return position < index.length ? index[position] : index[index.length - 1] + 1 + (position - index.length);
+        }
+
         /** Count a problem that wrecks the page (a late clear or RESET, a CAN) and where in the record it was. */
+        /** A grammar problem that is not severe, and where the first one was. */
+        noteProblem() {
+            this.lint += 1;
+            if (this.frames.length) {
+                const at = this.recordPosition(this.frames[0].position);
+                if (this.firstProblemAt < 0) this.firstProblemAt = at;
+                if (this.problemsAt.length < 64) this.problemsAt.push(at);
+            }
+        }
+
         noteSevere() {
             this.lintSevere++;
-            if (this.firstSevereAt < 0 && this.frames.length) this.firstSevereAt = this.frames[0].position;
+            if (this.firstSevereAt < 0 && this.frames.length) this.firstSevereAt = this.recordPosition(this.frames[0].position);
         }
 
         /** Record a color-map or blink event if either changed since the last snapshot. */
@@ -1314,6 +3167,16 @@
 
         get frame() { return this.frames[this.frames.length - 1]; }
 
+        /** How the record's next byte will be read (for readRoles()): with what follows it, as one command. */
+        roleOf(byte) {
+            if ((this.collecting === 'macro' || this.collecting === 'macrox') && this.def_frame === 0) return ROLE_DEFINITION;
+            if (byte < 0x20) return ROLE_CONTROL;
+            const set = this.g[this.invoked];
+            if (set === SET_PDI) return ROLE_PDI;
+            if (set === SET_MACRO || set === SET_NULL) return ROLE_OTHER;
+            return ROLE_TEXT;
+        }
+
         step() {
             const frame = this.frame, { bytes } = frame, position = frame.position;
             if (position >= bytes.length) return false;
@@ -1331,7 +3194,11 @@
                             return true;
                         }
                     }
-                    if (this.collecting === 'macro') { this.body.push(byte); return true; }
+                    if (this.collecting === 'macro') {
+                        this.body.push(byte);
+                        if (this.paceTable) this.pace(this.paceTable.definitionByte);
+                        return true;
+                    }
                     const start = frame.position - 1;           // macro defined and executed at once
                     this.execByte(byte);
                     const defining = this.frames[this.def_frame];
@@ -1357,12 +3224,12 @@
 
         execC0(byte) {
             if (TRANSPARENT_C0.has(byte)) return;
+            if (this.paceTable) this.pace(paceC0(this.paceTable, byte));
             const frame = this.frame;
-            if (frame.corrupt && frame.corrupt[frame.position - 1] && (byte === 0x0C || byte === CAN)) return;
             if (byte === ESC) {
                 const [kind, length, slot, value] = parseEscape(frame.bytes, frame.position);
                 frame.position += length - 1;
-                if (kind === 'bad' || kind === 'unsup' || kind === 'trunc') this.lint += 1;
+                if (kind === 'bad' || kind === 'unsup' || kind === 'trunc') this.noteProblem();
                 if (kind === 'desig') this.g[slot] = value;
                 else if (kind === 'shift') { this.locked = this.invoked = slot; this.single = false; }
                 else if (kind === 'c1') this.execC1(value);
@@ -1429,8 +3296,10 @@
         clearDisplay(color, address) {
             if (this.prims.length >= 20) { this.lint += 4; this.noteSevere(); }
             this.prims = [];
+            const started = this.clock;
+            this.pace(this.paceTable ? this.paceTable.clear : 0);
             this.snapState();
-            this.events.push(['clear', this.clock]);
+            this.events.push(['clear', this.clock, this.clock - started]);
             if (color === BLACK && address < 0) return;
             const fill = new Primitive('rect');
             fill.filled = true;
@@ -1447,6 +3316,7 @@
         }
 
         execC1(code) {
+            if (this.paceTable) this.pace(paceC1(this.paceTable, code));
             if (code >= 0x40 && code <= 0x44) {                    // DEF MACRO / DEFP / DEFT / DEF DRCS / DEF TEXTURE
                 const terminated = this.collecting;
                 this.endDefinition();
@@ -1511,7 +3381,15 @@
         execGraphic(byte) {
             const set = this.g[this.invoked];
             if (this.single) { this.invoked = this.locked; this.single = false; }
-            if (set === SET_PDI) { if (byte >= 0x20 && byte <= 0x3F) this.execPdi(byte); return; }
+            if (set === SET_PDI) {
+                if (byte >= 0x20 && byte <= 0x3F) {
+                    // An opcode failing parity is skipped; its operands follow as data with no opcode in front
+                    const frame = this.frame;
+                    if (frame.parityFailed && frame.parityFailed[frame.position - 1]) return;
+                    this.execPdi(byte);
+                }
+                return;
+            }
             if (set === SET_MACRO) { this.invokeMacro(byte); return; }
             if (set === SET_NULL) return;
             this.last_graphic = byte;
@@ -1525,8 +3403,45 @@
             character.path = this.text.path;
             character.reverse = this.text.reverse;
             character.underlined = this.text.underlined;
+            const mark = set === SET_SUPPLEMENTARY && isNonSpacingAccent(byte);
+            const advance = this.proportionalAdvance(byte, set, mark, character);
             this.emit(character);
-            if (set !== SET_SUPPLEMENTARY || !isNonSpacingAccent(byte)) this.moveBy('fwd');
+            if (!mark) this.moveBy('fwd', advance);
+        }
+
+        /**
+         * How far a character of the repertoire moves the cursor in proportional text (0: the usual step), with its
+         * field moved back so its ink starts at the cursor, as both receivers laid it (decode-orc PR #328).
+         */
+        proportionalAdvance(byte, set, mark, character) {
+            const repertoire = set === SET_PRIMARY || set === SET_SUPPLEMENTARY;
+            if (!repertoire || !spacedProportionally(this.text)) { this.pendingMarkClass = -1; return 0; }
+            const supplementary = set === SET_SUPPLEMENTARY;
+            let cls = widthClass(byte, supplementary);
+            const atMark = this.pendingMarkClass >= 0 && this.pendingMarkCursor
+                && this.pendingMarkCursor[0] === this.cursor[0] && this.pendingMarkCursor[1] === this.cursor[1];
+            if (mark) {
+                // Its class waits for the letter it is put on (clause 11.1)
+                this.pendingMarkClass = atMark ? Math.max(this.pendingMarkClass, cls) : cls;
+                this.pendingMarkCursor = this.cursor;
+                return 0;
+            }
+            if (atMark) cls = Math.max(cls, this.pendingMarkClass);
+            this.pendingMarkClass = -1;
+            const field = this.text.field;
+            if (referencePixels(field[0]) < SMALLEST_FIELD_COLUMNS) cls = FULL_WIDTH_CLASS;
+            if (!atMark && field[0] > 0) {
+                const codePoint = supplementary ? FONT.SUPPLEMENTARY.codePointAt(byte - 0x20) : byte;
+                const offset = inkOffset(codePoint, field);
+                if (offset) {
+                    const [x, y] = character.origin;
+                    character.origin = [
+                        [x - offset, x, x + offset, x][this.text.rotation & 3],
+                        [y, y - offset, y, y + offset][this.text.rotation & 3]];
+                    character.points = [character.origin];
+                }
+            }
+            return proportionalDisplacement(cls, field[0]);
         }
 
         /** The operand bytes that follow a PDI opcode. */
@@ -1542,7 +3457,20 @@
         }
 
         execPdi(opcode) {
-            const operandBytes = this.gatherOperands(), operands = new OperandReader(operandBytes, [...this.fmt]);
+            let operandBytes = this.gatherOperands();
+            // The record ended inside this command: words that arrived whole are drawn, a partial last word is not,
+            // and a figure only its last word closes (arc, polygon, incremental polygon) is not drawn at all
+            const frame = this.frame;
+            if (this.frames.length === 1 && frame.position >= frame.bytes.length && operandBytes.length) {
+                if ((opcode >= 0x2C && opcode <= 0x2F) || (opcode >= 0x34 && opcode <= 0x37) || opcode === 0x3B) return;
+                if (opcode >= 0x24 && opcode <= 0x38) {
+                    const wordBytes = this.fmt[1], whole = operandBytes.length - (operandBytes.length % wordBytes);
+                    if (whole === 0) return;
+                    operandBytes = operandBytes.slice(0, whole);
+                }
+            }
+            if (this.paceTable) this.pace(pacePdi(this.paceTable, opcode));
+            const operands = new OperandReader(operandBytes, [...this.fmt]);
             if (opcode === 0x20) this.pdiReset(operands);
             else if (opcode === 0x21) this.pdiDomain(operands);
             else if (opcode === 0x22) this.pdiText(operands);
@@ -1550,9 +3478,13 @@
             else if (opcode === 0x3C) this.pdiSetColor(operands);
             else if (opcode === 0x3E) this.pdiSelectColor(operands);
             else if (opcode === 0x3F) this.pdiBlink(operands);
-            else if (opcode === 0x3D) {                         // WAIT (§5.3.2.8), tenths of a second
+            else if (opcode === 0x3D) {                         // WAIT (§5.3.2.8)
+                // The first byte must be the Figure 28 format byte (0x5C), or the whole command is a null operation;
+                // each byte after it is a delay in tenths of a second, zero meaning two TV fields (decode-orc PR #328)
+                if (!operandBytes.length || (operandBytes[0] & 0x3F) !== 0x1C) return;
                 this.snapState();
-                this.clock += 0.1 * operandBytes.reduce((total, byte) => total + (byte & 0x3F), 0);
+                for (const byte of operandBytes.slice(1)) this.clock += (byte & 0x3F) ? 0.1 * (byte & 0x3F) : 0.033;
+                this.clock = Math.min(this.clock, 15 * 60);
             }
             else if (opcode <= 0x27) this.pdiPoint(opcode, operands);
             else if (opcode <= 0x2B) this.pdiLine(opcode, operands);
@@ -1561,7 +3493,7 @@
             else if (opcode <= 0x37) this.pdiPoly(opcode, operands);
             else if (opcode === 0x38) this.pdiField(operands);
             else this.pdiIncremental(opcode, operands, operandBytes);
-            if (operands.truncated) this.lint += 1;
+            if (operands.truncated) this.noteProblem();
         }
 
         pdiReset(operands) {
@@ -1600,6 +3532,9 @@
             const first = operands.fixed();
             this.fmt = [(first & 3) + 1, ((first >> 2) & 7) + 1, !!((first >> 5) & 1)];
             if (operands.empty()) return;
+            // A DOMAIN declaring 1- or 2-byte coordinates whose own pel arrives in 3 bytes was written by a sender
+            // still on 3, and 3 is what its coordinates go on being sent in (decode-orc PR #328)
+            if (this.fmt[1] < 3 && operands.remaining() === 3) this.fmt[1] = 3;
             operands.format = [...this.fmt];
             this.pel = operands.coord();
         }
@@ -1642,12 +3577,38 @@
 
         pdiSelectColor(operands) {
             const bytesPerValue = this.fmt[0];
-            const valueCount = bytesPerValue ? Math.floor(operands.remaining() / bytesPerValue) : 0;
+            const valueCount = bytesPerValue ? Math.ceil(operands.remaining() / bytesPerValue) : 0;
             if (valueCount === 0) { this.color.mode = 0; return; }
             const drawAddress = mapAddressFromOperand(operands.single(), bytesPerValue);
             if (valueCount === 1) { this.color.selectMapped(drawAddress); return; }
             const backgroundAddress = mapAddressFromOperand(operands.single(), bytesPerValue);
             this.color.selectMappedWithBackground(drawAddress, backgroundAddress);
+        }
+
+        /**
+         * When a blink process defined now with a start delay of `delayTenths` first turns ON (decode-orc PR #328):
+         * the delay is counted from the start of the ON interval of the most recently defined active process, the one
+         * under way or the next (§5.3.2.7.2), and moved on a period where that has gone by; with none running, the
+         * next tenth-of-a-second tick. This is what makes one command's processes chase in step, as the NBC peacock's
+         * feathers do.
+         */
+        firstBlinkOn(delayTenths) {
+            const clock = this.clock;
+            let newest = null;
+            for (let i = this.blinkOrder.length - 1; i >= 0 && !newest; i--) {
+                if (this.blink.includes(this.blinkOrder[i])) newest = this.blinkOrder[i];
+                else this.blinkOrder.splice(i, 1);
+            }
+            if (!newest) return Math.ceil(clock * 10 - 1e-9) / 10;
+            const [, , onTenths, offTenths, , firstOn] = newest, period = 0.1 * (onTenths + offTenths);
+            let start = firstOn;
+            if (clock > firstOn && period > 0) {
+                start = firstOn + Math.floor((clock - firstOn) / period + 1e-9) * period;
+                if (clock - start >= 0.1 * onTenths - 1e-9) start += period;
+            }
+            start += 0.1 * delayTenths;
+            if (start < clock - 1e-9 && period > 0) start += Math.ceil((clock - start) / period - 1e-9) * period;
+            return start;
         }
 
         pdiBlink(operands) {
@@ -1658,22 +3619,30 @@
                 const onTime = operands.empty() ? 0 : operands.fixed();
                 const offTime = operands.empty() ? 0 : operands.fixed();
                 const delay = !operands.empty() ? operands.fixed() : 0;
-                this.blink[pythonMod(fromAddress, 16)] = (onTime && offTime)
-                    ? [pythonMod(toAddress, 16), null, onTime, offTime, delay, this.clock]
-                    : null;
+                let process = null;
+                if (onTime && offTime) {
+                    process = [pythonMod(toAddress, 16), null, onTime, offTime, 0, this.firstBlinkOn(delay)];
+                    this.blinkOrder.push(process);
+                }
+                this.blink[pythonMod(fromAddress, 16)] = process;
                 if (operands.empty()) return;
                 fromAddress = nextMapAddress(fromAddress);
                 if (fromAddress === null) return;
             }
         }
 
-        resolve(point) { return clampToScreen(point); }
+        // Figures keep the coordinates the record gave and are clipped where they are drawn (decode-orc PR #328)
+        resolve(point) { return point; }
+
+        /** A polygon, arc or incremental polygon with a vertex off the unit screen is not drawn (TU-2000x behavior). */
+        static offScreen(points) {
+            return points.some(([x, y]) => !(x >= 0 && x < 1 && y >= 0 && y < 1));
+        }
 
         pdiPoint(opcode, operands) {
             const relative = opcode === 0x25 || opcode === 0x27, visible = opcode === 0x26 || opcode === 0x27;
-            while (!operands.empty()) {
-                const offset = operands.coord();
-                const target = this.resolve(relative ? [this.dp[0] + offset[0], this.dp[1] + offset[1]] : offset);
+            const execute = (offset) => {
+                const target = relative ? [this.dp[0] + offset[0], this.dp[1] + offset[1]] : offset;
                 this.moveDp(target);
                 if (visible) {
                     const point = this.make('point');
@@ -1681,17 +3650,37 @@
                     point.points = [target];
                     this.emit(point);
                 }
-                if (operands.truncated) return;
+            };
+            // An operand with no data is zero-filled: the origin, or no displacement (§5.3.2.2.5)
+            if (operands.empty()) { execute([0.0, 0.0]); return; }
+            const traced = this.pointTrace && opcode === 0x24 && this.frames.length === 1 ? [] : null;
+            while (!operands.empty()) {
+                const offset = operands.coord();
+                execute(offset);
+                if (traced) traced.push(offset);
+                if (operands.truncated) break;
+            }
+            if (traced && traced.length) {
+                const end = this.recordPosition(this.frames[0].position);
+                this.pointTrace.push({ from: end - operands.bytes.length - 1, to: end, points: traced });
             }
         }
 
         pdiLine(opcode, operands) {
             const relative = opcode === 0x29 || opcode === 0x2B, hasStart = opcode === 0x2A || opcode === 0x2B;
+            if (operands.empty() && opcode === 0x28) {           // LINE (Absolute) with no data: to the origin
+                const line = this.make('line');
+                line.origin = this.dp;
+                line.points = [this.dp, [0.0, 0.0]];
+                this.emit(line);
+                this.moveDp([0.0, 0.0]);
+                return;
+            }
             while (!operands.empty()) {
                 let start = this.dp;
-                if (hasStart) { start = this.resolve(operands.coord()); if (operands.empty()) return; }
-                const offset = operands.coord();
-                const end = relative ? this.resolve([start[0] + offset[0], start[1] + offset[1]]) : this.resolve(offset);
+                if (hasStart) start = operands.coord();
+                const offset = operands.empty() ? [0.0, 0.0] : operands.coord();    // a missing end is zero-filled
+                const end = relative ? [start[0] + offset[0], start[1] + offset[1]] : offset;
                 const line = this.make('line');
                 line.origin = start;
                 line.points = [start, end];
@@ -1720,7 +3709,7 @@
             if (arc.points.length < 2) return;
             if (arc.points.length === 2) arc.points.push(start);       // two points: a full circle
             const end = arc.points[arc.points.length - 1];
-            this.emit(arc);
+            if (!Interpreter.offScreen(arc.points)) this.emit(arc); else this.noteOffScreen();
             this.moveDp(end);
         }
 
@@ -1758,8 +3747,8 @@
                 poly.points.push(previous);
                 if (operands.truncated) break;
             }
-            if (poly.points.length < 3) return;
-            this.emit(poly);
+            // A polygon of one or two points is still drawn: its outline is at least one pel (§5.3.2.2.6)
+            if (!Interpreter.offScreen(poly.points)) this.emit(poly); else this.noteOffScreen();
             this.moveDp(start);
         }
 
@@ -1773,7 +3762,7 @@
             const first = operands.coord();
             if (operands.empty()) { this.field_origin = this.dp; this.field_size = first; return; }
             const extent = operands.coord();
-            this.field_origin = this.resolve(first);
+            this.field_origin = first;
             this.field_size = extent;
             this.moveDp(this.field_origin);
         }
@@ -1789,21 +3778,51 @@
                 return;
             }
             if (operands.empty()) return;                              // INCREMENTAL LINE / POLYGON
-            const step = operands.coord();
-            const poly = this.make('poly');
-            poly.filled = opcode === 0x3B;
-            poly.origin = this.dp;
-            poly.points = [this.dp];
-            let current = this.dp;
-            while (!operands.empty() && poly.points.length < 256) {
-                const direction = operands.fixed() & 7;
-                const dx = [1, 2, 3].includes(direction) ? step[0] : ([5, 6, 7].includes(direction) ? -step[0] : 0.0);
-                const dy = [3, 4, 5].includes(direction) ? step[1] : ([7, 0, 1].includes(direction) ? -step[1] : 0.0);
-                current = this.resolve([current[0] + dx, current[1] + dy]);
-                poly.points.push(current);
+            let step = operands.coord();
+            const polygon = opcode === 0x3B;
+            // Three 2-bit move nibbles per byte, b6 to b1 (Tables 16 and 17): 01 step x, 10 step y, 11 both;
+            // 00 makes the next nibble a modifier: 00 toggles drawing (a null for a polygon), 01/10/11 negate x/y/both
+            const points = [this.dp], drawn = [];
+            let current = this.dp, draw = true, modifierNext = false;
+            while (!operands.empty()) {
+                const byte = operands.fixed();
+                for (let shift = 4; shift >= 0; shift -= 2) {
+                    const nibble = (byte >> shift) & 3;
+                    if (modifierNext) {
+                        if (nibble === 0) { if (polygon) continue; draw = !draw; }
+                        else if (nibble === 1) step = [-step[0], step[1]];
+                        else if (nibble === 2) step = [step[0], -step[1]];
+                        else step = [-step[0], -step[1]];
+                        modifierNext = false;
+                        continue;
+                    }
+                    if (nibble === 0) { modifierNext = true; continue; }
+                    current = [current[0] + (nibble & 1 ? step[0] : 0), current[1] + (nibble & 2 ? step[1] : 0)];
+                    points.push(current);
+                    drawn.push(draw);
+                }
             }
-            if (poly.points.length >= 2) this.emit(poly);
-            this.moveDp(current);
+            if (polygon) {
+                // The final point is implicitly the first, and the area is filled; at most 256 vertices
+                if (points.length >= 2) {
+                    const poly = this.make('poly');
+                    poly.filled = true;
+                    poly.points = points.slice(0, 256);
+                    poly.origin = poly.points[0];
+                    if (!Interpreter.offScreen(poly.points)) this.emit(poly); else this.noteOffScreen();
+                }
+                this.moveDp(points[0]);
+                return;
+            }
+            // Every run of drawn steps is one line through all of its vertices
+            let line = null;
+            for (let i = 0; i + 1 < points.length; i++) {
+                if (!drawn[i]) { if (line) { this.emit(line); line = null; } continue; }
+                if (!line) { line = this.make('line'); line.points = [points[i]]; line.origin = points[i]; }
+                line.points.push(points[i + 1]);
+            }
+            if (line) this.emit(line);
+            this.moveDp(points[points.length - 1]);
         }
 
         /** A new primitive carrying the current drawing attributes. */
@@ -1834,13 +3853,41 @@
             return prim;
         }
 
+        /**
+         * JS-only, for the grammar check: a figure off the unit screen is "in error" (§5.3.1), and on the recordings
+         * nearly always a damaged byte; it counts as a problem, so a contested reading that keeps it on the screen wins.
+         */
+        noteOffScreen() { if (this.checkingOnly) this.noteProblem(); }
+
         emit(prim) {
             if (this.collecting === 'drcs' || this.collecting === 'mask') { this.drawIntoDefinition(prim); return; }
+            if (this.checkingOnly && prim.kind !== 'char' && prim.points.some(([x, y]) => !(x > -1 / 256 && x < 1 + 1 / 256 && y > -1 / 256 && y < 1 + 1 / 256))) this.noteOffScreen();
+            if (this.classicPace) {
+                // The original nominal drawing speed: the figure appears at once, then a fixed time per kind of figure
+                this.snapState();
+                prim.t = this.clock;
+                prim.draw = 0;
+                this.prims.push(prim);
+                this.events.push(['p', this.clock, prim]);
+                this.clock += (CLASSIC_DRAW_COST[prim.kind] ?? 0.02) * (prim.filled ? 2.0 : 1.0);
+                return;
+            }
+            // The figure is on the screen once the receiver has drawn it; a fill is swept on over that time
+            const started = this.clock;
+            this.pace(this.paceTable ? paceFigure(this.paceTable, prim) : 0);
             this.snapState();
             prim.t = this.clock;
+            prim.draw = this.clock - started;
             this.prims.push(prim);
             this.events.push(['p', this.clock, prim]);
-            this.clock += (DRAW_COST[prim.kind] ?? 0.02) * (prim.filled ? 2.0 : 1.0);
+        }
+
+        /** Advance the clock by what the receiver took over a command (nothing with the pace off). */
+        pace(microseconds) {
+            if (!this.paceTable || !(microseconds > 0) || this.checkingOnly) return;
+            // Colour changes made before this belong before it on the clock
+            this.snapState();
+            this.clock = Math.min(this.clock + microseconds / 1e6, 15 * 60);
         }
 
         staysOnRow(point) {
@@ -1853,22 +3900,29 @@
         moveDp(point) {
             this.dp = point;
             if (this.text.move === 0 || this.text.move === 2) {
-                if (!this.staysOnRow(point)) this.wrap = 0;
-                this.cursor = point;
+                const cursor = clampToScreen(point);            // the cursor, unlike a drawing, stays on the screen
+                if (!this.staysOnRow(cursor)) this.wrap = 0;
+                this.cursor = cursor;
             }
         }
 
         moveCursor(point) {
             this.wrap = 0;
-            this.cursor = this.resolve(point);
+            this.cursor = clampToScreen(point);
             if (this.text.move === 0 || this.text.move === 1) this.dp = this.cursor;
         }
 
-        moveBy(direction) {
+        moveBy(direction, along = 0) {
             const text = this.text, horizontal = text.path === 0 || text.path === 1;
-            const characterStep = Math.abs(horizontal ? text.field[0] : text.field[1]) * SPACING_FACTORS[text.ics & 3];
+            // JS-only: a character steps a whole number of reference pixels, the field's width truncated to them, as
+            // the pages show the receivers did: the default 1/40 field steps 6/256, not 6.4/256, which is what
+            // lets index lines laid out to 42 columns (WIVB's "....p1") end inside their boxes instead of wrapping
+            const characterStep = Math.max(1, referencePixels(horizontal ? text.field[0] : text.field[1])) / 256 * SPACING_FACTORS[text.ics & 3];
             const rowStep = Math.abs(horizontal ? text.field[1] : text.field[0]) * ROW_SPACING_FACTORS[text.irs & 3];
-            const distance = (direction === 'fwd' || direction === 'back') ? characterStep : rowStep;
+            let distance = (direction === 'fwd' || direction === 'back') ? characterStep : rowStep;
+            if (direction === 'fwd' && along > 0) distance = along;
+            // APB and APF in proportional text step the full-width class (clause 11.1)
+            else if ((direction === 'fwd' || direction === 'back') && spacedProportionally(text)) distance = proportionalDisplacement(FULL_WIDTH_CLASS, text.field[0]);
             const [pathX, pathY] = PATH_DIRECTIONS[text.path];
             const [stepX, stepY] = {
                 fwd: [pathX, pathY], back: [-pathX, -pathY], down: [pathY, -pathX], up: [-pathY, pathX]
@@ -1889,6 +3943,13 @@
             this.mask_target = null;
             this.def_frame = this.frames.length ? this.frames.length - 1 : 0;
             this.def_had_code = false;
+            this.def_began = this.frames.length ? this.frames[0].position : 0;
+            this.def_record_length = this.frames.length ? this.frames[0].bytes.length : 0;
+            // The buffer takes the aspect of the character field (DRCS) or mask size: its larger dimension spans the
+            // whole unit axis and the other only its share (§6.2.3; decode-orc PR #328)
+            const shape = what === 'mask' ? this.mask_size : this.text.field;
+            const across = Math.abs(shape[0]), up = Math.abs(shape[1]);
+            this.def_extent = across > 0 && up > 0 ? (across >= up ? [1, up / across] : [across / up, 1]) : [1, 1];
             if (what === 'drcs') {
                 const [width, height] = this.drcsSize();
                 if (code >= 0x20 && code <= 0x7F) {
@@ -1944,6 +4005,9 @@
             const black = prim.color === BLACK;
             const surface = new Surface(target.w, target.h);
             const rasteriser = new Rasteriser(surface, target.w, target.h, true, this.decoderFont);
+            const [extentX, extentY] = this.def_extent || [1, 1];
+            rasteriser.columnsPerUnit = target.w / extentX;
+            rasteriser.rowsPerUnit = target.h / extentY;
             drawPrimitive(rasteriser, prim, null, { definition: true, drcs: this.drcs });
             surface.cells.forEach((cell, i) => { if (cell !== -1) target.el[i] = !black; });
         }
@@ -1953,6 +4017,7 @@
             const macro = this.macros.get(code);
             if (!macro || macro[1]) return;
             if (this.frames.length > MAX_MACRO_DEPTH) return;
+            if (this.paceTable) this.pace(this.paceTable.macro);
             this.frames.push({ bytes: macro[0], position: 0 });
         }
     }
@@ -1967,8 +4032,103 @@
         }
     }
 
-    const pelAnchor = (position, extent) => Math.floor(Math.min(position, position + extent));
     const pelSpan = (extent) => Math.max(1, Math.floor(Math.abs(extent) + 0.5));
+    // A negative pel is counted back from the drawing point's own cell, as both receivers did (decode-orc PR #328)
+    const pelAnchor = (position, extent) => {
+        const own = Math.floor(position);
+        return extent < 0 ? own - pelSpan(extent) + 1 : own;
+    };
+
+    /** Line textures as the Norpak TTX 650 laid them: is the index-th cell along the line lit, for a pel `pel` cells long? */
+    const linePatternLit = (texture, pel, index) => {
+        const period = texture === 1 ? 2 * pel : 6 * pel;
+        const phase = ((index % period) + period) % period;
+        if (texture === 1) return phase === 0;                          // dotted
+        if (texture === 2) return phase <= 2 * pel;                     // dashed
+        if (texture === 3) return phase === 0 || (phase >= 2 * pel && phase <= 4 * pel);   // dot-dash
+        return true;
+    };
+
+    /** The cells of a straight line as the TTX 650 steps it: from its lower end, error starting at half the major axis. */
+    const receiverLineCells = (x0, y0, x1, y1) => {
+        if (y1 < y0) [x0, y0, x1, y1] = [x1, y1, x0, y0];
+        const dx = x1 - x0, dy = y1 - y0, columnStep = dx >= 0 ? 1 : -1, across = Math.abs(dx);
+        const steep = dy > across, major = steep ? dy : across, minor = steep ? across : dy;
+        let error = major >> 1, x = x0, y = y0;
+        const cells = [[x, y]];
+        for (let step = 0; step < major; step++) {
+            error += minor;
+            if (error >= major) { x += columnStep; y += 1; error -= major; }
+            else if (steep) y += 1;
+            else x += columnStep;
+            cells.push([x, y]);
+        }
+        return cells;
+    };
+
+    // Arcs traced cell by cell as the Norpak TTX 650 traced them (decode-orc PR #328): coordinates in 1/64 cell
+    const ARC_UNIT = 64, ARC_LARGEST_CELL = 4096, ARC_MOST_STEPS = 200000, ARC_CLOSING_STEPS = 8;
+    const roundHalfAway = (value) => (value < 0 ? -Math.round(-value) : Math.round(value));
+    /** The cells of the arc (or circle) through three points, or { collinear } / null when it can't be traced. */
+    const arcCells = (cellPoints) => {
+        if (cellPoints.length !== 3) return null;
+        const units = cellPoints.map(([column, row]) => [roundHalfAway(column * ARC_UNIT), roundHalfAway(row * ARC_UNIT)]);
+        if (units.some(([x, y]) => Math.abs(x) > ARC_LARGEST_CELL * ARC_UNIT || Math.abs(y) > ARC_LARGEST_CELL * ARC_UNIT)) return null;
+        const [[startX, startY], [middleX, middleY], [endX, endY]] = units;
+        const ax = middleX - startX, ay = middleY - startY, bx = endX - middleX, by = endY - middleY;
+        const cellOf = (value) => Math.floor(value / ARC_UNIT);
+        let offsetX, offsetY, counterClockwise = false;
+        const circle = ax + bx === 0 && ay + by === 0;
+        if (circle) {                                       // centre half the diameter, truncated, from the start; clockwise
+            offsetX = -(ax >> 1);
+            offsetY = -(ay >> 1);
+        } else {
+            const cx = ax + bx, cy = ay + by;
+            // Exact integer arithmetic: the products run past 2^53
+            const bAx = BigInt(ax), bAy = BigInt(ay), bCx = BigInt(cx), bCy = BigInt(cy);
+            const cross = bAx * bCy - bAy * bCx;
+            if (cross === 0n) return { collinear: true };
+            counterClockwise = cross > 0n;
+            const a2 = bAx * bAx + bAy * bAy, c2 = bCx * bCx + bCy * bCy;
+            offsetX = -Number((a2 * bCy - c2 * bAy) / (2n * cross));     // BigInt division truncates toward zero
+            offsetY = -Number((c2 * bAx - a2 * bCx) / (2n * cross));
+        }
+        const start = [cellOf(startX), cellOf(startY)], end = [cellOf(endX), cellOf(endY)];
+        if ([ax, ay, bx, by, ax + bx, ay + by].every((step) => Math.abs(step) <= ARC_UNIT)) return { path: [start], circle };
+        let error = 0;
+        const stepRound = () => {
+            let stepX, stepY;
+            if (counterClockwise) { stepY = offsetX < 0 ? -1 : 1; stepX = offsetY < 0 ? 1 : -1; }
+            else { stepY = offsetX < 0 ? 1 : -1; stepX = offsetY < 0 ? -1 : 1; }
+            const alongX = error + 2 * stepX * offsetX + ARC_UNIT, alongY = error + 2 * stepY * offsetY + ARC_UNIT;
+            const diagonal = alongX + alongY - error;
+            if (Math.abs(diagonal) < Math.abs(alongX) && Math.abs(diagonal) < Math.abs(alongY)) {
+                offsetX += stepX * ARC_UNIT; offsetY += stepY * ARC_UNIT; error = diagonal;
+                return [stepX, stepY];
+            }
+            if (Math.abs(alongX) <= Math.abs(alongY)) { offsetX += stepX * ARC_UNIT; error = alongX; return [stepX, 0]; }
+            offsetY += stepY * ARC_UNIT; error = alongY;
+            return [0, stepY];
+        };
+        let at = start;
+        const path = [at];
+        for (let steps = 0; steps < ARC_MOST_STEPS; steps++) {
+            const [stepX, stepY] = stepRound();
+            at = [at[0] + stepX, at[1] + stepY];
+            path.push(at);
+            if (circle && steps < 2) continue;
+            if (Math.abs(end[0] - at[0]) <= 1 && Math.abs(end[1] - at[1]) <= 1) break;
+        }
+        for (let steps = 0; steps < ARC_CLOSING_STEPS; steps++) {
+            const [stepX, stepY] = stepRound();
+            const next = [at[0] + stepX, at[1] + stepY];
+            if (Math.abs(end[0] - next[0]) > Math.abs(end[0] - at[0]) || Math.abs(end[1] - next[1]) > Math.abs(end[1] - at[1])) break;
+            at = next;
+            path.push(at);
+        }
+        path.push(end);
+        return { path, circle };
+    };
 
     // Line textures: [on-segments, period] in pel steps (solid, dotted, dashed, dot-dash)
     const LINE_TEXTURES = {
@@ -2032,7 +4192,16 @@
         if (pattern === 1) return inBand(x, pel[0]);                       // vertical hatching
         if (pattern === 2) return inBand(y, pel[1]);                       // horizontal hatching
         if (pattern === 3) return inBand(x, pel[0]) || inBand(y, pel[1]);  // cross-hatching
-        if (!mask || !(mask.w > 0 && mask.h > 0)) return true;
+        // A programmable mask the page never defined is not a null pattern here (§5.3.2.4.4, which decode-orc follows):
+        // CBS ExtraVision pages fill with mask A without ever defining it (KCBS 1985 has 40 pages that do, none that
+        // define it), and they are drawn for a 50% dither. Read as one, it shades the crayons and the camera lens, and
+        // gives the four zones of the time-zone map (KCBS p63) the four tones its legend shows. Masks B to D, never
+        // defined either, fill solid (read as a dither, the Panasonic logo on KCBS p40 breaks up).
+        if (!mask || !(mask.w > 0 && mask.h > 0)) {
+            if (pattern !== 4) return true;
+            const column = Math.floor(x * 256 + 1e-6), row = Math.floor(y * 256 + 1e-6);   // receiver pixels
+            return ((column + row) & 1) === 0;
+        }
         const cellWidth = Math.abs(maskSize[0]), cellHeight = Math.abs(maskSize[1]);
         if (!(cellWidth > 1e-9 && cellHeight > 1e-9)) return true;
         let fractionX = (x % cellWidth) / cellWidth, fractionY = (y % cellHeight) / cellHeight;
@@ -2047,30 +4216,229 @@
 
     const GLYPH_INDEX = new Map(FONT.CODES.map((codePoint, index) => [codePoint, index]));
 
-    /** The largest font face that fits the character cell (only 6×10 at the receiver's 256 columns). */
-    const chooseFace = (gridWidth, cellColumns, cellRows) => {
-        const facesAvailable = gridWidth <= 256 ? 1 : FONT.FACES.length;
-        let chosen = null, chosenDividesRows = false, chosenArea = 0;
-        for (const face of FONT.FACES.slice(0, facesAvailable)) {
-            const [, faceWidth, faceHeight] = face;
-            if (faceWidth > cellColumns || faceHeight > cellRows) continue;
-            const dividesRows = cellRows % faceHeight === 0, area = faceWidth * faceHeight;
+    /** Whole cells of the reference receiver (256 across the unit screen) an extent covers (decode-orc PR #328). */
+    const referencePixels = (extent) => Math.floor(Math.abs(extent) * 256 + 1e-6);
+    const SMALLEST_FIELD_COLUMNS = 6, SMALLEST_FIELD_ROWS = 8;     // Table D1 items 2 and 5(g)
+
+    /** Columns and rows a face leaves over in a field, or -1 where it does not fit. */
+    const faceLeftover = (face, columns, rows) => (face[1] > columns || face[2] > rows ? -1 : (columns % face[1]) + (rows % face[2]));
+
+    /**
+     * The face a receiver at `gridWidth` draws a `columns` × `rows` field from (decode-orc PR #328).
+     * The TTX 650 and TU-2000x held a normal 6×10 generator and a larger 8×12 one, and chose the one that leaves
+     * the fewest columns and rows over at the reference grid (the larger on a tie). Above the reference grid the
+     * normal generator holds the finer faces too, and takes the finest whose height divides the field.
+     */
+    const chooseFace = (gridWidth, columns, rows) => {
+        const normal = FONT.FACES[0], larger = FONT.FACES.find((face) => face[5]);
+        const factor = Math.max(1, Math.floor(gridWidth / 256));
+        if (larger) {
+            const asNormal = faceLeftover(normal, Math.floor(columns / factor), Math.floor(rows / factor));
+            const asLarger = faceLeftover(larger, Math.floor(columns / factor), Math.floor(rows / factor));
+            if (asLarger >= 0 && (asNormal < 0 || asLarger <= asNormal)) return larger;
+        }
+        if (factor === 1) return normal;
+        let chosen = null, chosenDivides = false, chosenArea = 0;
+        for (const face of FONT.FACES) {
+            const [, faceWidth, faceHeight, , , isLarger] = face;
+            if (isLarger || faceWidth > columns || faceHeight > rows) continue;
+            const divides = rows % faceHeight === 0, area = faceWidth * faceHeight;
             if (chosen !== null) {
-                if (chosenDividesRows && !dividesRows) continue;
-                if (dividesRows === chosenDividesRows && area <= chosenArea) continue;
+                if (chosenDivides && !divides) continue;
+                if (divides === chosenDivides && area <= chosenArea) continue;
             }
             chosen = face;
-            chosenDividesRows = dividesRows;
+            chosenDivides = divides;
             chosenArea = area;
         }
-        return chosen || FONT.FACES[0];
+        return chosen || normal;
     };
-    const glyphRows = (face, codePoint) => {
+    const COMPOSED = new Map((FONT.COMPOSITIONS || []).map(([base, mark, composed]) => [base * 0x110000 + mark, composed]));
+    const MARK_FORMS = new Map((FONT.MARK_FORMS || []).map(([mark, overlay, spacing]) => [mark, { overlay, spacing }]));
+
+    /** Table 25's line and triangle graphics, drawn from the character field itself rather than a pattern. */
+    const FIELD_GRAPHICS = {
+        0x56: 'horizontal', 0x57: 'vertical', 0x58: 'diagonal', 0x59: 'reverseDiagonal',
+        0x5A: 'filledDiagonal', 0x5B: 'filledReverseDiagonal', 0x65: 'cross'
+    };
+
+    // A field edge is truncated to a whole cell with a little slack, so a field ending on a cell boundary and the
+    // next one starting there land on the same side of it (decode-orc PR #328)
+    const FIELD_EDGE_SLACK = 1e-6;
+    const BASELINE_FRACTION = 0.2;                                  // Table D1 item 2
+    const truncatedCell = (position) => Math.floor(position + FIELD_EDGE_SLACK);
+
+    /** One axis of a character field on the surface: `extent` cells from `origin`, towards higher or lower indices. */
+    class FieldAxis {
+        constructor(origin, extent, direction) { this.origin = origin; this.extent = extent; this.direction = direction; }
+        cellsWithin(distance) {
+            return this.direction > 0 ? truncatedCell(this.origin + distance) - truncatedCell(this.origin)
+                : truncatedCell(this.origin) - truncatedCell(this.origin - distance);
+        }
+        cells() { return this.cellsWithin(this.extent); }
+        /** A field turned to run back along an axis starts from its origin's own cell, as both receivers laid it. */
+        surface(index) { return this.direction > 0 ? truncatedCell(this.origin) + index : truncatedCell(this.origin) - index; }
+        centre(index) {
+            const middle = this.surface(index) + 0.5;
+            return this.direction > 0 ? middle - this.origin : this.origin - middle;
+        }
+    }
+
+    /** What a character puts in its field: lit is its shape. Row 0 is the field's foot. */
+    class FieldImage {
+        constructor(columns, rows) {
+            this.columns = Math.max(0, columns); this.rows = Math.max(0, rows);
+            this.lit = new Uint8Array(this.columns * this.rows);
+        }
+        at(column, row) { return column >= 0 && column < this.columns && row >= 0 && row < this.rows && this.lit[row * this.columns + column] !== 0; }
+        set(column, row) { if (column >= 0 && column < this.columns && row >= 0 && row < this.rows) this.lit[row * this.columns + column] = 1; }
+        fill(firstColumn, endColumn, firstRow, endRow) {
+            for (let row = firstRow; row < endRow; row++) for (let column = firstColumn; column < endColumn; column++) this.set(column, row);
+        }
+    }
+
+    /**
+     * Where a `patternWidth` × `patternHeight` pattern sits in a field: at a whole multiple of its size (Appendix B),
+     * squeezed where the field is a little short of it; centred across with any spare column to the right, and raised
+     * to put its baseline at 20% of the field's height. A DRCS buffer (descent < 0) is laid from the field's origin.
+     */
+    const placePattern = (patternWidth, patternHeight, descent, field) => {
+        const fit = (fieldCells, patternCells) => (fieldCells >= patternCells
+            ? { scale: Math.floor(fieldCells / patternCells), cells: Math.floor(fieldCells / patternCells) * patternCells }
+            : { scale: 1, cells: fieldCells });
+        const across = fit(field.nominalColumns, patternWidth), up = fit(field.nominalRows, patternHeight);
+        const place = { columns: across.cells, rows: up.cells, firstColumn: 0, firstRow: 0, scaleAcross: across.scale, scaleUp: up.scale };
+        if (descent < 0) return place;
+        place.firstColumn = Math.floor((field.nominalColumns - place.columns) / 2);
+        if (place.rows === place.scaleUp * patternHeight) {
+            const baseline = Math.round(BASELINE_FRACTION * field.up.extent);   // extent is never negative
+            place.firstRow = Math.min(Math.max(baseline - place.scaleUp * descent, 0), field.nominalRows - place.rows);
+        }
+        return place;
+    };
+
+    /** Lay a pattern into the image at `place`, nearest-neighbour; `lit(column, rowFromTop)`. */
+    const layPattern = (image, place, width, height, lit) => {
+        if (place.columns <= 0 || place.rows <= 0 || width <= 0 || height <= 0) return;
+        for (let row = 0; row < place.rows; row++) {
+            const sourceRow = Math.min(height - 1, Math.floor((place.rows - 1 - row) * height / place.rows));
+            for (let column = 0; column < place.columns; column++) {
+                const sourceColumn = Math.min(width - 1, Math.floor(column * width / place.columns));
+                if (lit(sourceColumn, sourceRow)) image.set(place.firstColumn + column, place.firstRow + row);
+            }
+        }
+    };
+
+    const facePattern = (face, codePoint) => {
         const index = GLYPH_INDEX.get(codePoint);
         if (index === undefined) return null;
-        const faceHeight = face[2];
-        return face[3].slice(index * faceHeight, (index + 1) * faceHeight);
+        return face[3].slice(index * face[2], (index + 1) * face[2]);
     };
+    /** The box drawn for a character the face has no pattern for: the capital H's extent outlined. */
+    const replacementPatterns = new Map();
+    const replacementPattern = (face) => {
+        if (replacementPatterns.has(face)) return replacementPatterns.get(face);
+        const [, width, height] = face, capital = facePattern(face, 0x48);
+        let top = height, bottom = -1, spread = 0;
+        for (let row = 0; capital && row < height; row++) {
+            if (capital[row]) { top = Math.min(top, row); bottom = Math.max(bottom, row); spread |= capital[row]; }
+        }
+        if (bottom < 0) { top = 0; bottom = height - 1; spread = (1 << width) - 1; }
+        let left = 0, right = 0;
+        for (let column = 0; column < width; column++) {
+            const bit = 1 << (width - 1 - column);
+            if (spread & bit) { if (!left) left = bit; right = bit; }
+        }
+        const span = right === 0 ? 0 : ((left << 1) - right);
+        const rows = new Array(height).fill(0);
+        for (let row = top; row <= bottom; row++) rows[row] = (row === top || row === bottom) ? span : (left | right);
+        replacementPatterns.set(face, rows);
+        return rows;
+    };
+    /**
+     * How far into its field a proportionally spaced character's ink starts: the columns its pattern leaves blank
+     * before the ink, where the reference receiver drew it (decode-orc PR #328). Zero for a character with no ink.
+     */
+    const inkOffset = (codePoint, field) => {
+        const columns = Math.max(1, referencePixels(field[0])), rows = Math.max(1, referencePixels(field[1]));
+        const face = chooseFace(256, columns, rows), width = face[1];
+        const pattern = facePattern(face, codePoint);
+        if (!pattern) return 0;
+        let firstLit = width;
+        for (const bits of pattern) {
+            for (let column = 0; column < firstLit; column++) if ((bits >> (width - 1 - column)) & 1) { firstLit = column; break; }
+        }
+        if (firstLit >= width) return 0;
+        const scale = columns >= width ? Math.floor(columns / width) : 1;
+        const firstColumn = columns >= width ? Math.floor((columns - scale * width) / 2) : 0;
+        return (firstColumn + firstLit * scale) / 256;
+    };
+    const layRows = (image, place, face, rows) => layPattern(image, place, face[1], face[2], (column, row) => (rows[row] >> (face[1] - 1 - column)) & 1);
+    const layFacePattern = (image, face, place, codePoint) => {
+        let rows = facePattern(face, codePoint);
+        for (const candidate of glyphCandidates(codePoint)) {
+            if (rows) break;
+            rows = facePattern(face, candidate);
+        }
+        if (!rows) return false;
+        layRows(image, place, face, rows);
+        return true;
+    };
+    const layOrBox = (image, face, place, codePoint) => {
+        if (!layFacePattern(image, face, place, codePoint)) layRows(image, place, face, replacementPattern(face));
+    };
+    /** Marks with no letter: the first in its spacing form, any others laid over it (Table 26). */
+    const laySpacingMarks = (image, face, place, marks) => {
+        marks.forEach((mark, index) => {
+            const forms = MARK_FORMS.get(mark);
+            layOrBox(image, face, place, !forms ? mark : (index === 0 && forms.spacing ? forms.spacing : forms.overlay));
+        });
+    };
+
+    /** Draw one of Table 25's field graphics edge to edge of the field, `weight` cells across and `weightUp` up. */
+    const layFieldGraphic = (image, graphic, field, weight, weightUp) => {
+        const width = field.across.extent, height = field.up.extent;
+        if (!(width > 0) || !(height > 0) || image.columns <= 0 || image.rows <= 0) return;
+        const horizontal = () => {
+            const middle = height / 2;
+            image.fill(0, image.columns, field.up.cellsWithin(middle - weightUp / 2), field.up.cellsWithin(middle + weightUp / 2));
+        };
+        const vertical = () => {
+            const middle = width / 2;
+            image.fill(field.across.cellsWithin(middle - weight / 2), field.across.cellsWithin(middle + weight / 2), 0, image.rows);
+        };
+        const diagonal = (reverse) => {
+            const touch = 10 * FIELD_EDGE_SLACK;
+            for (let row = 0; row < image.rows; row++) {
+                const low = Math.min(Math.max(field.up.centre(row) - 0.5, 0), height);
+                const high = Math.min(Math.max(field.up.centre(row) + 0.5, 0), height);
+                const from = reverse ? width - high * width / height : low * width / height;
+                const to = reverse ? width - low * width / height : high * width / height;
+                const first = Math.min(Math.max(field.across.cellsWithin(from), 0), image.columns - 1);
+                const last = Math.min(Math.max(Math.max(field.across.cellsWithin(Math.max(from, to - touch)), first + weight - 1), 0), image.columns - 1);
+                image.fill(first, last + 1, row, row + 1);
+            }
+        };
+        const triangle = (reverse) => {
+            for (let row = 0; row < image.rows; row++) {
+                const rise = field.up.centre(row);
+                for (let column = 0; column < image.columns; column++) {
+                    const run = field.across.centre(column), edge = reverse ? width - run : run;
+                    if (rise * width <= edge * height) image.set(column, row);
+                }
+            }
+        };
+        if (graphic === 'horizontal') horizontal();
+        else if (graphic === 'vertical') vertical();
+        else if (graphic === 'cross') { horizontal(); vertical(); }
+        else if (graphic === 'diagonal') diagonal(false);
+        else if (graphic === 'reverseDiagonal') diagonal(true);
+        else if (graphic === 'filledDiagonal') triangle(false);
+        else if (graphic === 'filledReverseDiagonal') triangle(true);
+    };
+
+    const sameCharacterField = (a, b) => Math.abs(a.origin[0] - b.origin[0]) < 1e-6 && Math.abs(a.origin[1] - b.origin[1]) < 1e-6
+        && Math.abs(a.size[0] - b.size[0]) < 1e-6 && Math.abs(a.size[1] - b.size[1]) < 1e-6 && a.rotation === b.rotation;
 
     const resolveDecoderFont = (font) => {
         if (!font) return null;
@@ -2081,17 +4449,6 @@
     const GLYPH_STAND_INS = {
         0x27: [0x2019], 0x60: [0x2018], 0x2019: [0x27], 0x2018: [0x60], 0x2015: [0x2014, 0x2D],
         0x2014: [0x2015, 0x2D], 0x2500: [0x2014, 0x2D], 0x2502: [0x7C], 0xA4: [0x24]
-    };
-
-    const CELL_EPSILON = 1e-6;
-
-    const LINE_GLYPHS = { 0x2015: [true, false], 0x2500: [true, false], 0x2502: [false, true], 0x253C: [true, true] };
-
-    const lineGlyph = (codePoint, width, height) => {
-        const lines = LINE_GLYPHS[codePoint];
-        if (!lines) return null;
-        const [horizontal, vertical] = lines, middleRow = Math.floor(height / 2), middleBit = 1 << (width - 1 - Math.floor(width / 2));
-        return Array.from({ length: height }, (_, row) => (horizontal && row === middleRow ? (1 << width) - 1 : 0) | (vertical ? middleBit : 0));
     };
 
     const glyphCandidates = (codePoint) => {
@@ -2159,8 +4516,10 @@
 
         /** Bresenham line of pel-sized blocks between two points in cell units. */
         sweep(from, to, pelSize, ink) {
-            const fromColumn = pelAnchor(from[0], pelSize[0]), fromRow = pelAnchor(from[1], pelSize[1]);
-            const toColumn = pelAnchor(to[0], pelSize[0]), toRow = pelAnchor(to[1], pelSize[1]);
+            let fromColumn = pelAnchor(from[0], pelSize[0]), fromRow = pelAnchor(from[1], pelSize[1]);
+            let toColumn = pelAnchor(to[0], pelSize[0]), toRow = pelAnchor(to[1], pelSize[1]);
+            // Walk from the upper end, so a half-pixel tie lights the upper cell whichever end the line started from
+            if (fromRow < toRow) [fromColumn, fromRow, toColumn, toRow] = [toColumn, toRow, fromColumn, fromRow];
             const columnDistance = Math.abs(toColumn - fromColumn), rowDistance = Math.abs(toRow - fromRow);
             const columnStep = toColumn >= fromColumn ? 1 : -1, rowStep = toRow >= fromRow ? 1 : -1;
             let column = fromColumn, row = fromRow, error = columnDistance - rowDistance;
@@ -2173,7 +4532,7 @@
             }
         }
 
-        stroke(points, pel, texture, ink, closed = false) {
+        stroke(points, pel, texture, ink, closed = false, gaps = null, vertices = true) {
             if (!points.length) return;
             if (points.length === 1) { this.stamp(points[0], pel, ink); return; }
             const pelSize = this.sizeToCells(pel), [onSegments, period] = LINE_TEXTURES[texture];
@@ -2191,6 +4550,21 @@
                     if (!Number.isFinite(stepLength)) stepLength = 0.0;
                 }
                 if (texture === 0 || !(stepLength > 0)) { this.sweep(from, to, pelSize, ink); continue; }
+                // Colour mode 2 draws a texture's gaps in the background colour
+                if (gaps !== null) this.sweep(from, to, pelSize, gaps);
+                if (vertices) {
+                    // A straight line's pattern is registered to the screen, as the TTX 650 lays it: each cell of the line
+                    // is lit by the pattern at its column (its row on a steep line); both ends are always drawn
+                    const x0 = Math.floor(from[0]), y0 = Math.floor(from[1]), x1 = Math.floor(to[0]), y1 = Math.floor(to[1]);
+                    const steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
+                    const pelCells = steep ? pelSpan(pelSize[1]) : pelSpan(pelSize[0]);
+                    for (const [x, y] of receiverLineCells(x0, y0, x1, y1)) {
+                        if (linePatternLit(texture, pelCells, steep ? y : x)) this.stampCells([x, y], pelSize, ink);
+                    }
+                    this.stampCells(from, pelSize, ink);
+                    this.stampCells(to, pelSize, ink);
+                    continue;
+                }
                 const pointAtStep = (steps) => {
                     const fraction = Math.min(Math.max(steps * stepLength / length, 0.0), 1.0);
                     return [from[0] + run * fraction, from[1] + rise * fraction];
@@ -2203,13 +4577,13 @@
                         if (dashEnd >= dashStart) this.sweep(pointAtStep(dashStart - entry), pointAtStep(dashEnd - entry), pelSize, ink);
                     }
                 }
-                this.stampCells(from, pelSize, ink);
-                this.stampCells(to, pelSize, ink);
+                if (i === 0) this.stampCells(from, pelSize, ink);               // a flattened curve: only its ends
+                if (i + 1 === segmentCount) this.stampCells(to, pelSize, ink);
                 phase = exit;
             }
         }
 
-        fill(points, pel, pattern, maskSize, mask, ink) {
+        fill(points, pel, pattern, maskSize, mask, ink, gaps = null) {
             if (points.length < 2) { if (points.length) this.stamp(points[0], pel, ink); return; }
             const pelSize = this.sizeToCells(pel);
             const cellPoints = points.map((point) => this.toCells(point));
@@ -2230,61 +4604,84 @@
             this.stroke(points, pel, 0, ink, true);
             this.traced = null;
 
-            // 2. scanlines: which cells are inside the polygon
-            const enclosed = new Uint8Array(cellCount), vertexCount = cellPoints.length;
+            // 2. the figure is the outline plus every cell whose lower-left corner lies inside the path by the
+            // odd-even rule, as the TTX 650 fills; a one-cell gap inside the figure stays open (decode-orc PR #328)
+            const inFigure = Uint8Array.from(outline), vertexCount = cellPoints.length;
             for (let row = firstRow; row < firstRow + height; row++) {
-                const sampleY = row + 0.5, crossings = [];
+                const corner = row, crossings = [];
                 for (let i = 0; i < vertexCount; i++) {
                     const a = cellPoints[i], b = cellPoints[(i + 1) % vertexCount];
-                    if ((a[1] <= sampleY && sampleY < b[1]) || (b[1] <= sampleY && sampleY < a[1]))
-                        crossings.push(a[0] + (sampleY - a[1]) / (b[1] - a[1]) * (b[0] - a[0]));
+                    if ((a[1] <= corner && b[1] > corner) || (b[1] <= corner && a[1] > corner))
+                        crossings.push(a[0] + (corner - a[1]) / (b[1] - a[1]) * (b[0] - a[0]));
                 }
                 crossings.sort((p, q) => p - q);
                 const rowBase = (row - firstRow) * width - firstColumn;
-                for (let i = 0; i < crossings.length - 1; i += 2) {
-                    const spanStart = Math.max(firstColumn, Math.ceil(crossings[i] - 0.5));
-                    const spanEnd = Math.min(firstColumn + width - 1, Math.floor(crossings[i + 1] - 0.5));
-                    for (let column = spanStart; column <= spanEnd; column++) enclosed[rowBase + column] = 1;
+                for (let i = 0; i + 1 < crossings.length; i += 2) {
+                    const spanStart = Math.max(firstColumn, Math.ceil(crossings[i]));
+                    const spanEnd = Math.min(firstColumn + width - 1, Math.floor(crossings[i + 1]));
+                    for (let column = spanStart; column <= spanEnd; column++) inFigure[rowBase + column] = 1;
                 }
             }
 
-            // 3. flood the outside, starting from cells clearly outside and not next to the outline
-            const outside = new Uint8Array(cellCount), nearOutline = new Uint8Array(cellCount);
-            for (let index = 0; index < cellCount; index++) {
-                if (!outline[index]) continue;
-                const y = Math.floor(index / width), x = index - y * width;
-                for (let dy = -1; dy <= 1; dy++) {
-                    const neighborY = y + dy;
-                    if (neighborY < 0 || neighborY >= height) continue;
-                    for (let dx = -1; dx <= 1; dx++) {
-                        const neighborX = x + dx;
-                        if (neighborX >= 0 && neighborX < width) nearOutline[neighborY * width + neighborX] = 1;
-                    }
-                }
-            }
-            const toVisit = [];
-            for (let index = 0; index < cellCount; index++) {
-                if (!enclosed[index] && !outline[index] && !nearOutline[index]) { outside[index] = 1; toVisit.push(index); }
-            }
-            while (toVisit.length) {
-                const index = toVisit.pop();
-                const y = Math.floor(index / width), x = index - y * width;
-                for (const [neighborX, neighborY] of [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]) {
-                    if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
-                        const neighbor = neighborY * width + neighborX;
-                        if (!outside[neighbor] && !outline[neighbor]) { outside[neighbor] = 1; toVisit.push(neighbor); }
-                    }
-                }
-            }
-
-            // 4. paint everything that is not outside (subject to the fill pattern)
+            // 3. paint the figure (subject to the fill pattern; in colour mode 2 its gaps take the background)
             for (let row = Math.max(firstRow, 0); row < Math.min(firstRow + height, screenHeight); row++) {
                 const rowBase = (row - firstRow) * width;
                 for (let column = Math.max(firstColumn, 0); column < Math.min(firstColumn + width, screenWidth); column++) {
-                    if (outside[rowBase + column - firstColumn]) continue;
+                    if (!inFigure[rowBase + column - firstColumn]) continue;
                     if (pattern && !patternCovers(pattern, pel, maskSize, mask,
-                        (column + 0.5) / this.columnsPerUnit, (row + 0.5) / this.rowsPerUnit)) continue;
+                        (column + 0.5) / this.columnsPerUnit, (row + 0.5) / this.rowsPerUnit)) {
+                        if (gaps !== null) this.surface.cells[row * screenWidth + column] = gaps;
+                        continue;
+                    }
                     this.surface.cells[row * screenWidth + column] = ink;
+                }
+            }
+        }
+
+        /** Stroke a traced cell path (an arc), the texture counted along it; ends always drawn. */
+        strokeCells(path, pel, texture, ink, gaps = null) {
+            const pelSize = this.sizeToCells(pel), pelCells = pelSpan(pelSize[0]);
+            path.forEach((cell, index) => {
+                const lit = texture === 0 || index === 0 || index + 1 === path.length || linePatternLit(texture, pelCells, index);
+                if (lit) this.stampCells(cell, pelSize, ink);
+                else if (gaps !== null) this.stampCells(cell, pelSize, gaps);
+            });
+        }
+
+        /** Fill a traced cell outline: each row from its leftmost to rightmost outline cell, widened by the pel. */
+        fillCells(outline, pel, pattern, maskSize, mask, ink, gaps = null) {
+            if (!outline.length) return;
+            const pelSize = this.sizeToCells(pel), pelColumns = pelSpan(pelSize[0]), pelRows = pelSpan(pelSize[1]);
+            const screenWidth = this.surface.w, screenHeight = this.surface.h;
+            let lowest = Infinity, highest = -Infinity;
+            for (const [, row] of outline) { lowest = Math.min(lowest, row); highest = Math.max(highest, row); }
+            const firstRow = Math.max(lowest, -screenHeight), lastRow = Math.min(highest, 2 * screenHeight);
+            if (firstRow > lastRow) return;
+            const leftOf = new Array(lastRow - firstRow + 1).fill(Infinity), rightOf = new Array(lastRow - firstRow + 1).fill(-Infinity);
+            for (const [column, row] of outline) {
+                if (row < firstRow || row > lastRow) continue;
+                leftOf[row - firstRow] = Math.min(leftOf[row - firstRow], column);
+                rightOf[row - firstRow] = Math.max(rightOf[row - firstRow], column);
+            }
+            const pelDown = pelSize[1] < 0;
+            const firstFilled = pelDown ? firstRow - (pelRows - 1) : firstRow, lastFilled = pelDown ? lastRow : lastRow + (pelRows - 1);
+            for (let row = Math.max(firstFilled, 0); row <= Math.min(lastFilled, screenHeight - 1); row++) {
+                let left = Infinity, right = -Infinity;
+                for (let reach = 0; reach < pelRows; reach++) {
+                    const from = pelDown ? row + reach : row - reach;
+                    if (from < firstRow || from > lastRow || leftOf[from - firstRow] > rightOf[from - firstRow]) continue;
+                    left = Math.min(left, leftOf[from - firstRow]);
+                    right = Math.max(right, rightOf[from - firstRow]);
+                }
+                if (left > right) continue;
+                if (pelSize[0] < 0) left -= pelColumns - 1; else right += pelColumns - 1;
+                for (let column = Math.max(left, 0); column <= Math.min(right, screenWidth - 1); column++) {
+                    if (pattern && !patternCovers(pattern, pel, maskSize, mask,
+                        (column + 0.5) / this.columnsPerUnit, (row + 0.5) / this.rowsPerUnit)) {
+                        if (gaps !== null) this.surface.put(column, row, gaps);
+                        continue;
+                    }
+                    this.surface.put(column, row, ink);
                 }
             }
         }
@@ -2298,117 +4695,219 @@
             }
         }
 
-        /** The character cell size in whole raster cells, or null if it is empty. */
-        characterCellSize(prim) {
-            const size = this.sizeToCells(prim.size);
-            if (Math.abs(size[0]) < 1e-9 || Math.abs(size[1]) < 1e-9) return null;
-            return [Math.max(1, roundHalfEven(Math.abs(size[0]))), Math.max(1, roundHalfEven(Math.abs(size[1])))];
+        /**
+         * A character field on the surface, in the field's own frame (decode-orc PR #328): `across` runs along the
+         * character's width and `up` along its height, onto whichever surface axes the rotation turns them. Its cells
+         * are the ones its edges truncate to, so a line of fields tiles the row with no gaps or overlaps.
+         */
+        characterField(prim) {
+            const [originColumn, originRow] = this.toCells(prim.origin);
+            const width = Math.abs(prim.size[0]), height = Math.abs(prim.size[1]);
+            const perColumn = this.columnsPerUnit, perRow = this.rowsPerUnit;
+            let across, up, acrossIsColumns;
+            switch (prim.rotation) {
+                case 1: across = new FieldAxis(originRow, width * perRow, 1); up = new FieldAxis(originColumn, height * perColumn, -1); acrossIsColumns = false; break;
+                case 2: across = new FieldAxis(originColumn, width * perColumn, -1); up = new FieldAxis(originRow, height * perRow, -1); acrossIsColumns = true; break;
+                case 3: across = new FieldAxis(originRow, width * perRow, -1); up = new FieldAxis(originColumn, height * perColumn, 1); acrossIsColumns = false; break;
+                default: across = new FieldAxis(originColumn, width * perColumn, 1); up = new FieldAxis(originRow, height * perRow, 1); acrossIsColumns = true;
+            }
+            const field = {
+                across, up, acrossIsColumns,
+                acrossCellsPerUnit: acrossIsColumns ? perColumn : perRow, upCellsPerUnit: acrossIsColumns ? perRow : perColumn,
+                columns: across.cells(), rows: up.cells(),
+                nominalColumns: Math.max(1, truncatedCell(across.extent)), nominalRows: Math.max(1, truncatedCell(up.extent)),
+                surfaceCell(column, row) {
+                    const along = across.surface(column), rising = up.surface(row);
+                    return acrossIsColumns ? [along, rising] : [rising, along];
+                }
+            };
+            field.empty = field.columns <= 0 || field.rows <= 0;
+            return field;
         }
 
-        /** Scale a bitmap (rows of bits, MSB = left) into the character cell, honouring rotation and reverse. */
-        depositCells(prim, isLit, ink, background) {
-            const cellSize = this.characterCellSize(prim);
-            if (!cellSize) return;
-            const [columns, rows] = cellSize, origin = this.toCells(prim.origin);
-            const columnDirection = prim.size[0] < 0 ? -1.0 : 1.0, rowDirection = prim.size[1] < 0 ? -1.0 : 1.0;
-            const anchorColumn = Math.floor(origin[0] + CELL_EPSILON), anchorRow = Math.floor(origin[1] + CELL_EPSILON);
-            const unlitPen = prim.reverse ? ink : background;
-            if (unlitPen !== null && unlitPen !== undefined && prim.rotation === 0) {
-                const size = this.sizeToCells(prim.size);
-                const left = Math.min(origin[0], origin[0] + size[0]), bottom = Math.min(origin[1], origin[1] + size[1]);
-                const endColumn = Math.floor(left + Math.abs(size[0]) + CELL_EPSILON), endRow = Math.floor(bottom + Math.abs(size[1]) + CELL_EPSILON);
-                for (let row = Math.floor(bottom + CELL_EPSILON); row < endRow; row++) {
-                    for (let column = Math.floor(left + CELL_EPSILON); column < endColumn; column++) this.surface.put(column, row, unlitPen);
+        /** The surface cells a field covers, as a rectangle. */
+        fieldRect(field) {
+            const [firstColumn, firstRow] = field.surfaceCell(0, 0), [lastColumn, lastRow] = field.surfaceCell(field.columns - 1, field.rows - 1);
+            return {
+                column: Math.min(firstColumn, lastColumn), row: Math.min(firstRow, lastRow),
+                columns: Math.abs(lastColumn - firstColumn) + 1, rows: Math.abs(lastRow - firstRow) + 1
+            };
+        }
+
+        cellsOf(rect) {
+            const { w, h, cells } = this.surface, out = new Int32Array(rect.columns * rect.rows);
+            for (let row = 0; row < rect.rows; row++) {
+                for (let column = 0; column < rect.columns; column++) {
+                    const x = rect.column + column, y = rect.row + row;
+                    out[row * rect.columns + column] = (x >= 0 && x < w && y >= 0 && y < h) ? cells[y * w + x] : -2;
                 }
             }
-            for (let row = 0; row < rows; row++) {
-                for (let column = 0; column < columns; column++) {
-                    const lit = isLit(column, row, columns, rows);
+            return out;
+        }
+
+        stillHolds(rect, saved) {
+            const now = this.cellsOf(rect);
+            return now.length === saved.length && now.every((value, index) => value === saved[index]);
+        }
+
+        putBack(rect, saved) {
+            for (let row = 0; row < rect.rows; row++) {
+                for (let column = 0; column < rect.columns; column++) {
+                    const value = saved[row * rect.columns + column];
+                    if (value !== -2) this.surface.cells[(rect.row + row) * this.surface.w + rect.column + column] = value;
+                }
+            }
+        }
+
+        /** A mosaic's six elements dividing the field's own cells; separated mode (underline) shrinks each by the pel. */
+        mosaicImage(prim, field) {
+            const image = new FieldImage(field.columns, field.rows), code = prim.char;
+            const sixBits = (code & 0x20 || code === 0x5F) ? ((code & 0x1F) | ((code >> 1) & 0x20)) : 0;
+            const splitAcross = field.across.cellsWithin(field.across.extent / 2);
+            const splitUp = [0, field.up.cellsWithin(field.up.extent / 3), field.up.cellsWithin(2 * field.up.extent / 3), field.rows];
+            const shrinkAcross = prim.underlined ? pelSpan(prim.pel[0] * field.acrossCellsPerUnit) : 0;
+            const shrinkUp = prim.underlined ? pelSpan(prim.pel[1] * field.upCellsPerUnit) : 0;
+            for (let element = 0; element < 6; element++) {
+                if (!(sixBits & (1 << element))) continue;
+                const right = element % 2 !== 0, band = 2 - Math.floor(element / 2);
+                const firstColumn = right ? splitAcross : 0, endColumn = right ? field.columns : splitAcross;
+                const firstRow = splitUp[band], endRow = splitUp[band + 1];
+                image.fill(firstColumn, Math.max(firstColumn, endColumn - shrinkAcross), firstRow, Math.max(firstRow, endRow - shrinkUp));
+            }
+            return image;
+        }
+
+        /** Too small to present: one reference pixel at the field's origin, as the TTX 650 draws it. */
+        static characterTooSmall(prim, drcs) {
+            const columns = referencePixels(prim.size[0]), rows = referencePixels(prim.size[1]);
+            if (prim.rep === 'P' || prim.rep === 'S') {
+                if (prim.char === 0x20 || (prim.rep === 'S' && isNonSpacingAccent(prim.char))) return false;
+                return columns < SMALLEST_FIELD_COLUMNS || rows < SMALLEST_FIELD_ROWS;
+            }
+            if (prim.rep === 'D') {
+                const glyph = drcs ? drcs.get(prim.char) : null;
+                return !!glyph && (columns < glyph.w || rows < glyph.h);
+            }
+            return false;
+        }
+
+        /**
+         * Deposit an image into its field in the character's attributes: a negative dx/dy reflects the pattern in place,
+         * reverse video swaps shape and surround, and the underline (dy of the logical pel, at least a cell) runs along
+         * the field's origin edge, turned with the character.
+         */
+        depositFieldImage(field, image, prim, underline, ink, background) {
+            const mirrorAcross = prim.size[0] < 0, mirrorUp = prim.size[1] < 0;
+            const underlineRows = underline ? pelSpan(prim.pel[1] * field.upCellsPerUnit) : 0;
+            const landing = (axis, cells, limit) => {
+                const base = axis.surface(0);
+                return axis.direction > 0 ? [Math.max(0, -base), Math.min(cells - 1, limit - 1 - base)]
+                    : [Math.max(0, base - (limit - 1)), Math.min(cells - 1, base)];
+            };
+            const acrossLimit = field.acrossIsColumns ? this.surface.w : this.surface.h;
+            const upLimit = field.acrossIsColumns ? this.surface.h : this.surface.w;
+            const [firstColumn, lastColumn] = landing(field.across, field.columns, acrossLimit);
+            const [firstRow, lastRow] = landing(field.up, field.rows, upLimit);
+            for (let row = firstRow; row <= lastRow; row++) {
+                for (let column = firstColumn; column <= lastColumn; column++) {
+                    const lit = row < underlineRows || image.at(mirrorAcross ? field.columns - 1 - column : column, mirrorUp ? field.rows - 1 - row : row);
                     const pen = prim.reverse ? (lit ? background : ink) : (lit ? ink : background);
                     if (pen === null || pen === undefined) continue;
-                    let placedColumn = column, placedRow = rows - 1 - row;
-                    if (prim.rotation === 1) [placedColumn, placedRow] = [-placedRow + rows - 1, placedColumn];
-                    else if (prim.rotation === 2) [placedColumn, placedRow] = [columns - 1 - placedColumn, rows - 1 - placedRow];
-                    else if (prim.rotation === 3) [placedColumn, placedRow] = [placedRow, columns - 1 - placedColumn];
-                    const screenColumn = anchorColumn + columnDirection * placedColumn + (columnDirection < 0 ? -1 : 0);
-                    const screenRow = anchorRow + rowDirection * placedRow + (rowDirection < 0 ? -1 : 0);
-                    this.surface.put(screenColumn, screenRow, pen);
+                    const [surfaceColumn, surfaceRow] = field.surfaceCell(column, row);
+                    this.surface.put(surfaceColumn, surfaceRow, pen);
                 }
             }
         }
 
-        depositBitmap(prim, bitmapRows, bitmapWidth, bitmapHeight, ink, background) {
-            this.depositCells(prim, (column, row, columns, rows) => {
-                const sourceRow = Math.min(Math.max(Math.floor(bitmapHeight * row / rows), 0), bitmapHeight - 1);
-                const sourceColumn = Math.min(Math.max(Math.floor(bitmapWidth * column / columns), 0), bitmapWidth - 1);
-                return (bitmapRows[sourceRow] >> (bitmapWidth - 1 - sourceColumn)) & 1;
-            }, ink, background);
-        }
-
-        depositDecoderCharacter(prim, codePoint, ink, background) {
-            const cellSize = this.characterCellSize(prim);
-            if (!cellSize) return true;
-            const choice = chooseDecoderFace(this.decoderFont, codePoint, cellSize[0], cellSize[1]);
-            if (!choice) return false;
-            const { face, rows: glyph, scaleX, scaleY } = choice;
-            const top = Math.ceil((cellSize[1] - face.h * scaleY) / 2);
-            this.depositCells(prim, (column, row) => {
-                const faceColumn = Math.floor(column / scaleX), faceRow = Math.floor((row - top) / scaleY);
-                if (faceColumn < 0 || faceColumn >= face.w || faceRow < 0 || faceRow >= face.h) return 0;
-                return (glyph[faceRow] >> (face.w - 1 - faceColumn)) & 1;
-            }, ink, background);
-            return true;
+        /** A letter from the optional decoder font, at whole multiples, centred vertically as before. */
+        decoderImage(field, codePoint) {
+            const choice = chooseDecoderFace(this.decoderFont, codePoint, field.nominalColumns, field.nominalRows);
+            if (!choice) return null;
+            const { face, rows: glyph, scaleX, scaleY } = choice, image = new FieldImage(field.columns, field.rows);
+            const top = Math.ceil((field.nominalRows - face.h * scaleY) / 2);
+            for (let fromTop = 0; fromTop < field.nominalRows; fromTop++) {
+                const faceRow = Math.floor((fromTop - top) / scaleY);
+                if (faceRow < 0 || faceRow >= face.h) continue;
+                for (let column = 0; column < field.nominalColumns; column++) {
+                    const faceColumn = Math.floor(column / scaleX);
+                    if (faceColumn < face.w && ((glyph[faceRow] >> (face.w - 1 - faceColumn)) & 1)) image.set(column, field.nominalRows - 1 - fromTop);
+                }
+            }
+            return image;
         }
 
         isUnitSquare() { return Math.abs(this.rowsPerUnit - this.surface.h) < 1e-9; }
 
+        /**
+         * Draw a character into its field (decode-orc PR #328): the receivers' face for the field, laid at a whole
+         * multiple and placed on the baseline; mosaics tiling the field; DRCS from the origin; Table 25's line graphics
+         * from the field itself; and accents (sent before their letter, without advancing) composed onto the letter.
+         */
         depositCharacter(prim, drcs, ink, background) {
-            if (prim.rep === 'M') {                                   // mosaic: 2 × 3 block elements
-                const code = prim.char;
-                const sixBits = (code & 0x20 || code === 0x5F) ? ((code & 0x1F) | ((code >> 1) & 0x20)) : 0;
-                const size = this.sizeToCells(prim.size), origin = this.toCells(prim.origin);
-                const left = Math.min(origin[0], origin[0] + size[0]), bottom = Math.min(origin[1], origin[1] + size[1]);
-                const width = Math.abs(size[0]), height = Math.abs(size[1]);
-                if (width < 1e-9 || height < 1e-9) return;
-                const pelSize = this.sizeToCells(prim.pel);
-                const gapX = prim.underlined ? Math.abs(pelSize[0]) : 0.0, gapY = prim.underlined ? Math.abs(pelSize[1]) : 0.0;
-                const elementWidth = width / 2.0, elementHeight = height / 3.0;
-                if (background !== null) this.fillRectCells(left, bottom, width, height, background);
-                for (let element = 0; element < 6; element++) {
-                    if (!(sixBits & (1 << element))) continue;
-                    const elementColumn = element % 2, rowFromTop = Math.floor(element / 2);
-                    this.fillRectCells(left + elementColumn * elementWidth, bottom + (2 - rowFromTop) * elementHeight,
-                        Math.max(0.0, elementWidth - gapX), Math.max(0.0, elementHeight - gapY),
-                        (prim.reverse && background !== null) ? background : ink);
+            const field = this.characterField(prim), rect = field.empty ? null : this.fieldRect(field);
+            const mark = prim.rep === 'S' && isNonSpacingAccent(prim.char);
+            const takesMarks = (prim.rep === 'P' || prim.rep === 'S') && !mark;
+            let marks = [], before = null, takenBack = false;
+            if (this.pendingMarks) {
+                const pending = this.pendingMarks;
+                this.pendingMarks = null;
+                if ((mark || takesMarks) && sameCharacterField(pending.marks[pending.marks.length - 1], prim) && this.stillHolds(pending.rect, pending.after)) {
+                    marks = pending.marks;
+                    // The field goes back to what it held before the marks, so the letter is drawn once, composed —
+                    // but only within the instant the marks were drawn in
+                    if (prim.t === pending.t) { this.putBack(pending.rect, pending.before); before = pending.before; takenBack = true; }
                 }
-                return;
             }
-            if (prim.rep === 'D') {                                   // dynamically redefined character
+            if (field.empty) return;
+            if (mark && !takenBack) before = this.cellsOf(rect);
+
+            const face = chooseFace(!this.isUnitSquare() ? this.surface.w : 256, field.nominalColumns, field.nominalRows);
+            const place = placePattern(face[1], face[2], face[4], field);
+            const unicodeOf = (p) => (p.rep === 'P' ? ((p.char >= 0x20 && p.char < 0x7F) ? p.char : 0x20) : FONT.SUPPLEMENTARY.codePointAt(p.char - 0x20));
+            const markCodes = (list) => list.map(unicodeOf);
+            let image = new FieldImage(field.columns, field.rows), underline = !!prim.underlined;
+
+            const layLetter = (withMarks) => {
+                const graphic = prim.rep === 'S' ? FIELD_GRAPHICS[prim.char] : undefined;
+                let base = unicodeOf(prim);
+                if (!graphic && base === 0x20 && withMarks.length) { laySpacingMarks(image, face, place, withMarks); return; }
+                const overlays = [];
+                for (const each of withMarks) {
+                    const composed = graphic ? 0 : (COMPOSED.get(base * 0x110000 + each) || 0);
+                    if (composed) base = composed;
+                    else { const forms = MARK_FORMS.get(each); overlays.push(forms ? forms.overlay : each); }
+                }
+                if (graphic) layFieldGraphic(image, graphic, field, place.scaleAcross, place.scaleUp);
+                else if (this.decoderFont && !withMarks.length) {
+                    const decoded = this.decoderImage(field, base);
+                    if (decoded) image = decoded; else layOrBox(image, face, place, base);
+                } else layOrBox(image, face, place, base);
+                for (const overlay of overlays) layOrBox(image, face, place, overlay);
+            };
+
+            if (prim.rep === 'M') {
+                image = this.mosaicImage(prim, field);
+                underline = false;                                          // "Mosaic characters are not underlined"
+            } else if (prim.rep === 'D') {
                 const glyph = drcs ? drcs.get(prim.char) : null;
-                if (!glyph) return;
-                const glyphWidth = Math.min(glyph.w, 8), rows = new Array(glyph.h).fill(0);
-                for (let row = 0; row < glyph.h; row++) {
-                    let bits = 0;
-                    for (let column = 0; column < Math.min(glyph.w, 8); column++) {
-                        if (glyph.el[row * glyph.w + column]) bits |= 1 << (glyph.w - 1 - column);
-                    }
-                    rows[glyph.h - 1 - row] = glyph.w > glyphWidth ? bits >> (glyph.w - glyphWidth) : bits;
-                }
-                this.depositBitmap(prim, rows, glyphWidth, glyph.h, ink, background);
-                return;
+                // The whole buffer, one element per pixel of the field it was defined in; element row 0 is the bottom
+                if (glyph) layPattern(image, placePattern(glyph.w, glyph.h, -1, field), glyph.w, glyph.h,
+                    (column, fromTop) => glyph.el[(glyph.h - 1 - fromTop) * glyph.w + column]);
+            } else if (mark) {
+                marks = marks.concat([prim]);
+                laySpacingMarks(image, face, place, markCodes(marks));
+            } else if (marks.length && !takenBack) {
+                layLetter([]);
+                laySpacingMarks(image, face, place, markCodes(marks));
+            } else layLetter(markCodes(marks));
+
+            if (!mark && Rasteriser.characterTooSmall(prim, drcs)) {
+                image = new FieldImage(field.columns, field.rows);
+                const referencePixel = Math.max(1, Math.round(this.columnsPerUnit / 256));
+                image.fill(0, referencePixel, 0, referencePixel);
             }
-            let codePoint = prim.rep === 'P' ? prim.char : FONT.SUPPLEMENTARY.charCodeAt(prim.char - 0x20);
-            if (prim.rep === 'P' && !(codePoint >= 0x20 && codePoint < 0x7F)) codePoint = 0x20;
-            if (this.decoderFont && this.depositDecoderCharacter(prim, codePoint, ink, background)) return;
-            const cellSize = this.characterCellSize(prim);
-            if (!cellSize) return;
-            const face = chooseFace(!this.isUnitSquare() ? this.surface.w : 256, cellSize[0], cellSize[1]);
-            let rows = glyphRows(face, codePoint) || lineGlyph(codePoint, face[1], face[2]);
-            for (const candidate of glyphCandidates(codePoint)) {
-                if (rows) break;
-                rows = glyphRows(face, candidate);
-            }
-            this.depositBitmap(prim, rows || new Array(face[2]).fill(0), face[1], face[2], ink, background);
+            this.depositFieldImage(field, image, prim, underline, ink, background);
+            if (mark) this.pendingMarks = { marks, rect, before, after: this.cellsOf(rect), t: prim.t };
         }
 
         /** INCREMENTAL POINT: lay a run of pixel colors across the field, row by row from the top. */
@@ -2445,25 +4944,39 @@
         });
         const ink = definition ? prim.color : pen(foregroundInk(prim));
         const background = (prim.mode === 2 && prim.baddr >= 0 && !definition) ? pen(['m', prim.baddr]) : null;
+        const gaps = background;                     // colour mode 2: texture and pattern gaps take the background
         const kind = prim.kind;
         if (kind === 'point') {
             if (prim.points.length) rasteriser.stamp(prim.points[0], prim.pel, ink);
         } else if (kind === 'line') {
-            rasteriser.stroke(prim.points, prim.pel, prim.line_tex, ink, false);
+            rasteriser.stroke(prim.points, prim.pel, prim.line_tex, ink, false, gaps);
         } else if (kind === 'arc' || kind === 'rect' || kind === 'poly') {
+            const mask = (prim.pattern >= 4 && page) ? page.masks[prim.pattern - 4] : null;
+            const highlightInk = () => (background !== null ? background : pen(['c', BLACK]));
+            if (kind === 'arc' && prim.points.length === 3) {
+                // An arc through three points is traced cell by cell as the TTX 650 traced it (decode-orc PR #328)
+                const traced = arcCells(prim.points.map((point) => rasteriser.toCells(point)));
+                if (traced && traced.collinear) { rasteriser.stroke(prim.points, prim.pel, prim.line_tex, ink, false, gaps); return; }
+                if (traced) {
+                    if (!prim.filled) { rasteriser.strokeCells(traced.path, prim.pel, prim.line_tex, ink, gaps); return; }
+                    const outline = traced.circle ? traced.path : traced.path.concat(receiverLineCells(
+                        ...traced.path[traced.path.length - 1], ...traced.path[0]));
+                    rasteriser.fillCells(outline, prim.pel, definition ? 0 : prim.pattern, prim.mask_size, mask, ink, gaps);
+                    // The chord is not part of the arc and is not highlighted (§5.3.3.3)
+                    if (prim.highlighted && !definition) rasteriser.strokeCells(traced.path, prim.pel, 0, highlightInk());
+                    return;
+                }
+            }
             let outline;
             if (kind === 'arc') outline = arcToPolyline(prim.points, 0.2 / rasteriser.columnsPerUnit);
             else if (kind === 'rect') {
                 const [originX, originY] = prim.origin, farX = originX + prim.size[0], farY = originY + prim.size[1];
                 outline = [prim.origin, [farX, originY], [farX, farY], [originX, farY]];
             } else outline = prim.points;
-            if (!prim.filled) { rasteriser.stroke(outline, prim.pel, prim.line_tex, ink, kind === 'rect'); return; }
-            const mask = (prim.pattern >= 4 && page) ? page.masks[prim.pattern - 4] : null;
-            rasteriser.fill(outline, prim.pel, definition ? 0 : prim.pattern, prim.mask_size, mask, ink);
-            if (prim.highlighted && !definition) {
-                const highlight = background !== null ? background : pen(['c', BLACK]);
-                rasteriser.stroke(outline, prim.pel, 0, highlight, kind !== 'arc');
-            }
+            const closed = kind !== 'arc', vertices = kind !== 'arc';
+            if (!prim.filled) { rasteriser.stroke(outline, prim.pel, prim.line_tex, ink, closed, gaps, vertices); return; }
+            rasteriser.fill(outline, prim.pel, definition ? 0 : prim.pattern, prim.mask_size, mask, ink, gaps);
+            if (prim.highlighted && !definition) rasteriser.stroke(outline, prim.pel, 0, highlightInk(), closed);
         } else if (kind === 'incr') {
             if (definition) { rasteriser.stroke(prim.points, prim.pel, prim.line_tex, ink, false); return; }
             const inks = (prim.incr || []).map((value) => {
@@ -2506,6 +5019,7 @@
 
         reset() {
             this.nextEvent = 0;
+            this.sweep = null;             // a fill or clear being swept across the screen (receiver pace)
             this.map = [...DEFAULT_MAP];
             this.blink = new Array(16).fill(null);
             this.inks = [['c', BLACK]];
@@ -2533,21 +5047,40 @@
 
         /** Run events up to `time` seconds (null/undefined = all). Returns true if anything changed. */
         advance(time) {
-            const events = this.events, options = { pen: (ink) => this.pen(ink) };
+            const events = this.events, options = { pen: (ink) => this.pen(ink) }, all = time === null || time === undefined;
             let changed = false;
-            while (this.nextEvent < events.length && (time === null || time === undefined || events[this.nextEvent][1] <= time)) {
-                const [type, , payload] = events[this.nextEvent++];
-                changed = true;
+            if (this.sweep && (all || time >= this.sweep.end)) { this.sweep = null; changed = true; }
+            const run = ([type, , payload]) => {
                 if (type === 'p') drawPrimitive(this.rasteriser, payload, this.page, options);
                 else if (type === 'clear') this._newSurface();
                 else if (type === 'map') this.map = payload;
                 else if (type === 'blink') this.blink = payload;
+            };
+            while (this.nextEvent < events.length) {
+                const event = events[this.nextEvent], [type, at, payload] = event;
+                if (all || at <= time) { this.nextEvent++; this.sweep = null; run(event); changed = true; continue; }
+                // At a receiver's pace a fill or a clear is swept onto the screen a row at a time over the time it took
+                // (decode-orc PR #328): it is drawn when it starts, and the rows not reached yet keep what was there
+                const duration = type === 'clear' ? payload || 0 : type === 'p' ? payload.draw || 0 : 0;
+                const rows = type === 'clear' ? [0, DISPLAY_HEIGHT] : type === 'p' && duration > 0 ? paceFillRows(payload) : null;
+                if (!this.page.sweep || !rows || duration <= 0 || at - duration > time) break;
+                this.nextEvent++;
+                const before = new Int32Array(this.surf.cells);
+                run(event);
+                const scale = this.gh / DISPLAY_HEIGHT;
+                this.sweep = {
+                    start: at - duration, end: at, before, up: this.page.sweep === 'up',
+                    low: Math.max(0, Math.floor(rows[0] * scale)), high: Math.min(this.gh, Math.ceil(rows[1] * scale))
+                };
+                changed = true;
+                break;
             }
+            if (this.sweep) { this.sweepTime = time; changed = true; }
             if (changed) this.generation++;
             return changed;
         }
 
-        done() { return this.nextEvent >= this.events.length; }
+        done() { return this.nextEvent >= this.events.length && !this.sweep; }
 
         pauses(minimumSeconds = 2) {
             const found = [];
@@ -2571,7 +5104,7 @@
                 let color = kind === 'm' ? this.map[pythonMod(value, 16)] : value;
                 if (onTenths && offTenths && time !== null && time !== undefined) {
                     const phase = time - startTime - 0.1 * delayTenths;
-                    if (phase >= 0 && (phase % (0.1 * (onTenths + offTenths))) >= 0.1 * onTenths) {
+                    if (phase >= 0 && (phase % (0.1 * (onTenths + offTenths))) < 0.1 * onTenths) {
                         color = toAddress >= 0 ? this.map[pythonMod(toAddress, 16)] : toColor;
                     }
                 }
@@ -2585,7 +5118,7 @@
                 const [toAddress, toColor, onTenths, offTenths, delayTenths, startTime] = process;
                 if (onTenths && offTenths) {
                     const phase = time - startTime - 0.1 * delayTenths;
-                    if (phase >= 0 && (phase % (0.1 * (onTenths + offTenths))) >= 0.1 * onTenths) {
+                    if (phase >= 0 && (phase % (0.1 * (onTenths + offTenths))) < 0.1 * onTenths) {
                         color = toAddress >= 0 ? this.map[pythonMod(toAddress, 16)] : toColor;
                     }
                 }
@@ -2598,8 +5131,16 @@
 
         /** Write the frame at `time` into an RGBA buffer (Uint8ClampedArray, w*h*4), top row first. */
         paintRGBA(rgba, time) {
-            const palette = this.palette(time), { gw: width, gh: height } = this, cells = this.surf.cells;
+            const palette = this.palette(time), { gw: width, gh: height } = this, sweep = this.sweep;
+            // Rows a sweep has not reached yet still show what was there before it
+            let swept = null;
+            if (sweep) {
+                const fraction = Math.min(1, Math.max(0, (this.sweepTime - sweep.start) / (sweep.end - sweep.start)));
+                const reach = sweep.low + fraction * (sweep.high - sweep.low);
+                swept = (row) => row < sweep.low || row >= sweep.high || (sweep.up ? row < reach : row >= sweep.high - (reach - sweep.low));
+            }
             for (let row = 0; row < height; row++) {
+                const cells = swept && !swept(row) ? sweep.before : this.surf.cells;
                 const source = row * width, target = (height - 1 - row) * width * 4;   // raster row 0 is the bottom
                 for (let column = 0; column < width; column++) {
                     const inkId = cells[source + column], [red, green, blue] = palette[inkId < 0 ? 0 : inkId];
@@ -2666,10 +5207,11 @@
     const isPresentation = (recordType) => recordType === 0 || recordType === 1 || recordType === 3;
 
     /** A .t33 file → the record catalog and a summary. */
-    const catalogStream = (bytes, packetCount, lowNibbleFirst, catalog, onProgress) => {
+    const catalogStream = (bytes, packetCount, lowNibbleFirst, catalog, onProgress, salvage = null) => {
         const messages = [];
         const recordAssembler = new RecordAssembler((message) => messages.push(message));
         const groupAssembler = new GroupAssembler((group) => recordAssembler.add(group), false, lowNibbleFirst);
+        if (salvage) groupAssembler.onLoose = (run) => salvage.add(run);
         for (let i = 0; i < packetCount; i++) {
             groupAssembler.add(decodePacket(bytes.subarray(i * PACKET_SIZE, (i + 1) * PACKET_SIZE)));
             if (messages.length) {
@@ -2688,45 +5230,356 @@
         const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
         const packetCount = Math.floor(bytes.length / PACKET_SIZE);
         const lowNibbleFirst = detectHeaderNibbleOrder(bytes, packetCount);
-        let catalog = new Catalog();
-        let { groupAssembler, recordAssembler } = catalogStream(bytes, packetCount, lowNibbleFirst, catalog, onProgress);
-        const editionChanges = catalog.findEditionChanges();
-        if (editionChanges.size) {
-            catalog = new Catalog(editionChanges);
-            ({ groupAssembler, recordAssembler } = catalogStream(bytes, packetCount, lowNibbleFirst, catalog, onProgress));
-        }
-        const [folded, dropped, kept] = catalog.reconcile();
-        const records = catalog.records();
+        const catalog = new Catalog();
+        const salvage = new Salvage();
+        const { groupAssembler, recordAssembler } = catalogStream(bytes, packetCount, lowNibbleFirst, catalog, onProgress, salvage);
+        const reconciled = catalog.reconcile();
+        // decode-orc PR #328: a stream where under a tenth of the packets arrived with a whole prefix is another
+        // signal read as NABTS (every NABTS recording measured has at least 72 %), and nothing is listed
+        const stats = groupAssembler.stats, notNabts = stats.packets >= 200 && stats.prefix_whole * 10 < stats.packets;
+        const records = notNabts ? [] : catalog.records();
+        const salvaged = notNabts ? null : salvage.apply(records);
         return {
             records,
             summary: {
                 packets: packetCount, header_nibble_order: lowNibbleFirst ? 'low first' : 'high first',
                 groups: groupAssembler.stats, records: recordAssembler.stats,
-                foreign: recordAssembler.foreign, identities_folded: folded, identities_dropped: dropped,
-                identities_kept: kept, pages_updated: editionChanges.size, cataloged: records.length
+                foreign: recordAssembler.foreign, identities_folded: reconciled.folded, identities_dropped: reconciled.dropped,
+                identities_kept: reconciled.kept, identities_misaddressed: reconciled.misaddressed,
+                pages_with_contents: [...catalog.identities.values()].filter((contents) => contents.length > 1).length, cataloged: records.length, not_nabts: notNabts, salvage: salvaged
             }
         };
     };
 
     /** Interpret every presentation record into a page (like nabts_interpret_records). */
-    const interpret = (records, grid = [256, 200], { font = null } = {}) => {
-        const interpreter = new Interpreter(grid, { font }), supportRecords = new Map(), latestByAddress = new Map();
+    // ---------------------------------------------------------------------------
+    // Reconstruction of lost bytes from a record library (decode-orc PR #328, nabts_record_library.cpp and
+    // naplps_reconstruct.cpp). A service writes its pages from templates, so a stretch a recording lost very often
+    // stands, complete, in another record: where the bytes either side of the hole occur in such a record exactly
+    // the hole's length apart, what lies between them there is what the hole lost.
+    // ---------------------------------------------------------------------------
+    const LIBRARY_ANCHOR_BYTES = 12, LIBRARY_MAX_CONTEXT = 64, LIBRARY_TRUSTED_CONTEXT = 56, LIBRARY_MIN_DISTINCT = 4;
+    const LIBRARY_PREFERENCE_MARGIN = 16, LIBRARY_DOMINANT_RATIO = 10, LIBRARY_DOMINANT_MIN_RECORDS = 2;
+    const LIBRARY_DOMINANT_CONTEXT = 32, LIBRARY_SAMPLE_STRIDE = 4;
+    const SHIFT_MARGIN = 1.1, SHIFT_EVIDENCE_BYTES = 6, DIALECT_WINDOW_BYTES = 32;
+
+    const libraryPresent = (present, index) => !present || !present.length || (index < present.length && present[index] !== 0);
+    /** A byte that can stand in a context or a fill: delivered, and not the 0x00 a lost packet's filler reads as. */
+    const libraryUsable = (data, present, index) => index < data.length && data[index] !== 0 && libraryPresent(present, index);
+
+    /** A 12-byte anchor's hash as one number (two 26-bit lanes); one in four is sampled, chosen by the hash itself. */
+    const anchorHash = (data, at) => {
+        let a = 0x811C9DC5, b = 0x01000193;
+        for (let i = 0; i < LIBRARY_ANCHOR_BYTES; i++) {
+            const byte = data[at + i] + 1;
+            a = Math.imul(a ^ byte, 0x01000193);
+            b = Math.imul(b + byte, 0x5BD1E995) ^ (b >>> 15);
+        }
+        a ^= a >>> 13; a = Math.imul(a, 0x85EBCA6B); a ^= a >>> 16;
+        b ^= b >>> 13; b = Math.imul(b, 0xC2B2AE35); b ^= b >>> 16;
+        return (a >>> 6) * 67108864 + (b >>> 6);
+    };
+    const anchorSampled = (hash) => hash % LIBRARY_SAMPLE_STRIDE === 0;
+
+    class RecordLibrary {
+        constructor() { this.records = []; this.anchors = new Map(); }
+
+        add(record) { this.records.push(record); return this.records.length - 1; }
+
+        build() {
+            this.anchors.clear();
+            this.records.forEach(({ data, present }, r) => {
+                if (data.length < LIBRARY_ANCHOR_BYTES) return;
+                let unusable = 0;
+                for (let i = 0; i < data.length; i++) {
+                    if (!libraryUsable(data, present, i)) unusable++;
+                    if (i >= LIBRARY_ANCHOR_BYTES && !libraryUsable(data, present, i - LIBRARY_ANCHOR_BYTES)) unusable--;
+                    if (i + 1 < LIBRARY_ANCHOR_BYTES || unusable !== 0) continue;
+                    const start = i + 1 - LIBRARY_ANCHOR_BYTES, hash = anchorHash(data, start);
+                    if (!anchorSampled(hash)) continue;
+                    let list = this.anchors.get(hash);
+                    if (!list) this.anchors.set(hash, list = []);
+                    list.push(r, start);
+                }
+            });
+        }
+
+        /** What the library offers for data[start, end): { bytes, record } or null. `wrong` marks bytes known wrong. */
+        search(data, present, wrong, start, end, exclude) {
+            if (start >= end || end > data.length) return null;
+            const length = end - start;
+            const isWrong = (index) => !!wrong && index < wrong.length && wrong[index] !== 0;
+            let leftReach = 0, leftUsable = 0;
+            while (leftUsable < LIBRARY_MAX_CONTEXT && leftReach < start && leftReach < 2 * LIBRARY_MAX_CONTEXT) {
+                const at = start - 1 - leftReach;
+                if (!isWrong(at)) { if (!libraryUsable(data, present, at)) break; leftUsable++; }
+                leftReach++;
+            }
+            let rightReach = 0, rightUsable = 0;
+            while (rightUsable < LIBRARY_MAX_CONTEXT && end + rightReach < data.length && rightReach < 2 * LIBRARY_MAX_CONTEXT) {
+                const at = end + rightReach;
+                if (!isWrong(at)) { if (!libraryUsable(data, present, at)) break; rightUsable++; }
+                rightReach++;
+            }
+            if (leftUsable < LIBRARY_ANCHOR_BYTES || rightUsable < LIBRARY_ANCHOR_BYTES) return null;
+
+            // Alignments any sampled anchor in either context proposes: the record, and where the hole would start
+            const alignments = new Set();
+            const propose = (from, to) => {
+                for (let q = from; q + LIBRARY_ANCHOR_BYTES <= to; q++) {
+                    const hash = anchorHash(data, q);
+                    if (!anchorSampled(hash)) continue;
+                    const list = this.anchors.get(hash);
+                    if (!list) continue;
+                    for (let k = 0; k < list.length; k += 2) {
+                        if (list[k] === exclude) continue;
+                        const refStart = list[k + 1] + start - q;
+                        if (refStart >= 0) alignments.add(list[k] * 1048576 + refStart);
+                    }
+                }
+            };
+            propose(start - leftReach, start);
+            propose(end, end + rightReach);
+
+            const byFill = new Map();
+            for (const alignment of alignments) {
+                const recordIndex = Math.floor(alignment / 1048576), refStart = alignment - recordIndex * 1048576;
+                const record = this.records[recordIndex], refEnd = refStart + length;
+                if (refEnd > record.data.length) continue;
+                let whole = true;
+                for (let i = refStart; i < refEnd && whole; i++) whole = libraryUsable(record.data, record.present, i);
+                if (!whole) continue;
+                let left = 0, right = 0, leftSpan = 0, rightSpan = 0;
+                while (leftSpan < leftReach && leftSpan < refStart) {
+                    const at = start - 1 - leftSpan, there = refStart - 1 - leftSpan;
+                    if (!isWrong(at)) {
+                        if (!libraryUsable(record.data, record.present, there) || record.data[there] !== data[at]) break;
+                        left++;
+                    }
+                    leftSpan++;
+                }
+                while (rightSpan < rightReach && refEnd + rightSpan < record.data.length) {
+                    const at = end + rightSpan, there = refEnd + rightSpan;
+                    if (!isWrong(at)) {
+                        if (!libraryUsable(record.data, record.present, there) || record.data[there] !== data[at]) break;
+                        right++;
+                    }
+                    rightSpan++;
+                }
+                if (left < LIBRARY_ANCHOR_BYTES || right < LIBRARY_ANCHOR_BYTES) continue;
+                // A side that is padding, or one operand repeated, matches anywhere
+                const distinctIn = (from, to) => {
+                    const seen = new Set();
+                    for (let i = from; i < to; i++) if (!isWrong(i)) seen.add(data[i]);
+                    return seen.size;
+                };
+                if (distinctIn(start - leftSpan, start) < LIBRARY_MIN_DISTINCT || distinctIn(end, end + rightSpan) < LIBRARY_MIN_DISTINCT) continue;
+                const bytes = record.data.slice(refStart, refEnd), key = bytes.join(',');
+                if (!byFill.has(key)) byFill.set(key, { bytes, candidates: [] });
+                byFill.get(key).candidates.push({ record: recordIndex, total: left + right });
+            }
+            if (!byFill.size) return null;
+
+            let best = null, runnerUp = 0;
+            const offers = [];
+            for (const [key, { bytes, candidates }] of [...byFill].sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+                const strongest = candidates.reduce((x, y) => (y.total > x.total ? y : x));
+                const records = new Set(candidates.map((c) => c.record)).size;
+                offers.push({ bytes, strongest, records });
+                if (!best || strongest.total > best.strongest.total) {
+                    if (best) runnerUp = Math.max(runnerUp, best.strongest.total);
+                    best = { bytes, strongest, records };
+                } else runnerUp = Math.max(runnerUp, strongest.total);
+            }
+            if (best.strongest.total < LIBRARY_TRUSTED_CONTEXT) return null;
+            if (byFill.size > 1 && best.strongest.total < runnerUp + LIBRARY_PREFERENCE_MARGIN) {
+                // One fill offered by far more records than any other is still the one sent
+                const top = offers.reduce((x, y) => (y.records > x.records ? y : x));
+                const next = Math.max(0, ...offers.filter((o) => o !== top).map((o) => o.records));
+                const dominant = top.records >= LIBRARY_DOMINANT_MIN_RECORDS && top.records >= LIBRARY_DOMINANT_RATIO * next &&
+                    top.strongest.total >= LIBRARY_DOMINANT_CONTEXT;
+                if (!dominant) return null;
+                best = top;
+            }
+            return { bytes: best.bytes, record: best.strongest.record };
+        }
+    }
+
+    /** How the record was being read just before `offset`: 'text', 'pdi' or null. */
+    const readStateBefore = (data, roles, offset) => {
+        for (let i = Math.min(offset, roles.length); i-- > 0;) {
+            const role = roles[i];
+            if (role === ROLE_UNREAD || role === ROLE_TRANSPARENT) continue;
+            if (role === ROLE_TEXT) return 'text';
+            if (role === ROLE_PDI) return 'pdi';
+            if (role === ROLE_CONTROL) {
+                const byte = data[i] & 0x7F;
+                return byte === 0x0E ? 'pdi' : byte === 0x0F ? 'text' : null;
+            }
+            return null;
+        }
+        return null;
+    };
+    const withOddParity = (byte) => (ODD_PARITY[byte & 0x7F] ? byte & 0x7F : (byte & 0x7F) | 0x80);
+    const FLIP_MARGIN = 1.0;          // natural-log units per letter pair: the preferred reading is e times likelier
+
+    /**
+     * Rebuild what a recording lost of one record (naplps_reconstruct_record): bytes received failing parity are
+     * replaced where the library vouches for what stood there, lost stretches are filled from the library, and a shift
+     * the loss took is put back where the bytes after an unfilled stretch read far more like text than PDI data (or
+     * the other way). Bytes that arrived passing parity are never changed. Returns { data, summary } or null.
+     */
+    const reconstructRecord = (data, present, library, self, model) => {
+        const out = [...data], summary = { lost: 0, filled: 0, inferred: 0, corrupt: 0, corrected: 0 };
+        const wrong = new Uint8Array(data.length);
+        let anyWrong = false;
+        for (let i = 0; i < data.length; i++) {
+            if (libraryPresent(present, i) && data[i] !== 0 && !ODD_PARITY[data[i] & 0xFF]) { wrong[i] = 1; summary.corrupt++; anyWrong = true; }
+        }
+        for (let i = 0; anyWrong && i < data.length;) {
+            if (!wrong[i]) { i++; continue; }
+            let j = i;
+            while (j < data.length && wrong[j]) j++;
+            const answer = library.search(data, present, wrong, i, j, self);
+            if (answer && answer.bytes.every((byte) => byte === 0 || ODD_PARITY[byte & 0xFF])) {
+                for (let k = i; k < j; k++) out[k] = answer.bytes[k - i];
+                summary.corrected += j - i;
+            }
+            i = j;
+        }
+        // JS-only: a lone byte failing parity that the library had nothing for is read as one bit flipped: of the
+        // readings one bit away that pass parity, the one the recording's dialect clearly prefers between its
+        // neighbors is taken, when it reads no worse to the grammar (NBC's "$8@", FIELD, received as "$(@", LINE,
+        // which left its text in the wrong field and drew a line across the page)
+        if (model && model.records && anyWrong) {
+            for (let i = 1; i + 1 < out.length; i++) {
+                if (!wrong[i] || wrong[i - 1] || wrong[i + 1] || ODD_PARITY[out[i] & 0xFF]) continue;
+                if (!libraryPresent(present, i - 1) || !libraryPresent(present, i + 1)) continue;
+                const roles = readRoles(out), role = roles[i] === ROLE_TEXT ? 'text' : roles[i] === ROLE_PDI ? 'pdi' : null;
+                if (!role) continue;
+                const from = Math.max(0, i - 2), count = Math.min(out.length, i + 3) - from;
+                const scored = [];
+                for (let bit = 0; bit < 8; bit++) {
+                    const candidate = (out[i] ^ (1 << bit)) & 0xFF;
+                    if (!ODD_PARITY[candidate] || (candidate & 0x7F) < 0x20 || (candidate & 0x7F) === 0x7F) continue;
+                    const trial = out.slice(from, from + count);
+                    trial[i - from] = candidate;
+                    scored.push([role === 'text' ? model.textScore(trial, 0, count) : model.pdiScore(trial, 0, count), candidate]);
+                }
+                scored.sort((a, b) => b[0] - a[0]);
+                if (!scored.length || (scored.length > 1 && scored[0][0] - scored[1][0] < FLIP_MARGIN)) continue;
+                const trial = [...out];
+                trial[i] = scored[0][1];
+                const [severe, problems] = grammarProblems(trial), [baseSevere, baseProblems] = grammarProblems(out);
+                if (severe > baseSevere || problems > baseProblems) continue;
+                out[i] = scored[0][1];
+                summary.corrected++;
+            }
+        }
+        const holes = [];
+        if (present && present.length) {
+            for (let i = 0; i < data.length;) {
+                if (libraryPresent(present, i)) { i++; continue; }
+                let j = i;
+                while (j < data.length && !libraryPresent(present, j)) j++;
+                holes.push([i, j]);
+                summary.lost += j - i;
+                i = j;
+            }
+        }
+        const filled = holes.map(([start, end]) => {
+            const answer = library.search(data, present, null, start, end, self);
+            if (!answer) return false;
+            for (let k = start; k < end; k++) out[k] = answer.bytes[k - start];
+            summary.filled += end - start;
+            return true;
+        });
+        if (model && model.records) {
+            let roles = null;
+            holes.forEach(([start, end], h) => {
+                if (filled[h] || start === 0) return;
+                roles = roles || readRoles(out);
+                const before = readStateBefore(out, roles, start);
+                if (!before) return;
+                let stop = end;
+                while (stop < out.length && stop - end < DIALECT_WINDOW_BYTES && (out[stop] & 0x7F) >= 0x20) stop++;
+                if (stop - end < SHIFT_EVIDENCE_BYTES) return;
+                const text = model.textScore(out, end, stop - end), pdi = model.pdiScore(out, end, stop - end);
+                const toText = before === 'pdi' && text - pdi >= SHIFT_MARGIN, toPdi = before === 'text' && pdi - text >= SHIFT_MARGIN;
+                if (!toText && !toPdi) return;
+                out[end - 1] = withOddParity(toText ? 0x0F : 0x0E);
+                summary.inferred++;
+                roles = null;
+            });
+        }
+        if (!summary.corrected && !summary.filled && !summary.inferred) return { data: null, summary };
+        return { data: out, summary };
+    };
+
+    /** Rebuild every presentation record from the recording's own records (decode-orc's "Reconstruct lost data"). */
+    const reconstructRecords = (records) => {
+        const library = new RecordLibrary(), model = new DialectModel(), index = new Map();
         for (const record of records) {
-            if (!isPresentation(record.type)) continue;
+            if (!isPresentation(record.type) || !record.data?.length) continue;
+            index.set(record, library.add({ data: record.data, present: record.present || [] }));
+            model.learn(record.data, record.present || []);
+        }
+        library.build();
+        for (const record of records) {
+            record.rebuilt = null;
+            record.reconstruction = null;
+            if (!index.has(record)) continue;
+            const { data, summary } = reconstructRecord(record.data, record.present || [], library, index.get(record), model);
+            if (summary.lost || summary.corrupt) record.reconstruction = summary;
+            if (data) record.rebuilt = data;
+        }
+    };
+
+    /**
+     * Run every presentation record into its page. `reconstruct` rebuilds lost and corrupt bytes from the
+     * recording's other records first (the record's own data is left as recovered); `pace` sets the drawing speed:
+     * 'classic' (the viewer's original fast, fixed time per figure), 'ttx650' (Norpak TTX 650), 'tu2000x'
+     * (Panasonic TU-2000x) or 'off' (instant).
+     */
+    const interpret = (records, grid = [256, 200], { font = null, reconstruct = true, pace = 'classic' } = {}) => {
+        const interpreter = new Interpreter(grid, { font, pace }), supportRecords = new Map(), latestByAddress = new Map();
+        if (reconstruct) reconstructRecords(records);
+        else for (const record of records) { record.rebuilt = null; record.reconstruction = null; }
+        const codeOf = (record) => record.rebuilt || record.data;
+        for (const record of records) {
+            // Salvaged fragments have no page number, so they neither continue nor are continued by a page
+            if (!isPresentation(record.type) || record.identity_lost) continue;
             if (record.flags.support_record) supportRecords.set(record.channel, record);
-            latestByAddress.set(`${record.channel},${record.address}`, record);
+            // The most-seen content of an address stands for it in More chains (contents are listed most-seen first)
+            const addressKey = `${record.channel},${record.address}`;
+            if (!latestByAddress.has(addressKey) || record.version !== latestByAddress.get(addressKey).version) latestByAddress.set(addressKey, record);
         }
         // "More" chains: which page continues which (explicit extension, or the +1 rule)
         const predecessor = new Map();
         for (const record of latestByAddress.values()) {
             let successor = record.more_address;
+            if (successor === NO_MORE) continue;                   // designated elsewhere: the More flag is not used
             if (successor === null || successor === undefined) {
                 if (!record.flags.more) continue;
                 successor = nextPageAddress(record.address);
                 if (successor === null) continue;
             }
-            if (successor === record.address) continue;
+            // Only forward links continue a chain (decode-orc PR #328)
+            if (successor <= record.address) continue;
             predecessor.set(`${record.channel},${successor}`, record);
+        }
+        // A sub-page (address not ending in 00) that no page continues is drawn over the nearest lower page
+        // of its group, as a receiver showed it (Teletext Rescue 1.2; CBS 1992 page 402 after 401)
+        for (const record of latestByAddress.values()) {
+            const key = `${record.channel},${record.address}`;
+            if (record.address % 256 === 0 || predecessor.has(key)) continue;
+            const group = Math.floor(record.address / 256);
+            let best = null;
+            for (const other of latestByAddress.values()) {
+                if (other.channel === record.channel && other.address < record.address &&
+                    Math.floor(other.address / 256) === group && (!best || other.address > best.address)) best = other;
+            }
+            if (best) predecessor.set(key, best);
         }
         for (const record of records) {
             record.page = null;
@@ -2736,7 +5589,7 @@
             if (!isPresentation(record.type) || !record.data?.length) continue;
             let earlierPages = [], address = record.address, isRing = false;
             const visited = new Set([record.address]);
-            while (predecessor.has(`${record.channel},${address}`)) {
+            while (!record.identity_lost && predecessor.has(`${record.channel},${address}`)) {
                 const previous = predecessor.get(`${record.channel},${address}`);
                 if (visited.has(previous.address)) { isRing = true; break; }
                 visited.add(previous.address);
@@ -2755,12 +5608,12 @@
             const isCaption = record.flags.caption || earlierPages.some((page) => page.flags.caption);
             interpreter.resetDecoder();
             if (needsSupport && !record.flags.support_record && supportRecords.has(record.channel)) {
-                interpreter.run(supportRecords.get(record.channel).data);
+                interpreter.run(codeOf(supportRecords.get(record.channel)));
             }
             if (isCaption) interpreter.applyCaptionState();
             let keepDisplay = false;
-            for (const page of earlierPages) { interpreter.run(page.data, keepDisplay); keepDisplay = true; }
-            record.page = interpreter.run(record.data, keepDisplay);
+            for (const page of earlierPages) { interpreter.run(codeOf(page), keepDisplay); keepDisplay = true; }
+            record.page = interpreter.run(codeOf(record), keepDisplay);
             record.text = pageText(record.page);
         }
         return records;

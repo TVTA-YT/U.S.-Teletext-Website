@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const FILE_FIELD_NAMES = ['submissionFile'];
 
+    // Signed-in contributor with a confirmed name, or null (anyone can still submit without an account)
+    let account = null;
+    const nameInput = document.getElementById('sumbissionName');
+    const nameHelp = document.getElementById('submissionNameHelp');
+    const accountBar = document.getElementById('account-bar');
+
     // If there are multiple samples, they need to be kept in memory.
     let samples = [];
     // This will remain null unless a sample is being edited
@@ -345,8 +351,82 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /* CONTRIBUTOR ACCOUNTS */
+
+    // Show who is signed in and, if their name is confirmed, fill in and lock the uploader name field
+    async function initAccount() {
+        if (!window.NatAccount) return;
+        const { getMe, signOut, el } = window.NatAccount;
+        const me = await getMe();
+
+        if (!me.loggedIn) {
+            accountBar.replaceChildren(el('p', { className: 'mb-0 text-center' }, [
+                'Contributed before? ',
+                el('a', { href: 'login.html?next=submissions.html' }, 'Sign in'),
+                ' to have your name filled in and follow your submissions on ',
+                el('a', { href: 'my-submissions.html' }, 'My Submissions'),
+                '. An account is optional.'
+            ]));
+            return;
+        }
+
+        const signOutBtn = el('button', { type: 'button', className: 'btn btn-link p-0 align-baseline' }, 'Sign out');
+        signOutBtn.addEventListener('click', async () => {
+            await signOut();
+            window.location.reload();
+        });
+
+        // Name not set up yet, or waiting for confirmation: the form works as before
+        if (me.nameStatus !== 'active') {
+            accountBar.replaceChildren(el('p', { className: 'mb-0 text-center' }, [
+                `Signed in as ${me.email}. `,
+                me.nameStatus === 'pending'
+                    ? 'Your contributor name is awaiting confirmation, so please type it below for now. '
+                    : el('a', { href: 'login.html?next=submissions.html' }, 'Finish setting up your contributor name.'),
+                ' ',
+                signOutBtn
+            ]));
+            return;
+        }
+
+        account = me;
+
+        accountBar.replaceChildren(el('p', { className: 'mb-0 text-center' }, [
+            'Signed in as ',
+            el('strong', { text: me.name }),
+            me.anonymous ? ' (credited as Anonymous)' : '',
+            '. ',
+            el('a', { href: 'my-submissions.html' }, 'My Submissions'),
+            ' · ',
+            signOutBtn
+        ]));
+
+        // "Anonymous" or the contributor name, decided by the account's setting.
+        // defaultValue keeps it in place when "Reset Fields" is pressed
+        const credit = me.creditName ?? me.name;
+        nameInput.value = credit;
+        nameInput.defaultValue = credit;
+        nameInput.readOnly = true;
+        nameHelp.textContent = me.anonymous
+            ? 'You\'ve chosen to stay anonymous, so your samples are credited as "Anonymous". You can change this on the My Samples page.'
+            : 'Filled in from your account. To be credited as "Anonymous" instead, change it on the My Samples page.';
+    }
+
+    // The details of one sample as stored in the account's submission log (the file itself only goes to Formspree)
+    function toLogEntry(s) {
+        return {
+            network: s.network === 'Other' ? s.otherNetwork : s.network,
+            service: s.service || s.otherService,
+            date: s.date,
+            programTitle: s.programTitle,
+            tapeType: s.tapeType,
+            tapeSpeed: s.tapeSpeed,
+            fileName: s.submissionFile ? s.submissionFile.name : ''
+        };
+    }
+
     // Stop form submission if there are no samples
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         // Display alert if no sample is added to the list
         if (samples.length === 0) {
             e.preventDefault();
@@ -373,7 +453,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+
+        // Not signed in: Formspree receives the form exactly as before
+        if (!account) return;
+
+        // Signed in: record the samples on the account first, then send everything to Formspree.
+        // A failure here never blocks the submission itself; it just won't appear on My Samples.
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        const result = await window.NatAccount.post('/api/auth/submissions', { samples: samples.map(toLogEntry) });
+
+        // The reference code and verified name are included in the Formspree email so it can be matched to the account
+        // accountName is the real contributor name, so you can tell who sent an "Anonymous" submission.
+        // creditAs is what to put in "Recovered By" when it's added to the archive
+        const extras = {
+            submissionRef: result.ok ? result.ref : 'not recorded',
+            accountName: result.ok ? result.name : account.name,
+            creditAs: result.ok ? result.creditName : (account.creditName ?? account.name)
+        };
+        Object.entries(extras).forEach(([name, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            hiddenFieldsContainer.appendChild(input);
+        });
+
+        // Native submit: skips this handler, so it doesn't loop
+        HTMLFormElement.prototype.submit.call(form);
     });
 
     initFields(fieldsContainer);
+    initAccount();
 })

@@ -159,10 +159,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -189,10 +192,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -234,6 +240,7 @@
                     <img src="../images/banners/dark/Privacy-Policy.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
                 <hr aria-hidden="true" />
+                <p>Updated October 15, 2026</p>
                 <section id="who-we-are">
                     <h2>1. Who We Are</h2>
                     <p>
@@ -277,14 +284,16 @@
                         <li>We do not use Google Analytics, Google Ads, Meta Pixel, or any similar ad-supported tracking service.</li>
                     </ul>
                     <p aria-hidden="true">
-                        Because no cookies or persistent identifiers are set, there is
-                        <strong>no cookie consent banner</strong> on this Site — there's nothing for you to opt in or out of. This section
-                        exists purely for transparency about what limited, non-identifying data is collected in aggregate.
+                        The site <strong>does not set</strong> any cookies for regular visitors who do not have an account. The only cookie
+                        used on this site is a sign-in cookie, which is only set if you choose to sign in as a contributor. This cookie is
+                        strictly necessary for signing in and is not used for analytical or advertising purposes; with that said, there is
+                        <strong>no cookie consent</strong> banner on the Site.
                     </p>
-                    <p>
-                        Because no cookies or persistent identifiers are set, there is no cookie consent banner on this Site — there's
-                        nothing for you to opt in or out of. This section exists purely for transparency about what limited, non-identifying
-                        data is collected in aggregate.
+                    <p class="sr-only">
+                        The site does not set any cookies for regular visitors who do not have an account. The only cookie used on this site
+                        is a sign-in cookie, which is only set if you choose to sign in as a contributor. This cookie is strictly necessary
+                        for signing in and is not used for analytical or advertising purposes; with that said, there is no cookie consent
+                        banner on the Site.
                     </p>
                 </section>
                 <hr aria-hidden="true" />
@@ -344,48 +353,162 @@
                     <h2>4. Information You Provide Directly</h2>
                     <p>
                         If you use our Contact or Submissions pages to send us a message or submit teletext samples, we collect whatever
-                        information you choose to include (such as your name, email address, and message content). This information is used
-                        solely to respond to your inquiry or process your submission, and is not shared with third parties except as needed
-                        to fulfill that purpose (for example, a form-processing service, if one is used).
+                        information you choose to include (such as your name, email address, message content, sample details, and uploaded
+                        files). These forms are processed by Formspree, a form-processing service, which delivers the final form to us. This
+                        information is used solely to respond to your inquiry or process your submission, and is not shared with third
+                        parties except as needed to fulfill that purpose (for example, a form-processing service, if one is used).
+                    </p>
+                    <p>
+                        The name you enter into the Submission form (or your contributor name if signed in) may be shown publicly in the
+                        Site as the "Recovered By" credit for samples we add.
                     </p>
                 </section>
                 <hr aria-hidden="true" />
+                <section id="contributor-accounts">
+                    <h2>5. Contributor Accounts</h2>
+                    <p>
+                        Creating an account is optional; you can still submit samples without an account. If you choose to create one, your
+                        contributor name is automatically filled in on the Submissions form. Signing in also allows you to view your
+                        submissions and credited samples on the My Samples page. Signing in uses a one-time link sent to your email address;
+                        there is no password to create or remember.
+                    </p>
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Information</th>
+                                <th scope="col">Why we store it</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Email address</td>
+                                <td>
+                                    We use this to send you sign-in links. It is never shown publicly on the Site and never used for
+                                    newsletters or marketing. It is only shared with out email delivery service to send you sign-in links.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Contributor name</td>
+                                <td>
+                                    This is the name you choose when submitting samples. It is shown publicly as the "Recovered By" credit
+                                    on samples you contribute.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Account dates</td>
+                                <td>This is when your account was created and when you last signed in.</td>
+                            </tr>
+                            <tr>
+                                <td>Sign-in links and sessions</td>
+                                <td>
+                                    This is needed to sign you in and keep you signed in. These are stored only in a scrambled (hashed)
+                                    form, meaning they cannot be used to sign in even if there should happen to be a database leak.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Submission details</td>
+                                <td>
+                                    These are the details that are submitted while signed in: network, teletext/text service, air date,
+                                    program title, tape format and speed, file name, a reference code, and the submission's review status.
+                                    This lets you follow your submissions on the My Samples page. Uploaded files are not stored here; they
+                                    only go to Formspree. From there, they are downloaded locally, then deleted from Formspree.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>The sign-in cookie</h4>
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col"><code>nat_session</code></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Purpose</th>
+                                <td>Keeps you signed in as a contributor.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">When it is set</th>
+                                <td>Only after you open a sign-in link. Visitor who don't sign in never receive this cookie.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">How long it lasts</th>
+                                <td>30 days or until you sign out, whichever comes first.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Type</th>
+                                <td>
+                                    First-parity and strictly necessary. It contains only a random identifier, is sent only over secure
+                                    (HTTPS) connections, cannot be read by scripts on the page, and it not sent along with requests from
+                                    other websites.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <hr aria-hidden="true" />
                 <section id="how-we-use.collect-information">
-                    <h2>5. How We Use Collected Information</h2>
+                    <h2>6. How We Use Collected Information</h2>
                     <p>We use the information described above to:</p>
                     <ul>
                         <li>Understand which archived teletext services and pages get the most interest</li>
                         <li>Identify broken links or technical issues</li>
                         <li>Prioritize future archiving efforts based on what visitors seem to care about</li>
+                        <li>Review submissions and credit contributors for the samples they provide</li>
+                        <li>Sign contributors in and show them their own submissions</li>
                     </ul>
                     <p>
                         We do not sell, rent, or trade visitor data. We do not use collected data for advertising or ad targeting, and we
                         have no ability to do so even if we wanted to (which we would never do anyway) — GoatCounter simply doesn't collect
-                        the kind of identifying data that would make that possible.
+                        the kind of identifying data that would make that possible. Contributor email addresses are used only for signing
+                        in.
                     </p>
                 </section>
                 <hr aria-hidden="true" />
                 <section id="your-choices">
-                    <h2>6. Your Choices</h2>
+                    <h2>7. Your Choices</h2>
                     <p>
-                        Because no cookies or tracking identifiers are used, there's no consent to manage or opt out of. If you'd prefer not
-                        to be counted in aggregate page-view statistics at all, using a browser extension that blocks third-party scripts
-                        (such as uBlock Origin) will prevent the GoatCounter script from loading.
+                        GoatCounter uses no cookies or tracking identifiers, so there is no consent to manage or opt out of. If you'd prefer
+                        not to be counted in aggregate page-view statistics at all, using a browser extension that blocks third-party
+                        scripts (such as uBlock Origin) will prevent the GoatCounter script from loading.
+                    </p>
+                    <p>If you have a contributor account, you can:</p>
+                    <ul>
+                        <li>Sign out at any time, which ends your session and removes the sign-in cookie</li>
+                        <li>Ask us to change your contributor name</li>
+                        <li>Ask us to delete your account</li>
+                    </ul>
+                    <p>
+                        To make any of these requests, <a href="contact.html">contact us</a> using the email address used for your account.
                     </p>
                 </section>
                 <hr aria-hidden="true" />
                 <section id="data-retention">
-                    <h2>7. Data Retention</h2>
-                    <p>
-                        Aggregate page-view counts are retained indefinitely for historical comparison (e.g., "this page has had X views
-                        since launch"), but since no individual visitor is ever identified, there is no personal data to delete or expire.
-                        Messages submitted through our contact or submissions forms are retained only as long as necessary to respond to or
-                        process them, or as required by applicable law.
-                    </p>
+                    <h2>8. Data Retention</h2>
+                    <ul>
+                        <li>
+                            Aggregate page-view counts are retained indefinitely for historical comparison (e.g., "this page has had X views
+                            since launch"), but since no individual visitor is ever identified, there is no personal data to delete or
+                            expire.
+                        </li>
+                        <li>
+                            Messages submitted through our contact or submissions forms are retained only as long as necessary to respond to
+                            or process them, or as required by applicable law.
+                        </li>
+                        <li>Sign-in links expire after 15 minutes and are deleted once used or expired.</li>
+                        <li>Sign-in sessions end after 30 days or when you sign out, and from there are deleted.</li>
+                        <li>
+                            Contributor account and submission details are kept until you ask us to delete them. Deleting your account
+                            removes your email address, sessions, and submission details. "Recovered By" credits on samples already added to
+                            the Site remain part of the submission records unless you ask us to change them.
+                        </li>
+                    </ul>
                 </section>
                 <hr aria-hidden="true" />
                 <section id="third-party-services">
-                    <h2>8. Third-Party Services</h2>
+                    <h2>9. Third-Party Services</h2>
                     <p aria-hidden="true">The Site uses the following third-party service(s):</p>
                     <p class="sr-only">The Site uses the following third-party service or services:</p>
                     <ul>
@@ -399,22 +522,31 @@
                             <a href="https://www.goatcounter.com/privacy" target="_blank"> GoatCounter's Privacy Policy </a>
                             for details on how they handle the limited data described above.
                         </li>
+                        <li>
+                            <strong>Cloudflare</strong>: This is the site's web host. Various data, including contributor accounts, are
+                            stored here. Cloudflare may log standard request information (such as IP addresses) independent of our own
+                            analytics. See <a href="#">Cloudflare's Privacy Policy</a>.
+                        </li>
+                        <li>
+                            <strong>Formspree</strong>: This is the provider that processes the Contact and Submissions forms, including
+                            uploaded files. See <a href="#">Formspree's Privacy Policy</a>.
+                        </li>
+                        <li>Resend</li>
+                        : This service delivers sign-in emails to contributors. It receives your email address and the sign-in email we
+                        send. See
+                        <a href="#">Resend's Privacy Policy</a
+                        >.
                     </ul>
-                    <p>
-                        The Site is hosted on GitHub Pages. GitHub may log standard server access information (such as IP address)
-                        independent of our own analytics; see
-                        <a
-                            href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
-                            target="_blank"
-                            aria-label="Git Hubs Privacy Statement"
-                        >
-                            GitHub's Privacy Statement
-                        </a>
-                        for details.
-                    </p>
                     <p>
                         Outbound links to other archives or third-party destinations are not covered by this policy. We encourage you to
                         review the privacy policies of any external site you visit.
+                    </p>
+                </section>
+                <section id="changes-to-this-policy">
+                    <h2>10. Changes to This Policy</h2>
+                    <p>
+                        If we change how the Site collects or uses information, we will update this page and the date at the top before the
+                        changes take effect.
                     </p>
                 </section>
                 <!-- Floating theme button, bottom-right -->

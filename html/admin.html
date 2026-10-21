@@ -1,0 +1,384 @@
+<!doctype html>
+<!-- Created October 19, 2026, 13:50 -->
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Archive admin dashboard for reviewing submissions and contributor names." />
+        <!-- Open Graph URLs -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="North American Teletext Archive - Admin Dashboard" />
+        <meta property="og:description" content="Archive admin dashboard for reviewing submissions and contributor names." />
+        <meta property="og:url" content="https://nateletext.com/html/admin.html" />
+        <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
+        <meta property="og:image:alt" content="North American Teletext Archive" />
+        <meta property="og:site_name" content="North American Teletext Archive" />
+        <meta property="og:locale" content="en_US" />
+        <link rel="canonical" href="https://nateletext.com/html/admin.html" />
+        <link rel="icon" href="../images/favicons/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="../images/favicons/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../images/favicons/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../images/favicons/apple-touch-icon.png" />
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/media.css" />
+        <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="../css/color-overrides.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+        <meta name="robots" content="noindex" />
+        <title>Admin Dashboard</title>
+        <style>
+            .container {
+                padding-top: 110px;
+            }
+
+            .btn {
+                border-radius: 24px;
+            }
+
+            .submission-button {
+                background-color: #152de3;
+                color: #fff;
+            }
+
+            .submission-button:hover {
+                background-color: #4d62ff;
+            }
+
+            figure {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="logo">
+                <a href="../index.html" class="navbar-brand">
+                    <!-- <?xml version="1.0" encoding="UTF-8"?> -->
+                    <svg class="site-logo" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 699 221.14">
+                        <defs>
+                            <style>
+                                .cls-1 {
+                                    fill: #fff;
+                                    font-family: TinyandChunky, "Tiny and Chunky";
+                                    font-size: 12px;
+                                }
+
+                                .cls-2 {
+                                    fill: #fff800;
+                                }
+
+                                .cls-3 {
+                                    fill: #0019ff;
+                                }
+                            </style>
+                        </defs>
+                        <rect class="cls-3" x="6.17" y="87.19" width="692.83" height="29.92" />
+                        <rect class="cls-3" x="6.17" width="692.83" height="12.96" />
+                        <rect class="cls-3" x="6.17" y="191.34" width="692.83" height="12.96" />
+                        <g>
+                            <polygon
+                                class="cls-2"
+                                points="619.35 142.1 619.22 159.13 558.09 159.14 557.78 142.11 547.78 141.91 547.79 122.2 537.07 121.79 537.51 56.62 527 56.67 526.95 159.17 475.91 159.08 475.9 45.11 567.92 45.11 568.06 65.07 578.31 65.2 578.34 85.08 588.35 85.19 588.84 101.97 598.86 102.35 598.85 121.9 608.85 122.15 609 142.14 619.35 142.1"
+                            />
+                            <polygon
+                                class="cls-2"
+                                points="445.03 159 393.99 159.21 393.9 56.54 373.3 56.5 373.28 45.12 465.28 45.1 465.41 56.54 445.01 56.59 445.03 159"
+                            />
+                            <g>
+                                <polygon
+                                    class="cls-2"
+                                    points="218.96 159.08 157.89 159.16 157.72 94.88 157.91 56.59 147.46 56.67 147.47 159.11 86.01 159.14 85.83 94.04 86.06 45.11 188.04 45.1 188.58 56.55 208.81 56.57 208.93 73.54 218.95 73.7 219.2 121.39 218.96 159.08"
+                                />
+                                <polygon
+                                    class="cls-2"
+                                    points="373.07 159.15 311.78 159.13 311.68 142.19 301.38 141.72 301.26 122.12 291.19 121.81 291.19 56.61 280.46 56.64 280.75 118.16 280.43 159.11 229.74 159.14 229.53 93.85 229.79 45.11 321.64 45.11 321.8 65.08 332.06 65.12 332.22 85.05 342.28 85.23 342.3 101.95 352.35 102.38 352.44 122.08 362.74 122.21 362.74 142.12 373.11 142.14 373.07 159.15"
+                                />
+                            </g>
+                        </g>
+                        <text class="cls-1" transform="translate(154.03 181.27)">
+                            <tspan x="0" y="0">North American Teletext Archive</tspan>
+                        </text>
+                    </svg>
+                </a>
+            </div>
+            <button
+                class="navbar-toggler mx-4"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services
+                            <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Text Services
+                            <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-options">
+                                <a href="services.html" class="dropdown-item text-dropdown-option">Teletext Services</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="other-text-services.html" class="dropdown-item text-dropdown-option">Other Text Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown desktop-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
+                            <li class="dropdown-options">
+                                <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mobile-link">
+                        <a class="nav-link" data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#">
+                            Other Pages <i class="dropdown-toggle"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header text-center text-muted">Other VBI Services</li>
+                            <li class="dropdown-options">
+                                <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
+                            </li>
+                            <hr class="dropdown-divider" />
+                            <li class="dropdown-header text-center text-muted">Other Pages</li>
+                            <li class="dropdown-options">
+                                <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
+                                    Affiliates That Altered VBI
+                                </a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                            </li>
+                            <li class="dropdown-options">
+                                <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="submissions.html">Submissions</a>
+                    </li>
+                    <li class="nav-item desktop-link">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item mobile-link">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="container pb-3">
+                <h1>
+                    <span class="visually-hidden">Admin Dashboard</span>
+                    <img
+                        src="../images/banners/light/Admin-Dashboard_light.png"
+                        alt=""
+                        class="mw-100 light-mode-image"
+                        aria-hidden="true"
+                    />
+                    <img src="../images/banners/dark/Admin-Dashboard.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                </h1>
+                <hr aria-hidden="true" />
+                <div id="admin-content">
+                    <div id="admin-account" class="mb-3">
+                        <p class="text-muted">Loading&hellip;</p>
+                    </div>
+                    <div id="admin-status" role="status" aria-live="polite"></div>
+                    <div id="admin-overview" class="row g-3 mb-4" aria-label="Summary"></div>
+                    <section class="mb-5" aria-labelledby="names-heading">
+                        <h2 id="names-heading">Names awaiting confirmation</h2>
+                        <div id="pending-names">
+                            <p class="text-muted">Loading&hellip;</p>
+                        </div>
+                    </section>
+                    <section class="mb-4" aria-labelledby="submissions-heading">
+                        <h2 id="submissions-heading">Submissions</h2>
+                        <p class="text-muted">Samples sent by signed-in contributors.</p>
+                        <div class="mb-3" style="max-width: 320px">
+                            <label for="status-filter" class="form-label">Show</label>
+                            <select id="status-filter" class="form-select" aria-controls="admin-submissions">
+                                <option value="received" selected>Awaiting review</option>
+                                <option value="archived">Added to the site</option>
+                                <option value="declined">Not added</option>
+                                <option value="all">All submissions</option>
+                            </select>
+                        </div>
+                        <div id="admin-submissions" aria-live="polite">
+                            <p class="text-muted">Loading&hellip;</p>
+                        </div>
+                    </section>
+                </div>
+                <!-- Floating theme button, bottom-right -->
+                <button
+                    id="themeFab"
+                    type="button"
+                    class="btn btn-outline-secondary rounded-circle shadow"
+                    style="position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; z-index: 1050"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#themeOffcanvas"
+                    aria-controls="themeOffcanvas"
+                    title="Theme"
+                >
+                    <span class="theme-icon">
+                        <i class="bi bi-circle-half"></i>
+                    </span>
+                </button>
+
+                <!-- Offcanvas panel -->
+                <div
+                    class="offcanvas offcanvas-end"
+                    tabindex="-1"
+                    id="themeOffcanvas"
+                    aria-labelledby="themeOffcanvasLabel"
+                    style="width: 260px"
+                >
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="light">
+                                <i class="bi bi-brightness-high-fill"></i> Light
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="dark">
+                                <i class="bi bi-moon-fill"></i> Dark
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary theme-choice text-start" data-theme="auto">
+                                <i class="bi bi-display-fill"></i> Match system
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="end-footer pt-4 text-center">
+            <div id="footer-site-links">
+                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
+                <p>
+                    Issues? &nbsp;
+                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
+                </p>
+                <p>
+                    Have questions or information? &nbsp;
+                    <a href="contact.html">Contact us.</a>
+                </p>
+                <p>
+                    Looking for a specific page? &nbsp;
+                    <a href="sitemap.html">Site map.</a>
+                </p>
+                <p class="pb-4">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                </p>
+            </div>
+            <div class="pt-4">
+                <small class="text-white"
+                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
+                >
+                <br />
+                <br />
+                <small class="text-white">
+                    The names, logos, and trademarks of featured broadcast networks are the property of their respectful owners. Any and all
+                    properties are used solely for navigational purposes to help visitors of the website select the teletext or text service
+                    associated with each broadcaster and easily identify the network the teletext or text service data was sourced from.
+                    This website is not affiliated with, endorsed by, sponsored by, or officially connected with any of the broadcast
+                    networks featured on this website.
+                </small>
+                <br />
+                <br />
+                <small class="text-white">
+                    <strong
+                        >This site respects your privacy &mdash; no ad tracking. The only cookie is set when a contributor signs in, to keep
+                        them signed in.</strong
+                    >
+                </small>
+            </div>
+        </footer>
+        <script src="../js/color-modes.js"></script>
+        <script src="../js/account.js"></script>
+        <script src="../js/admin.js"></script>
+    </body>
+</html>

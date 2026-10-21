@@ -14,11 +14,12 @@ WaveTop_light.png
 VCR-Plus_white.png
 VCR-Plus.png
 package.json
-seed.sql
 depreciated/
 node_modules/
 TODO/
 json/
+sql/
+.vscode/
 images/meta-site-images
 
 # wrangler files

@@ -262,10 +262,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -292,10 +295,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -390,7 +396,7 @@
                             </button>
                             <button type="submit" class="btn btn-outline-secondary">Go</button>
                         </form>
-                        <div class="mobile-goto d-flex d-md-none justify-content-center gap-2 mt-2 mb-4" role="group" aria-label="Subpages">
+                        <div class="mobile-goto d-flex d-md-none justify-content-center gap-2 mt-2" role="group" aria-label="Subpages">
                             <button type="button" class="btn btn-outline-secondary" data-command="prev-subpage">
                                 <i class="bi bi-chevron-left" aria-hidden="true"></i> Subpage
                             </button>
@@ -401,6 +407,11 @@
                             <button type="button" class="btn btn-outline-secondary" data-command="replay">
                                 <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Redraw Page
                             </button>
+                        </div>
+                        <div class="mobile-goto d-flex d-md-none justify-content-center gap-2 mt-2 mb-4" role="group" aria-label="Subpages">
+                            <button type="button" class="btn btn-outline-secondary" data-command="magazine">Magazine</button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="index">Index</button>
+                            <button type="button" class="btn btn-outline-secondary" data-command="master-index">M.Index</button>
                         </div>
                         <p class="visually-hidden" id="screenHelp">
                             Type a three-digit page number to go to a specific page. With the screen focused, the up and down arrow keys
@@ -448,6 +459,11 @@
                             <p class="visually-hidden" id="moreHelp">
                                 The "MORE" key ends the page's next long pause or shows its continuation page.
                             </p>
+                            <div class="d-grid gap-2 mb-3" style="grid-template-columns: 1fr 1fr 1fr" role="group" aria-label="Index keys">
+                                <button type="button" class="btn btn-outline-secondary" data-command="magazine">Magazine</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="index">Index</button>
+                                <button type="button" class="btn btn-outline-secondary" data-command="master-index">M.Index</button>
+                            </div>
                             <button type="button" class="btn btn-outline-secondary w-100 mb-3" data-command="replay">
                                 <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Draw Page Again
                             </button>
@@ -483,6 +499,19 @@
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="optAspect" checked />
                                 <label for="optAspect" class="form-check-label">Aspect ratio (4:3)</label>
+                            </div>
+                            <div class="mt-2">
+                                <label for="optPace" class="form-label small mb-1">Receiver drawing times</label>
+                                <select class="form-select form-select-sm" id="optPace">
+                                    <option value="classic">Fast (original)</option>
+                                    <option value="ttx650">Norpak TTX 650</option>
+                                    <option value="tu2000x">Panasonic TU-2000x</option>
+                                    <option value="off">Instant (no drawing time)</option>
+                                </select>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="optReconstruct" />
+                                    <label for="optReconstruct" class="form-check-label">Reconstruct lost data</label>
+                                </div>
                             </div>
                             <div class="mt-2">
                                 <label for="optFont" class="form-label small mb-1">Decoder font</label>
@@ -637,7 +666,10 @@
                 <br />
                 <br />
                 <small class="text-white">
-                    <strong>This site respects your privacy &mdash; we use no cookies and no ad tracking.</strong>
+                    <strong>
+                        This site respects your privacy &mdash; no ad tracking. The only cookie is set when a contributor signs in, a cookie
+                        that is used to keep them signed in.
+                    </strong>
                 </small>
             </div>
         </footer>

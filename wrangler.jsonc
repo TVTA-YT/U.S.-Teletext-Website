@@ -1,50 +1,94 @@
 {
-    "name": "nateletext",
-    "main": "worker/src/index.js",
-    "compatibility_date": "2026-09-28",
-
-    "assets": {
-        "directory": "./",
-        "binding": "ASSETS",
-        "not_found_handling": "404-page",
-        "run_worker_first": ["/api/*", "/files/*"]
-    },
-
-    "routes": [
-        { "pattern": "nateletext.com", "custom_domain": true },
-        { "pattern": "www.nateletext.com", "custom_domain": true }
-    ],
-
-    "d1_databases": [
-        {
-            "binding": "DB",
-            "database_name": "teletext",
-            "database_id": "b2359f88-2698-4738-9748-a4f7830d3d48"
-        }
-    ],
-    "r2_buckets": [
-        {
-            "binding": "GALLERY",
-            "bucket_name": "teletext-gallery"
+	"name": "nateletext",
+	"main": "worker/src/index.js",
+	"compatibility_date": "2026-09-28",
+	"assets": {
+		"directory": "./",
+		"binding": "ASSETS",
+		"not_found_handling": "404-page",
+		"run_worker_first": [
+			"/api/*",
+			"/files/*"
+		]
+	},
+	"routes": [
+		{
+			"pattern": "nateletext.com",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.nateletext.com",
+			"custom_domain": true
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "teletext",
+			"database_id": "b2359f88-2698-4738-9748-a4f7830d3d48"
+		},
+		{
+			"binding": "teletext_staging",
+			"database_name": "teletext-staging",
+			"database_id": "ea5486bc-1f20-4717-829b-cd4fb3fbb12c",
+			"remote": true
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "GALLERY",
+			"bucket_name": "teletext-gallery",
+            "remote": true
+		},
+		{
+			"binding": "TEXT_ARCHIVE",
+			"bucket_name": "text-service-html",
+            "remote": true
+		},
+		{
+			"binding": "EPG",
+			"bucket_name": "starsight",
+            "remote": true
+		},
+		{
+			"binding": "TELETEXT",
+			"bucket_name": "decoded-teletext",
+            "remote": true
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "HEADLINES",
+			"id": "23efc897376544bdb413512d80f3942c",
+			"preview_id": "23efc897376544bdb413512d80f3942c"
+		}
+	],
+    "env": {
+    "staging": {
+        "workers_dev": true,
+        "routes": [],
+        "assets": {
+            "directory": "./",
+            "binding": "ASSETS",
+            "not_found_handling": "404-page",
+            "run_worker_first": ["/api/*", "/files/*"]
         },
-        {
-            "binding": "TEXT_ARCHIVE",
-            "bucket_name": "text-service-html"
-        },
-        {
-            "binding": "EPG",
-            "bucket_name": "starsight"
-        },
-        {
-            "binding": "TELETEXT",
-            "bucket_name": "decoded-teletext"
+        "d1_databases": [
+            { "binding": "DB", "database_name": "teletext-staging", "database_id": "ea5486bc-1f20-4717-829b-cd4fb3fbb12c" }
+        ],
+        "r2_buckets": [
+            { "binding": "GALLERY", "bucket_name": "teletext-gallery", "remote": true },
+            { "binding": "TEXT_ARCHIVE", "bucket_name": "text-service-html", "remote": true },
+            { "binding": "EPG", "bucket_name": "starsight", "remote": true },
+            { "binding": "TELETEXT", "bucket_name": "decoded-teletext", "remote": true }
+        ],
+        "kv_namespaces": [
+            { "binding": "HEADLINES", "id": "23efc897376544bdb413512d80f3942c" }
+        ],
+        "vars": {
+            "SITE_ORIGIN": "https://nateletext-staging.us-teletext-archive.workers.dev",
+            "EMAIL_FROM": "North American Teletext Archive <login@nateletext.com>"
         }
-    ],
-    "kv_namespaces": [
-        {
-            "binding": "HEADLINES",
-            "id": "23efc897376544bdb413512d80f3942c",
-            "preview_id": "23efc897376544bdb413512d80f3942c"
-        }
-    ]
+    }
+}
 }

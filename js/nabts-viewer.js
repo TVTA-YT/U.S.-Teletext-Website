@@ -61,7 +61,7 @@
     const fontSelect = byID('optFont');
     const fontCredit = byID('fontCredit');
     const speedSelect = byID('optSpeed');
-    const mobileGotoForm = byID('mobileGoToPage');
+    const mobileGotoForm = byID('mobileGoto');
     const mobilePageInput = byID('mobilePageInput');
     const fullscreenButton = document.querySelector('[data-command="fullscreen"]');
 
@@ -97,7 +97,10 @@
         lastPaintedPalette: '',
         typedDigits: '',
         entryTimeout: 0,
-        speed: 1
+        speed: 1,
+        // Receiver whose drawing times the page is played at, and whether lost data is rebuilt (decode-orc PR #328)
+        pace: 'classic',
+        reconstruct: true
     };
 
     // Disable the checkbox for the animations if a user prefers reduced motion
@@ -140,10 +143,10 @@
         if (metadata.contributor) byID('contributor-name').textContent = metadata.contributor;
         if (metadata.fileName) setSourceName(metadata.fileName);
 
-        // * For the pre-launch ExtraVision samples from 1983, they will have a modified version of the ExtraVision image heading banner
+        // A sample with its own banner (e.g. the 1983 ExtraVision samples) replaces the service banner
+        // * The IDs must match the <img> IDs in the HTML (lightImageBanner / darkImageBanner)
         for (const [field, imageID] of [['bannerLight', 'lightImageBanner'], ['bannerDark', 'darkImageBanner']]) {
             const banner = byID(imageID);
-
             if (metadata[field] && banner) {
                 banner.src = metadata[field];
                 banner.hidden = false;
@@ -153,6 +156,7 @@
         if (metadata.bannerTitle) byID('bannerTitle').textContent = metadata.bannerTitle;
     };
 
+    // & Load the sample; async/await waits for the download and prevents the page from freezing
     // & Load the sample; async/await waits for the download and prevents the page from freezing
     const loadSample = async () => {
 
@@ -209,7 +213,7 @@
         setTimeout(() => {
             try {
                 const { records } = NABTS.readT33(new Uint8Array(state.streamBytes));
-                NABTS.interpret(records, state.grid, { font: state.font });
+                NABTS.interpret(records, state.grid, { font: state.font, pace: state.pace, reconstruct: state.reconstruct });
                 resolve(records);
             } catch (error) { reject(error); }
         }, 20);
@@ -254,7 +258,7 @@
 
         // Send a copy of the bytes instead of duplicating it
         const bytesCopy = state.streamBytes.slice(0);
-        worker.postMessage({ bytes: bytesCopy, grid: state.grid, font: state.font }, [bytesCopy]);
+        worker.postMessage({ bytes: bytesCopy, grid: state.grid, font: state.font, pace: state.pace, reconstruct: state.reconstruct }, [bytesCopy]);
     });
 
 
@@ -290,7 +294,9 @@
 
         // Channel A00 has captions only, so it gets its own label
         state.records.forEach((record, index) => {
-            const channelLabel = record.channel === 0xA00 ? 'Channel A00 (captions)' : `Channel ${toHex3(record.channel)}`;
+            // Pages salvaged without their header (decode-orc PR #328) are fragments with no page number: listed apart
+            let channelLabel = record.channel === 0xA00 ? 'Channel A00 (captions)' : `Channel ${toHex3(record.channel)}`;
+            if (record.identity_lost) channelLabel = `Channel ${toHex3(record.channel)}: fragments salvaged without a page number`;
 
             // If the first record, create its group
             if (!groupsByChannel.has(channelLabel)) {
@@ -305,6 +311,7 @@
 
             // Pages updated during the recording without a new version number are listed once per edition
             if (record.editions > 1) recordLabel += ` (edition ${record.edition} of ${record.editions})`;
+            if (record.identity_lost) recordLabel = `Fragment ${record.addr_text.replace('LOST', '')}`;
 
             // Page's first line
             let description = record.page ? firstTextLine(record) : (RECORD_TYPE_NAMES[record.type] || 'Record').toLowerCase();
@@ -398,7 +405,7 @@
         else entryDisplay.textContent = '';
 
         // The mobile page number box shows the current page as its placeholder
-        if (mobilePageInput) mobilePageInput.placeholder = record ? `${pageNumberOf(record) || record.addr_text}` : '---';
+        if (mobilePageInput) mobilePageInput.placeholder = record ? `P${pageNumberOf(record) || record.addr_text}` : 'P---';
     };
 
     // & Remove unfinished page number entry after 6 seconds
@@ -447,7 +454,8 @@
     // & Build the record's name and its info line
     const describeRecord = (record, index) => {
         const subpages = subpageIndexesOf(record), subpageNumber = subpages.indexOf(index) + 1;
-        const name = pageNumberOf(record) ? `Page ${pageNumberOf(record)}` : `Record ${record.addr_text}`;
+        const name = record.identity_lost ? `Fragment ${record.addr_text.replace('LOST', '')}`
+            : pageNumberOf(record) ? `Page ${pageNumberOf(record)}` : `Record ${record.addr_text}`;
         const parts = [
             name + (record.channel ? ` on channel ${toHex3(record.channel)}` : ''),
             `version ${record.version}${subpages.length > 1 ? ` (subpage ${subpageNumber} of ${subpages.length})` : ''}`
@@ -455,8 +463,20 @@
 
         // Only name unusual types
         if (record.type !== 0) parts.push(RECORD_TYPE_NAMES[record.type] || `Type ${record.type}`);
-        // The page changed during the recording while keeping its version number
-        if (record.editions > 1) parts.push(`edition ${record.edition} of ${record.editions}: the page was updated during the recording`);
+        // Different pages were sent under this page number and version during the recording
+        if (record.editions > 1) parts.push(`edition ${record.edition} of ${record.editions}: different contents were sent under this page number and version`);
+        // Rebuilt from packets whose header was lost, so its page number is unknown and its start is missing
+        if (record.identity_lost) parts.push('salvaged fragment: its header was lost, so its page number is unknown and its start is missing');
+        if (record.bytes_salvaged && !record.identity_lost) parts.push(`${record.bytes_salvaged} missing bytes recovered from packets whose header was lost`);
+        // Lost or damaged bytes rebuilt from the recording's other pages ("Reconstruct lost data")
+        const rebuilt = record.reconstruction;
+        if (rebuilt && record.rebuilt) {
+            const done = [];
+            if (rebuilt.filled) done.push(`${rebuilt.filled} of ${rebuilt.lost} lost bytes filled`);
+            if (rebuilt.corrected) done.push(`${rebuilt.corrected} damaged bytes corrected`);
+            if (rebuilt.inferred) done.push(`${rebuilt.inferred} lost shift${rebuilt.inferred === 1 ? '' : 's'} restored`);
+            parts.push(`reconstructed from other pages: ${done.join(', ')}`);
+        }
         // Address never arrived undamaged, but the page recurred under it with content of its own
         if (record.unconfirmed) parts.push('unconfirmed: its address was damaged every time it arrived');
         if (record.chain_pos) {
@@ -650,6 +670,97 @@
         announce('There is no more for this page.');
     };
 
+    // & Magazine, Index and M.Index, as on the Panasonic TU-1000x/TU-2000x remote (TNQ1470)
+    // Pages that can be navigated to by number: a short address, a real page number (not a salvaged fragment)
+    const isNumberedPage = (record) => hasShortAddress(record) && !record.identity_lost;
+    const pageValueOf = (record) => parseInt(record.addr_text, 16);
+
+    // A page's best-received version: the one seen most often (an older version may be badly damaged)
+    const bestVersionOf = (index) => subpageIndexesOf(state.records[index])
+        .reduce((best, other) => ((state.records[other].seen || 0) > (state.records[best].seen || 0) ? other : best), index);
+
+    // The first page of a channel: its 000 if it has one, otherwise its lowest-numbered page
+    const masterIndexOf = (channel) => {
+        let best = -1;
+        state.records.forEach((record, index) => {
+            if (record.channel !== channel || !isNumberedPage(record)) return;
+            if (best < 0 || pageValueOf(record) < pageValueOf(state.records[best])) best = index;
+        });
+        return best < 0 ? best : bestVersionOf(best);
+    };
+
+    // M.Index: the master index of the magazine (channel) being watched
+    const pressMasterIndex = () => {
+        const record = state.records[state.currentIndex];
+        if (!record) return;
+        const index = masterIndexOf(record.channel);
+        if (index < 0) { announce('This channel has no master index.'); return; }
+        showRecord(index);
+        announce(`Master index: ${describeRecord(state.records[index], index).name}.`);
+    };
+
+    // Magazine: the next magazine (channel) in the sample, at its master index. Captions (A00) are not a magazine.
+    const pressMagazine = () => {
+        const record = state.records[state.currentIndex];
+        if (!record) return;
+        const channels = [...new Set(state.records.filter((other) => isNumberedPage(other) && other.channel !== 0xA00)
+            .map((other) => other.channel))].sort((a, b) => a - b);
+        if (channels.length < 2) { announce('This sample has only one magazine.'); return; }
+        const next = channels[(channels.indexOf(record.channel) + 1) % channels.length];
+        const index = masterIndexOf(next);
+        if (index < 0) return;
+        showRecord(index);
+        announce(`Magazine ${toHex3(next)}: ${describeRecord(state.records[index], index).name}.`);
+    };
+
+    // The page numbers an index page lists: "13.Weekdays on WIVB" and "Gas Spill in Lancaster....p1". Every version
+    // of the page is read, as one may be damaged where another isn't
+    const listedPageNumbers = (record) => {
+        const key = pageKey(record), listed = new Set();
+        const text = state.records.filter((other) => pageKey(other) === key).map((other) => other.text || '').join('\n');
+        for (const match of text.matchAll(/(?:^|[^0-9.])(\d{1,3})\s?\.(?=\s*[A-Za-z0-9"'])/gm)) listed.add(Number(match[1]));
+        for (const match of text.matchAll(/\.{2,}\s*[pP]?\s*(\d{1,3})\b/g)) listed.add(Number(match[1]));
+        return listed;
+    };
+
+    // Index: the index of the section being read. The page the service flagged as an index (a header flag few
+    // services set), else the nearest lower-numbered page on the channel that lists this page's number, else M.Index
+    const pressIndex = () => {
+        const record = state.records[state.currentIndex];
+        if (!record || !isNumberedPage(record)) { pressMasterIndex(); return; }
+        const value = pageValueOf(record), number = Number(record.addr_text);
+        const lower = firstIndexOfEachPage().filter((index) => {
+            const other = state.records[index];
+            return other.channel === record.channel && isNumberedPage(other) && pageValueOf(other) < value;
+        }).sort((a, b) => pageValueOf(state.records[b]) - pageValueOf(state.records[a]));
+        const anyFlagged = state.records.some((other) => other.channel === record.channel && other.flags?.index);
+        let target = anyFlagged ? lower.find((index) => state.records[index].flags?.index) : undefined;
+        if (target === undefined && Number.isFinite(number)) {
+            target = lower.find((index) => listedPageNumbers(state.records[index]).has(number));
+        }
+        if (target === undefined) { pressMasterIndex(); return; }
+        target = bestVersionOf(target);
+        showRecord(target);
+        announce(`Index: ${describeRecord(state.records[target], target).name}.`);
+    };
+
+    // The three buttons come from the HTML (data-command="magazine", "index", "master-index"); only if they're
+    // missing are they added here, in a row under the More button
+    const moreButton = document.querySelector('[data-command="more"]');
+    if (moreButton && !document.querySelector('[data-command="magazine"]')) {
+        const row = document.createElement('div');
+        row.className = 'd-grid gap-2 mb-3';
+        row.style.gridTemplateColumns = '1fr 1fr 1fr';
+        row.setAttribute('role', 'group');
+        row.setAttribute('aria-label', 'Index keys');
+        row.innerHTML = `
+            <button type="button" class="btn btn-outline-secondary" data-command="magazine">Magazine</button>
+            <button type="button" class="btn btn-outline-secondary" data-command="index">Index</button>
+            <button type="button" class="btn btn-outline-secondary" data-command="master-index">M.Index</button>`;
+        const help = byID('moreHelp');
+        (help || moreButton).after(row);
+    }
+
     // & Full screen toggle
     const toggleFullscreen = () => {
         if (document.fullscreenElement) document.exitFullscreen();
@@ -669,6 +780,9 @@
     // Keypad data commands
     const COMMANDS = {
         more: pressMore,
+        magazine: pressMagazine,
+        index: pressIndex,
+        'master-index': pressMasterIndex,
         replay: () => startPlayback(),
         'prev-page': () => stepPage(-1),
         'next-page': () => stepPage(1),
@@ -708,12 +822,10 @@
             goToTypedPage();
         });
 
-        // Only digits and A-F (page numbers are hexadecimal, e.g. 06B)
+        // Only digits and A-F (page numbers are hexadecimal, e.g. 06B); go to page once all 3 are typed
         mobilePageInput.addEventListener('input', () => {
-            mobilePageInput.value = mobilePageInput.value
-                .replace(/[^0-9a-f]/gi, '')
-                .toUpperCase()
-                .slice(0, 3);
+            mobilePageInput.value = mobilePageInput.value.replace(/[^0-9a-f]/gi, '').slice(0, 3);
+            if (mobilePageInput.value.length === 3) goToTypedPage();
         });
     }
 
@@ -757,6 +869,58 @@
         const index = currentName ? indexOfRecordName(currentName) : 0;
         showRecord(Math.max(0, index), true);
     };
+
+    // & Receiver pace and reconstruction options, added beside the drawing speed (decode-orc PR #328)
+    const PACE_STORAGE_KEY = 'nabtsViewer.pace', RECONSTRUCT_STORAGE_KEY = 'nabtsViewer.reconstruct';
+    try {
+        const savedPace = localStorage.getItem(PACE_STORAGE_KEY), savedReconstruct = localStorage.getItem(RECONSTRUCT_STORAGE_KEY);
+        if (['classic', 'ttx650', 'tu2000x', 'off'].includes(savedPace)) state.pace = savedPace;
+        if (savedReconstruct !== null) state.reconstruct = savedReconstruct === 'true';
+    } catch { /* storage unavailable: keep the defaults */ }
+    // The options come from the HTML (#optPace, #optReconstruct); only if they're missing are they added here
+    const speedRow = speedSelect.closest('.row');
+    if (!byID('optPace') && speedRow) {
+        const options = document.createElement('div');
+        options.className = 'mt-2';
+        options.innerHTML = `
+            <label for="optPace" class="form-label small mb-1">Receiver drawing times</label>
+            <select class="form-select form-select-sm" id="optPace">
+                <option value="classic">Fast (original)</option>
+                <option value="ttx650">Norpak TTX 650</option>
+                <option value="tu2000x">Panasonic TU-2000x</option>
+                <option value="off">Instant (no drawing time)</option>
+            </select>
+            <div class="form-check mt-2">
+                <input type="checkbox" class="form-check-input" id="optReconstruct" />
+                <label for="optReconstruct" class="form-check-label">Reconstruct lost data</label>
+            </div>`;
+        speedRow.after(options);
+    }
+    const paceSelect = byID('optPace'), reconstructCheckbox = byID('optReconstruct');
+    if (paceSelect && reconstructCheckbox) {
+        paceSelect.value = state.pace;
+        reconstructCheckbox.checked = state.reconstruct;
+        // Only the interpretation changes, so the records already read are run again on the page (no re-reading)
+        const reinterpretKeepingRecord = () => {
+            if (!state.records || !state.records.length) return;
+            const currentName = state.currentIndex >= 0 ? NABTS.recordName(state.records[state.currentIndex]) : null;
+            NABTS.interpret(state.records, state.grid, { font: state.font, pace: state.pace, reconstruct: state.reconstruct });
+            const index = currentName ? indexOfRecordName(currentName) : 0;
+            showRecord(Math.max(0, index), true);
+        };
+        paceSelect.addEventListener('change', () => {
+            state.pace = paceSelect.value;
+            try { localStorage.setItem(PACE_STORAGE_KEY, state.pace); } catch { /* not saved */ }
+            reinterpretKeepingRecord();
+            announce(`Drawing times: ${paceSelect.selectedOptions[0].textContent}.`);
+        });
+        reconstructCheckbox.addEventListener('change', () => {
+            state.reconstruct = reconstructCheckbox.checked;
+            try { localStorage.setItem(RECONSTRUCT_STORAGE_KEY, String(state.reconstruct)); } catch { /* not saved */ }
+            reinterpretKeepingRecord();
+            announce(`Reconstruct lost data ${state.reconstruct ? 'on' : 'off'}.`);
+        });
+    }
 
     // ^ Names under which the user's resolution and font choices are saved in their browser
     const RESOLUTION_STORAGE_KEY = 'nabtsViewer.resolution';

@@ -261,7 +261,10 @@ function appendRow(tbody, row, columns, dataset) {
     const tr = document.createElement('tr');
 
     const isNewRecord = row.isNew === true;
+    const isUpdatedRecord = !isNewRecord && row.isUpdated === true;
+
     if (isNewRecord) tr.classList.add('row-new');
+    if (isUpdatedRecord) tr.classList.add('row-updated');
 
     // if (row.isNew) (now - Number(firstSeen)) <= NEW_WINDOW_SECONDS;
     const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);

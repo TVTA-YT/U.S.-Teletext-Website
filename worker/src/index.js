@@ -1,4 +1,7 @@
-// Show new records for 7 days
+// Magic link login routes (/api/auth/*)
+import { handleAuth, handleAdmin } from "../../js/auth.js";
+
+// ^ Show new records for 7 days
 const NEW_WINDOW_DAYS = 7;
 const NEW_WINDOW_SECONDS = NEW_WINDOW_DAYS * 24 * 60 * 60;
 
@@ -149,7 +152,7 @@ const tables = {
 
 /* RESPONSE HELPER FUNCTIONS */
 
-// Let any website make requests to the API
+// & Let any website make requests to the API
 function corsHeader() {
     return {
         "Access-Control-Allow-Origin": "*",
@@ -159,12 +162,12 @@ function corsHeader() {
     };
 }
 
-// Take JS Date (e.g. 2026-09-20T00:00:00Z) and remove time (e.g. 2026-09-20)
+// & Take JS Date (e.g. 2026-09-20T00:00:00Z) and remove time (e.g. 2026-09-20)
 function toDateOnly(date) {
     return date.toISOString().slice(0, 10);
 }
 
-// Retrieve total listing from all samples for the previous day (e.g. if Monday, return totals from Sunday)
+// & Retrieve total listing from all samples for the previous day (e.g. if Monday, return totals from Sunday)
 function getMarqueeDayRange(now = new Date()) {
 
     // Use Eastern Time regardless of Cloudflare's server time zone
@@ -180,12 +183,12 @@ function getMarqueeDayRange(now = new Date()) {
     return { dayStart: yesterdayStart, dayEnd: todayStart }
 }
 
-// Convert the data to JSON, set HTTP status, set JSON content type, and add CORS headers
+// & Convert the data to JSON, set HTTP status, set JSON content type, and add CORS headers
 function jsonResponse(data, status = 200) {
     return new Response(JSON.stringify(data), { status, headers: corsHeader() });
 }
 
-// Error response
+// & Error response
 function errorResponse(message, status = 500) {
     return jsonResponse({ error: message }, status);
 }
@@ -193,7 +196,7 @@ function errorResponse(message, status = 500) {
 
 /* FINDING THE DATASET */
 
-// Recognize the URL-safe name or actual table name
+// & Recognize the URL-safe name or actual table name
 function getDatasetEntry(datasetName) {
     const normalizedName = String(datasetName ?? "").trim().toLowerCase();
 
@@ -212,12 +215,22 @@ function getDatasetConfig(datasetName) {
 /* EXPORT INDIVIDUAL DATASET */
 
 // Build dynamic SQL query
+// ^ Show updated records for 7 days
+const UPDATED_WINDOW_SECONDS = 7 * 24 * 60 * 60;
+
+// & Convert a date string to UNIX seconds, or null if missing/invalid
+function toUnixSeconds(value) {
+    if (value === null || value === undefined || String(value).trim() === "") return null;
+    const ms = new Date(value).getTime();
+    return Number.isNaN(ms) ? null : Math.floor(ms / 1000);
+}
+
+// & Build dynamic SQL query
 async function exportTable(db, config) {
     const now = Math.floor(Date.now() / 1000);
-    const columns = config.columns.map(column => `t.${column}`).join(", ");
+    const columns = [...config.columns, "Date_Updated"].map(column => `t.${column}`).join(", ");
     const dateField = config.dateField || "Date";
 
-    // SQL statement
     const sql = `
         SELECT ${columns}
         FROM ${config.table} AS t
@@ -226,34 +239,25 @@ async function exportTable(db, config) {
 
     const result = await db.prepare(sql).all();
 
-    // Loop over each row to see if it's new
+    // Flag each row as new (added in the last 7 days) or updated (edited in the last 7 days)
     return result.results.map(row => {
-        let isNew = false;
+        const addedSeconds = toUnixSeconds(row.Date_Added);
+        const updatedSeconds = toUnixSeconds(row.Date_Updated);
 
-        // If date exists and is valid, create JavaScript Date object
-        if (row.Date_Added !== null && row.Date_Added !== undefined) {
-            const dateAdded = new Date(row.Date_Added);
+        const addedAge = addedSeconds === null ? null : now - addedSeconds;
+        const isNew = addedAge !== null && addedAge >= 0 && addedAge <= NEW_WINDOW_SECONDS;
 
-            // Make sure the date is valid
-            if (!Number.isNaN(dateAdded.getTime())) {
+        const updatedAge = updatedSeconds === null ? null : now - updatedSeconds;
+        const isUpdated = !isNew && updatedAge !== null && updatedAge >= 0 && updatedAge <= UPDATED_WINDOW_SECONDS;
 
-                // Convert the date to UNIX seconds by converting JS Date object to use seconds
-                const dateAddedSeconds = Math.floor(dateAdded.getTime() / 1000);
-
-                // Calculate the age of the record and determine if its within the 7-day "new" period
-                const age = now - dateAddedSeconds;
-                isNew = age >= 0 && age <= NEW_WINDOW_SECONDS;
-            }
-        }
-
-        return { ...row, isNew };
+        return { ...row, isNew, isUpdated };
     });
 }
 
 
 /* ELECTRA/KEYFAX TRIVIA */
 
-// Function for Electra/Keyfax trivia pages
+// & Function for Electra/Keyfax trivia pages
 async function getElectraKeyfaxTrivia(db) {
     const { results } = await db.prepare(`
         SELECT
@@ -272,7 +276,7 @@ async function getElectraKeyfaxTrivia(db) {
 
 /* DATASET COUNTS */
 
-// Calculate statistics for every dataset
+// & Calculate statistics for every dataset
 async function getAllCounts(db) {
     const entries = Object.entries(tables);
 
@@ -294,7 +298,7 @@ async function getAllCounts(db) {
         };
     });
 
-    // Calculate total number of teletext and text samples
+    // & Calculate total number of teletext and text samples
     function sumByType(type) {
         return entries.reduce((totals, [datasetName, config]) => {
 
@@ -303,9 +307,9 @@ async function getAllCounts(db) {
             const dataset = counts[datasetName];
 
             /*
-            - Add totals from all teletext and text tables
-            - NOTE: " ?. " is optional chaining. Basically, if a dataset exists, return the total. Otherwise, do not crash
-            - Nullish coalescing operator ( ?? ): if value is null or undefined, use 0
+            * Add totals from all teletext and text tables
+            * NOTE: " ?. " is optional chaining. Basically, if a dataset exists, return the total. Otherwise, do not crash
+            * Nullish coalescing operator ( ?? ): if value is null or undefined, use 0
             */
             totals.total += dataset?.total ?? 0;
 
@@ -326,7 +330,7 @@ async function getAllCounts(db) {
 
 /* RECENT ADDITIONS */
 
-// Find recently added records
+// & Find recently added records
 async function getRecentFromDataset(db, config) {
 
     // The homepage table only needs values from the "Date", "Date_Added", "Recovered_By", and "Service_Name" columns
@@ -352,7 +356,7 @@ async function getRecentFromDataset(db, config) {
     return result.results;
 }
 
-// Figure out the 10 newest records across all datasets
+// & Figure out the 10 newest records across all datasets
 async function getRecentAdditions(db) {
     const entries = Object.entries(tables);
 
@@ -377,44 +381,44 @@ async function getRecentAdditions(db) {
 
 /* R2 GALLERY MANIFEST */
 
-// Generate Cloudflare R2 object path for image gallery
+// & Generate Cloudflare R2 object path for image gallery
 function galleryKey(identifier) {
     return `gallery/gallery-${identifier}.json`;
 }
 
-// Generate Cloudflare R2 object path for StarSight data
+// & Generate Cloudflare R2 object path for StarSight data
 function starsightKey(identifier) {
     return `starsight/${identifier}.json`;
 }
 
-// Get gallery manifests
+// & Get gallery manifests
 async function getGalleryManifest(env, identifier) {
     const object = await env.GALLERY.get(galleryKey(identifier));
     if (!object) return null;
     return await object.json();
 }
 
-// Get StarSight manifest
+// & Get StarSight manifest
 async function getStarSightManifest(env, identifier) {
     const object = await env.EPG.get(starsightKey(identifier));
     if (!object) return null;
     return await object.json()
 }
 
-// ID pattern for fetching teletext JSON files
+// ^ ID pattern for fetching teletext JSON files
 const SAMPLE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 
-// R2 folder name for NBC Teletext
+// & R2 folder name for NBC Teletext
 function r2Folder(dataset) {
     return dataset.config.r2Folder ?? dataset.key;
 }
 
-// Generate R2 object path for teletext JSON
+// & Generate R2 object path for teletext JSON
 function pagesKey(folder, fileID, extension) {
     return `${folder}/${fileID}.${extension}`;
 }
 
-// List all samples that have available JSON (or T33) files in the R2
+// & List all samples that have available JSON (or T33) files in the R2
 async function listSamplesWithPages(env, folder, extension = "json") {
     const ids = [];
     let cursor;
@@ -448,10 +452,10 @@ const EXTRAVISION_PRELAUNCH_BANNERS = {
 
 /* RECENTLY VIEWABLE SAMPLES */
 
-// Number of rows shown in the homepage "Recently Viewable Samples" table
+// ^ Number of rows shown in the homepage "Recently Viewable Samples" table
 const RECENT_VIEWABLE_LIMIT = 25;
 
-// List every stream file in R2 for one dataset, along with when it was uploaded
+// & List every stream file in R2 for one dataset, along with when it was uploaded
 async function listStreamObjects(env, folder, extension) {
     const objects = [];
     let cursor;
@@ -473,7 +477,7 @@ async function listStreamObjects(env, folder, extension) {
     return objects;
 }
 
-// Find the newest stream files across all teletext datasets and attach their database details
+// & Find the newest stream files across all teletext datasets and attach their database details
 async function getRecentViewableSamples(env) {
     const teletextDatasets = Object.entries(tables).filter(([, config]) => config.type === "teletext");
 
@@ -543,15 +547,15 @@ async function getRecentViewableSamples(env) {
     });
 }
 
-// Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
+// ^ Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
 const GALLERY_TABLES = ["Acquire", "DaTaVizion", "Edutel", "Electra", "ExtraVision", "Keyfax", "NBC_Teletext", "SSS_Teletext", "Virtext", "Wis_Infotext_Teletext"];
 
-// Accepted names: Record-3-12-v1 (NABTS), Page-100-2 (WST), and editor exports such as P100-0000, P110-0000-subpage-1 or Page-101-0000-version-1-of-7
+// ^ Accepted names: Record-3-12-v1 (NABTS), Page-100-2 (WST), and editor exports such as P100-0000, P110-0000-subpage-1 or Page-101-0000-version-1-of-7
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+|Page-\d+-\d+|(?:P|Page-)\d{3}-[0-9A-F]{4}(?:-subpage-\d+)?(?:-version-\d+-of-\d+)?)\.(?:png|jpg|jpeg|gif)$/i;
 
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 
-// Get metadata from IA
+// & Get metadata from IA
 async function fetchIaMetadata(identifier) {
     const url = `https://archive.org/metadata/${encodeURIComponent(identifier)}`;
     const response = await fetch(url);
@@ -561,7 +565,7 @@ async function fetchIaMetadata(identifier) {
     return data;
 }
 
-// Query all tables to find IA ID
+// & Query all tables to find IA ID
 async function getGalleryIdentifiers(db) {
     const statements = GALLERY_TABLES.map(table => db.prepare(`
         SELECT DISTINCT IA_ID FROM ${table}
@@ -590,7 +594,7 @@ async function getGalleryIdentifiers(db) {
     return [...identifiers];
 }
 
-// Look through each table for IA ID
+// & Look through each table for IA ID
 async function getGalleryDatabase(db, identifier) {
     for (const table of GALLERY_TABLES) {
         // Retrieve values from these columns
@@ -607,13 +611,13 @@ async function getGalleryDatabase(db, identifier) {
     return { Recovered_By: null, Program_Title: null, Date: null, Service_Name: null, Network: null };
 }
 
-// Building the image URL
+// & Building the image URL
 function buildZipEntryUrl(identifier, zipFilename, entryPath) {
     const segments = entryPath.split("/").map(segment => encodeURIComponent(segment));
     return `https://archive.org/download/${encodeURIComponent(identifier)}/${encodeURIComponent(zipFilename)}/${segments.join("/")}`;
 }
 
-// Download specific byte range
+// & Download specific byte range
 async function fetchByteRange(url, start, end) {
     const response = await fetch(url, { headers: { "Range": `bytes=${start}-${end}` } });
 
@@ -623,7 +627,7 @@ async function fetchByteRange(url, start, end) {
     return new Uint8Array(await response.arrayBuffer());
 }
 
-// Get the file size of the ZIP
+// & Get the file size of the ZIP
 async function fetchRemoteFileSize(url) {
     const response = await fetch(url, { headers: { "Range": "bytes=0-0" } });
 
@@ -641,7 +645,7 @@ async function fetchRemoteFileSize(url) {
 
 /* LOCATING AND PARSING ZIP */
 
-// Find the ZIP's End of Central Directory (EOCD) record and extract information about the Central Directory
+// & Find the ZIP's End of Central Directory (EOCD) record and extract information about the Central Directory
 function locateEocd(buffer) {
 
     // Hexadecimal bytes that identify the EOCD record
@@ -668,7 +672,7 @@ function locateEocd(buffer) {
     return null;
 }
 
-// Read the Central Directory and extract the filename of every file in the ZIP
+// & Read the Central Directory and extract the filename of every file in the ZIP
 function parseCentralDirectoryFilenames(buffer, entryCount) {
     const decoder = new TextDecoder();
     const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
@@ -683,11 +687,11 @@ function parseCentralDirectoryFilenames(buffer, entryCount) {
         if (signature !== 0x02014b50) break;
 
         /*
-        - Get how many bytes long the filename is.
-        - Look for additional metadata and its length.
-        - Look for comments and their length.
-        - Filename starts 46 bytes after the beginning of the Central Directory entry.
-        - Calculate where filename ends
+        * Get how many bytes long the filename is.
+        * Look for additional metadata and its length.
+        * Look for comments and their length.
+        * Filename starts 46 bytes after the beginning of the Central Directory entry.
+        * Calculate where filename ends
         */
         const nameLength = view.getUint16(offset + 28, true);
         const extraLength = view.getUint16(offset + 30, true);
@@ -705,7 +709,7 @@ function parseCentralDirectoryFilenames(buffer, entryCount) {
     return filenames;
 }
 
-// Call previous functions to generate
+// & Call previous functions to generate
 async function fetchZipEntries(identifier, zipFilename) {
     const zipUrl = "https://archive.org/download/" + encodeURIComponent(identifier) + "/" + encodeURIComponent(zipFilename);
 
@@ -729,7 +733,7 @@ async function fetchZipEntries(identifier, zipFilename) {
     return parseCentralDirectoryFilenames(centralDirectory, eocd.entryCount).filter(filename => !filename.endsWith("/"));
 }
 
-// Loop over all image files from IA to build the image gallery list
+// & Loop over all image files from IA to build the image gallery list
 async function buildGalleryImageList(identifier, files) {
     const images = [];
 
@@ -763,7 +767,7 @@ async function buildGalleryImageList(identifier, files) {
 
 /* GENERATING GALLERY MANIFESTS */
 
-// Generate the image gallery manifest
+// & Generate the image gallery manifest
 async function generateGalleryManifest(env, identifier) {
 
     // Get the files, information about the record, and the relevant images
@@ -791,7 +795,7 @@ async function generateGalleryManifest(env, identifier) {
     return manifest;
 }
 
-// Check if manifest already exists
+// & Check if manifest already exists
 async function generateSingleGallery(env, identifier, force) {
     const key = galleryKey(identifier);
 
@@ -805,7 +809,7 @@ async function generateSingleGallery(env, identifier, force) {
     return { status: "generated", identifier, key, imageCount: manifest.images.length };
 }
 
-// Generate all galleries
+// & Generate all galleries
 async function generateAllGalleries(env, force = false) {
     const identifiers = await getGalleryIdentifiers(env.DB);
     const generated = [];
@@ -848,7 +852,7 @@ async function generateAllGalleries(env, force = false) {
 
 /* API REQUEST HANDLER */
 
-// API router function
+// & API router function
 async function handleApi(request, env) {
     if (request.method === "OPTIONS") {
         return new Response(null, { status: 204, headers: corsHeader() });
@@ -1178,6 +1182,18 @@ async function handleApi(request, env) {
 export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
+
+        // Login routes are checked first, because handleApi() only accepts GET requests
+        if (url.pathname.startsWith("/api/auth/")) {
+            const response = await handleAuth(request, env, tables);
+            return response ?? errorResponse("Not found", 404);
+        }
+
+        // Admin dashboard routes (signed-in admin accounts only)
+        if (url.pathname.startsWith("/api/admin/")) {
+            const response = await handleAdmin(request, env, tables);
+            return response ?? errorResponse("Not found", 404);
+        }
 
         if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
             return handleApi(request, env);

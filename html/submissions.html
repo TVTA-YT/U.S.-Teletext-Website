@@ -183,10 +183,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -213,10 +216,13 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
+                                <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="teletext-links.html" class="dropdown-item text-dropdown-option">Teletext Links</a>
@@ -273,6 +279,9 @@
                         personal tapes with possible teletext, use <a href="contact.html">this</a> form.
                     </p>
                 </div>
+                <!-- If someone is signed in, "Signed in as..." will appear. If not, there is a sign-in prompt -->
+                <div id="account-bar" class="mb-4" aria-live="polite"></div>
+
                 <form action="https://formspree.io/f/xoeawkye" method="post" id="submissionForm" enctype="multipart/form-data">
                     <div id="sample-fields">
                         <div class="mb-3">
@@ -375,7 +384,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="submissionLink" class="form-label">
+                            <label for="submissionFile" class="form-label">
                                 <span aria-hidden="true">Provide your submission</span>
                                 <span class="sr-only">Provide your submission</span>
                             </label>
@@ -408,21 +417,26 @@
                     <div class="mb-3">
                         <div class="alert alert-info text-center">
                             <div class="alert-heading">
-                                <h4 class="fw-bold">NOTE</h4>
+                                <h4 class="fw-bold fs-1">NOTE</h4>
                             </div>
                             <p class="mb-0">
-                                If you are submitting a sample from a tape you do not own or did not transfer yourself, you must include the
-                                name of the person who originally provided or transferred the tape. Please note that
-                                <strong>only</strong> the name/moniker of the original source of the data (or "anon" if they asked to remain
-                                anonymous) will be displayed as the contributor.
+                                It is advised that you <em>only</em> submit samples that you have permission to submit. Samples that are
+                                submitted without the consent or knowledge of the original source will <strong>not</strong> be considered
+                                until permission is granted from them.
                             </p>
                         </div>
-                        <label for="sumbissionName" class="form-label"
-                            ><span aria-hidden="true">Uploader name (optional)</span
-                            ><span class="sr-only">Uploader name (optional)</span></label
-                        >
-                        <input type="text" name="sumbissionName" id="sumbissionName" class="form-control" placeholder="John D." />
-                        <div class="form-text text-primary">You can use a moniker if you'd like</div>
+                        <label for="sumbissionName" class="form-label">
+                            <span aria-hidden="true">Uploader name (optional)</span>
+                            <span class="sr-only">Uploader name (optional)</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="sumbissionName"
+                            id="sumbissionName"
+                            class="form-control"
+                            aria-describedby="submissionNameHelp"
+                        />
+                        <div id="submissionNameHelp" class="form-text text-primary">You can use a moniker if you'd like</div>
                     </div>
                     <div class="mb-4">
                         <div class="cf-turnstile pb-2" data-sitekey="0x4AAAAAAFacw5QJpyc6MUab"></div>
@@ -494,9 +508,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -509,10 +523,14 @@
                 <br />
                 <br />
                 <small class="text-white">
-                    <strong>This site respects your privacy &mdash; we use no cookies and no ad tracking.</strong>
+                    <strong>
+                        This site respects your privacy &mdash; no ad tracking. The only cookie is set when a contributor signs in, to keep
+                        them signed in.
+                    </strong>
                 </small>
             </div>
         </footer>
+        <script src="../js/account.js"></script>
         <script src="../js/add-new-form.js"></script>
         <script src="../js/color-modes.js"></script>
         <script src="../js/heading-reveal.js"></script>
