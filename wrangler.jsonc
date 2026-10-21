@@ -86,7 +86,7 @@
             { "binding": "HEADLINES", "id": "23efc897376544bdb413512d80f3942c" }
         ],
         "vars": {
-            "SITE_ORIGIN": "https://nateletext-staging.us-teletext-archive.workers.dev",
+            "SITE_ORIGIN": "https://nateletext.com,https://www.nateletext.com",
             "EMAIL_FROM": "North American Teletext Archive <login@nateletext.com>"
         }
     }

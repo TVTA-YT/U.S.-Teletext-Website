@@ -755,11 +755,26 @@
     // wider than the screen makes Safari scale the page out to fit it. The viewer's buttons opt out of double-tap
     // zoom, and the index row's three columns may shrink below their text (which is cut short, not pushed out)
     const touchStyle = document.createElement('style');
+    // Safari also scales the whole page out to fit anything wider than the screen, re-checking whenever the
+    // keyboard opens or the page changes, even for something parked off screen (a closed off-canvas panel, a
+    // floating button); nothing may make the page wider than the screen, and the page number box keeps a 16px
+    // font so focusing it doesn't zoom in either
     touchStyle.textContent = `
+        html, body { max-width: 100%; overflow-x: hidden; }
+        @supports (overflow-x: clip) { html, body { overflow-x: clip; } }
+        #mobilePageInput { font-size: max(16px, 1.25rem); }
         .keypad .btn, [data-command], [data-digit], .mobile-goto .btn { touch-action: manipulation; }
         .index-keys { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
         .index-keys .btn { min-width: 0; padding-left: 0.25rem; padding-right: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }`;
     document.head.appendChild(touchStyle);
+
+    // On iPhones and iPads, Safari (and every iOS browser, which all run Safari's engine) rescales the page by itself
+    // when a field is focused or the page changes. A maximum scale of 1 in the viewport stops that automatic
+    // rescaling; iOS still lets the reader pinch to zoom whatever it says, so only iOS gets it (elsewhere it would
+    // block zooming)
+    const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (isIOS && viewportMeta && !/maximum-scale/.test(viewportMeta.content)) viewportMeta.content += ', maximum-scale=1';
 
     // The three buttons come from the HTML (data-command="magazine", "index", "master-index"); only if they're
     // missing are they added here, in a row under the More button
