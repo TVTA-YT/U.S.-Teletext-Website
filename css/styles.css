@@ -204,12 +204,6 @@ h1 .type-cursor {
   border: 0;
 }
 
-.results-table tbody tr.row-updated > * {
-  --bs-table-bg-type: #8be9ff;
-  --bs-table-accent-bg: #8be9ff;
-  color: #000;
-}
-
 .row-new,
 .row-new td {
   --bs-table-bg: #a5ffba;
@@ -222,6 +216,13 @@ h1 .type-cursor {
   --bs-table-bg: #ffa5a5;
   --bs-table-striped-bg: #ffa5a5;
   background-color: #ffa5a5 !important;
+}
+
+.row-updated,
+.row-updated td {
+  --bs-table-bg: #8be9ff;
+  --bs-table-striped-bg: #8be9ff;
+  background-color: #8be9ff !important;
 }
 
 .cell-wrap {
