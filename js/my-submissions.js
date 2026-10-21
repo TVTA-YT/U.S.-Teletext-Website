@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const titles = String(value).split("|").map(title => title.trim()).filter(Boolean);
         if (titles.length < 2) return titles[0] ?? "-";
 
-        return titles.map((title, index) => el("span", { className: "d-block my-samples-multiple-titles" }, [
+        return titles.map((title, index) => el("span", { className: "d-block my-submissions-multiple-titles" }, [
             title,
             index < titles.length - 1 ? el("span", { className: "visually-hidden", text: "," }) : null
         ]));
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (/^https?:\/\//i.test(path)) return contextLink(path, visibleText, spokenText, true);
         if (/^[a-z][a-z0-9+.-]*:/i.test(path)) return "-";
 
-        // Root-relative, so it works from /html/my-samples.html whether stored as "files/...", "/files/..." or "../files/..."
+        // Root-relative, so it works from /html/my-submissions.html whether stored as "files/...", "/files/..." or "../files/..."
         return contextLink(`/${path.replace(/^(\.\.\/|\.\/|\/)+/, "")}`, visibleText, spokenText);
     }
 
@@ -483,10 +483,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
-    const data = await get("/api/auth/my-samples");
+    const data = await get("/api/auth/my-submissions");
 
     if (data.status === 401) {
-        window.location.href = "login.html?next=my-samples.html";
+        window.location.href = "login.html?next=my-submissions.html";
         return;
     }
 
@@ -500,7 +500,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (data.nameStatus !== "active") {
-        window.location.href = "login.html?next=my-samples.html";
+        window.location.href = "login.html?next=my-submissions.html";
         return;
     }
 

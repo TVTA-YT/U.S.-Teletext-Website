@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filterEl = document.getElementById("status-filter");
     const statusEl = document.getElementById("admin-status");
 
-    // Same wording contributors see on My Samples
+    // Same wording contributors see on My Submissions
     const STATUS_LABELS = {
         received: { text: "Received, awaiting review", badge: "text-bg-secondary" },
         archived: { text: "Submitted", badge: "text-bg-success" },
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Buttons offered for each status (never the one it already has)
     const STATUS_ACTIONS = [
         { status: "archived", text: "Mark as added", className: "btn-success", confirm: null },
-        { status: "declined", text: "Decline", className: "btn-outline-danger", confirm: "Mark this submission as not added? The contributor will see \"Not added\" on My Samples." },
+        { status: "declined", text: "Decline", className: "btn-outline-danger", confirm: "Mark this submission as not added? The contributor will see \"Not added\" on My Submissions." },
         { status: "received", text: "Back to review", className: "btn-outline-secondary", confirm: null }
     ];
 

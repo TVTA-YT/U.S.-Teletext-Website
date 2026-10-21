@@ -408,8 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nameInput.defaultValue = credit;
         nameInput.readOnly = true;
         nameHelp.textContent = me.anonymous
-            ? 'You\'ve chosen to stay anonymous, so your samples are credited as "Anonymous". You can change this on the My Samples page.'
-            : 'Filled in from your account. To be credited as "Anonymous" instead, change it on the My Samples page.';
+            ? 'You\'ve chosen to stay anonymous, so your samples are credited as "Anonymous". You can change this on the My Submissions page.'
+            : 'Filled in from your account. To be credited as "Anonymous" instead, change it on the My Submissions page.';
     }
 
     // The details of one sample as stored in the account's submission log (the file itself only goes to Formspree)
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!account) return;
 
         // Signed in: record the samples on the account first, then send everything to Formspree.
-        // A failure here never blocks the submission itself; it just won't appear on My Samples.
+        // A failure here never blocks the submission itself; it just won't appear on My Submissions.
         e.preventDefault();
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting…';
