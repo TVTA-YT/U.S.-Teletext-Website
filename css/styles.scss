@@ -247,22 +247,14 @@ h1 {
 .results-table {
     tbody {
         tr {
-            .row-updated {
-                * {
-                    --bs-table-bg-type: #8be9ff;
-                    --bs-table-accent-bg: #8be9ff;
-                    color: #000;
-                }
+            &.row-updated > * {
+                --bs-table-bg-type: #8be9ff;
+                --bs-table-accent-bg: #8be9ff;
+                color: #000;
             }
         }
     }
 }
-
-// .results-table > tbody > tr > .row-updated > * {
-//     --bs-table-bg-type: #000;
-//     --bs-table-accent-bg: #000;
-//     color: #000;
-// }
 
 .row-new,
 .row-new td {
