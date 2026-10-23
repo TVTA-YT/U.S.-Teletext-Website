@@ -1,5 +1,5 @@
 importScripts('naplps-font.js', 'nabts.js');
-try { importScripts('naplps-font.js'); } catch { /* decoder fonts are optional */ }
+try { importScripts('naplps-decoder-fonts.js'); } catch { /* decoder fonts are optional */ }
 
 self.addEventListener('message', ({ data: { bytes, grid, font, pace, reconstruct } }) => {
     try {

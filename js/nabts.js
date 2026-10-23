@@ -117,6 +117,7 @@
         packet.valid = true;
         packet.channel = (prefixNibbles[0] << 8) | (prefixNibbles[1] << 4) | prefixNibbles[2];
         packet.attested = !!(HAMMING_CLEAN[packetBytes[0]] && HAMMING_CLEAN[packetBytes[1]] && HAMMING_CLEAN[packetBytes[2]]);
+        packet.prefix = packetBytes.subarray(0, PREFIX_SIZE);
         packet.ci = prefixNibbles[3];                    // continuity index
         packet.ci_byte = packetBytes[3];
         const structure = prefixNibbles[4];
@@ -153,18 +154,39 @@
     // * * * Data groups (§4) * * *
     const GROUP_HEADER_SIZE = 8, MAX_FURTHER_PACKETS = 67, MAX_OPEN_GROUPS = 32, LOOSE_RUN_MAX_GAP = 2, MAX_OPEN_LOOSE_RUNS = 8;
 
+    /** The nibble whose Hamming 8/4 codeword is nearest a byte (the preferred one where it ties for nearest). */
+    const nearestNibble = (byte, preferred = -1) => {
+        let best = 0, bestDistance = 9;
+        for (let nibble = 0; nibble < 16; nibble++) {
+            const distance = countSetBits(byte ^ HAMMING_CODEWORDS[nibble]);
+            if (distance < bestDistance || (distance === bestDistance && nibble === preferred)) { best = nibble; bestDistance = distance; }
+        }
+        return best;
+    };
+
     const decodeGroupHeader = (bytes, lowNibbleFirst = false) => {
         if (bytes.length < GROUP_HEADER_SIZE) return null;
         const nibbles = [];
         let attested = true;
+        let guessed = 0;
         for (let i = 0; i < GROUP_HEADER_SIZE; i++) {
             nibbles.push(HAMMING_VALUE[bytes[i]]);
-            if (nibbles[i] < 0) return null;
             if (!HAMMING_CLEAN[bytes[i]]) attested = false;
+            if (nibbles[i] < 0) {
+                // JS-only: a byte with two bits wrong (WSBT 1984 reads the type byte 0x15 as 0x2A in half its group
+                // headers) is read as the nearest codeword, type 0 where that is among them; with more than two
+                // header bytes past correction the header is taken as lost
+                if (++guessed > 2) return null;
+                nibbles[i] = nearestNibble(bytes[i], i === 0 ? 0 : -1);
+            }
         }
         const byteFrom = (first, second) => (lowNibbleFirst ? (second << 4) | first : (first << 4) | second);
+        if (guessed) {
+            const further = byteFrom(nibbles[3], nibbles[4]), finalBytes = byteFrom(nibbles[5], nibbles[6]);
+            if (further > MAX_FURTHER_PACKETS || finalBytes > MAX_BLOCK) return null;
+        }
         return {
-            attested, type_attested: !!HAMMING_CLEAN[bytes[0]],
+            attested, type_attested: !!HAMMING_CLEAN[bytes[0]], guessed,
             type: nibbles[0], ci: nibbles[1], rep: nibbles[2], further: byteFrom(nibbles[3], nibbles[4]),
             final_bytes: byteFrom(nibbles[5], nibbles[6]), routing: nibbles[7]
         };
@@ -176,8 +198,8 @@
             const packet = decodePacket(bytes.subarray(i * PACKET_SIZE, (i + 1) * PACKET_SIZE));
             if (!packet.valid || !packet.sync) continue;
             const asHigh = decodeGroupHeader(packet.data, false), asLow = decodeGroupHeader(packet.data, true);
-            if (!asHigh) continue;
-            const plausible = (header) => header.further <= MAX_FURTHER_PACKETS && header.final_bytes <= MAX_BLOCK;
+            if (!asHigh || asHigh.guessed) continue;
+            const plausible = (header) => !!header && header.further <= MAX_FURTHER_PACKETS && header.final_bytes <= MAX_BLOCK;
             if (plausible(asHigh) && !plausible(asLow)) highFirst++;
             else if (plausible(asLow) && !plausible(asHigh)) lowFirst++;
         }
@@ -272,7 +294,8 @@
                 data: end > GROUP_HEADER_SIZE ? group.stream.slice(GROUP_HEADER_SIZE, end) : [],
                 present: end > GROUP_HEADER_SIZE ? group.present.slice(GROUP_HEADER_SIZE, end) : [],
                 clock: this.clock,
-                intact: outcome === 'complete' && group.lost === 0 && group.damaged === 0 && group.unchecked === 0
+                // A header read from codewords guessed past correction can't vouch for a whole group (JS-only)
+                intact: outcome === 'complete' && group.lost === 0 && group.damaged === 0 && group.unchecked === 0 && !group.header.guessed
             };
             this.stats[outcome] += 1;
             if (outcome === 'complete' && group.header.type !== 0) this.stats.foreign += 1;
@@ -689,6 +712,9 @@
      * beats a parity-clean one, which beats a corrupt one; within a tier the most copies win, then the newest.
      * `vouching` (one flag per copy) says whose vouched bytes count as vouched; null = none.
      */
+    // Columns 2 and 3 hold the PDI commands (and in text, the space, digits and punctuation): a reading there is
+    // left to the grammar, which can tell a command from an operand
+    const isCommandColumn = (byte) => (byte & 0x7F) >= 0x20 && (byte & 0x7F) <= 0x3F;
     const voteOverCopies = (copies, included, vouching = null) => {
         const length = votedLength(copies, included);
         const data = new Array(length).fill(0), present = new Array(length).fill(0), ties = [], contested = [], alternatives = [];
@@ -718,6 +744,33 @@
                 if (tier === winnerTier && !(weightOf(value) > weightOf(winner) ||
                     (weightOf(value) === weightOf(winner) && newestOf(value) > newestOf(winner)))) continue;
                 winner = value;
+            }
+            // JS-only: a reading that fails parity is one bit from what was sent, so it backs a passing reading one
+            // bit away from it. Between two passing readings of one tier, the one such failed reads back (and the
+            // other doesn't) wins when they outnumber the margin it lost by, outside columns 2 and 3 (CBS 1984-02-27 page 047: a line feed
+            // held by 14 copies and backed by 25 reading 0x4A lost to "D" held by 11)
+            if (tierOf(winner) >= 1 && !isCommandColumn(winner)) {
+                const flipBacking = (value) => {
+                    let backing = 0;
+                    for (const [failed, failedWeight] of weight) {
+                        if (ODD_PARITY[failed] || countSetBits((failed ^ value) & 0xFF) !== 1) continue;
+                        backing += failedWeight;
+                    }
+                    return backing;
+                };
+                const winnerBacking = flipBacking(winner);
+                let challenger = null, challengerScore = 0;
+                for (const value of weight.keys()) {
+                    if (value === winner || tierOf(value) !== tierOf(winner) || isCommandColumn(value)) continue;
+                    // ... only where one of the two is a control code: a line feed read as a letter breaks a page's layout
+                    if ((value & 0x7F) >= 0x20 && (winner & 0x7F) >= 0x20) continue;
+                    const backing = flipBacking(value) - winnerBacking;
+                    if (backing <= 0) continue;
+                    const score = weightOf(value) + backing - weightOf(winner);
+                    if (weightOf(value) < 2 * 255 || backing < weightOf(winner)) continue;
+                    if (score > 0 && score > challengerScore) { challenger = value; challengerScore = score; }
+                }
+                if (challenger !== null) winner = challenger;
             }
             data[position] = winner;
             present[position] = tierOf(winner) === 2 ? 2 : 1;
@@ -988,6 +1041,119 @@
     };
 
     /**
+     * JS-only: pages draw the same figure more than once (a logo in two colors, a shadow under it), so a stretch of
+     * bytes misread alike in every copy is often found intact elsewhere in the record. Where the grammar finds a
+     * problem, the 22 bytes around it are looked for elsewhere in the record, matching but for one to four bytes
+     * at it; those bytes are taken from the other copy of the stretch when that takes the problem away and
+     * adds no severe one (CBS 1984-02-27 page 050: "GGB" read as "G'\"", POINT and TEXT, in the first of its two
+     * ExtraVision logos, which an error burst that cancelled itself out in the packet's check let through).
+     */
+    const TEMPLATE_BEFORE = 12, TEMPLATE_AFTER = 10, TEMPLATE_SLACK = 3, TEMPLATE_MAX_DIFFERENCES = 4, MAX_TEMPLATE_TRIALS = 24;
+    const repairBySelfTemplate = (data) => {
+        let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
+        if (!bestProblems) return data;
+        let trials = 0;
+        const done = new Set();
+        for (const problemAt of problemsAt) {
+            if (trials >= MAX_TEMPLATE_TRIALS || bestProblems === 0) break;
+            const from = problemAt - TEMPLATE_BEFORE, to = problemAt + TEMPLATE_AFTER;
+            if (from < 0 || to > best.length) continue;
+            const value = (k) => best[k] & 0x7F;
+            let repaired = false;
+            for (let q = 0; q + (to - from) <= best.length && trials < MAX_TEMPLATE_TRIALS && !repaired; q++) {
+                if (Math.abs(q - from) < to - from) continue;
+                // The stretch must match exactly but for a few bytes at the problem and just before it
+                const differing = [];
+                let fits = true;
+                for (let k = 0; k < to - from && fits; k++) {
+                    if (value(from + k) === value(q + k)) continue;
+                    const at = from + k;
+                    if (at < problemAt - TEMPLATE_SLACK || at > problemAt + 2 || differing.length >= TEMPLATE_MAX_DIFFERENCES) fits = false;
+                    else differing.push(k);
+                }
+                if (!fits || !differing.length) continue;
+                const key = differing.map((k) => `${from + k}:${value(q + k)}`).join(',');
+                if (done.has(key)) continue;
+                done.add(key);
+                trials++;
+                const trial = [...best];
+                for (const k of differing) trial[from + k] = withOddParity(value(q + k));
+                const [severe, problems] = grammarProblems(trial);
+                if (severe <= bestSevere && problems < bestProblems) { best = trial; bestSevere = severe; bestProblems = problems; repaired = true; }
+            }
+        }
+        return best;
+    };
+
+    /**
+     * JS-only: CBS 1984-02-27 misreads bits 6 and 5 of a byte swapped (01 for 10: 0x5C as 0x3C, 0x47 as 0x27), which
+     * passes parity and turns an operand into a command. Where the grammar finds a problem, a byte from 0x20 to 0x3F
+     * just after a drawing command it left with no operands is tried as the operand from 0x40 to 0x5F it would be swapped back, and kept when the
+     * problem goes, no severe one comes and another page of the recording holds the command so put right (its
+     * opcode and three operand bytes), twice a record at most (pages 094 to 096: a background rectangle that lost its size, drawing them
+     * black instead of gray).
+     */
+    const MAX_SWAP_TRIALS = 24, MAX_SWAPS = 2, SWAP_EVIDENCE = 4;
+    const repairBySwappedBits = (data, seenElsewhere) => {
+        let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
+        if (!bestProblems) return data;
+        let trials = 0, swaps = 0;
+        for (const problemAt of problemsAt) {
+            if (trials >= MAX_SWAP_TRIALS || !bestProblems) break;
+            // Only the byte just after a drawing command left with no operands, and two such bytes a record at most
+            const command = best[problemAt] & 0x7F, at = problemAt + 1;
+            if (command < 0x28 || command > 0x37 || at >= best.length || swaps >= MAX_SWAPS) continue;
+            const value = best[at] & 0x7F;
+            if (value < 0x20 || value > 0x3F) continue;
+            trials++;
+            const trial = [...best];
+            trial[at] = withOddParity(value ^ 0x60);
+            // The command as put right must be one the recording sends elsewhere, byte for byte
+            if (!seenElsewhere(trial, problemAt)) continue;
+            const [severe, problems] = grammarProblems(trial);
+            if (severe <= bestSevere && problems < bestProblems) { best = trial; bestSevere = severe; bestProblems = problems; swaps++; }
+        }
+        return best;
+    };
+
+    /**
+     * JS-only: CBS 1985-06-29 also misreads a byte's parity bit and bit 6 swapped (0x68 received as 0xA8, which passes
+     * parity and reads as 0x28, LINE), so a whole copy can pass every check with an operand turned into a command.
+     * Where the grammar finds a problem, a command byte that arrived with its parity bit set and bit 6 clear, at the
+     * problem or just before it, is tried as the operand the swap would have come from; it is kept when it takes away eight problems or more, leaves three or fewer (or a twentieth), and
+     * at least a quarter of the record's problems (a misread command throws everything after it out of step: one such
+     * byte on the "Lone Justice" ad made 340 problems, and the poster drew as abstract shapes) and adds no severe one.
+     */
+    const MAX_HIGH_SWAPS = 8, HIGH_SWAP_LOOKBACK = 3, HIGH_SWAP_TRIALS = 48, HIGH_SWAP_MIN_GAIN = 8, HIGH_SWAP_LEFT = 3;
+    const repairByHighBitSwap = (data) => {
+        let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
+        let trials = 0;
+        for (let swaps = 0; swaps < MAX_HIGH_SWAPS && bestProblems > 0 && trials < HIGH_SWAP_TRIALS; swaps++) {
+            let improved = false;
+            const tried = new Set();
+            for (const problemAt of problemsAt.slice(0, 16)) {
+                for (let at = Math.max(0, problemAt - HIGH_SWAP_LOOKBACK); at <= problemAt && at < best.length; at++) {
+                    const byte = best[at], value = byte & 0x7F;
+                    if (tried.has(at) || (byte & 0xC0) !== 0x80 || value < 0x20 || value > 0x3F) continue;
+                    tried.add(at);
+                    if (++trials > HIGH_SWAP_TRIALS) break;
+                    const trial = [...best];
+                    trial[at] = (byte & 0x3F) | 0x40;
+                    const [severe, problems, , at2] = grammarProblems(trial);
+                    if (severe <= bestSevere && bestProblems - problems >= Math.max(HIGH_SWAP_MIN_GAIN, bestProblems / 4) &&
+                        problems <= Math.max(HIGH_SWAP_LEFT, bestProblems / 20)) {
+                        best = trial; bestSevere = severe; bestProblems = problems; problemsAt = at2; improved = true;
+                        break;
+                    }
+                }
+                if (improved || trials > HIGH_SWAP_TRIALS) break;
+            }
+            if (!improved) break;
+        }
+        return best;
+    };
+
+    /**
      * JS-only: a byte the whole recording tends to misread one way (WIVB's tape reads 0x58 as 0x28, LINE, again
      * and again) is put back where every copy of a record misread it alike: just before a grammar problem, a PDI
      * opcode the recording usually confuses with an operand byte is tried as that operand, and kept when it takes
@@ -1153,6 +1319,108 @@
         }
     };
 
+    /**
+     * JS-only: letters a recording misreads the same way in every copy (WSBT 1984 reads "the" as "t(j", "t(e" or
+     * "thj" a third of the time: h as "(", e as "j") are learned from the recording itself and put back. A spelling
+     * seen far less often than one a letter or two away from it ("thj" 13 times, "the" 170) teaches that swap; swaps
+     * taught 20 or more times are applied to spellings no more than a fifth as common as what they become.
+     */
+    const SYSTEMATIC_MIN_LESSONS = 20, SYSTEMATIC_STRONG_LESSONS = 50, SYSTEMATIC_RATIO = 5, SYSTEMATIC_MIN_WORD = 3;
+    const isWordByte = (byte) => isLetter(byte) || (byte & 0x7F) === 0x28;
+    const settleSystematicMisreads = (records) => {
+        const spans = [], counts = new Map();
+        for (const record of records) {
+            if (!record.data || !record.data.length || !isPresentation(record.type)) continue;
+            const roles = readRoles(record.data);
+            let start = -1;
+            for (let i = 0; i <= record.data.length; i++) {
+                const inWord = i < record.data.length && roles[i] === ROLE_TEXT && isWordByte(record.data[i]);
+                if (inWord && start < 0) start = i;
+                if (!inWord && start >= 0) {
+                    if (i - start >= SYSTEMATIC_MIN_WORD) {
+                        const word = spell(record.data, start, i);
+                        spans.push([record, start, i, word]);
+                        counts.set(word, (counts.get(word) || 0) + 1);
+                    }
+                    start = -1;
+                }
+            }
+        }
+        // Group spellings by length, to find the common word a letter or two from a rare one
+        const byLength = new Map();
+        for (const [word, count] of counts) {
+            if (!byLength.has(word.length)) byLength.set(word.length, []);
+            byLength.get(word.length).push([word, count]);
+        }
+        for (const list of byLength.values()) list.sort((a, b) => b[1] - a[1]);
+        const nearestCommon = (word, count) => {
+            for (const [other, otherCount] of byLength.get(word.length) || []) {
+                if (otherCount < count * SYSTEMATIC_RATIO) break;
+                if (other.includes('(')) continue;
+                let differences = 0;
+                for (let i = 0; i < word.length && differences < 3; i++) if (word[i] !== other[i]) differences++;
+                if (differences && differences <= 2) return other;
+            }
+            return null;
+        };
+        // Only a spelling that can't be a word is taken for a misreading: one with a "(" in it, or a letter pair no
+        // spelling seen three times or more has ("thj": "hj"); "are" next to "the" teaches nothing
+        const pairs = new Set();
+        for (const [word, count] of counts) {
+            if (count < 3 || word.includes('(')) continue;
+            for (let i = 0; i + 1 < word.length; i++) pairs.add(word.slice(i, i + 2));
+        }
+        const misread = (word) => {
+            if (word.includes('(')) return true;
+            for (let i = 0; i + 1 < word.length; i++) if (!pairs.has(word.slice(i, i + 2))) return true;
+            return false;
+        };
+        const lessons = new Map();
+        for (const [word, count] of counts) {
+            if (!misread(word)) continue;
+            const other = nearestCommon(word, count);
+            if (!other) continue;
+            for (let i = 0; i < word.length; i++) if (word[i] !== other[i]) {
+                const key = word[i] + other[i];
+                lessons.set(key, (lessons.get(key) || 0) + count);
+            }
+        }
+        const swaps = new Set([...lessons].filter(([, n]) => n >= SYSTEMATIC_MIN_LESSONS).map(([key]) => key));
+        if (!swaps.size) return;
+        // A spelling with nothing odd about it is put right too where a single letter, swapped as the recording
+        // swaps it most often (50 times or more), makes it a far commoner word: "thj" (common enough to have its
+        // letter pairs counted) becomes "the"
+        const strongSwaps = new Set([...lessons].filter(([, n]) => n >= SYSTEMATIC_STRONG_LESSONS).map(([key]) => key));
+        const oneStrongSwap = (word, other) => {
+            let differences = 0, strong = true;
+            for (let i = 0; i < word.length; i++) if (word[i] !== other[i]) { differences++; if (!strongSwaps.has(word[i] + other[i])) strong = false; }
+            return differences === 1 && strong;
+        };
+        for (const [record, from, to, word] of spans) {
+            if (!misread(word)) {
+                const other = nearestCommon(word, counts.get(word));
+                if (!other || !oneStrongSwap(word, other)) continue;
+            }
+            // Words in capitals (names, call letters, headings) are left: their letter pairs are no guide
+            const original = spell(record.data, from, to).length && String.fromCharCode(...record.data.slice(from, to).map((byte) => byte & 0x7F));
+            if (original.slice(1) === original.slice(1).toUpperCase() && /[A-Z]/.test(original.slice(1))) continue;
+            const other = nearestCommon(word, counts.get(word));
+            if (!other) continue;
+            let allowed = true;
+            for (let i = 0; i < word.length; i++) if (word[i] !== other[i] && !swaps.has(word[i] + other[i])) { allowed = false; break; }
+            if (!allowed) continue;
+            const data = record.data.slice();
+            for (let i = 0; i < word.length; i++) {
+                if (word[i] === other[i]) continue;
+                // Keep the letter's case: the vocabulary is spelled in lower case
+                const original = data[from + i] & 0x7F, upper = original >= 0x41 && original <= 0x5A;
+                const code = upper ? other.toUpperCase().charCodeAt(i) : other.charCodeAt(i);
+                data[from + i] = withOddParity(code);
+            }
+            record.data = data;
+        }
+    };
+
     // ---------------------------------------------------------------------------
     // Contents (decode-orc PR #328): one identity (channel, address, version) can carry more than one page over a
     // recording — a carousel's versions come round again with new pages, a page is replaced without its version
@@ -1165,6 +1433,8 @@
     const PAGE_DIFFERENCE_VOUCHED_BYTES = 6, PAGE_DIFFERENCE_VOUCHED_PERCENT = 8, DISPLACEMENT_CONTEXT = 3, DISPLACEMENT_REACH = 96;
     const IDENTITY_MIN_JUDGED = 48, MISREAD_VERSION_RATIO = 20, MISREAD_VERSION_MIN_MAIN = 20, MISREAD_VERSION_AGREEMENT = 0.9;
     const MISADDRESSED_SEEN_RATIO = 4, SAME_IDENTITY_CONTENT = 0.5;
+    const OVERRULE_MIN_COPIES = 3;
+    const MISNAMED_MAX_SEEN = 2, MISNAMED_SEEN_RATIO = 10, MISNAMED_AGREEMENT = 0.9;
 
     /** A copy's bytes as the content comparisons read them: each byte where it arrived passing parity, else -1. */
     const readingCache = new WeakMap();
@@ -1493,6 +1763,13 @@
             return Catalog.parityClean(message.data) ? 2 : 1;
         }
 
+        /** A compact key for a record's bytes, to count the copies that read them alike. */
+        static contentKey(data) {
+            let hash = 2166136261;
+            for (const byte of data) hash = Math.imul(hash ^ (byte & 0x7F), 16777619);
+            return `${data.length}:${hash >>> 0}`;
+        }
+
         static takeMessage(entry, message) {
             entry.type = message.type;
             entry.records = message.records;
@@ -1551,14 +1828,42 @@
                 this.entries.set(key, entry);
                 if (!this.identities.has(identity)) this.identities.set(identity, []);
                 this.identities.get(identity).push(content);
-            } else if (rank > entry.kept_rank || (rank === entry.kept_rank && message.data.length > entry.data.length)) {
+            } else if (!entry.intactDisagree &&
+                (rank > entry.kept_rank || (rank === entry.kept_rank && message.data.length > entry.data.length))) {
                 Catalog.takeMessage(entry, message);
             }
-            if (good) entry.copies = [];
-            else if (!entry.kept_intact && message.aligned) {
-                if (entry.copies.length >= MAX_COPIES) entry.copies.shift();
-                entry.copies.push([message.data, message.present]);
+            // JS-only: a copy can pass every packet's check and still be wrong (two bits misread down one column of a
+            // packet pass its suffix check). Where two intact copies differ, neither stands for the record: every copy
+            // seen is voted, the intact ones with the rest (WCIA 1990's master index: one of its two intact copies read
+            // a LINE as DOMAIN, and taken as the record, it drew a blank screen; on CBS 1985-06-29 most pages arrived
+            // "intact" in a dozen or more different readings)
+            const voter = [message.data, message.present];
+            if (good) {
+                if (!entry.intactCopies) entry.intactCopies = [];
+                if (entry.intactCopies.length < MAX_COPIES) entry.intactCopies.push(voter);
             }
+            const keep = (list) => { if (list.length >= MAX_COPIES) list.shift(); list.push(voter); };
+            // (not captions: a caption's version is reused by every caption it carries, each intact and each different)
+            if (good && !message.flags.caption && message.type !== 1) {
+                if (!entry.intactReadings) entry.intactReadings = new Set();
+                entry.intactReadings.add(Catalog.contentKey(message.data));
+                if (entry.intactReadings.size > 1 && !entry.intactDisagree) {
+                    entry.intactDisagree = true;
+                    entry.kept_intact = false;
+                    entry.kept_rank = 1;
+                    entry.copies = [...(entry.spareCopies || [])];
+                    entry.spareCopies = null;
+                }
+            }
+            if (entry.intactDisagree) { if (message.aligned || good) keep(entry.copies); }
+            else if (good) {
+                // The copies seen so far are kept aside too, should a later intact copy disagree with this one
+                if (!entry.spareCopies) entry.spareCopies = entry.copies.slice(-MAX_COPIES);
+                entry.copies = [];
+                keep(entry.spareCopies);
+            }
+            else if (!entry.kept_intact && message.aligned) keep(entry.copies);
+            else if (message.aligned) keep(entry.spareCopies || (entry.spareCopies = []));
             for (const name of FLAG_TALLY) {
                 if (message.flags[name]) {
                     entry.flags_set[name]++;
@@ -1596,6 +1901,62 @@
                 cached.first === copies[0] && cached.last === copies[copies.length - 1]) return cached.result;
             const result = voteRecord(copies);
             entry.voteCache = { copies, length: copies.length, first: copies[0], last: copies[copies.length - 1], result };
+            return result;
+        }
+
+        /**
+         * JS-only: where intact copies disagree, the record is voted from them alone, byte by byte; where they tie, the
+         * other copies break the tie, and failing that the grammar (the copies whose checks failed carry the most
+         * misreadings of all: on CBS 1985-06-29, voted in, they turned the EVTV ad to stripes, took the BASF ad's
+         * background and the Eurythmics ad's face). Null where the intact copies are of different lengths.
+         */
+        static votedIntact(entry) {
+            const intact = entry.intactCopies || [];
+            if (intact.length < 2) return null;
+            const length = intact[0][0].length;
+            if (intact.some(([data]) => data.length !== length)) return null;
+            const others = entry.copies.filter(([data]) => data.length === length && !intact.some(([held]) => held === data));
+            const data = [], ties = [];
+            for (let i = 0; i < length; i++) {
+                const counts = new Map();
+                for (const [held] of intact) counts.set(held[i], (counts.get(held[i]) || 0) + 1);
+                let most = 0;
+                for (const count of counts.values()) most = Math.max(most, count);
+                let leaders = [...counts].filter(([, count]) => count === most).map(([byte]) => byte);
+                if (leaders.length > 1) {
+                    // The other copies break the tie, where they favor one of the readings
+                    const support = leaders.map((byte) => others.filter(([held, present]) => present[i] && held[i] === byte).length);
+                    const best = Math.max(...support);
+                    const kept = leaders.filter((byte, k) => support[k] === best);
+                    if (kept.length < leaders.length) leaders = kept;
+                }
+                data.push(leaders[0]);
+                if (leaders.length > 1) ties.push([i, leaders]);
+            }
+            return ties.length ? settleTiesByGrammar(data, ties) : data;
+        }
+
+        /**
+         * JS-only: a lone intact copy can carry a misread its checks let through. Where three or more of the other
+         * copies, all holding the byte, agree on another reading, theirs is taken (CBS 1985-06-29's KKGO ad: its one
+         * intact copy read "America's" as "Hmerica's").
+         */
+        static overruledIntact(data, spare) {
+            const others = spare.filter(([held]) => held.length === data.length && held !== data);
+            if (others.length < OVERRULE_MIN_COPIES) return data;
+            let result = data;
+            for (let i = 0; i < data.length; i++) {
+                const first = others[0][0][i];
+                if (first === data[i]) continue;
+                let agree = 0;
+                for (const [held, present] of others) {
+                    if (!present[i] || held[i] !== first) { agree = -1; break; }
+                    agree++;
+                }
+                if (agree < OVERRULE_MIN_COPIES || !ODD_PARITY[first & 0xFF]) continue;
+                if (result === data) result = [...data];
+                result[i] = first;
+            }
             return result;
         }
 
@@ -1701,8 +2062,21 @@
                     // Seen at most a fifth as often, losses or a shared layout are enough; seen nearly as often (both
                     // rare), it takes losses and a layout the damage left recognizable
                     const rare = entry.seen * 5 <= mainEntry.seen;
-                    if (rare ? lostBytes < 27 && !sharesLayout : lostBytes < 27 || !damagedLayout) return;
-                    Catalog.absorb(mainEntry, sameLength && rare ? entry : { ...entry, copies: [], kept_intact: false });
+                    // ... or, however often seen, exactly as long as the main content with its layout shared: a page
+                    // revised on the air changes length, while a recording whose packets are often misread (WCBS April
+                    // 1985) gathers its spliced copies, which keep the length, into a content of their own
+                    const spliced = sameLength && sharesLayout;
+                    if (rare ? lostBytes < 27 && !sharesLayout : (lostBytes < 27 || !damagedLayout) && !spliced) return;
+                    // Its copies only fill the room the main content's own copies leave: appended, they would push the
+                    // main content's out of the 64 kept (CBS 1984-02-27 page 041: 46 copies with a block of packets
+                    // misplaced outvoted the page's good ones)
+                    Catalog.absorb(mainEntry, { ...entry, copies: [], kept_intact: false });
+                    if (sameLength && rare && !mainEntry.kept_intact) {
+                        for (const copy of entry.copies) {
+                            if (mainEntry.copies.length >= MAX_COPIES) break;
+                            mainEntry.copies.push(copy);
+                        }
+                    }
                     joined[index] = true;
                 });
                 const renumbered = [];
@@ -1794,7 +2168,7 @@
             const singleDigitNeighbor = (index) => {
                 let found = null;
                 for (let other = 0; other < entries.length; other++) {
-                    if (!trusted[other]) continue;
+                    if (!trusted[other] || misnamed[other] !== null) continue;
                     let differences = 0;
                     for (let d = 0; d < digits[index].length && differences <= 1; d++) {
                         if (digits[index][d] !== digits[other][d]) differences++;
@@ -1805,7 +2179,25 @@
                 }
                 return found;
             };
-            const anchor = [...trusted];
+            // JS-only: a page named as transmitted only once or twice, whose bytes are another named page's (nine in
+            // ten agreeing) seen ten times as often under the same version, its address a digit away, is that page
+            // with its address misread past what the header's code caught (CBS 1984-02-27: a copy of page 009 read as
+            // 029, where the real page 029 lost its header)
+            const misnamed = entries.map((entry, i) => {
+                if (!trusted[i] || entry.seen > MISNAMED_MAX_SEEN || entry.intact_n > 0) return null;
+                let found = null;
+                entries.forEach((other, j) => {
+                    if (j === i || !trusted[j] || other.channel !== entry.channel || other.version !== entry.version ||
+                        other.seen < MISNAMED_SEEN_RATIO * entry.seen) return;
+                    let differences = 0;
+                    for (let d = 0; d < digits[i].length; d++) if (digits[i][d] !== digits[j][d]) differences++;
+                    if (differences !== 1) return;
+                    if (views[i][0].length !== views[j][0].length || !(agreementOf(i, j) >= MISNAMED_AGREEMENT)) return;
+                    if (found === null || other.seen > entries[found].seen) found = j;
+                });
+                return found;
+            });
+            const anchor = trusted.map((isTrusted, i) => isTrusted && misnamed[i] === null);
             const untrusted = entries.map((_, i) => i).filter((i) => !trusted[i])
                 .sort((x, y) => entries[y].seen - entries[x].seen);
             const verdicts = new Array(entries.length).fill(null);
@@ -1859,6 +2251,12 @@
             });
             for (const u of untrusted) if (verdicts[u][0] === 'fold' && misaddressed[verdicts[u][1]]) verdicts[u] = ['drop'];
             entries.forEach((entry, i) => {
+                if (misnamed[i] === null || misaddressed[misnamed[i]]) return;
+                Catalog.foldInto(entries[misnamed[i]], entry);
+                result.folded++;
+                this.removeEntry(keys[i]);
+            });
+            entries.forEach((entry, i) => {
                 if (trusted[i] || misaddressed[i]) return;
                 const [action, target] = verdicts[i];
                 if (action === 'keep') { entry.unconfirmed = true; result.kept++; return; }
@@ -1882,7 +2280,7 @@
                 b.seen - a.seen || a.content - b.content);
             const rank = new Map(), confusions = new Map(), readingsOf = new Map();
             const built = entries.map((entry) => {
-                const { copies, representative, types, types_att, voteCache, ...fields } = entry;
+                const { copies, representative, types, types_att, voteCache, intactReadings, spareCopies, intactCopies, ...fields } = entry;
                 const record = { ...fields };
                 const hasAttested = entry.attested_n > 0;
                 const voters = hasAttested ? entry.attested_n : entry.seen;
@@ -1896,7 +2294,12 @@
                 rank.set(identity, (rank.get(identity) || 0) + 1);
                 record.edition = rank.get(identity);
                 record.editions = (this.identities.get(Catalog.identityKey(entry)) || [0]).length;
-                if (copies.length) {
+                const intactVote = entry.intactDisagree ? Catalog.votedIntact(entry) : null;
+                if (intactVote) {
+                    record.data = intactVote;
+                    record.present = new Array(intactVote.length).fill(2);
+                    record.copies_voted = 0;
+                } else if (copies.length) {
                     const [data, present, ties, contested, alternatives] = Catalog.votedCopies(entry);
                     if (alternatives && alternatives.length) readingsOf.set(record, alternatives);
                     record.data = ties && ties.length ? settleTiesByGrammar(data, ties) : data;
@@ -1908,6 +2311,8 @@
                         }
                     }
                     record.present = present;
+                } else if (entry.kept_intact && record.data && entry.spareCopies && isPresentation(record.type)) {
+                    record.data = Catalog.overruledIntact(record.data, entry.spareCopies);
                 }
                 record.addr_text = !entry.long_form ? addressText(entry.address) : toHex(entry.address, 9);
                 record.purpose = reservedPurpose(entry.channel, entry.address);
@@ -1925,6 +2330,28 @@
                 }
             }
             for (const list of partners.values()) list.sort((p, q) => q[1] - p[1]);
+            // Every run of SWAP_EVIDENCE bytes the recording's pages hold, to confirm a command put right
+            const runs = new Map();
+            const runAt = (data, from) => String.fromCharCode(...data.slice(from, from + SWAP_EVIDENCE).map((byte) => byte & 0x7F));
+            built.forEach((record, index) => {
+                if (!record.data || !isPresentation(record.type)) return;
+                for (let i = 0; i + SWAP_EVIDENCE <= record.data.length; i++) {
+                    const run = runAt(record.data, i);
+                    if (!runs.has(run)) runs.set(run, index);
+                    else if (runs.get(run) !== index) runs.set(run, -1);
+                }
+            });
+            built.forEach((record, index) => {
+                if (!record.data || !record.data.length || !isPresentation(record.type)) return;
+                // A record kept from an intact copy is repaired only where its parity bit and bit 6 were swapped,
+                // which its packets' checks can't catch
+                if (!record.copies_voted) { record.data = repairByHighBitSwap(record.data); return; }
+                const seenElsewhere = (trial, from) => {
+                    const holder = runs.get(runAt(trial, from));
+                    return holder !== undefined && holder !== index;
+                };
+                record.data = repairByHighBitSwap(repairBySwappedBits(repairBySelfTemplate(record.data), seenElsewhere));
+            });
             if (partners.size) {
                 for (const record of built) {
                     if (record.copies_voted && record.data && record.data.length && isPresentation(record.type)) {
@@ -1933,6 +2360,7 @@
                 }
             }
             settleWordsByVocabulary(built, readingsOf);
+            settleSystematicMisreads(built);
             return built;
         }
     }
@@ -2726,6 +3154,24 @@
     const SPACING_FACTORS = [1.0, 1.25, 1.5, 1.0], ROW_SPACING_FACTORS = [1.0, 1.25, 1.5, 2.0];
     const PATH_DIRECTIONS = [[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0]];
 
+    // An area as [left, right, bottom, top]; a character field's extent from its origin as [x0, x1, y0, y1], by
+    // rotation (decode-orc PR #328)
+    const UNIT_SCREEN_AREA = [0.0, 1.0, 0.0, 1.0], FIELD_EDGE_TOLERANCE = 1e-9;
+    const fieldExtent = (text) => {
+        const width = Math.abs(text.field[0]), height = Math.abs(text.field[1]);
+        return [[0, width, 0, height], [-height, 0, 0, width], [-width, 0, -height, 0], [0, height, -width, 0]][text.rotation & 3];
+    };
+    /** Whether a move to `next` in the direction (stepX, stepY) keeps the field inside `area` along that axis. */
+    const moveFits = ([left, right, bottom, top], [x, y], [x0, x1, y0, y1], stepX, stepY) => {
+        const fitsX = x + x0 >= left - FIELD_EDGE_TOLERANCE && x + x1 <= right + FIELD_EDGE_TOLERANCE;
+        const fitsY = y + y0 >= bottom - FIELD_EDGE_TOLERANCE && y + y1 <= top + FIELD_EDGE_TOLERANCE;
+        return (stepX === 0 || fitsX) && (stepY === 0 || fitsY);
+    };
+    /** `at` moved along (dx, dy), one of them zero, to put the field against that edge of `area`. */
+    const againstEdge = ([x, y], [left, right, bottom, top], [x0, x1, y0, y1], dx, dy) => [
+        dx < 0 ? left - x0 : dx > 0 ? right - x1 : x,
+        dy < 0 ? bottom - y0 : dy > 0 ? top - y1 : y];
+
     // Proportional spacing (inter-character spacing code 3) as T.101 Annex D's Addendum, clause 11, has it
     // (decode-orc PR #328). Width classes 0 (narrowest) to 9 (full width), by row 0-15 and column 2-7 of the
     // primary (Table 1/T.101) and supplementary (Table 2/T.101) sets; 7/15 is not a character.
@@ -2992,6 +3438,7 @@
             this.color = new ColorState();
             this.field_origin = [0.0, 0.0];
             this.field_size = [1.0, 1.0];
+            this.cellAddressed = false;
             this.cursor = this.home();
             this.dp = [0.0, 0.0];                     // drawing point
             this.blink = new Array(16).fill(null);
@@ -3036,6 +3483,7 @@
 
         /** Interpret one record's NAPLPS bytes. keepDisplay draws over the previous record (a "More" chain). */
         run(recordBytes, keepDisplay = false) {
+            this.cellAddressed = isCellAddressed(recordBytes);
             this.lint = 0;                            // grammar problems, for settling tied votes
             this.lintSevere = 0;
             this.firstSevereAt = -1;
@@ -3430,9 +3878,10 @@
             this.pendingMarkClass = -1;
             const field = this.text.field;
             if (referencePixels(field[0]) < SMALLEST_FIELD_COLUMNS) cls = FULL_WIDTH_CLASS;
+            let displacement = proportionalDisplacement(cls, field[0]);
             if (!atMark && field[0] > 0) {
                 const codePoint = supplementary ? FONT.SUPPLEMENTARY.codePointAt(byte - 0x20) : byte;
-                const offset = inkOffset(codePoint, field);
+                const extent = inkExtent(codePoint, field, this.decoderFont), offset = extent ? extent[0] / 256 : 0;
                 if (offset) {
                     const [x, y] = character.origin;
                     character.origin = [
@@ -3440,8 +3889,15 @@
                         [y, y - offset, y, y + offset][this.text.rotation & 3]];
                     character.points = [character.origin];
                 }
+                // JS-only: Table 1's widths fit the receivers' own narrow letters; a face whose letters are wider runs
+                // them together (the default misc-fixed draws "l" 3 pixels wide where the class gives it 2, and at
+                // double size "e" 10 wide where the class gives it 9). The next letter starts clear of this one's
+                // ink: a pixel clear at double size or more, and at least not over it at normal size, where a pixel
+                // more for every letter would run the lines past their ends (KCBS 1986's proportional headings read
+                // "Tylenol" and "Shuttle" with their letters run together)
+                if (extent) displacement = Math.max(displacement, (extent[1] - extent[0] + 1 + (extent[2] > 1 ? 1 : 0)) / 256);
             }
-            return proportionalDisplacement(cls, field[0]);
+            return displacement;
         }
 
         /** The operand bytes that follow a PDI opcode. */
@@ -3494,6 +3950,9 @@
             else if (opcode === 0x38) this.pdiField(operands);
             else this.pdiIncremental(opcode, operands, operandBytes);
             if (operands.truncated) this.noteProblem();
+            // JS-only: a line, arc, rectangle or polygon with no operands draws nothing; as received it is nearly
+            // always an operand misread as a command (CBS 1984-02-27 reads 0x5C as 0x3C: "RECT 3C 7F 79")
+            else if (this.checkingOnly && opcode >= 0x28 && opcode <= 0x37 && !operandBytes.length) this.noteProblem();
         }
 
         pdiReset(operands) {
@@ -3529,6 +3988,7 @@
 
         pdiDomain(operands) {
             if (operands.empty()) return;
+            const formerFormat = this.fmt, formerPel = this.pel;
             const first = operands.fixed();
             this.fmt = [(first & 3) + 1, ((first >> 2) & 7) + 1, !!((first >> 5) & 1)];
             if (operands.empty()) return;
@@ -3537,6 +3997,15 @@
             if (this.fmt[1] < 3 && operands.remaining() === 3) this.fmt[1] = 3;
             operands.format = [...this.fmt];
             this.pel = operands.coord();
+            // JS-only: a DOMAIN with bytes left over after its pel doesn't fit its own header, and is set aside whole,
+            // as the receiver it was authored on evidently did: the EVTV "IS AT THE WHEREHOUSE!" ad (CBS 1985-06-29)
+            // sends one whose pel would be 84 by 13 pixels, which sweeps every outline across the page, and its
+            // design (navy panels on orange) shows only with the pel left as it was
+            if (!operands.empty()) {
+                this.fmt = formerFormat;
+                this.pel = formerPel;
+                if (this.checkingOnly) this.noteProblem();
+            }
         }
 
         pdiText(operands) {
@@ -3861,7 +4330,7 @@
 
         emit(prim) {
             if (this.collecting === 'drcs' || this.collecting === 'mask') { this.drawIntoDefinition(prim); return; }
-            if (this.checkingOnly && prim.kind !== 'char' && prim.points.some(([x, y]) => !(x > -1 / 256 && x < 1 + 1 / 256 && y > -1 / 256 && y < 1 + 1 / 256))) this.noteOffScreen();
+            if (this.checkingOnly && prim.kind !== 'char' && prim.points.some(([x, y]) => (prim.kind === 'rect' ? !(x >= -1 / 256 && x <= 1 + 1 / 256 && y >= -1 / 256 && y <= 1 + 1 / 256) : !(x > -1 / 256 && x < 1 + 1 / 256 && y > -1 / 256 && y < 1 + 1 / 256)))) this.noteOffScreen();
             if (this.classicPace) {
                 // The original nominal drawing speed: the figure appears at once, then a fixed time per kind of figure
                 this.snapState();
@@ -3906,6 +4375,16 @@
             }
         }
 
+        /** The area the cursor is confined to: the active field where the character field at the cursor lies in it. */
+        confiningArea(extent) {
+            const [originX, originY] = this.field_origin, [sizeX, sizeY] = this.field_size;
+            if (originX === 0 && originY === 0 && sizeX === 1 && sizeY === 1) return UNIT_SCREEN_AREA;
+            const shiftX = sizeX < 0 ? 1 / 256 : 0, shiftY = sizeY < 0 ? 1 / 256 : 0;
+            const field = [Math.min(originX, originX + sizeX) + shiftX, Math.max(originX, originX + sizeX) + shiftX,
+            Math.min(originY, originY + sizeY) + shiftY, Math.max(originY, originY + sizeY) + shiftY];
+            return moveFits(field, this.cursor, extent, 1, 1) ? field : UNIT_SCREEN_AREA;
+        }
+
         moveCursor(point) {
             this.wrap = 0;
             this.cursor = clampToScreen(point);
@@ -3917,8 +4396,18 @@
             // JS-only: a character steps a whole number of reference pixels, the field's width truncated to them, as
             // the pages show the receivers did: the default 1/40 field steps 6/256, not 6.4/256, which is what
             // lets index lines laid out to 42 columns (WIVB's "....p1") end inside their boxes instead of wrapping
-            const characterStep = Math.max(1, referencePixels(horizontal ? text.field[0] : text.field[1])) / 256 * SPACING_FACTORS[text.ics & 3];
-            const rowStep = Math.abs(horizontal ? text.field[1] : text.field[0]) * ROW_SPACING_FACTORS[text.irs & 3];
+            // Turned 90 or 270 degrees, the field's height lies across the screen and its width up it, so those are
+            // what a movement along x or y is measured by (§5.3.2.3.4 "depending on the character path and character
+            // rotation", decode-orc PR #328): WCIA 1990's network names run up the side of its TV listings
+            // JS-only: a record that places its text by row and column (NSR or APS with a position) is laid out on
+            // the grid of whole character fields those address, so there a character steps the field exactly and the
+            // row stays on that grid: WCBS 1983-04-13 fills 40 columns of 1/40 edge to edge, which whole-pixel steps
+            // ended at pixel 240, leaving a black strip down the right of every page
+            const turned = (text.rotation & 1) === 1;
+            const across = turned ? text.field[1] : text.field[0], up = turned ? text.field[0] : text.field[1];
+            const pathExtent = Math.abs(horizontal ? across : up);
+            const characterStep = (this.cellAddressed ? pathExtent : Math.max(1, referencePixels(pathExtent)) / 256) * SPACING_FACTORS[text.ics & 3];
+            const rowStep = Math.abs(horizontal ? up : across) * ROW_SPACING_FACTORS[text.irs & 3];
             let distance = (direction === 'fwd' || direction === 'back') ? characterStep : rowStep;
             if (direction === 'fwd' && along > 0) distance = along;
             // APB and APF in proportional text step the full-width class (clause 11.1)
@@ -3929,8 +4418,22 @@
             }[direction];
             let newX = this.cursor[0] + stepX * distance, newY = this.cursor[1] + stepY * distance;
             const rightEdge = this.field_origin[0] + Math.abs(this.field_size[0]);
-            const wrapped = direction === 'fwd' && text.path === 0 && newX + Math.abs(text.field[0]) > rightEdge + 1e-9;
+            let wrapped = direction === 'fwd' && text.path === 0 && newX + Math.abs(text.field[0]) > rightEdge + 1e-9;
             if (wrapped) { newX = this.field_origin[0]; newY -= rowStep; }
+            // Along the other paths, a character that would leave the active field (where the cursor's field lies
+            // in it) or the unit screen wraps the same way: back to the edge the path starts from, then one row on
+            // (§5.3.2.3.6, decode-orc PR #328). KLFY 1991-06-29's "Premium Channels" footnote is sent on the upward
+            // path its rotated channel names used, into a FIELD one row high, so each letter wraps to the next
+            // "row", which on that path is one field to the right, and the footnote reads across the screen
+            else if (direction === 'fwd' && text.path !== 0) {
+                const extent = fieldExtent(text), area = this.confiningArea(extent);
+                if (!moveFits(area, [newX, newY], extent, stepX, stepY)) {
+                    const [startX, startY] = againstEdge(this.cursor, area, extent, -pathX, -pathY);
+                    newX = startX + pathY * rowStep;
+                    newY = startY - pathX * rowStep;
+                    wrapped = true;
+                }
+            }
             this.moveCursor([newX, newY]);
             if (wrapped) this.wrap = 1;
         }
@@ -4217,6 +4720,24 @@
     const GLYPH_INDEX = new Map(FONT.CODES.map((codePoint, index) => [codePoint, index]));
 
     /** Whole cells of the reference receiver (256 across the unit screen) an extent covers (decode-orc PR #328). */
+    /**
+     * JS-only: whether a record lays its text out by row and column, addressing CELL_ADDRESSED_POSITIONS places or
+     * more with NSR or APS (WCBS 1983-04-13 positions each of its rows so); the NSR at the home position that most
+     * records begin with doesn't count. Control codes never occur as operands or text, so the bytes are just scanned.
+     */
+    const CELL_ADDRESSED_POSITIONS = 4;
+    const isCellAddressed = (bytes) => {
+        const positions = new Set();
+        for (let i = 0; i + 2 < bytes.length; i++) {
+            const code = bytes[i] & 0x7F, row = bytes[i + 1] & 0x7F, column = bytes[i + 2] & 0x7F;
+            if (code === NSR && row >= 0x40 && column >= 0x40) positions.add((row & 0x3F) * 64 + (column & 0x3F));
+            else if (code === APS && row >= 0x20 && column >= 0x20) positions.add((row - 32) * 64 + (column - 32));
+            else continue;
+            if (positions.size >= CELL_ADDRESSED_POSITIONS) return true;
+        }
+        return false;
+    };
+
     const referencePixels = (extent) => Math.floor(Math.abs(extent) * 256 + 1e-6);
     const SMALLEST_FIELD_COLUMNS = 6, SMALLEST_FIELD_ROWS = 8;     // Table D1 items 2 and 5(g)
 
@@ -4359,19 +4880,27 @@
      * How far into its field a proportionally spaced character's ink starts: the columns its pattern leaves blank
      * before the ink, where the reference receiver drew it (decode-orc PR #328). Zero for a character with no ink.
      */
-    const inkOffset = (codePoint, field) => {
+    /**
+     * Where a character's ink lies across its field, in reference pixels as it is drawn: [first column, last column,
+     * the face's pixel width] — in the decoder font when one is chosen (laid from the field's edge), else in the
+     * receivers' face (centred) — or null for a character with no ink.
+     */
+    const inkExtent = (codePoint, field, decoderFont = null) => {
         const columns = Math.max(1, referencePixels(field[0])), rows = Math.max(1, referencePixels(field[1]));
-        const face = chooseFace(256, columns, rows), width = face[1];
-        const pattern = facePattern(face, codePoint);
-        if (!pattern) return 0;
-        let firstLit = width;
+        const choice = decoderFont ? chooseDecoderFace(decoderFont, codePoint, columns, rows) : null;
+        const face = choice ? null : chooseFace(256, columns, rows);
+        const width = choice ? choice.face.w : face[1], pattern = choice ? choice.rows : facePattern(face, codePoint);
+        if (!pattern) return null;
+        let firstLit = width, lastLit = -1;
         for (const bits of pattern) {
-            for (let column = 0; column < firstLit; column++) if ((bits >> (width - 1 - column)) & 1) { firstLit = column; break; }
+            for (let column = 0; column < width; column++) {
+                if ((bits >> (width - 1 - column)) & 1) { firstLit = Math.min(firstLit, column); lastLit = Math.max(lastLit, column); }
+            }
         }
-        if (firstLit >= width) return 0;
-        const scale = columns >= width ? Math.floor(columns / width) : 1;
-        const firstColumn = columns >= width ? Math.floor((columns - scale * width) / 2) : 0;
-        return (firstColumn + firstLit * scale) / 256;
+        if (lastLit < 0) return null;
+        const scale = choice ? Math.max(1, Math.floor(choice.scaleX)) : (columns >= width ? Math.floor(columns / width) : 1);
+        const firstColumn = !choice && columns >= width ? Math.floor((columns - scale * width) / 2) : 0;
+        return [firstColumn + firstLit * scale, firstColumn + (lastLit + 1) * scale - 1, scale];
     };
     const layRows = (image, place, face, rows) => layPattern(image, place, face[1], face[2], (column, row) => (rows[row] >> (face[1] - 1 - column)) & 1);
     const layFacePattern = (image, face, place, codePoint) => {
@@ -5152,6 +5681,197 @@
         }
     }
 
+    // * * * SVG export (after decode-orc PR #328's catalogue_svg_document) * * *
+    /*
+    * A page as an SVG document drawn from the receiver's cells: each run of cells one ink covers is a rectangle, so
+    * the document is the screen the Player paints, as vectors. Animated, it plays the presentation with SMIL (SVG 1.1
+    * §19), which a web browser runs with no script:
+    *   - what each moment of the page's drawing adds (the cells it changed) is a group kept hidden until then;
+    *   - a fill or clear a receiver swept onto the screen is revealed through a clip that grows over the sweep;
+    *   - an ink whose color changes (a color-map change, a blink process) paints from a one-stop gradient whose stop
+    *     color follows the ink's track, and the blinking repeats forever once the page is drawn.
+    * Still, it is the finished page with blinking colors in their "on" phase, as the PNGs show it.
+    */
+    const SVG_WIDTH = 1536, SVG_HEIGHT = 1152, MAX_TRACK_STEPS = 4000;
+    const hexColor = (color) => `#${colorToRgb(color).map((level) => level.toString(16).padStart(2, '0')).join('')}`;
+    const svgTime = (seconds) => `${Math.max(0, Math.round(seconds * 1000)) / 1000}s`;
+
+    /** The rectangles (x, y, width, height, ink id) covering the cells `wanted` picks out, y counted down from the top. */
+    const cellRectangles = (cells, width, height, wanted) => {
+        const rectangles = [], open = new Map();          // run key "x,w,ink" → rectangle still growing downward
+        for (let y = 0; y < height; y++) {
+            const row = height - 1 - y, runs = new Map();
+            for (let x = 0; x < width;) {
+                const at = row * width + x;
+                if (!wanted(at)) { x++; continue; }
+                const ink = Math.max(0, cells[at]);
+                let end = x + 1;
+                while (end < width && wanted(row * width + end) && Math.max(0, cells[row * width + end]) === ink) end++;
+                const key = `${x},${end - x},${ink}`, growing = open.get(key);
+                if (growing && growing[1] + growing[3] === y) { growing[3]++; runs.set(key, growing); }
+                else { const rectangle = [x, y, end - x, 1, ink]; rectangles.push(rectangle); runs.set(key, rectangle); }
+                x = end;
+            }
+            open.clear();
+            for (const [key, rectangle] of runs) open.set(key, rectangle);
+        }
+        return rectangles;
+    };
+
+    /**
+     * An ink's color over time: [[time, color], …] up to `loopStart`, then (if it blinks for good) one period of
+     * `loop` repeated forever from `loopStart`.
+     */
+    const inkTrack = (player, ink, states) => {
+        const steps = [];
+        const add = (time, color) => { if (!steps.length || steps[steps.length - 1][1] !== color) steps.push([time, color]); };
+        const processOf = () => {
+            if (ink[0] === 'k') return ink[5] && ink[6] ? [ink[5], ink[6], ink[7], ink[8]] : null;
+            const address = pythonMod(ink[0] === 'm' ? ink[1] : ink[2], 16), process = player.blink[address];
+            return process && process[2] && process[3] ? [process[2], process[3], process[4], process[5]] : null;
+        };
+        const colorAt = (time) => player.colorOf(ink, time);
+        let loop = null;
+        states.forEach(([from, map, blink], index) => {
+            const to = index + 1 < states.length ? states[index + 1][0] : Infinity;
+            player.map = map; player.blink = blink;
+            add(from, colorAt(from));
+            const process = processOf();
+            if (!process) return;
+            const [on, off, delay, start] = process, period = 0.1 * (on + off), first = start + 0.1 * delay;
+            // The toggles inside this stretch: on at first + k·period, off a tenth·on later
+            let k = Math.max(0, Math.floor((from - first) / period));
+            for (; steps.length < MAX_TRACK_STEPS; k++) {
+                const onAt = first + k * period, offAt = onAt + 0.1 * on;
+                if (to === Infinity && onAt >= from) {
+                    loop = { start: onAt, period, on: colorAt(onAt + 1e-6), off: colorAt(offAt + 1e-6), onShare: on / (on + off) };
+                    return;
+                }
+                if (onAt >= to) return;
+                if (onAt >= from) add(onAt, colorAt(onAt + 1e-6));
+                if (offAt >= from && offAt < to) add(offAt, colorAt(offAt + 1e-6));
+            }
+        });
+        if (loop && loop.on === loop.off) loop = null;
+        return { steps, loop };
+    };
+
+    const pageSVG = (page, [gridWidth, gridHeight] = [256, 200], { font = null, animated = true, title = '' } = {}) => {
+        const player = new Player(page, [gridWidth, gridHeight], { font });
+        const escapeText = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const head = `<svg xmlns="http://www.w3.org/2000/svg" width="${SVG_WIDTH}" height="${SVG_HEIGHT}" ` +
+            `viewBox="0 0 ${gridWidth} ${gridHeight}" preserveAspectRatio="none" shape-rendering="crispEdges">` +
+            (title ? `<title>${escapeText(title)}</title>` : '');
+        const drawRectangles = (rectangles, fillOf) => rectangles.map(([x, y, width, height, ink]) =>
+            `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fillOf(ink)}"/>`).join('');
+        if (!animated) {
+            player.advance(null);
+            const palette = player.inks.map((ink) => hexColor(player.colorOf(ink, null)));
+            const cells = player.surf.cells;
+            return `${head}${drawRectangles(cellRectangles(cells, gridWidth, gridHeight, () => true), (ink) => palette[ink])}</svg>`;
+        }
+
+        // Play the page event by event, the way Player.advance does, noting what each moment changed
+        const layers = [], states = [[0, [...player.map], [...player.blink]]];
+        const options = { pen: (ink) => player.pen(ink) };
+        const events = player.events;
+        let previous = new Int32Array(player.surf.cells), current = null;
+        const scale = gridHeight / DISPLAY_HEIGHT;
+        const flush = () => {
+            if (!current) return;
+            const cells = player.surf.cells, changed = (at) => cells[at] !== previous[at];
+            const rectangles = cellRectangles(cells, gridWidth, gridHeight, changed);
+            if (rectangles.length) layers.push({ ...current, rectangles });
+            previous = new Int32Array(cells);
+            current = null;
+        };
+        for (const [type, at, payload] of events) {
+            if (type === 'map' || type === 'blink') {
+                if (type === 'map') player.map = payload; else player.blink = payload;
+                const state = [at, [...player.map], [...player.blink]];
+                if (states[states.length - 1][0] === at) states[states.length - 1] = state; else states.push(state);
+                continue;
+            }
+            const duration = type === 'clear' ? payload || 0 : type === 'p' ? payload.draw || 0 : 0;
+            const rows = type === 'clear' ? [0, DISPLAY_HEIGHT] : type === 'p' && duration > 0 ? paceFillRows(payload) : null;
+            const swept = page.sweep && rows && duration > 0;
+            const begin = swept ? at - duration : at;
+            if (swept || !current || current.sweep || current.begin !== begin) flush();
+            if (type === 'p') drawPrimitive(player.rasteriser, payload, page, options);
+            else if (type === 'clear') player._newSurface();
+            if (!current) current = { begin };
+            if (swept) {
+                current.sweep = {
+                    end: at, up: page.sweep === 'up',
+                    low: Math.max(0, Math.floor(rows[0] * scale)), high: Math.min(gridHeight, Math.ceil(rows[1] * scale))
+                };
+                flush();
+            }
+        }
+        flush();
+        // A sweep is cut short by whatever is drawn next, as the Player cuts it
+        layers.forEach((layer, index) => {
+            if (layer.sweep && index + 1 < layers.length) layer.sweep.cut = layers[index + 1].begin;
+        });
+
+        // Inks: a fixed color, or a gradient whose stop follows the ink's track
+        const definitions = [], fills = player.inks.map((ink, id) => {
+            const { steps, loop } = inkTrack(player, ink, states);
+            if (steps.length === 1 && !loop) return hexColor(steps[0][1]);
+            const name = `ink${id}`;
+            let animations = '';
+            const introEnd = loop ? loop.start : steps[steps.length - 1][0];
+            if (steps.length > 1 && introEnd > 0) {
+                const keyTimes = steps.map(([time]) => Math.min(1, time / introEnd).toFixed(5)).join(';');
+                animations += `<animate attributeName="stop-color" calcMode="discrete" dur="${svgTime(introEnd)}" fill="freeze" ` +
+                    `values="${steps.map(([, color]) => hexColor(color)).join(';')}" keyTimes="${keyTimes}"/>`;
+            }
+            if (loop) {
+                animations += `<animate attributeName="stop-color" calcMode="discrete" begin="${svgTime(loop.start)}" ` +
+                    `dur="${svgTime(loop.period)}" repeatCount="indefinite" values="${hexColor(loop.on)};${hexColor(loop.off)}" ` +
+                    `keyTimes="0;${loop.onShare.toFixed(5)}"/>`;
+            }
+            definitions.push(`<linearGradient id="${name}"><stop offset="0" stop-color="${hexColor(steps[0][1])}">${animations}</stop></linearGradient>`);
+            return `url(#${name})`;
+        });
+
+        const body = layers.map((layer, index) => {
+            let opening = '<g', inner = '', clip = '';
+            if (layer.begin > 0) {
+                opening += ' visibility="hidden"';
+                inner += `<set attributeName="visibility" to="visible" begin="${svgTime(layer.begin)}" fill="freeze"/>`;
+            }
+            if (layer.sweep) {
+                // The band the sweep crosses grows from its starting edge; the rows outside it show at once
+                const { low, high, up, end, cut } = layer.sweep, top = gridHeight - high, bottom = gridHeight - low;
+                const stop = cut !== undefined && cut < end ? cut : end, span = high - low, length = end - layer.begin;
+                // Row by row as the Player shows it: sweeping up, k rows are in once the sweep is past (k − 1) / span of
+                // its time; sweeping down, once it is past k / span
+                const fraction = Math.min(1, (stop - layer.begin) / Math.max(1e-6, length)), lag = up ? 1 : 0;
+                const heights = [], keyTimes = [];
+                for (let k = up ? 1 : 0; k <= span && (k - lag) / span <= fraction; k++) {
+                    heights.push(k);
+                    keyTimes.push(Math.min(1, ((k - lag) / span) / Math.max(1e-6, fraction)).toFixed(5));
+                }
+                if (!heights.length) { heights.push(0); keyTimes.push('0'); }
+                const step = (attribute, values) => `<animate attributeName="${attribute}" calcMode="discrete" ` +
+                    `values="${values.join(';')}" keyTimes="${keyTimes.join(';')}" begin="${svgTime(layer.begin)}" ` +
+                    `dur="${svgTime(Math.max(0.001, stop - layer.begin))}" fill="freeze"/>`;
+                const finish = (attribute, to) => (stop < end ? `<set attributeName="${attribute}" to="${to}" begin="${svgTime(stop)}" fill="freeze"/>` : '');
+                const band = up
+                    ? `<rect x="0" y="${bottom}" width="${gridWidth}" height="0">${step('y', heights.map((k) => bottom - k))}` +
+                    `${step('height', heights)}${finish('y', top)}${finish('height', span)}</rect>`
+                    : `<rect x="0" y="${top}" width="${gridWidth}" height="0">${step('height', heights)}${finish('height', span)}</rect>`;
+                clip = `<clipPath id="sweep${index}"><rect x="0" y="0" width="${gridWidth}" height="${top}"/>` +
+                    `<rect x="0" y="${bottom}" width="${gridWidth}" height="${gridHeight - bottom}"/>${band}</clipPath>`;
+                opening += ` clip-path="url(#sweep${index})"`;
+            }
+            return `${clip}${opening}>${inner}${drawRectangles(layer.rectangles, (ink) => fills[ink])}</g>`;
+        }).join('');
+        // The screen starts black
+        return `${head}<defs>${definitions.join('')}</defs><rect width="${gridWidth}" height="${gridHeight}" fill="#000000"/>${body}</svg>`;
+    };
+
     // * * * Page text, as it remains on screen (for search and screen readers) * * *
     // * A later character replaces an earlier one in the same place, a filled rectangle wipes text under it, and drop shadows (the same text a pixel away) are not repeated.
     const pageText = (page) => {
@@ -5207,13 +5927,65 @@
     const isPresentation = (recordType) => recordType === 0 || recordType === 1 || recordType === 3;
 
     /** A .t33 file → the record catalog and a summary. */
+    const CONTINUITY_LOOKAHEAD = 8;
+    /** The next data packet on `channel` among the packets after this one, or null. */
+    const nextOnChannel = (queue, channel) => {
+        for (const packet of queue) if (packet.valid && packet.channel === channel) return packet.sync ? null : packet;
+        return null;
+    };
+    const correctContinuity = (packet, queue, assembler) => {
+        if (!packet.valid || packet.sync) return;
+        const open = assembler.openGroups.get(packet.channel);
+        if (open) {
+            const expected = (open.lastIndex + 1) % 16;
+            if (packet.ci === expected) return;
+            const next = nextOnChannel(queue, packet.channel), after = next && nextOnChannel(queue.slice(queue.indexOf(next) + 1), packet.channel);
+            // ... when its channel number was read cleanly (a packet out of step with a damaged channel number is as
+            // likely another channel's, misaddressed here), its index byte is at most three bits from the expected
+            // one's (a two-bit misread; further off, it's another group's packet) and the two packets after it follow on
+            if (packet.attested && next && next.ci === (expected + 1) % 16 && after && after.ci === (expected + 2) % 16 &&
+                countSetBits(packet.ci_byte ^ HAMMING_CODEWORDS[expected]) <= 3) {
+                packet.ci = expected;
+                packet.ci_byte = HAMMING_CODEWORDS[expected];
+                assembler.stats.ci_misreads = (assembler.stats.ci_misreads || 0) + 1;
+            }
+            return;
+        }
+        // A packet on a channel with no group open, its channel number not read cleanly, that takes up exactly where
+        // a group open on another channel left off (and that channel's next packet follows it) is that group's
+        if (packet.attested) return;
+        for (const [channel, group] of assembler.openGroups) {
+            // Its channel number read two bits or less from that channel's
+            const distance = [0, 1, 2].reduce((sum, k) => sum + countSetBits(packet.prefix[k] ^ HAMMING_CODEWORDS[(channel >> (8 - 4 * k)) & 0xF]), 0);
+            if (distance > 2) continue;
+            const expected = (group.lastIndex + 1) % 16;
+            if (packet.ci !== expected) continue;
+            const next = nextOnChannel(queue, channel);
+            if (!next || next.ci !== (expected + 1) % 16) continue;
+            packet.channel = channel;
+            assembler.stats.channel_misreads = (assembler.stats.channel_misreads || 0) + 1;
+            return;
+        }
+    };
+
     const catalogStream = (bytes, packetCount, lowNibbleFirst, catalog, onProgress, salvage = null) => {
         const messages = [];
         const recordAssembler = new RecordAssembler((message) => messages.push(message));
         const groupAssembler = new GroupAssembler((group) => recordAssembler.add(group), false, lowNibbleFirst);
         if (salvage) groupAssembler.onLoose = (run) => salvage.add(run);
+        // JS-only: a .t33 is read whole, so each packet is judged with the next few in view. A continuity index or
+        // channel number misread past what its Hamming code corrects (WSBT 1984: a quarter of a group's packets) made
+        // the group take the packet for a jump of many lost packets, close early, and leave the rest of its packets
+        // with no group (seven in ten of that recording's packets). Where the packet's channel's next packet carries
+        // the index after the one expected, the packet is the one expected
+        const queue = [];
+        const decodeAt = (index) => decodePacket(bytes.subarray(index * PACKET_SIZE, (index + 1) * PACKET_SIZE));
+        for (let i = 0; i < Math.min(packetCount, CONTINUITY_LOOKAHEAD); i++) queue.push(decodeAt(i));
         for (let i = 0; i < packetCount; i++) {
-            groupAssembler.add(decodePacket(bytes.subarray(i * PACKET_SIZE, (i + 1) * PACKET_SIZE)));
+            const packet = queue.shift();
+            if (i + CONTINUITY_LOOKAHEAD < packetCount) queue.push(decodeAt(i + CONTINUITY_LOOKAHEAD));
+            correctContinuity(packet, queue, groupAssembler);
+            groupAssembler.add(packet);
             if (messages.length) {
                 for (const message of messages) catalog.merge(message);
                 messages.length = 0;
@@ -5628,7 +6400,7 @@
     const flagsText = (record) => FLAG_LABELS.filter(([flag]) => record.flags[flag]).map(([, label]) => label).join(', ');
 
     return {
-        readT33, interpret, Player, Interpreter, pageText,
+        readT33, interpret, Player, Interpreter, pageText, pageSVG,
         decoderFonts: () => loadDecoderFonts(), recordLabel, recordName, flagsText,
         addressText, isPresentation, rgb: colorToRgb, DEFAULT_MAP, DISPLAY_H: DISPLAY_HEIGHT,
         GRIDS: { '256 × 200 (receiver)': [256, 200], '512 × 400': [512, 400], '768 × 600': [768, 600] },

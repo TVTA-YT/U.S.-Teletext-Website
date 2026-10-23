@@ -7,6 +7,9 @@
     // Images exported from the site's teletext editor
     const EDITOR_PATTERN = /^(?:P|Page-)(\d{3})-([0-9A-F]{4})(?:-subpage-(\d+))?(?:-version-(\d+)-of-(\d+))?$/i;
 
+    // Images named like "100_0000_v3" (page_subcode_vVersion)
+    const UNDERSCORE_PATTERN = /^(\d{3})_([0-9A-F]{4})(?:_v(\d+))?$/i;
+
     // Load 30 thumbnail images per requests
     const IMAGES_PER_LOAD = 30;
 
@@ -314,6 +317,30 @@
 
                 // Sort by subcode first, then subpage (P110-0000, P110-0000-subpage-1, P110-0000-subpage-2, Page-110-0000-version-1-of-2, P110-0001, etc)
                 subIndex: parseInt(subcode, 16) * 1000000 + subpageNumber * 1000 + versionNumber,
+                collapse: false,
+            };
+        }
+
+        const underscoreMatch = UNDERSCORE_PATTERN.exec(nameNoExt);
+
+        // This is used for images named like "100_0000_v3" (page, subcode, version)
+        if (underscoreMatch) {
+            const [, page, subcode, version] = underscoreMatch;
+            const versionNumber = version !== undefined ? parseInt(version, 10) : 0;
+            const hasSubcode = subcode !== "0000";
+
+            // e.g. "100 v3", "100/0001 v2", or just "100"
+            let displayNumber = page;
+            if (hasSubcode) displayNumber += `/${subcode.toUpperCase()}`;
+            if (versionNumber) displayNumber += ` v${versionNumber}`;
+
+            return {
+                kind: "underscore",
+                pageNumber: parseInt(page, 10),
+                displayNumber,
+
+                // Sort by subcode first, then version (100_0000_v1, 100_0000_v2, 100_0001_v1, etc.)
+                subIndex: parseInt(subcode, 16) * 1000 + versionNumber,
                 collapse: false,
             };
         }
