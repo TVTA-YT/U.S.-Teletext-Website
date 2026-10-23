@@ -1,6 +1,7 @@
-/*! nabts.js — NABTS (.t33) stream decoder and NAPLPS page renderer/animator for the browser.
- * JavaScript port of pages/nabts.py from AssunaYuuki's Teletext Rescue, itself a port of decode-orc
- * (orc/plugins/stages/nabts_sink). Licence: GPL-3.0-or-later (inherited from decode-orc).
+/*
+~ nabts.js — NABTS (.t33) stream decoder and NAPLPS page renderer/animator for the browser.
+ ~ JavaScript port of NABTS code used by Decode-Orc, specifically pull request 328.
+ * Licence: GPL-3.0-or-later (inherited from decode-orc).
  * See https://github.com/decode-orc/decode-orc
  */
 ((globalScope, createLibrary) => {
@@ -1013,7 +1014,7 @@
      * read the second stroke of its "W" logo's 0x58 as 0x28, LINE, which broke the stroke and drew a line off the
      * screen; two held 0x58, as the stroke repeated 32 bytes on has it).
      */
-    const MAX_CONTESTED_TRIALS = 24;
+    const MAX_CONTESTED_TRIALS = 24, TIE_SETTLE_MIN_COPIES = 8;
     const settleContestedByGrammar = (data, contested) => {
         let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
         if (!bestProblems) return data;
@@ -1093,25 +1094,55 @@
      * opcode and three operand bytes), twice a record at most (pages 094 to 096: a background rectangle that lost its size, drawing them
      * black instead of gray).
      */
-    const MAX_SWAP_TRIALS = 24, MAX_SWAPS = 2, SWAP_EVIDENCE = 4;
-    const repairBySwappedBits = (data, seenElsewhere) => {
+    const MAX_SWAP_TRIALS = 24, MAX_SWAPS = 2, SWAP_EVIDENCE = 4, SWAP_LOOKBACK = 4, SWAP_UNEVIDENCED_GAIN = 2;
+    const repairBySwappedBits = (data, seenElsewhere, unevidenced = false) => {
         let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
         if (!bestProblems) return data;
+        const isCommand = (k) => (best[k] & 0x7F) >= 0x20 && (best[k] & 0x7F) <= 0x3F;
+        // The bytes a problem may come from, each with the runs that must hold it elsewhere in the recording
+        const candidatesFor = (problemAt) => {
+            const candidates = [], command = best[problemAt] & 0x7F;
+            // The byte just after a drawing command left with no operands
+            if (command >= 0x28 && command <= 0x37 && problemAt + 1 < best.length && isCommand(problemAt + 1)) {
+                candidates.push({ at: problemAt + 1, evidenceFrom: [problemAt], lookedBack: false });
+            }
+            const runsAround = (at) => [at - 3, at - 2, at - 1, at].filter((from) => from >= 0);
+            // JS-only: the command byte at the problem itself, where it came straight after an operand: it may be the
+            // operand that went on (CBS 1984-10-02's second copy of page 008: POINT SET 0x4B read as 0x2B, LINE, which
+            // moved the REAGAN story and piled its first lines along the bottom)
+            if (problemAt >= 1 && isCommand(problemAt) && (best[problemAt - 1] & 0x7F) >= 0x40) {
+                candidates.push({ at: problemAt, evidenceFrom: runsAround(problemAt), lookedBack: false });
+            }
+            // JS-only: a few bytes before the problem, a command byte straight after another command, which may be
+            // the first one's operand (Finance on CBS 1984-10-02: POINT SET 0x4A read as 0x2A, twice, drew the "N" of
+            // its title askew and a stray line across the page)
+            for (let k = problemAt - 1; k >= Math.max(1, problemAt - SWAP_LOOKBACK); k--) {
+                if (isCommand(k) && isCommand(k - 1)) { candidates.push({ at: k, evidenceFrom: runsAround(k), lookedBack: true }); break; }
+            }
+            return candidates;
+        };
         let trials = 0, swaps = 0;
+        const tried = new Set();
         for (const problemAt of problemsAt) {
-            if (trials >= MAX_SWAP_TRIALS || !bestProblems) break;
-            // Only the byte just after a drawing command left with no operands, and two such bytes a record at most
-            const command = best[problemAt] & 0x7F, at = problemAt + 1;
-            if (command < 0x28 || command > 0x37 || at >= best.length || swaps >= MAX_SWAPS) continue;
-            const value = best[at] & 0x7F;
-            if (value < 0x20 || value > 0x3F) continue;
-            trials++;
-            const trial = [...best];
-            trial[at] = withOddParity(value ^ 0x60);
-            // The command as put right must be one the recording sends elsewhere, byte for byte
-            if (!seenElsewhere(trial, problemAt)) continue;
-            const [severe, problems] = grammarProblems(trial);
-            if (severe <= bestSevere && problems < bestProblems) { best = trial; bestSevere = severe; bestProblems = problems; swaps++; }
+            if (trials >= MAX_SWAP_TRIALS || !bestProblems || swaps >= MAX_SWAPS) break;
+            for (const { at, evidenceFrom, lookedBack } of candidatesFor(problemAt)) {
+                if (tried.has(at) || trials >= MAX_SWAP_TRIALS) continue;
+                tried.add(at);
+                trials++;
+                const trial = [...best];
+                trial[at] = withOddParity((best[at] & 0x7F) ^ 0x60);
+                // The command as put right must be one the recording sends elsewhere, byte for byte; a swap found by
+                // looking back may do without in a record kept from an intact copy, where it takes two problems or more
+                // away (a title drawn once); a voted record leaves such bytes to the recording's own confusions
+                const evidenced = evidenceFrom.some((from) => seenElsewhere(trial, from));
+                if (!evidenced && !(lookedBack && unevidenced)) continue;
+                const [severe, problems] = grammarProblems(trial);
+                const gain = bestProblems - problems;
+                if (severe <= bestSevere && gain > 0 && (evidenced || gain >= SWAP_UNEVIDENCED_GAIN)) {
+                    best = trial; bestSevere = severe; bestProblems = problems; swaps++;
+                    break;
+                }
+            }
         }
         return best;
     };
@@ -1125,20 +1156,34 @@
      * byte on the "Lone Justice" ad made 340 problems, and the poster drew as abstract shapes) and adds no severe one.
      */
     const MAX_HIGH_SWAPS = 8, HIGH_SWAP_LOOKBACK = 3, HIGH_SWAP_TRIALS = 48, HIGH_SWAP_MIN_GAIN = 8, HIGH_SWAP_LEFT = 3;
-    const repairByHighBitSwap = (data) => {
+    // JS-only: the swap the other way turns SI or SO (0x8F, 0x8E) into "O" or "N" (0x4F, 0x4E), and the text after it
+    // runs as drawing commands, its spaces as RESETs, until the grammar breaks a phrase later (CBS 1984-10-02 page
+    // 005: "News Update (cont.)" cleared the screen, leaving the page black)
+    const SHIFT_SWAP_LOOKBACK = 24, SHIFT_SWAP_VETO_COPIES = 8;
+    const highSwapped = (byte) => {
+        if ((byte & 0xC0) === 0x80 && (byte & 0x7F) >= 0x20 && (byte & 0x7F) <= 0x3F) return (byte & 0x3F) | 0x40;
+        if (byte === 0x4E || byte === 0x4F) return byte ^ 0xC0;
+        return null;
+    };
+    const repairByHighBitSwap = (data, ruledOut = null) => {
         let best = data, [bestSevere, bestProblems, , problemsAt] = grammarProblems(data);
         let trials = 0;
         for (let swaps = 0; swaps < MAX_HIGH_SWAPS && bestProblems > 0 && trials < HIGH_SWAP_TRIALS; swaps++) {
             let improved = false;
             const tried = new Set();
             for (const problemAt of problemsAt.slice(0, 16)) {
-                for (let at = Math.max(0, problemAt - HIGH_SWAP_LOOKBACK); at <= problemAt && at < best.length; at++) {
-                    const byte = best[at], value = byte & 0x7F;
-                    if (tried.has(at) || (byte & 0xC0) !== 0x80 || value < 0x20 || value > 0x3F) continue;
+                for (let at = Math.max(0, problemAt - SHIFT_SWAP_LOOKBACK); at <= problemAt && at < best.length; at++) {
+                    const byte = best[at], swapped = highSwapped(byte);
+                    if (tried.has(at) || swapped === null) continue;
+                    if (byte & 0x80 && at < problemAt - HIGH_SWAP_LOOKBACK) continue;
+                    // An SI or SO is not put back where many copies received the byte and none as that: an "O" they
+                    // all agree on is an operand (CBS 1984-01-02's Hollywood Hotline: all 133 copies read 0x4F, and as
+                    // SI it ran the page's drawing code out as text)
+                    if (!(byte & 0x80) && ruledOut && ruledOut(at, swapped)) continue;
                     tried.add(at);
                     if (++trials > HIGH_SWAP_TRIALS) break;
                     const trial = [...best];
-                    trial[at] = (byte & 0x3F) | 0x40;
+                    trial[at] = swapped;
                     const [severe, problems, , at2] = grammarProblems(trial);
                     if (severe <= bestSevere && bestProblems - problems >= Math.max(HIGH_SWAP_MIN_GAIN, bestProblems / 4) &&
                         problems <= Math.max(HIGH_SWAP_LEFT, bestProblems / 20)) {
@@ -1433,7 +1478,7 @@
     const PAGE_DIFFERENCE_VOUCHED_BYTES = 6, PAGE_DIFFERENCE_VOUCHED_PERCENT = 8, DISPLACEMENT_CONTEXT = 3, DISPLACEMENT_REACH = 96;
     const IDENTITY_MIN_JUDGED = 48, MISREAD_VERSION_RATIO = 20, MISREAD_VERSION_MIN_MAIN = 20, MISREAD_VERSION_AGREEMENT = 0.9;
     const MISADDRESSED_SEEN_RATIO = 4, SAME_IDENTITY_CONTENT = 0.5;
-    const OVERRULE_MIN_COPIES = 3;
+    const OVERRULE_MIN_COPIES = 3, OVERRULE_SHARE = 0.9;
     const MISNAMED_MAX_SEEN = 2, MISNAMED_SEEN_RATIO = 10, MISNAMED_AGREEMENT = 0.9;
 
     /** A copy's bytes as the content comparisons read them: each byte where it arrived passing parity, else -1. */
@@ -1946,14 +1991,19 @@
             if (others.length < OVERRULE_MIN_COPIES) return data;
             let result = data;
             for (let i = 0; i < data.length; i++) {
-                const first = others[0][0][i];
-                if (first === data[i]) continue;
-                let agree = 0;
+                // The reading most of the copies that received the byte hold, where nine in ten hold it (all of them,
+                // where there are only a few: a stray reading or two among dozens of copies is a tape's noise)
+                const counts = new Map();
+                let received = 0;
                 for (const [held, present] of others) {
-                    if (!present[i] || held[i] !== first) { agree = -1; break; }
-                    agree++;
+                    if (!present[i] || !ODD_PARITY[held[i] & 0xFF]) continue;     // a reading failing parity is no vote
+                    received++;
+                    counts.set(held[i], (counts.get(held[i]) || 0) + 1);
                 }
-                if (agree < OVERRULE_MIN_COPIES || !ODD_PARITY[first & 0xFF]) continue;
+                let first = null, agree = 0;
+                for (const [value, count] of counts) if (count > agree) { first = value; agree = count; }
+                if (first === null || first === data[i]) continue;
+                if (agree < OVERRULE_MIN_COPIES || agree < received * OVERRULE_SHARE || !ODD_PARITY[first & 0xFF]) continue;
                 if (result === data) result = [...data];
                 result[i] = first;
             }
@@ -1989,6 +2039,11 @@
             if (source.kept_intact && !target.kept_intact) {
                 for (const field of ['type', 'records', 'complete', 'data', 'present', 'representative', 'more_address',
                     'kept_rank', 'kept_intact', 'kept_whole', 'long_form']) target[field] = source[field];
+                // JS-only: the copies the target held are kept aside, to overrule the intact copy where they agree
+                // on another reading (CBS 1984-10-02's Weather Watch: the 185 copies reading a polygon's "b" and DEL
+                // were set aside for one intact copy that read TEXT and SELECT COLOR there, and the page drew in
+                // the wrong colors)
+                target.spareCopies = target.copies.concat(source.spareCopies || []).slice(-MAX_COPIES);
                 target.copies = [];
             } else if (!target.kept_intact) {
                 target.copies = target.copies.concat(source.copies);
@@ -2278,10 +2333,11 @@
             // numbers them in order of arrival instead)
             entries.sort((a, b) => a.channel - b.channel || a.address - b.address || a.version - b.version ||
                 b.seen - a.seen || a.content - b.content);
-            const rank = new Map(), confusions = new Map(), readingsOf = new Map();
+            const rank = new Map(), confusions = new Map(), readingsOf = new Map(), entryOf = new Map();
             const built = entries.map((entry) => {
                 const { copies, representative, types, types_att, voteCache, intactReadings, spareCopies, intactCopies, ...fields } = entry;
                 const record = { ...fields };
+                entryOf.set(record, entry);
                 const hasAttested = entry.attested_n > 0;
                 const voters = hasAttested ? entry.attested_n : entry.seen;
                 const flagCounts = hasAttested ? entry.flags_att : entry.flags_set;
@@ -2303,6 +2359,14 @@
                     const [data, present, ties, contested, alternatives] = Catalog.votedCopies(entry);
                     if (alternatives && alternatives.length) readingsOf.set(record, alternatives);
                     record.data = ties && ties.length ? settleTiesByGrammar(data, ties) : data;
+                    // JS-only: a byte the copies split evenly on is settled by the grammar as an outvoted reading is,
+                    // where no severe problem called for it (CBS 1984-10-02's Kids' Time: POINT SET 0x24 or DC4 0x14,
+                    // 29 copies each, and the menu under its title was drawn off the top of the screen)
+                    if (ties && ties.length && copies.length >= TIE_SETTLE_MIN_COPIES && isPresentation(record.type)) {
+                        const tiedPairs = ties.filter(([position]) => record.data[position] === data[position])
+                            .map(([position, [winner, other]]) => [position, [winner, other]]);
+                        if (tiedPairs.length) record.data = settleContestedByGrammar(record.data, tiedPairs);
+                    }
                     if (contested && contested.length && isPresentation(record.type)) {
                         record.data = settleContestedByMotif(settleContestedByGrammar(record.data, contested), contested);
                         for (const [, [winner, runnerUp]] of contested) {
@@ -2343,14 +2407,30 @@
             });
             built.forEach((record, index) => {
                 if (!record.data || !record.data.length || !isPresentation(record.type)) return;
-                // A record kept from an intact copy is repaired only where its parity bit and bit 6 were swapped,
-                // which its packets' checks can't catch
-                if (!record.copies_voted) { record.data = repairByHighBitSwap(record.data); return; }
                 const seenElsewhere = (trial, from) => {
                     const holder = runs.get(runAt(trial, from));
                     return holder !== undefined && holder !== index;
                 };
-                record.data = repairByHighBitSwap(repairBySwappedBits(repairBySelfTemplate(record.data), seenElsewhere));
+                // A record kept from an intact copy is repaired only where bits were swapped, which its packets'
+                // checks can't catch: the parity bit and bit 6, or bits 6 and 5 where another record holds the result
+                // Whether some copy of the record received `value` at `at`
+                const entry = entryOf.get(record);
+                // Whether the copies rule a reading out: SHIFT_SWAP_VETO_COPIES or more received the byte, and none as
+                // `value` (a misread shared by every copy is a thing of a record seen two or three times)
+                const kept = [entry.copies, entry.spareCopies, entry.intactCopies].filter((list) => list && list.length);
+                const ruledOut = !kept.length ? null : (at, value) => {
+                    let received = 0;
+                    for (const list of kept) {
+                        for (const [copyData, copyPresent] of list) {
+                            if (copyPresent && !copyPresent[at]) continue;
+                            if (copyData[at] === value) return false;
+                            received++;
+                        }
+                    }
+                    return received >= SHIFT_SWAP_VETO_COPIES;
+                };
+                if (!record.copies_voted) { record.data = repairByHighBitSwap(repairBySwappedBits(record.data, seenElsewhere, true), ruledOut); return; }
+                record.data = repairByHighBitSwap(repairBySwappedBits(repairBySelfTemplate(record.data), seenElsewhere), ruledOut);
             });
             if (partners.size) {
                 for (const record of built) {
@@ -2668,9 +2748,13 @@
                     const at = offset + i;
                     if (at < 0 || at >= record.data.length || !salvageUsable(run.data, run.present, i)) continue;
                     if (present[at] !== 0) continue;              // the vote settled this byte, and a run is one reading
-                    // JS-only: a single reading never supplies a control code (a misread 0x4C read as 0x0C would clear
-                    // the screen); the hole is left for the interpreter, which reads past it
-                    if ((run.data[i] & 0x7F) < 0x20) continue;
+                    // JS-only: a single reading never supplies a clear screen or CAN (a misread 0x4C read as 0x0C would
+                    // clear the screen); the hole is left for the interpreter, which reads past it. Other controls -- the
+                    // shifts, line ends and cursor moves pages are full of -- are filled as decode-orc fills them, or a
+                    // hole holding one is never filled whole (CBS 1984-01-02, a tape missing one packet in eight from
+                    // its groups: its pages came out stacked and scrambled where decode-orc's are clean)
+                    const code = run.data[i] & 0x7F;
+                    if (code === 0x0C || code === 0x18) continue;
                     fills.push(i);
                 }
                 for (const i of salvageVouchedFills(run, record, offset, fills)) {
@@ -6341,7 +6425,7 @@
             predecessor.set(`${record.channel},${successor}`, record);
         }
         // A sub-page (address not ending in 00) that no page continues is drawn over the nearest lower page
-        // of its group, as a receiver showed it (Teletext Rescue 1.2; CBS 1992 page 402 after 401)
+        // of its group, as a receiver showed it (CBS 1992 page 402 after 401)
         for (const record of latestByAddress.values()) {
             const key = `${record.channel},${record.address}`;
             if (record.address % 256 === 0 || predecessor.has(key)) continue;

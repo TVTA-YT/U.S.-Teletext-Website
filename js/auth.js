@@ -77,8 +77,11 @@ function getCookie(request, name) {
 ! Secure: HTTPS only.
 ! SameSite=Lax: Not sent on cross-site POSTs
 */
-function sessionCookie(value, maxAge) {
-    return `${COOKIE_NAME}=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
+function sessionCookie(value, maxAge, env) {
+    // Secure everywhere the site runs on https (the live site). Left off only for local testing on http://localhost,
+    // because Safari throws away Secure cookies there and sign-in would loop back to the start
+    const secure = String(siteOrigins(env)[0] ?? "").startsWith("http://") ? "" : " Secure;";
+    return `${COOKIE_NAME}=${value}; Path=/; HttpOnly;${secure} SameSite=Lax; Max-Age=${maxAge}`;
 }
 
 function siteOrigins(env) {
@@ -149,15 +152,24 @@ async function sendLoginEmail(env, to, link) {
         return;
     }
 
+    // Expiry time in Eastern Time, e.g. "3:15 AM ET". Makes each email's text different, so Gmail doesn't hide it as repeated
+    const expiresAt = new Date(Date.now() + TOKEN_TTL_SECONDS * 1000).toLocaleTimeString("en-US", {
+        timeZone: "America/New_York", hour: "numeric", minute: "2-digit"
+    });
+
     const subject = "Sign-in link for NATA";
-    const text = `Use this link to sign in to the North American Teletext Archive:\n\n${link}\n\nThe link works once and expires in 15 minutes. If you didn't request it, you can ignore this email.`;
+    const text = `Use this link to sign in to the North American Teletext Archive:\n\n${link}\n\nThe link works once and expires at ${expiresAt} ET (15 minutes after it was sent). If you didn't request it, you can ignore this email.`;
     const html = `<p>Use this link to sign in to the North American Teletext Archive:</p>
 <p><a href="${link}">Sign in to nateletext.com</a></p>
-<p>The link works once and expires in 15 minutes. If you didn't request it, you can ignore this email.</p>`;
+<p>The link works once and expires at ${expiresAt} ET (15 minutes after it was sent). If you didn't request it, you can ignore this email.</p>`;
+
+    // A unique ID on every email stops Gmail from grouping sign-in emails into one conversation
+    // and collapsing the newer ones (they'd look empty, with only a "..." button)
+    const headers = { "X-Entity-Ref-ID": crypto.randomUUID() };
 
     // ^ Option 1: Cloudflare Email Service (send_email binding named "EMAIL")
     if (env.EMAIL) {
-        await env.EMAIL.send({ from: env.EMAIL_FROM, to, subject, text, html });
+        await env.EMAIL.send({ from: env.EMAIL_FROM, to, subject, text, html, headers });
         return;
     }
 
@@ -166,7 +178,7 @@ async function sendLoginEmail(env, to, link) {
         const response = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: { "Authorization": `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ from: env.EMAIL_FROM, to: [to], subject, text, html })
+            body: JSON.stringify({ from: env.EMAIL_FROM, to: [to], subject, text, html, headers })
         });
 
         if (!response.ok) throw new Error(`Resend returned HTTP ${response.status}`);
@@ -251,7 +263,7 @@ async function verifyLink(request, env) {
         env.DB.prepare(`UPDATE users SET last_login_at = datetime('now') WHERE id = ?`).bind(user.id)
     ]);
 
-    return authJson({ ok: true, needsName: user.name_status === "none" }, 200, sessionCookie(sessionID, SESSION_TTL_SECONDS));
+    return authJson({ ok: true, needsName: user.name_status === "none" }, 200, sessionCookie(sessionID, SESSION_TTL_SECONDS, env));
 }
 
 // & Do this if the name already appear in the "Recovered_By" column anywhere on the site
@@ -323,7 +335,7 @@ async function logout(request, env) {
     }
 
     // Max-Age=0 tells the browser to delete the cookie
-    return authJson({ ok: true }, 200, sessionCookie("", 0));
+    return authJson({ ok: true }, 200, sessionCookie("", 0, env));
 }
 
 // & Used by the submission form (auto-fill) and the site header (signed in / signed out)
@@ -344,7 +356,9 @@ async function me(request, env) {
     });
 }
 
-// & Called by the submission form right before it sends everything to Formspree
+// & Called by the submission form right before it sends everything to Formspree.
+// * Rows start as "uploading" and stay hidden until the form confirms Formspree accepted the upload,
+// * so a refused or interrupted upload never shows up as "Received" on My Samples or the admin dashboard
 async function logSubmission(request, env) {
     const user = await getSessionUser(request, env);
     if (!user) return authJson({ error: "You're not signed in." }, 401);
@@ -363,10 +377,15 @@ async function logSubmission(request, env) {
     // Decided here from the account setting, not taken from the form, so it can't be changed in the browser
     const credit = creditName(user);
 
+    // Clear out this account's uploads that never finished (browser closed mid-upload) more than a day ago
+    const cleanup = env.DB.prepare(`
+        DELETE FROM submissions WHERE user_id = ? AND status = 'uploading' AND submitted_at < datetime('now', '-1 day')
+    `).bind(user.id);
+
     // One row per sample, all written together
     const statements = samples.map(sample => env.DB.prepare(`
-        INSERT INTO submissions (ref, user_id, credit_as, network, service, sample_date, program_title, tape_type, tape_speed, file_name)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO submissions (ref, user_id, credit_as, network, service, sample_date, program_title, tape_type, tape_speed, file_name, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'uploading')
     `).bind(
         ref,
         user.id,
@@ -380,15 +399,36 @@ async function logSubmission(request, env) {
         cleanField(sample?.fileName, limits.fileName)
     ));
 
-    await env.DB.batch(statements);
+    await env.DB.batch([cleanup, ...statements]);
     return authJson({ ok: true, ref, name: user.name, creditName: credit });
+}
+
+// & After Formspree accepts the upload: "uploading" -> "received" (now visible on My Samples and the admin dashboard).
+// & After Formspree refuses it: the rows are removed.
+async function finishSubmission(request, env, accepted) {
+    const user = await getSessionUser(request, env);
+    if (!user) return authJson({ error: "You're not signed in." }, 401);
+
+    const body = await readJson(request);
+    const ref = String(body?.ref ?? "").trim().toUpperCase();
+    if (!REF_PATTERN.test(ref)) return authJson({ error: "Invalid reference code" }, 400);
+
+    // Only this account's own rows, and only while still "uploading", so finished submissions can't be changed here
+    const statement = accepted
+        ? env.DB.prepare(`UPDATE submissions SET status = 'received' WHERE ref = ? AND user_id = ? AND status = 'uploading' RETURNING id`)
+        : env.DB.prepare(`DELETE FROM submissions WHERE ref = ? AND user_id = ? AND status = 'uploading' RETURNING id`);
+
+    const { results } = await statement.bind(ref, user.id).all();
+    if (!results?.length) return authJson({ error: "No upload in progress with that reference code" }, 404);
+
+    return authJson({ ok: true, ref, samples: results.length });
 }
 
 async function getUserSubmissions(db, userID) {
     const { results } = await db.prepare(`
         SELECT ref, submitted_at, credit_as, network, service, sample_date, program_title, tape_type, tape_speed, file_name, status
         FROM submissions
-        WHERE user_id = ?
+        WHERE user_id = ? AND status != 'uploading'
         ORDER BY submitted_at DESC, id ASC
     `).bind(userID).all();
 
@@ -396,7 +436,7 @@ async function getUserSubmissions(db, userID) {
 }
 
 // & Logged submissions, plus every record across every dataset whose "Recovered_By" matches the user's name
-async function mySubmissions(request, env, tables) {
+async function mySamples(request, env, tables) {
     const user = await getSessionUser(request, env);
     if (!user) return authJson({ error: "You're not signed in." }, 401);
 
@@ -467,7 +507,7 @@ async function setSubmissionStatus(url, env) {
     if (!REF_PATTERN.test(ref)) return authJson({ error: "Invalid reference code" }, 400);
     if (!SUBMISSION_STATUSES.includes(status)) return authJson({ error: `Status must be one of: ${SUBMISSION_STATUSES.join(", ")}` }, 400);
 
-    const { results } = await env.DB.prepare(`UPDATE submissions SET status = ? WHERE ref = ? RETURNING id`).bind(status, ref).all();
+    const { results } = await env.DB.prepare(`UPDATE submissions SET status = ? WHERE ref = ? AND status != 'uploading' RETURNING id`).bind(status, ref).all();
     if (!results?.length) return authJson({ error: "No submission with that reference code" }, 404);
 
     return authJson({ ok: true, ref, status, samplesUpdated: results.length });
@@ -487,11 +527,13 @@ export async function handleAuth(request, env, tables) {
             if (path === "/api/auth/logout") return await logout(request, env);
             if (path === "/api/auth/submissions") return await logSubmission(request, env);
             if (path === "/api/auth/anonymous") return await setAnonymous(request, env);
+            if (path === "/api/auth/submissions/confirm") return await finishSubmission(request, env, true);
+            if (path === "/api/auth/submissions/cancel") return await finishSubmission(request, env, false);
         }
 
         if (request.method === "GET") {
             if (path === "/api/auth/me") return await me(request, env);
-            if (path === "/api/auth/my-submissions") return await mySubmissions(request, env, tables);
+            if (path === "/api/auth/my-samples") return await mySamples(request, env, tables);
             if (path === "/api/auth/admin/approve-name") return await approveName(url, env);
             if (path === "/api/auth/admin/submission-status") return await setSubmissionStatus(url, env);
         }
@@ -553,7 +595,8 @@ async function adminSubmissions(url, env) {
         return authJson({ error: `Status must be all or one of: ${SUBMISSION_STATUSES.join(", ")}` }, 400);
     }
 
-    const filter = status === "all" ? "" : "WHERE s.status = ?";
+    // "All" still leaves out uploads that never finished; those files never reached Formspree
+    const filter = status === "all" ? "WHERE s.status != 'uploading'" : "WHERE s.status = ?";
 
     // Pick the newest reference codes first, then load every sample under them
     const { results } = await env.DB.prepare(`
@@ -621,7 +664,7 @@ async function adminSetSubmissionStatus(request, env) {
     if (!REF_PATTERN.test(ref)) return authJson({ error: "Invalid reference code" }, 400);
     if (!SUBMISSION_STATUSES.includes(status)) return authJson({ error: `Status must be one of: ${SUBMISSION_STATUSES.join(", ")}` }, 400);
 
-    const { results } = await env.DB.prepare(`UPDATE submissions SET status = ? WHERE ref = ? RETURNING id`).bind(status, ref).all();
+    const { results } = await env.DB.prepare(`UPDATE submissions SET status = ? WHERE ref = ? AND status != 'uploading' RETURNING id`).bind(status, ref).all();
     if (!results?.length) return authJson({ error: "No submission with that reference code" }, 404);
 
     return authJson({ ok: true, ref, status, samplesUpdated: results.length });

@@ -38,6 +38,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const FILE_FIELD_NAMES = ['submissionFile'];
 
+    // Formspree's limits: 25 MB per file, 10 files per submission, 100 MB for the whole request.
+    // The total is kept a little under 100 MB to leave room for the rest of the form
+    const MB = 1024 * 1024;
+    const MAX_FILE_BYTES = 25 * MB;
+    const MAX_FILES = 10;
+    const MAX_TOTAL_BYTES = 95 * MB;
+
+    const statusEl = document.getElementById('submit-status');
+    const progressEl = document.getElementById('upload-progress');
+    const progressBar = progressEl.querySelector('.progress-bar');
+
+    function formatSize(bytes) {
+        return bytes >= MB ? `${(bytes / MB).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    }
+
+    // Messages are announced by screen readers (role="status" in submissions.html)
+    function showSubmitStatus(message, type = 'info', extra = null) {
+        statusEl.className = message ? `alert alert-${type} mb-3` : 'mb-3';
+        statusEl.replaceChildren(...(message ? [message] : []), ...(extra ? [extra] : []));
+    }
+
+    function setProgress(percent) {
+        const value = Math.max(0, Math.min(100, Math.round(percent)));
+        progressEl.hidden = false;
+        progressEl.setAttribute('aria-valuenow', String(value));
+        progressBar.style.width = `${value}%`;
+        progressBar.textContent = `${value}%`;
+    }
+
+    function hideProgress() {
+        setProgress(0);
+        progressEl.hidden = true;
+    }
+
+    // Problems with a list of samples before anything is sent; returns a message, or null if it's fine
+    function checkSampleLimits(list) {
+        const files = list.map(s => s.submissionFile).filter(Boolean);
+        const tooBig = files.find(file => file.size > MAX_FILE_BYTES);
+
+        if (tooBig) {
+            return `"${tooBig.name}" is ${formatSize(tooBig.size)}. Files can be up to 25 MB each. ` +
+                'Please split them into smaller uploads if possible..';
+        }
+
+        if (files.length > MAX_FILES) {
+            return `There are ${files.length} files. Up to ${MAX_FILES} can be sent at once, so please submit the rest separately.`;
+        }
+
+        const total = files.reduce((sum, file) => sum + file.size, 0);
+        if (total > MAX_TOTAL_BYTES) {
+            return `These files total ${formatSize(total)}. Up to 95 MB can be sent at once. Please submit them in smaller batches.`;
+        }
+
+        return null;
+    }
+
     // Signed-in contributor with a confirmed name, or null (anyone can still submit without an account)
     let account = null;
     const nameInput = document.getElementById('sumbissionName');
@@ -264,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const networkLabel = s.network === 'Other' ? s.otherNetwork : s.network;
             const serviceLabel = s.service === 'Other' || !s.service ? s.otherService : s.service;
-            const fileLabel = s.submissionFile ? s.submissionFile.name : 'No file attached';
+            const fileLabel = s.submissionFile ? `${s.submissionFile.name} (${formatSize(s.submissionFile.size)})` : 'No file attached';
 
             // Sample row label (i.e. CBS - ExtraVision - "Program Title")
             row.innerHTML = `
@@ -291,6 +347,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = readCurrentFields();
 
+        // Catch files Formspree would refuse now, instead of after a long upload
+        const updatedList = editingIndex !== null
+            ? samples.map((s, i) => (i === editingIndex ? data : s))
+            : [...samples, data];
+        const problem = checkSampleLimits(updatedList);
+
+        if (problem) {
+            showSubmitStatus(problem, 'warning');
+            return;
+        }
+
+        showSubmitStatus('');
+
         if (editingIndex !== null) {
             samples[editingIndex] = data;
             editingIndex = null;
@@ -307,13 +376,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = form.querySelector('button[type="submit"]');
 
     // Strip the "required" attribute from those specific elements after a submission is added to the list.
+    // They're remembered so they can be put back if the page stays open (e.g. after a failed upload)
+    let strippedRequired = [];
+
     submitBtn.addEventListener('click', () => {
         if (samples.length === 0) return;
 
-        fieldsContainer.querySelectorAll('[required]').forEach(el => {
+        strippedRequired = Array.from(fieldsContainer.querySelectorAll('[required]'));
+        strippedRequired.forEach(el => {
             el.required = false;
         });
     });
+
+    function restoreRequired() {
+        strippedRequired.forEach(el => { el.required = true; });
+        strippedRequired = [];
+    }
 
     // Trigger all delete or edit buttons for each sample (if multiple)
     summaryEl.addEventListener('click', (e) => {
@@ -425,14 +503,95 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    /* SENDING TO FORMSPREE */
+
+    // Sends the form to Formspree in the background, with upload progress.
+    // Resolves to { ok, status, message } and never throws
+    function sendToFormspree(formData) {
+        return new Promise(resolve => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action);
+
+            // Asks Formspree for a JSON answer instead of its "thank you" page
+            xhr.setRequestHeader('Accept', 'application/json');
+
+            xhr.upload.addEventListener('progress', event => {
+                if (event.lengthComputable) setProgress((event.loaded / event.total) * 100);
+            });
+
+            xhr.addEventListener('load', () => {
+                let body = {};
+                try { body = JSON.parse(xhr.responseText || '{}'); } catch { /* Cloudflare error pages aren't JSON */ }
+
+                const formspreeMessage = Array.isArray(body.errors)
+                    ? body.errors.map(error => error.message).filter(Boolean).join(' ')
+                    : (body.error || '');
+
+                resolve({ ok: xhr.status >= 200 && xhr.status < 300, status: xhr.status, message: formspreeMessage });
+            });
+
+            // No answer at all: offline, or the upload was cut off (often because it was too large or too slow)
+            xhr.addEventListener('error', () => resolve({ ok: false, status: 0, message: '' }));
+            xhr.addEventListener('timeout', () => resolve({ ok: false, status: 0, message: '' }));
+
+            xhr.send(formData);
+        });
+    }
+
+    // A clear explanation for each way Formspree can refuse an upload
+    function failureMessage(result) {
+        if (result.status === 413) {
+            return 'The uploaded file(s) is/are too large to be processed by the backend. Please submit fewer or smaller files at a time (up to 25 MB each, 95 MB in total).';
+        }
+        if (result.status === 429) {
+            return 'Too many submissions were sent in a short time. Please wait a few minutes and try again.';
+        }
+        if (result.status === 0) {
+            return 'The upload didn\'t finish. Check your connection and try again. Large uploads on slow connections can time out. Try submitting fewer files at a time.';
+        }
+        if (result.status === 403 && !result.message) {
+            return 'The anti-spam check didn\'t pass. Please complete the check above the Submit button again and resubmit.';
+        }
+
+        const detail = result.message ? `: ${result.message.trim().replace(/[.!?]?$/, '.')}` : '.';
+        return `The submission couldn't be sent${detail} Please try again.`;
+    }
+
+    // Single-use anti-spam token: needs a fresh one after every attempt
+    function resetTurnstile() {
+        try { window.turnstile?.reset(); } catch { /* widget not on the page */ }
+    }
+
+    function finishAttempt() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Form';
+        restoreRequired();
+        resetTurnstile();
+    }
+
     // Stop form submission if there are no samples
     form.addEventListener('submit', async (e) => {
+        // Sent in the background (below), so the page stays open and can report the result
+        e.preventDefault();
+
         // Display alert if no sample is added to the list
         if (samples.length === 0) {
-            e.preventDefault();
+            restoreRequired();
             alert('Please add at least one sample to the list before submitting.');
             return;
         }
+
+        const problem = checkSampleLimits(samples);
+        if (problem) {
+            restoreRequired();
+            showSubmitStatus(problem, 'warning');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+        showSubmitStatus('Uploading your submission. Please keep this page open until it finishes.', 'info');
+        setProgress(0);
 
         hiddenFieldsContainer.innerHTML = '';
         samples.forEach(s => {
@@ -454,35 +613,67 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Not signed in: Formspree receives the form exactly as before
-        if (!account) return;
+        // Signed in: reserve a reference code on the account first. It stays hidden ("uploading")
+        // until Formspree accepts the upload. A failure here never blocks the submission itself
+        let logged = null;
 
-        // Signed in: record the samples on the account first, then send everything to Formspree.
-        // A failure here never blocks the submission itself; it just won't appear on My Submissions.
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting…';
+        if (account) {
+            const result = await window.NatAccount.post('/api/auth/submissions', { samples: samples.map(toLogEntry) });
+            logged = result.ok ? result : null;
 
-        const result = await window.NatAccount.post('/api/auth/submissions', { samples: samples.map(toLogEntry) });
+            // The reference code and verified name are included in the Formspree email so it can be matched to the account
+            // accountName is the real contributor name, so you can tell who sent an "Anonymous" submission.
+            // creditAs is what to put in "Recovered By" when it's added to the archive
+            const extras = {
+                submissionRef: logged ? logged.ref : 'not recorded',
+                accountName: logged ? logged.name : account.name,
+                creditAs: logged ? logged.creditName : (account.creditName ?? account.name)
+            };
+            Object.entries(extras).forEach(([name, value]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                hiddenFieldsContainer.appendChild(input);
+            });
+        }
 
-        // The reference code and verified name are included in the Formspree email so it can be matched to the account
-        // accountName is the real contributor name, so you can tell who sent an "Anonymous" submission.
-        // creditAs is what to put in "Recovered By" when it's added to the archive
-        const extras = {
-            submissionRef: result.ok ? result.ref : 'not recorded',
-            accountName: result.ok ? result.name : account.name,
-            creditAs: result.ok ? result.creditName : (account.creditName ?? account.name)
-        };
-        Object.entries(extras).forEach(([name, value]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            hiddenFieldsContainer.appendChild(input);
-        });
+        // Everything in the form, including the hidden fields above and the anti-spam token
+        const sent = await sendToFormspree(new FormData(form));
+        hideProgress();
 
-        // Native submit: skips this handler, so it doesn't loop
-        HTMLFormElement.prototype.submit.call(form);
+        if (!sent.ok) {
+            // Nothing reached Formspree, so remove the reserved entry; the list stays filled in to try again
+            if (logged) await window.NatAccount.post('/api/auth/submissions/cancel', { ref: logged.ref });
+            showSubmitStatus(failureMessage(sent), 'danger');
+            finishAttempt();
+            return;
+        }
+
+        // Formspree has it: make it visible on My Submissions
+        if (logged) await window.NatAccount.post('/api/auth/submissions/confirm', { ref: logged.ref });
+
+        const count = samples.length === 1 ? '1 sample' : `${samples.length} samples`;
+        const confirmation = logged && window.NatAccount
+            ? window.NatAccount.el('span', {}, [
+                ` Your reference code is ${logged.ref}. You can follow it on `,
+                window.NatAccount.el('a', { href: 'my-submissions.html' }, 'My Submissions'),
+                '.'
+            ])
+            : null;
+
+        showSubmitStatus(`Your submission (${count}) was received.`, 'success', confirmation);
+
+        // Start fresh; the signed-in name stays filled in (its defaultValue is the account name)
+        samples = [];
+        editingIndex = null;
+        addBtn.textContent = 'Add to List';
+        hiddenFieldsContainer.innerHTML = '';
+        form.reset();
+        clearFields();
+        renderSummary();
+        finishAttempt();
+        statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
     initFields(fieldsContainer);

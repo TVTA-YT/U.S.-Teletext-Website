@@ -388,7 +388,19 @@
                                 <span aria-hidden="true">Provide your submission</span>
                                 <span class="sr-only">Provide your submission</span>
                             </label>
-                            <input type="file" name="submissionFile" id="submissionFile" class="form-control" accept=".zip, .7z" required />
+                            <input
+                                type="file"
+                                name="submissionFile"
+                                id="submissionFile"
+                                class="form-control"
+                                accept=".zip, .7z"
+                                aria-describedby="submissionFileHelp"
+                                required
+                            />
+                            <div id="submissionFileHelp" class="form-text">
+                                Only ZIP or 7z are accepted. Up to 10 files (95 MB total) can be sent at once. If submitting more than this,
+                                submit in smaller batches.
+                            </div>
                             <!-- <textarea
                                 name="submissionLink"
                                 id="submissionLink"
@@ -440,6 +452,21 @@
                     </div>
                     <div class="mb-4">
                         <div class="cf-turnstile pb-2" data-sitekey="0x4AAAAAAFacw5QJpyc6MUab"></div>
+                        <!-- Upload progress and the result of each submission (filled in by add-new-form.js) -->
+                        <div
+                            class="progress mb-3"
+                            id="upload-progress"
+                            role="progressbar"
+                            aria-label="Upload progress"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                            style="height: 1.5rem"
+                            hidden
+                        >
+                            <div class="progress-bar" style="width: 0%">0%</div>
+                        </div>
+                        <div id="submit-status" class="mb-3" role="status" aria-live="polite"></div>
                         <button type="submit" class="btn form-control submission-button">Submit Form</button>
                         <button type="reset" class="btn btn-danger form-control my-4">Reset Fields</button>
                     </div>
