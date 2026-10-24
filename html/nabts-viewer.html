@@ -474,8 +474,20 @@
                                 <button type="button" class="btn btn-outline-secondary" data-command="master-index">M.Index</button>
                             </div>
                             <button type="button" class="btn btn-outline-secondary w-100 mb-3" data-command="replay">
-                                <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Draw Page Again
+                                <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Redraw Page
                             </button>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary w-100 mb-2"
+                                data-command="play-keys"
+                                id="playKeysButton"
+                                aria-pressed="false"
+                                aria-describedby="playKeysHelp"
+                                hidden
+                            >
+                                <i class="bi bi-controller" aria-hidden="true"></i> Play Game
+                            </button>
+                            <p class="small text-body-secondary mb-3" id="playKeysHelp" hidden></p>
                             <button
                                 type="button"
                                 class="btn btn-outline-secondary w-100 mb-3"

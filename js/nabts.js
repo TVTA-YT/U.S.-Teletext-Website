@@ -3200,6 +3200,7 @@
     const BLINK_C1 = [5, 5, 0];
     const SET_PRIMARY = 0, SET_SUPPLEMENTARY = 1, SET_PDI = 2, SET_MOSAIC = 3, SET_MACRO = 4, SET_DRCS = 5, SET_NULL = 6;
     const STORAGE_LIMIT = 3072, MAX_MACRO_DEPTH = 8;
+    const FIRST_LINKED_MACRO = 0x20, LINKED_KEY_COUNT = 10;     // macros 2/0 to 2/9, the digit keys
     const DEFINITION_C1 = new Set([0x40, 0x41, 0x42, 0x43, 0x44, 0x45]);
     const DESIGNATION_SLOTS = {
         0x28: [0, false], 0x29: [1, true], 0x2A: [2, true], 0x2B: [3, true],
@@ -3568,6 +3569,8 @@
         /** Interpret one record's NAPLPS bytes. keepDisplay draws over the previous record (a "More" chain). */
         run(recordBytes, keepDisplay = false) {
             this.cellAddressed = isCellAddressed(recordBytes);
+            this.macrosDefined = new Set();
+            this.macrosInvoked = new Set();
             this.lint = 0;                            // grammar problems, for settling tied votes
             this.lintSevere = 0;
             this.firstSevereAt = -1;
@@ -3648,6 +3651,13 @@
             }
             this.endDefinition();
             this.snapState();
+            // The digits this record leaves linked: the macros 2/0 to 2/9 it defined and kept, and never ran itself
+            // (Table D1 item 7: "Macros may be accessed by user input mechanisms, for example, keys"; decode-orc PR #328)
+            this.linkedKeys = 0;
+            for (let key = 0; key < LINKED_KEY_COUNT; key++) {
+                const code = FIRST_LINKED_MACRO + key, macro = this.macros.get(code);
+                if (this.macrosDefined.has(code) && !this.macrosInvoked.has(code) && macro && !macro[1]) this.linkedKeys |= 1 << key;
+            }
             const finalMap = this.color.map;
             for (const prim of this.prims) {
                 if (prim.caddr >= 0) prim.color = finalMap[pythonMod(prim.caddr, 16)];
@@ -4570,6 +4580,8 @@
                     if (this.body.length && this.storage + this.body.length <= STORAGE_LIMIT) {
                         this.storage += this.body.length;
                         this.macros.set(code, [[...this.body], this.def_transmit]);
+                        if (this.macrosDefined) this.macrosDefined.add(code);
+                        if (what === 'macrox' && this.macrosInvoked) this.macrosInvoked.add(code);   // DEFP runs it too
                     }
                 }
             } else {
@@ -4603,9 +4615,25 @@
             if (this.collecting === 'macrox' && code === this.def_code) return;
             const macro = this.macros.get(code);
             if (!macro || macro[1]) return;
+            if (this.macrosInvoked) this.macrosInvoked.add(code);
             if (this.frames.length > MAX_MACRO_DEPTH) return;
             if (this.paceTable) this.pace(this.paceTable.macro);
             this.frames.push({ bytes: macro[0], position: 0 });
+        }
+
+        /**
+         * Press digit `key`, as a viewer of the page did, and return the page as it then stands (decode-orc PR #328):
+         * macro 2/key runs from the state the last run left, over the display it left. Table D1 item 7 has a macro so
+         * activated "executed in a contiguous sequence to completion", and what it leaves is where the next key starts,
+         * which is how a game keeps its cursor's place between moves. A key with no macro leaves the page as it is.
+         */
+        pressKey(key) {
+            const macro = key >= 0 && key < LINKED_KEY_COUNT ? this.macros.get(FIRST_LINKED_MACRO + key) : null;
+            const body = macro && !macro[1] ? [...macro[0]] : [];
+            const linked = this.linkedKeys;
+            const page = this.run(body, true);
+            this.linkedKeys = linked;                          // a key press defines nothing new to press
+            return page;
         }
     }
 
@@ -6425,7 +6453,7 @@
             predecessor.set(`${record.channel},${successor}`, record);
         }
         // A sub-page (address not ending in 00) that no page continues is drawn over the nearest lower page
-        // of its group, as a receiver showed it (CBS 1992 page 402 after 401)
+        // of its group, as a receiver showed it (Teletext Rescue 1.2; CBS 1992 page 402 after 401)
         for (const record of latestByAddress.values()) {
             const key = `${record.channel},${record.address}`;
             if (record.address % 256 === 0 || predecessor.has(key)) continue;
@@ -6471,9 +6499,37 @@
             for (const page of earlierPages) { interpreter.run(codeOf(page), keepDisplay); keepDisplay = true; }
             record.page = interpreter.run(codeOf(record), keepDisplay);
             record.text = pageText(record.page);
+            record.linked_keys = record.flags.support_record ? 0 : interpreter.linkedKeys;
+            // How the page was drawn, so its keys can be played over it again (playKeys)
+            record.play_setup = record.linked_keys ? {
+                support: needsSupport && !record.flags.support_record && supportRecords.has(record.channel)
+                    ? codeOf(supportRecords.get(record.channel)) : null,
+                caption: isCaption, earlier: earlierPages.map(codeOf), code: codeOf(record)
+            } : null;
         }
         return records;
     };
+
+    /**
+     * The page `record` as it stands after the digit `keys` are pressed in turn (an empty list redraws it as sent);
+     * only a page with linked keys (record.linked_keys) answers them. Returns a page for a Player.
+     */
+    const playKeys = (record, keys, grid = [256, 200], { font = null, pace = 'classic' } = {}) => {
+        const setup = record.play_setup;
+        if (!setup) return record.page;
+        const interpreter = new Interpreter(grid, { font, pace });
+        interpreter.resetDecoder();
+        if (setup.support) interpreter.run(setup.support);
+        if (setup.caption) interpreter.applyCaptionState();
+        let keepDisplay = false;
+        for (const code of setup.earlier) { interpreter.run(code, keepDisplay); keepDisplay = true; }
+        let page = interpreter.run(setup.code, keepDisplay);
+        // Every key but the last is played out at once: only the last one's drawing is seen being drawn
+        for (const key of keys) page = interpreter.pressKey(key);
+        return page;
+    };
+    /** The digits a page answers, ascending. */
+    const linkedDigits = (record) => [...Array(10).keys()].filter((key) => (record.linked_keys || 0) & (1 << key));
 
     const editionSuffix = (record, separator) => (record.edition > 1 ? `${separator}${record.edition}` : '');
     const recordLabel = (record) => `${toHex(record.channel, 3)}/${record.addr_text} v${record.version}${editionSuffix(record, ' e')}`;
@@ -6484,7 +6540,7 @@
     const flagsText = (record) => FLAG_LABELS.filter(([flag]) => record.flags[flag]).map(([, label]) => label).join(', ');
 
     return {
-        readT33, interpret, Player, Interpreter, pageText, pageSVG,
+        readT33, interpret, Player, Interpreter, pageText, pageSVG, playKeys, linkedDigits,
         decoderFonts: () => loadDecoderFonts(), recordLabel, recordName, flagsText,
         addressText, isPresentation, rgb: colorToRgb, DEFAULT_MAP, DISPLAY_H: DISPLAY_HEIGHT,
         GRIDS: { '256 × 200 (receiver)': [256, 200], '512 × 400': [512, 400], '768 × 600': [768, 600] },

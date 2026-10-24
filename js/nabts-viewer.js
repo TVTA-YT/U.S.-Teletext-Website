@@ -107,7 +107,10 @@
         speed: 1,
         // Receiver whose drawing times the page is played at, and whether lost data is rebuilt (decode-orc PR #328)
         pace: 'classic',
-        reconstruct: true
+        reconstruct: true,
+        // Pages whose digit keys run macros (games): whether the keys play the page, and the keys pressed so far
+        playing: false,
+        gameKeys: []
     };
 
     // Disable the checkbox for the animations if a user prefers reduced motion
@@ -427,6 +430,7 @@
     // & Enter 1 digit as its typed (or pressed if using the keypad)
     const typeDigit = (digit) => {
         if (!state.records.length) return;
+        if (state.playing) { pressGameKey(Number(digit)); return; }
         clearTimeout(state.entryTimeout);
         state.typedDigits += digit;
         updateEntryDisplay();
@@ -543,6 +547,8 @@
             ? `NAPLPS screen, ${name}${firstLine ? `: ${firstLine}` : ''}`
             : `${name} has no page to display`);
         updateEntryDisplay();
+        state.gameKeys = [];
+        updatePlayKeys(record);
         startPlayback();
     };
 
@@ -618,8 +624,14 @@
             return;
         }
 
-        // Create a new player for current page at the chosen resolution and in the chosen font
-        state.player = new NABTS.Player(record.page, state.grid, { font: state.font });
+        // Draw the current page at the chosen resolution and in the chosen font
+        playPage(record.page);
+    };
+
+    // & Draw a page from the start (a game's page after its keys, drawing what the last key drew)
+    const playPage = (page) => {
+        stopAnimation();
+        state.player = new NABTS.Player(page, state.grid, { font: state.font });
         state.frameImage = canvasContext.createImageData(canvas.width, canvas.height);
 
         // Forget what was previously painted before so the first frame is always painted
@@ -635,6 +647,48 @@
 
         continueFrom(startSeconds);
         renderFrame();
+    };
+
+    // & Games: pages whose digit keys run macros linked to them (Table D1 item 7; decode-orc PR #328)
+    const playKeysButton = byID('playKeysButton'), playKeysHelp = byID('playKeysHelp');
+    const describeKeys = (digits) => digits.length === 10 ? 'all ten digits' : digits.join(', ');
+    const updatePlayKeys = (record) => {
+        const digits = record ? NABTS.linkedDigits(record) : [];
+        if (!digits.length) state.playing = false;
+        if (playKeysButton) {
+            playKeysButton.hidden = !digits.length;
+            playKeysButton.setAttribute('aria-pressed', String(state.playing));
+            playKeysButton.classList.toggle('active', state.playing);
+        }
+        if (playKeysHelp) {
+            playKeysHelp.hidden = !digits.length;
+            playKeysHelp.textContent = !digits.length ? '' : state.playing
+                ? `The number keys now play this page (it answers ${describeKeys(digits)}). Redraw Page starts over. Press Play Game again to type page numbers.`
+                : `This page is interactive: it answers ${describeKeys(digits)}.`;
+        }
+    };
+    const togglePlayKeys = () => {
+        const record = state.records[state.currentIndex];
+        if (!record || !NABTS.linkedDigits(record).length) return;
+        state.playing = !state.playing;
+        cancelEntry();
+        updatePlayKeys(record);
+        announce(state.playing ? 'The number keys now play this page.' : 'The number keys enter page numbers again.');
+    };
+    const pressGameKey = (key) => {
+        const record = state.records[state.currentIndex];
+        if (!record) return;
+        if (!NABTS.linkedDigits(record).includes(key)) { announce(`Key ${key} does nothing on this page.`); return; }
+        // The page number display keeps showing the page; game keys are not page numbers
+        state.gameKeys.push(key);
+        entryDisplay.textContent = `${key}`;
+        clearTimeout(state.entryTimeout);
+        state.entryTimeout = setTimeout(updateEntryDisplay, 1500);
+        playPage(NABTS.playKeys(record, state.gameKeys, state.grid, { font: state.font, pace: state.pace }));
+    };
+    const restartPage = () => {
+        state.gameKeys = [];
+        startPlayback();
     };
 
     // & Functions for the "MORE" key seen on NABTS services
@@ -816,7 +870,8 @@
         magazine: pressMagazine,
         index: pressIndex,
         'master-index': pressMasterIndex,
-        replay: () => startPlayback(),
+        replay: restartPage,
+        'play-keys': togglePlayKeys,
         'prev-page': () => stepPage(-1),
         'next-page': () => stepPage(1),
         'prev-subpage': () => stepSubpage(-1),
@@ -858,6 +913,12 @@
 
         // Only digits and A-F (page numbers are hexadecimal, e.g. 06B); go to page once all 3 are typed
         mobilePageInput.addEventListener('input', () => {
+            // While a game is being played, digits typed here play it and the box stays empty
+            if (state.playing) {
+                for (const digit of mobilePageInput.value.replace(/[^0-9]/g, '')) pressGameKey(Number(digit));
+                mobilePageInput.value = '';
+                return;
+            }
             mobilePageInput.value = mobilePageInput.value.replace(/[^0-9a-f]/gi, '').slice(0, 3);
             if (mobilePageInput.value.length === 3) goToTypedPage();
         });
