@@ -1,0 +1,9 @@
+:root {
+    --redecode-row-bg: #f2e600;
+}
+
+tr.redecode-row-bg > td {
+    --bs-table-bg: var(--redecode-row-bg) !important;
+    --bs-table-bg-type: var(--redecode-row-bg) !important;
+    --bs-table-color: #000 !important;
+}

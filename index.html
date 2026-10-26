@@ -55,6 +55,11 @@
                 margin: 0 auto;
             }
 
+            dt {
+                font-weight: normal;
+                transform: scaleY(1.5);
+            }
+
             #site-intro-container {
                 margin-top: 0;
             }
@@ -63,15 +68,56 @@
                 margin-top: 20px;
             }
 
-            #site-title {
-                font-family: "Contour Generator", sans-serif;
-                line-height: 110%;
-                text-shadow: 3px 3px #000;
-                animation: colorChange 4s steps(4, end) infinite;
+            #quick-updates-list [data-field] {
+                white-space: pre-wrap;
+            }
+
+            [data-bs-theme="light"] #nata-decode {
+                --nata-draw: #000;
+                --nata-color: #000;
+            }
+
+            [data-bs-theme="dark"] #nata-decode {
+                --nata-draw: #0019ff;
+                --nata-color: #fff800;
+            }
+
+            #nata-decode {
+                color: var(--nata-draw);
+                width: min(90%, 1100px);
+                margin: 2rem auto;
+            }
+
+            #nata-decode svg {
+                display: block;
+                width: 100%;
+                height: auto;
+                color: var(--nata-color);
+                shape-rendering: crispEdges;
+            }
+
+            #quick-updates-list ul:empty {
+                display: none;
+            }
+
+            #quick-updates-list li {
+                list-style-type: none;
+            }
+
+            #quick-updates-container {
+                background-color: #0019ff;
+            }
+
+            #quick-updates-container.samples-story {
+                background-color: #ff0000;
+            }
+
+            #quick-updates-list ul[data-field="list"] {
+                padding-left: 2.5rem;
             }
 
             #samples-div {
-                background-color: #1c165b;
+                background-color: #0022ff;
             }
 
             #samples-text {
@@ -85,114 +131,28 @@
                 margin-top: 110px !important;
             }
 
-            .teletext-page-marquee-image {
-                width: 200px !important;
+            .keep-text-white {
+                color: #fff !important;
             }
 
-            .updates-marquee {
-                position: relative;
-                overflow: hidden;
-                width: 100%;
-                padding: 20px 0;
-                background-color: #000;
-            }
-
-            .updates-marquee-content.marquee-enter {
-                animation: updates-marquee-enter var(--enter-duration, 3s) linear forwards;
-            }
-
-            .updates-marquee-content.marquee-loop {
-                animation: updates-marquee 30s linear infinite;
-            }
-
-            .updates-marquee-content {
-                display: flex;
-                width: max-content;
-            }
-
-            .updates-marquee-track {
-                display: flex;
-                flex-shrink: 0;
-                white-space: nowrap;
-            }
-
-            .updates-marquee-text {
-                display: inline;
-            }
-
-            .image-marquee {
-                position: relative;
-                overflow: hidden;
-                width: 100%;
-                background-image: linear-gradient(to right, #152de3, #94a1ff);
-                padding: 25px 0 25px 0;
-            }
-
-            .image-marquee-content {
-                display: flex;
-                width: max-content;
-                gap: 6rem;
-                animation: image-marquee 25s linear infinite;
+            .quick-updates-cursor {
+                display: inline-block;
+                width: 0.6em;
+                height: 1em;
+                vertical-align: text-bottom;
+                background: #fff;
+                animation: quick-updates-cursor-blink 1s steps(1) infinite;
             }
 
             @media (prefers-reduced-motion: reduce) {
                 #site-intro-container {
                     margin-top: 94px !important;
                 }
-
-                #updates-marquee {
-                    display: none;
-                }
             }
 
-            @keyframes blink {
+            @keyframes quick-updates-cursor-blink {
                 50% {
                     opacity: 0;
-                }
-            }
-
-            @keyframes colorChange {
-                0% {
-                    color: #a80000;
-                }
-                25% {
-                    color: #321fff;
-                }
-                50% {
-                    color: #23b6ff;
-                }
-                75% {
-                    color: #00d231;
-                }
-                100% {
-                    color: #ffcb20;
-                }
-            }
-
-            @keyframes image-marquee {
-                from {
-                    transform: translateX(0%);
-                }
-                to {
-                    transform: translateX(calc(-7 * (200px + 6rem)));
-                }
-            }
-
-            @keyframes updates-marquee-enter {
-                from {
-                    transform: translateX(100vw);
-                }
-                to {
-                    transform: translateX(0%);
-                }
-            }
-
-            @keyframes updates-marquee {
-                from {
-                    transform: translateX(0%);
-                }
-                to {
-                    transform: translateX(-50%);
                 }
             }
         </style>
@@ -382,11 +342,8 @@
             </div>
         </nav>
         <main>
-            <div class="updates-marquee" id="updates-marquee" style="margin-top: 94px">
-                <div class="updates-marquee-content">
-                    <div class="updates-marquee-track"></div>
-                    <div class="updates-marquee-track" aria-hidden="true"></div>
-                </div>
+            <div class="text-center fs-1" id="date-time-div" style="margin: 120px 0 25px 0">
+                <span id="current-date-time" style="font-family: &quot;Teletext50&quot;, sans-serif"> &nbsp; </span>
             </div>
             <div class="alert alert-danger">
                 <div class="alert-heading">
@@ -401,135 +358,221 @@
                     <span class="visually-hidden">Welcome to the North American Teletext Archive</span>
                     <img src="images/banners/light/Welcome_light.png" alt="" class="mw-100 light-mode-image" />
                     <img src="images/banners/dark/Welcome.png" alt="" class="mw-100 dark-mode-image" />
-                    <div class="text-center" id="site-logo-padding" aria-hidden="true">
-                        <span id="site-title">
-                            NORTH AMERICAN<br />
-                            TELETEXT ARCHIVE
-                        </span>
-                    </div>
                 </h1>
-                <p class="fs-4 fw-bold text-center">Archiving North American teletext samples one submission at a time.</p>
-                <div class="image-marquee" id="image-marquee" aria-hidden="true">
-                    <div class="image-marquee-content">
-                        <div>
-                            <img
-                                src="images/DaTaVizion-index_stretched.png"
-                                alt="DaTaVizion index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
-                                alt="Electra index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/Record-000-000-vB.png"
-                                alt="CBS ExtraVision index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/Keyfax-index_stretched.png"
-                                alt="CBS ExtraVision Weather precipitation page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/NBC-Teletext.png"
-                                alt="NBC Teletext logo page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/SSS-Teletext-index_stretched.png"
-                                alt="CBS ExtraVision Media Watch page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/Virtext_stretched.png"
-                                alt="CBS ExtraVision Captions page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <!-- Start of loop -->
-                        <div>
-                            <img
-                                src="images/DaTaVizion-index_stretched.png"
-                                alt="DaTaVizion index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/TBS-8-17-1989_electra_stretched.png"
-                                alt="Electra index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/Record-000-000-vB.png"
-                                alt="CBS ExtraVision index page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/Keyfax-index_stretched.png"
-                                alt="CBS ExtraVision Weather precipitation page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/decoded-pages/NBC-Teletext.png"
-                                alt="NBC Teletext logo page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/SSS-Teletext-index_stretched.png"
-                                alt="CBS ExtraVision Media Watch page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
-                        </div>
-                        <div>
-                            <img
-                                src="images/Virtext_stretched.png"
-                                alt="CBS ExtraVision Captions page"
-                                class="mw-100 teletext-page-marquee-image border border-white rounded-2"
-                            />
+                <figure id="nata-decode">
+                    <svg id="nata" role="img" aria-labelledby="nata-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 501.17 73.08">
+                        <title id="nata-title">North American Teletext Archive</title>
+                        <path d="M46.57,29.76h-14.04V4.2h-4.29v25.56h-13.6V0h23.44c5.16,0,8.49,3.34,8.49,8.49v21.27Z" />
+                        <path
+                            d="M81.57,21.23c0,5.2-3.38,8.53-8.49,8.53h-14.9c-5.16,0-8.53-3.34-8.53-8.53v-12.74c0-5.15,3.38-8.49,8.53-8.49h14.9c5.11,0,8.49,3.34,8.49,8.49v12.74ZM67.93,25.52V4.2h-4.25v21.31h4.25Z"
+                        />
+                        <path
+                            d="M120.91,29.76h-13.3l-5.24-11.18V4.2h-4.25v25.56h-12.78V0h22.96c6.63,0,10.35,2.9,10.35,9.4,0,4.51-1.95,7.19-3.81,8.06l6.07,12.3Z"
+                        />
+                        <path d="M145.17,4.2h-6.41v25.56h-12.78V4.2h-6.37V0h25.56v4.2Z" />
+                        <path d="M177.66,29.76h-12.78v-12.87h-4.25v12.87h-12.78V0h12.78v12.61h4.25V0h12.78v29.76Z" />
+                        <path d="M230.98,29.76h-12.74V4.2h-4.29v14.9l-5.2,10.66h-16.07L207.59,0h23.39v29.76Z" />
+                        <path d="M288.56,29.76h-12.74V4.2h-4.29v25.56h-12.74V4.2h-4.29v14.9l-5.16,10.66h-16.07L248.14,0h40.42v29.76Z" />
+                        <path d="M322.6,29.76h-29.8V0h29.63v8.49h-12.61v-4.29h-4.25v8.4h12.78v4.29h-12.78v8.62h4.25v-4.29h12.78v8.53Z" />
+                        <path
+                            d="M361.68,29.76h-13.3l-5.24-11.18V4.2h-4.25v25.56h-12.78V0h22.96c6.63,0,10.35,2.9,10.35,9.4,0,4.51-1.95,7.19-3.81,8.06l6.07,12.3Z"
+                        />
+                        <path d="M376.93,29.76h-12.78V0h12.78v29.76Z" />
+                        <path
+                            d="M413.1,21.23c0,5.2-3.33,8.53-8.49,8.53h-14.9c-5.15,0-8.53-3.34-8.53-8.53v-12.74c0-5.15,3.38-8.49,8.53-8.49h14.9c5.16,0,8.49,3.34,8.49,8.49v4.25h-13.65V4.2h-4.2v21.31h4.2v-8.49h13.65v4.2Z"
+                        />
+                        <path d="M451.92,29.76h-12.74V4.2h-4.29v14.9l-5.2,10.66h-16.07l14.9-29.76h23.39v29.76Z" />
+                        <path d="M488.09,29.76h-14.04V4.2h-4.29v25.56h-13.6V0h23.44c5.16,0,8.49,3.34,8.49,8.49v21.27Z" />
+                        <path d="M25.56,47.52h-6.41v25.56H6.37v-25.56H0v-4.2h25.56v4.2Z" />
+                        <path
+                            d="M58.05,73.08h-29.8v-29.76h29.63v8.49h-12.61v-4.29h-4.25v8.4h12.78v4.29h-12.78v8.62h4.25v-4.29h12.78v8.53Z"
+                        />
+                        <path d="M91.1,73.08h-29.54v-29.76h12.78v25.52h4.25v-8.49h12.52v12.74Z" />
+                        <path
+                            d="M123.9,73.08h-29.8v-29.76h29.63v8.49h-12.61v-4.29h-4.25v8.4h12.78v4.29h-12.78v8.62h4.25v-4.29h12.78v8.53Z"
+                        />
+                        <path d="M151.4,47.52h-6.41v25.56h-12.78v-25.56h-6.37v-4.2h25.56v4.2Z" />
+                        <path
+                            d="M183.89,73.08h-29.8v-29.76h29.63v8.49h-12.61v-4.29h-4.25v8.4h12.78v4.29h-12.78v8.62h4.25v-4.29h12.78v8.53Z"
+                        />
+                        <path
+                            d="M224.1,73.08h-14.99l-4.03-8.92-4.29,8.92h-14.99l8.45-15.64-7.84-14.12h15.08l3.6,8.23,3.73-8.23h14.77l-7.58,13.78,8.1,15.99Z"
+                        />
+                        <path d="M250.78,47.52h-6.41v25.56h-12.78v-25.56h-6.37v-4.2h25.56v4.2Z" />
+                        <path d="M302.55,73.08h-12.74v-25.56h-4.29v14.9l-5.2,10.66h-16.07l14.9-29.76h23.39v29.76Z" />
+                        <path
+                            d="M342.36,73.08h-13.3l-5.24-11.18v-14.38h-4.25v25.56h-12.78v-29.76h22.96c6.63,0,10.35,2.9,10.35,9.4,0,4.5-1.95,7.19-3.81,8.06l6.07,12.3Z"
+                        />
+                        <path
+                            d="M375.46,64.55c0,5.2-3.33,8.53-8.49,8.53h-14.9c-5.15,0-8.53-3.34-8.53-8.53v-12.74c0-5.15,3.38-8.49,8.53-8.49h14.9c5.16,0,8.49,3.34,8.49,8.49v4.25h-13.65v-8.53h-4.2v21.31h4.2v-8.49h13.65v4.2Z"
+                        />
+                        <path d="M409.51,73.08h-12.78v-12.87h-4.25v12.87h-12.78v-29.76h12.78v12.61h4.25v-12.61h12.78v29.76Z" />
+                        <path d="M426.53,73.08h-12.78v-29.76h12.78v29.76Z" />
+                        <path d="M467.12,73.08h-23.39l-14.9-29.76h16.03l5.24,10.61v14.9h4.29v-25.52h12.74v29.76Z" />
+                        <path
+                            d="M501.17,73.08h-29.8v-29.76h29.63v8.49h-12.61v-4.29h-4.25v8.4h12.78v4.29h-12.78v8.62h4.25v-4.29h12.78v8.53Z"
+                        />
+                    </svg>
+                    <figcaption class="status" aria-hidden="true"></figcaption>
+                </figure>
+                <p class="fs-4 pt-3 fw-bold text-center">Archiving North American teletext samples one submission at a time.</p>
+                <br />
+                <section id="latest-updates" style="padding-top: 100px; padding-bottom: 100px">
+                    <h2>
+                        <span class="visually-hidden">Latest Updates</span>
+                        <img src="/images/NATA-Updates.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                        <img src="/images/NATA-Updates_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    </h2>
+                    <p class="fs-4 fw-bold text-center">Watch this space for quick updates.</p>
+                    <div id="quick-updates" style="font-family: &quot;Teletext50&quot;, sans-serif">
+                        <div id="quick-updates-container">
+                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #00d231">
+                                <span class="keep-text-white">NATA Updates</span>
+                                <br />
+                                <span class="keep-text-white" id="quick-updates-last-updated">Last Updated: 10/25/2026</span>
+                            </div>
+                            <div class="p-5">
+                                <div id="quick-updates-sr" class="visually-hidden" aria-live="polite"></div>
+                                <dl id="quick-updates-list" aria-hidden="true">
+                                    <dt
+                                        class="text-uppercase pb-2"
+                                        id="quick-updates-update-title"
+                                        style="color: #fff800 !important"
+                                        data-field="title"
+                                    ></dt>
+                                    <dd class="text-uppercase">
+                                        <span class="keep-text-white" id="quick-updates-update-body" data-field="body"></span>
+                                        <ul id="quick-updates-update-list" data-field="list" class="mb-0"></ul>
+                                        <span class="d-block mt-4 keep-text-white" id="quick-updates-update-date" data-field="date"></span>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="text-center" id="next-update-timer" aria-hidden="true">
+                                <span class="keep-text-white" id="next-update-timer-text">&nbsp;</span>
+                            </div>
+                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #00d231">
+                                <span class="keep-text-white" id="quick-updates-counter">Update 1 / 5</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="container" style="margin-top: 20px !important; margin-bottom: 20px !important">
-                <div id="site-introduction-paragraphs-column">
-                    <p class="site-introduction">
-                        On this website is a collection of newly decoded pages from North American teletext from various services such as
-                        the CBS's
-                        <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Electra</i>, which was broadcast on TBS (then SuperStation
-                        WTBS and SuperStation TBS). We're also now including samples from various text-based (non-teletext) services, both
-                        national (ABC PLUS) and local (Kentucky Educational Television's AgText).
-                    </p>
-                    <p class="site-introduction mb-0">
-                        <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality examples of
-                        these services, specifically the teletext services. This site aims to change that by acting as a repository,
-                        providing access to individual archives from these services, archives provided by those who have the capacity to
-                        decode these services.
-                    </p>
+                </section>
+                <div class="row">
+                    <div class="col-xl-5 col-lg-5 col-md-6">
+                        <div id="site-introduction-paragraphs-column">
+                            <p class="site-introduction pb-4">
+                                On this website is a collection of newly decoded pages from North American teletext from various services
+                                such as the CBS's
+                                <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Keyfax</i> and <i>Electra</i>, which were broadcast on
+                                TBS (then SuperStation WTBS and SuperStation TBS). We're also now including samples from various text-based
+                                (non-teletext) services, both national (such as ABC PLUS) and local (such as Kentucky Educational
+                                Television's AgText).
+                            </p>
+                            <p class="site-introduction mb-0">
+                                <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality
+                                examples of these services, specifically the teletext services. This site aims to change that by acting as a
+                                repository, providing access to individual archives from these services, archives provided by those who have
+                                the capacity to decode these services.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-7 col-md-6">
+                        <div class="row justify-content-center">
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/decoded-pages/Acquire_1991-04-27.png"
+                                        alt="Acquire index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/decoded-pages/Edutel_1983-08-19_1.png"
+                                        alt="Edutel index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/Electra_1992-12-13_stretched.png"
+                                        alt="Electra index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/DaTaVizion-index_stretched.png"
+                                        alt="DaTaVizion index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/decoded-pages/ExtraVision_1985-05-12.png"
+                                        alt="ExtraVision index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/Keyfax-index_stretched.png"
+                                        alt="Keyfax index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/decoded-pages/NBC-Teletext_1983-10-29.png"
+                                        alt="NBC Teletext index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/SSS-Teletext-index_stretched.png"
+                                        alt="SSS Teletext index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/Virtext_stretched.png"
+                                        alt="Virtext index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                            <div class="col-3">
+                                <figure>
+                                    <img
+                                        src="images/decoded-pages/InfoText_1986-11-24.png"
+                                        alt="Wisconsin InfoText index page"
+                                        class="mw-100 border border-white rounded-2"
+                                    />
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
+            </div>
+            <div class="container" style="margin-top: 20px !important; margin-bottom: 20px !important">
                 <div class="row pt-4">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" id="recent-additions-column">
                         <h3 class="text-center display-6 fw-bold">New Viewable Samples</h3>
@@ -554,8 +597,8 @@
                 <div class="row">
                     <div class="col-xl-6 pb-sm-4">
                         <div class="text-center">
-                            <img src="images/station-logos/WGBH-2_light.png" alt="WKRC" class="mw-100 w-25 pb-3 light-mode-image" />
-                            <img src="images/station-logos/WGBH-2.png" alt="WKRC" class="mw-100 w-25 pb-3 dark-mode-image" />
+                            <img src="images/station-logos/WGBH-2_light.png" alt="WGBH" class="mw-100 w-25 pb-3 light-mode-image" />
+                            <img src="images/station-logos/WGBH-2.png" alt="WGBH" class="mw-100 w-25 pb-3 dark-mode-image" />
                             <h2 class="fs-2 fw-bold">EARLY WGBH SAMPLES WANTED</h2>
                         </div>
                         <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
@@ -571,8 +614,8 @@
                                 data-bs-html="true"
                                 title="<img src='images/WGBH-Scoop_1985.jpg' class='img-fluid'>"
                             >
-                                Here's</a
-                            >
+                                Here's
+                            </a>
                             an image of the index page dated January 19, 1983. To view more images, check out
                             <a href="https://text-mode.org/?p=8749" target="_blank">this</a> page. This is a service that's high on our wish
                             list and one that we'd love to preserve.
@@ -597,54 +640,56 @@
                     </div>
                 </div>
                 <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 0.4" />
-                <p class="fs-5 text-center pt-1">
+                <p class="fs-5 text-center pt-1 pb-1">
                     We are currently looking for more teletext samples to add to the site! We are looking for samples from the following
-                    <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three CBS affiliates (especially from those colored
-                    red):
+                    <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three CBS affiliates.
+                    <strong>
+                        We're specifically looking for samples from the following affiliates that operated their own localized versions of
+                        ExtraVision:
+                    </strong>
                 </p>
                 <div class="justify-content-center">
-                    <table class="table text-center table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">Station</th>
-                                <th scope="col">City/State</th>
-                            </tr>
-                        </thead>
+                    <table class="text-center align-middle">
                         <tbody>
                             <tr>
-                                <td class="bg-danger">KCBS (O&amp;O)</td>
-                                <td class="bg-danger">Los Angeles, CA</td>
+                                <td>
+                                    <img src="images/KCBS.png" alt="" class="mw-100 w-75 dark-mode-image" />
+                                    <img src="images/KCBS_light.png" alt="" class="mw-100 w-75 light-mode-image" />
+                                </td>
+                                <td>
+                                    <img src="images/KSL-TV.png" alt="" class="w-100 w-75 dark-mode-image" />
+                                    <img src="images/KSL-TV_light.png" alt="" class="w-100 w-75 light-mode-image" />
+                                </td>
+                                <td>
+                                    <img src="images/WBTV.png" alt="" class="mw-100 w-75 dark-mode-image" />
+                                    <img src="images/WBTV_light.png" alt="" class="mw-100 w-75 light-mode-image" />
+                                </td>
+                                <td>
+                                    <img src="images/WIVB.png" alt="" class="mw-100 w-75 dark-mode-image" />
+                                    <img src="images/WIVB_light.png" alt="" class="mw-100 w-75 light-mode-image" />
+                                </td>
+                            </tr>
+                            <tr style="font-size: 1.5em; font-weight: bold">
+                                <td>KCBS</td>
+                                <td>KSL</td>
+                                <td>WBTV</td>
+                                <td>WIVB</td>
                             </tr>
                             <tr>
-                                <td class="bg-danger">KSL-TV</td>
-                                <td class="bg-danger">Salt Lake City, UT</td>
-                            </tr>
-                            <tr>
-                                <td>KMOX (former O&amp;O)*</td>
-                                <td>St. Louis, MO</td>
-                            </tr>
-                            <tr>
-                                <td>WBBM (O&amp;O)</td>
-                                <td>Chicago, IL</td>
-                            </tr>
-                            <tr>
-                                <td class="bg-danger">WBTV</td>
-                                <td class="bg-danger">Charlotte, NC</td>
-                            </tr>
-                            <tr>
-                                <td>WCAU (former O&amp;O)</td>
-                                <td>Philadelphia, PA</td>
-                            </tr>
-                            <tr>
-                                <td>WCBS (O&amp;O)</td>
-                                <td>New York, NY</td>
-                            </tr>
-                            <tr>
-                                <td class="bg-danger">WIVB</td>
-                                <td class="bg-danger">Buffalo, NY</td>
+                                <td>Los Angeles, CA</td>
+                                <td>Salt Lake City, UT</td>
+                                <td>Charlotte, NC</td>
+                                <td>N/A</td>
                             </tr>
                         </tbody>
                     </table>
+                    <p class="pt-4">Additional O&amp;O affiliates include:</p>
+                    <ul>
+                        <li><strong>KMOX</strong> (St. Louis, MO) (former O&amp;O)</li>
+                        <li><strong>WBBM</strong> (Chicago, IL)</li>
+                        <li><strong>WCAU</strong> (Philadelphia, PA)</li>
+                        <li><strong>WCBS</strong> (New York, NY)</li>
+                    </ul>
                     <p>NOTE: KMOX samples span 1983 &ndash; 1986.</p>
                     <p class="fs-5">
                         If you have any videotapes (Betamax or VHS) from these stations that date between 1983 and early 1992, you've got
@@ -741,8 +786,8 @@
             </div>
         </footer>
         <script src="js/color-modes.js"></script>
-        <script src="js/marquee.js"></script>
         <script src="js/recent-additions.js"></script>
+        <script src="js/site-updates.js"></script>
         <script>
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(
@@ -751,6 +796,218 @@
                         html: true,
                     }),
             );
+        </script>
+        <script>
+            // ~ Animated site logo in the style of an NABTS page
+            (() => {
+                // ^ Configurations
+                const config = {
+                    // The outlines' draw time per NABTS packet
+                    msPerPacket: 55,
+
+                    // Standard NABTS data block size
+                    bytesPerPacket: 28,
+
+                    // The height of each fill scan line in SVG viewBox units
+                    scanlineHeight: 1.25,
+
+                    // The fill time per scan line
+                    msPerScanline: 3,
+
+                    // This is set per theme in CSS
+                    outlineColor: "var(--nata-draw)",
+
+                    // The width of the outlines
+                    outlineWidth: 1,
+
+                    // The pause between the finished outline pass and start of the fill pass
+                    pauseBeforeFillMs: 400,
+
+                    // The delay before the animation starts
+                    startDelayMs: 500,
+                };
+
+                const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+                const logoSvg = document.getElementById("nata");
+                const reducedMotionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+
+                // Increases each time the animation starts so an older run knows to stop
+                let currentRunId = 0;
+
+                // Rough NAPLPS byte cost (opcode plus around 1.5 bytes per coordinate value)
+                const estimateNaplpsBytes = (pathData) => {
+                    const coordinateCount = (pathData.match(/-?\d*\.?\d+/g) || []).length;
+                    return 2 + Math.ceil(coordinateCount * 1.5);
+                };
+
+                // ^ Setup: each path becomes an outline (stroke) plus a filled copy revealed by a growing clip rectangle
+                const clipDefinitions = document.createElementNS(SVG_NAMESPACE, "defs");
+                logoSvg.insertBefore(clipDefinitions, logoSvg.firstChild.nextSibling);
+
+                const glyphs = [...logoSvg.querySelectorAll("path")].map((outlinePath, index) => {
+                    const bounds = outlinePath.getBBox();
+
+                    // Clip rectangle that grows downward to reveal the fill
+                    const clipPath = document.createElementNS(SVG_NAMESPACE, "clipPath");
+                    clipPath.id = "nabts-clip-" + index;
+                    const revealRect = document.createElementNS(SVG_NAMESPACE, "rect");
+
+                    // Attributes for the fill
+                    revealRect.setAttribute("x", bounds.x - 1);
+                    revealRect.setAttribute("y", bounds.y - 1);
+                    revealRect.setAttribute("width", bounds.width + 2);
+                    revealRect.setAttribute("height", 0);
+                    clipPath.appendChild(revealRect);
+                    clipDefinitions.appendChild(clipPath);
+
+                    // Filled copy of the path, placed behind the outline
+                    const filledCopy = outlinePath.cloneNode();
+                    filledCopy.setAttribute("fill", "currentColor");
+                    filledCopy.setAttribute("clip-path", `url(#${clipPath.id})`);
+                    outlinePath.before(filledCopy);
+
+                    // The original path becomes the outline
+                    outlinePath.setAttribute("fill", "none");
+                    outlinePath.setAttribute("stroke-width", config.outlineWidth);
+                    outlinePath.setAttribute("stroke-linejoin", "miter");
+
+                    const byteCount = estimateNaplpsBytes(outlinePath.getAttribute("d"));
+                    return {
+                        outlinePath,
+                        revealRect,
+                        outlineLength: outlinePath.getTotalLength(),
+                        packetCount: Math.max(1, Math.ceil(byteCount / config.bytesPerPacket)),
+                        fillHeight: bounds.height + 2,
+                    };
+                });
+
+                // & Timing helpers
+                // * Calls "onFrame" with progress from 0 to 1 over "durationMs", This will stop early if a newer run has started
+                const animate = (durationMs, onFrame, runId) =>
+                    new Promise((resolve) => {
+                        const startTime = performance.now();
+                        const frame = (now) => {
+                            if (runId !== currentRunId) return resolve();
+                            const progress = durationMs <= 0 ? 1 : Math.min(1, (now - startTime) / durationMs);
+                            onFrame(progress);
+                            progress < 1 ? requestAnimationFrame(frame) : resolve();
+                        };
+                        requestAnimationFrame(frame);
+                    });
+
+                const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+                // & Logo states
+                function hideLogo() {
+                    for (const glyph of glyphs) {
+                        glyph.revealRect.setAttribute("height", 0);
+                        glyph.outlinePath.style.stroke = config.outlineColor;
+                        glyph.outlinePath.setAttribute("stroke-dasharray", `${glyph.outlineLength} ${glyph.outlineLength}`);
+                        glyph.outlinePath.setAttribute("stroke-dashoffset", glyph.outlineLength);
+                    }
+                }
+
+                // & Showing the completed logo
+                function showCompletedLogo() {
+                    for (const glyph of glyphs) {
+                        glyph.revealRect.setAttribute("height", glyph.fillHeight);
+                        glyph.outlinePath.style.stroke = "none";
+                    }
+                }
+
+                // & Animation steps
+                // * Outline: vertices plotted as the "POLYGON" data arrives
+                const drawOutline = (glyph, runId) =>
+                    animate(
+                        glyph.packetCount * config.msPerPacket,
+                        (progress) => {
+                            glyph.outlinePath.setAttribute("stroke-dashoffset", glyph.outlineLength * (1 - progress));
+                        },
+                        runId,
+                    );
+
+                // & Flood fill, top to bottom, in discrete scan lines
+                async function fillGlyph(glyph, runId) {
+                    const scanlineCount = Math.ceil(glyph.fillHeight / config.scanlineHeight);
+                    await animate(
+                        scanlineCount * config.msPerScanline,
+                        (progress) => {
+                            const revealedHeight = Math.ceil(progress * scanlineCount) * config.scanlineHeight;
+                            glyph.revealRect.setAttribute("height", Math.min(revealedHeight, glyph.fillHeight));
+                        },
+                        runId,
+                    );
+                    if (runId === currentRunId) glyph.outlinePath.style.stroke = "none";
+                }
+
+                // & Playing the animation
+                async function playDecode() {
+                    const runId = ++currentRunId;
+                    hideLogo();
+                    if (reducedMotionQuery.matches) return showCompletedLogo();
+
+                    // ^ Pass 1: every outline, in order
+                    for (const glyph of glyphs) {
+                        if (runId !== currentRunId) return;
+                        await drawOutline(glyph, runId);
+                    }
+                    if (runId !== currentRunId) return;
+
+                    // ^ Pass 2: fill every glyph in the same order
+                    if (config.pauseBeforeFillMs) await delay(config.pauseBeforeFillMs);
+                    for (const glyph of glyphs) {
+                        if (runId !== currentRunId) return;
+                        await fillGlyph(glyph, runId);
+                    }
+                }
+
+                // ^ Start the animation
+                reducedMotionQuery.addEventListener?.("change", playDecode);
+                if (reducedMotionQuery.matches) {
+                    showCompletedLogo();
+                } else {
+                    hideLogo();
+                    setTimeout(playDecode, config.startDelayMs);
+                }
+            })();
+        </script>
+        <script>
+            {
+                // ~ Current date/time clock
+
+                const clock = document.getElementById("current-date-time");
+
+                // & Show the date and time in Eastern Time (e.g. "Sun, October 25, 2026 00:00:00 ET")
+                function updateClock() {
+                    const now = new Date();
+
+                    // Create Date object
+                    const date = now.toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "America/New_York",
+                    });
+
+                    // Create Time object
+                    const time = now.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hourCycle: "h23",
+                        timeZone: "America/New_York",
+                    });
+
+                    // Create the text content
+                    clock.textContent = `${date} ${time} ET`;
+
+                    // Schedule the next update right at the start of the next second
+                    setTimeout(updateClock, 1000 - now.getMilliseconds());
+                }
+
+                if (clock) updateClock();
+            }
         </script>
     </body>
 </html>

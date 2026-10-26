@@ -28,7 +28,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, #archive-count, .service-name, .table-result, .letter-reveal-char, .button-text, .station-name, .marquee-datetime, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles),
+span:not(#site-title, #archive-count, .service-name, .table-result, .letter-reveal-char, .button-text, .station-name, .marquee-datetime, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles, .keep-text-white),
 li,
 label,
 dt,
@@ -268,6 +268,32 @@ h1 {
 .cell-wrap {
     position: relative;
     display: inline-block;
+}
+
+.table-scroll {
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.table-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.table-scroll:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+.results-table.fixed-columns {
+    table-layout: fixed;
+}
+
+.results-table.fixed-columns td,
+.results-table.fixed-columns th {
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .end-footer {

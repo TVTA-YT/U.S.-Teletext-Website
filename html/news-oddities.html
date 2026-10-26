@@ -345,9 +345,366 @@
                         <h2 class="section pt-4">Teletext News</h2>
                         <p>Newest updates will be highlighted</p>
                         <hr aria-hidden="true" />
+                        <article id="nabts-decoding-status_2026-10-21">
+                            <p class="mb-0">October 26, 2026</p>
+                            <h1 class="story text-primary">NEW: Major developments regarding NABTS decoding</h1>
+                            <p>
+                                I'm sure I can speak for everyone involved with this site when I say that August 6, 2026, was a memorable
+                                day: the day when NABTS and NTSC WST decoding became a reality. Since then, we haven't stopped. We've
+                                continued to find new information and interesting samples. However, in this article, I only want to address
+                                NABTS, specifically the many updates made to the code that helps makes NABTS decoding possible.
+                            </p>
+                            <p>
+                                To decode teletext, we use <a href="#">Decode-Orc</a>, but it's not specifically just for teletext. Rather,
+                                it's software that used primarily for decoding FM RF videotape transfers produced with
+                                <a href="#">VHS-Decode</a>. It can do so much more than decode teletext, but that's the only feature I'm
+                                going to focus on here. When an update to the software was published that added teletext decoding, it was
+                                essentially in beta. Very few samples were available initially, but the samples that were available helped
+                                lead to the development of the decoder. As such, while the decoder <em>did</em> work, not every sample
+                                produced perfect results, as expected. While most pages (at least for most samples) were clean, many were
+                                badly damaged. Below are some examples of damaged pages, all decoded in August and early September. These
+                                pages will be compared to pages from the new code later.
+                            </p>
+                            <div class="row justify-content-center text-center pb-3">
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/ExtraVision_1985-04-14_P100-v7_Before.png"
+                                            alt="ExtraVision P100 v07 (04/14/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P100 v7) as exported with the code published in August (April 14, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P100 v7) <br />
+                                            (April 14, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/ExtraVision_1985-06-16_P043-v0_Before.png"
+                                            alt="ExtraVision P043 (v0) (06/16/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P043 v3) as exported with the code published in August (June 16, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P043 v3) <br />
+                                            (June 16, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/ExtraVision_1985-06-16_P500300-01_Before.png"
+                                            alt="ExtraVision P500300-01 (06/16/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P500300-01) as exported with the code published in August (June 16, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P500300-01) <br />
+                                            (June 16, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/ExtraVision_1991-12-29_P000_Before.png"
+                                            alt="ExtraVision index page (12/29/1991)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision index page as exported with the code published in August (December 21, 1991)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision index page <br />
+                                            (December 21, 1991)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/NBC-Teletext_1983-11-28_P030_Before.png"
+                                            alt="NBC Teletext P030 (11/28/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P051) as exported with the code published in August (November 28, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P051) <br />
+                                            (November 28, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/NBC-Teletext_1983-11-29_P021_Before.png"
+                                            alt="NBC Teletext P021 (11/29/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P021) as exported with the code published in August (November 29, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P021) <br />
+                                            (November 29, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/NBC-Teletext_1983-11-29_P048_Before.png"
+                                            alt="NBC Teletext P048 (11/29/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P048) as exported with the code published in August (November 29, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P048) <br />
+                                            (November 29, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/before/NBC-Teletext_1983-12-03_P019_Before.png"
+                                            alt="NBC Teletext P019 (12/03/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P021) as exported with the code published in August (December 3, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P021) <br />
+                                            (December 3, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                            </div>
+                            <p>
+                                Again, I'm focusing on damaged pages because I'm going to compare those pages, exported with the "beta"
+                                code, to the new exports from the updated code. Anyway, myself and the rest of us involved knew that with
+                                the software only being (at the time) a few days old, these errors were to be expected. It was also possible
+                                that other issues, such as a weak signal from the videotape and/or corrupted data in the teletext stream,
+                                could also cause the garbled pages. Nevertheless, we took off and started decoding what we have. Some,
+                                however, chose to wait for further improvements to Decode-Orc's NABTS decoding before they pursued further.
+                            </p>
+                            <p>
+                                On September 23, a new update to Decode-Orc, v2.9.2, added further improvement to NABTS decoding. One major
+                                improvement concerned NBC Teletext samples. Before this update, many of the colors in these samples were not
+                                rendering correctly. Many colors were rendered as white; this was especially true for anything colored
+                                black. After this new release was pushed, that issue was resolved. A before and after example is below.
+                            </p>
+                            <div class="row justify-content-center text-center">
+                                <div class="col-6">
+                                    <figure class="figure">
+                                        <img
+                                            src="../images/decoded-pages/NBC-Teletext_1983-11-28_Before.png"
+                                            alt="Acquire index page"
+                                            class="figure-img mw-100 w-75 figure-img border border-white border-1 rounded-1 electra-images"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext index page (November 28, 1983) as exported with the first version of the code published in August 2026 (exported in early September 2026)."
+                                        />
+                                        <figcaption class="figure-caption">Early September 2026</figcaption>
+                                    </figure>
+                                </div>
+                                <div class="col-6">
+                                    <figure class="figure">
+                                        <img
+                                            src="../images/decoded-pages/NBC-Teletext_1983-11-28_After.png"
+                                            alt="Acquire index page"
+                                            class="figure-img mw-100 w-75 figure-img border border-white border-1 rounded-1 electra-images"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext index page (November 28, 1983) as exported with Decode-Orc v2.9.2 (exported in late September 2026)."
+                                        />
+                                        <figcaption class="figure-caption">Late September 2026</figcaption>
+                                    </figure>
+                                </div>
+                                <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                            </div>
+                            <p>
+                                While this most of the color issues with NBC Teletext, major improvements were still needed to the code.
+                                Three days later, on September 26, a pull request was created in the Decode-Orc repository. This pull
+                                request focused specifically on improvements to the NABTS decoder. Since this code was not in the public
+                                release yet, I and a couple others built the application from the code in the pull request to test the new
+                                code. We immediately began seeing major improvements to NABTS decodes, but a few issues still persisted.
+                                Then, on October 19, even more updates were pushed to the code in the pull request. While the new, improve
+                                code exports much cleaner images (and now SVG files of each page), it also exports cleaner T33 files. As I
+                                see it, these updates have improved NABTS decodes so much that we're getting close to a "perfect" NABTS
+                                decoder.
+                            </p>
+                            <p>
+                                With each update, I integrated the changed code into the website's NABTS viewer. While re-decoding
+                                submissions from others who've submitted their samples to be re-decoded, I noticed that the JavaScript I use
+                                for the NABTS viewer (and my own personal PNG/SVG exporter) was actually, in some cases, producing even
+                                better results than the code on GitHub. I improved upon the JS code as I worked through each sample that had
+                                some problematic pages. I've submitted my findings to that pull request for review.
+                            </p>
+                            <p>
+                                Below are new exports of the 8 images above, all exported between October 22 and 25 using my custom
+                                JavaScript.
+                            </p>
+                            <div class="row justify-content-center text-center pb-3">
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/ExtraVision_1985-04-14_P100-v7_After.png"
+                                            alt="ExtraVision P100 v07 (04/14/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P100 v7) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (April 14, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P100 v7) <br />
+                                            (April 14, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/ExtraVision_1985-06-16_P043-v0_After.png"
+                                            alt="ExtraVision P043 (v0) (06/16/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P043 v3) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (June 16, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P043 v3) <br />
+                                            (June 16, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/ExtraVision_1985-06-16_P500300-01_After.png"
+                                            alt="ExtraVision P500300-01 (06/16/1985)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision (P500300-01) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (June 16, 1985)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision (P500300-01) <br />
+                                            (June 16, 1985)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/ExtraVision_1991-12-29_P000_After.png"
+                                            alt="ExtraVision index page (12/29/1991)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="ExtraVision index page as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (December 21, 1991)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            ExtraVision index page <br />
+                                            (December 21, 1991)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/NBC-Teletext_1983-11-28_P030_After.png"
+                                            alt="NBC Teletext P030 (11/28/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P051) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (November 28, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P051) <br />
+                                            (November 28, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/NBC-Teletext_1983-11-29_P021_After.png"
+                                            alt="NBC Teletext P021 (11/29/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P021) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (November 29, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P021) <br />
+                                            (November 29, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/NBC-Teletext_1983-11-29_P048_After.png"
+                                            alt="NBC Teletext P048 (11/29/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P048) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (November 29, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P048) <br />
+                                            (November 29, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                                <div class="col-3 pt-5">
+                                    <figure class="figure-img">
+                                        <img
+                                            src="../images/decoded-pages/comparison-images/after/NBC-Teletext_1983-12-03_P019_After.png"
+                                            alt="NBC Teletext P019 (12/03/1983)"
+                                            class="figure-img mw-100 border border-white rounded-1"
+                                            data-bs-target="#imageModal"
+                                            data-bs-caption="NBC Teletext (P021) as exported with custom JavaScript, which incorporates the updated NABTS code from September 26 and October 19, plus additional updates of my own (December 3, 1983)."
+                                        />
+                                        <figcaption class="figure-caption">
+                                            NBC Teletext (P021) <br />
+                                            (December 3, 1983)
+                                        </figcaption>
+                                    </figure>
+                                    <small class="text-secondary image-credit">Sample courtesy of Evan P.</small>
+                                </div>
+                            </div>
+                            <p>
+                                I should also note that WST decoding has improved as well. I've not included any examples because the
+                                current WST samples can easily be edited and cleaned up with the WST Editor on the website. However, it's
+                                recommended that all WST samples submitted before October 17 be re-decoded so a new, cleaner T34 file can be
+                                exported.
+                            </p>
+                            <p>
+                                Summing up, the improvements to NABTS decodes over the last month have been amazing. I knew that
+                                improvements to the code would make NABTS decodes look better, but I don't think I expected the results to
+                                be <em>this</em> good. It's an exciting time for those of us who are archiving North American teletext and I
+                                think it's only going to get better.
+                            </p>
+                        </article>
+                        <hr aria-hidden="true" />
                         <article id="acquire-teletext-serivce_2026-10-20">
                             <p class="mb-0">October 20, 2026</p>
-                            <h1 class="story text-primary">NEW: New teletext service, Acquire, discovered in 1991 WGN recording</h1>
+                            <h1 class="story">New teletext service, Acquire, discovered in 1991 WGN recording</h1>
                             <p>
                                 On October 15, a new teletext service provided by Chicago's WGN (not the superstation feed) has been
                                 discovered. This service was called Acquire and was found in a WGN recording dated April 27, 1991. Based on
@@ -379,7 +736,7 @@
                         <hr aria-hidden="true" />
                         <article id="kcbs-extravision_2026-10-13">
                             <p class="mb-0">October 13, 2026</p>
-                            <h1 class="story text-primary">NEW: Local KCBS ExtraVision discovered; WIVB discovered in September</h1>
+                            <h1 class="story">Local KCBS ExtraVision discovered; WIVB discovered in September</h1>
                             <p>
                                 Very early after this site launched, I added a table to the homepage with a list of CBS affiliates we were
                                 looking for samples from. These affiliates are (or were at one point) owned &amp; operated (O&amp;O)
@@ -394,6 +751,7 @@
                                 with little color.
                             </p>
                             <p>Example of both KCBS and WIVB index pages are below.</p>
+                            <p><strong>Updated October 26, 2026, to replace previous WIVB index page with cleaner version.</strong></p>
                             <div class="row justify-content-center text-center pb-3">
                                 <div class="col-6">
                                     <figure class="figure">
@@ -411,17 +769,15 @@
                                 <div class="col-6">
                                     <figure class="figure">
                                         <img
-                                            src="../images/decoded-pages/ExtraVision_WIVB_1984-08-26.png"
+                                            src="../images/decoded-pages/ExtraVision_WIVB_1985-04-14.png"
                                             alt="WIVB ExtraVision index page"
                                             class="figure-img mw-100 figure-img border border-white border-1 electra-images"
                                             data-bs-target="#imageModal"
                                             data-bs-caption="A (partially garbled) localized ExtraVision index page as seen on WIVB (August 26, 1984)."
                                         />
-                                        <figcaption class="figure-caption">
-                                            (Slightly garbled) WIVB index page (August 24, 1984).
-                                        </figcaption>
+                                        <figcaption class="figure-caption">(Slightly garbled) WIVB index page (April 14, 1985).</figcaption>
                                     </figure>
-                                    <small class="text-secondary image-credit">Sample courtesy of cowraft.</small>
+                                    <small class="text-secondary image-credit">Sample courtesy of TVTA.</small>
                                 </div>
                             </div>
                         </article>

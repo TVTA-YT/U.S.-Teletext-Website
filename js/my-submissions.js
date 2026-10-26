@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Teletext (WST and NABTS): on-site viewer + Internet Archive download
         if (group.type === "teletext") {
             return {
-                headers: ["View", "Internet Archive"],
+                headers: ["View", "ZIP"],
                 cells: row => [viewerLink(group.dataset, row, viewable), archiveOrgLink(row)]
             };
         }
@@ -291,7 +291,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     // min-width stops the column from being squeezed narrower on small screens
                     style: COLUMN_WIDTHS[header] ? `width: ${COLUMN_WIDTHS[header]}; min-width: ${COLUMN_WIDTHS[header]};` : null
                 })))),
-                el("tbody", {}, rows.map(cells => el("tr", {}, cells.map(cell => el("td", {}, cell)))))
+                // A row is either a list of cells, or { cells, className } when the row needs a color (e.g. re-decoding)
+                el("tbody", {}, rows.map(row => {
+                    const cells = Array.isArray(row) ? row : row.cells;
+                    return el("tr", { className: Array.isArray(row) ? null : row.className }, cells.map(cell => el("td", {}, cell)));
+                }))
             ])
         ]);
     }
@@ -397,7 +401,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const date = row.Date ?? row.Record_Date;
                 const tape = [row.Tape_Type, row.Tape_Speed].filter(hasRealValue).join(" ");
 
-                return [
+                const cells = [
                     hasRealValue(date) ? date : "-",
                     programTitleCell(row.Program_Title),
                     [row.Network, row.Affiliate].filter(hasRealValue).join(" / ") || "-",
@@ -413,6 +417,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                         : "-",
                     ...links.cells(row)
                 ];
+
+                // Being re-decoded: color the row and add spoken text for screen readers
+                if (row.needsRedecode === true) {
+                    cells[0] = [
+                        cells[0],
+                        el("span", { className: "visually-hidden", text: ". Being re-decoded with an updated decoder" })
+                    ];
+                    return { className: "redecode-row-bg", cells };
+                }
+
+                return cells;
             });
 
             const headingID = `dataset-${group.dataset}`;
@@ -478,7 +493,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             ]);
         });
 
+        // Explains the color, only when at least one of this contributor's records is flagged
+        const anyRedecode = data.datasets.some(group => group.rows.some(row => row.needsRedecode === true));
+        const redecodeNote = anyRedecode
+            ? [el("p", {
+                className: "alert alert-warning",
+                text: "Highlighted samples are being re-decoded with an updated decoder. Their pages may change once that's done."
+            })]
+            : [];
+
         archiveEl.replaceChildren(
+            ...redecodeNote,
             el("div", { className: "row" }, sections)
         );
     }

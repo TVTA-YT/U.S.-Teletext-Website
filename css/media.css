@@ -160,6 +160,17 @@
         display: none;
     }
 
+    #quick-updates-update-title {
+        font-size: 1rem;
+        line-height: 1em;
+    }
+
+    #quick-updates-update-body,
+    #quick-updates-update-date,
+    #quick-updates-update-list {
+        font-size: 1rem;
+    }
+
     /* .time-row > div {
         width: 150px !important;
         min-width: 150px !important;
@@ -169,6 +180,17 @@
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
 
 @media (min-width: 1400px) {
+    #quick-updates-update-title {
+        font-size: 2rem;
+        line-height: 1.2em;
+    }
+
+    #quick-updates-update-body,
+    #quick-updates-update-date,
+    #quick-updates-update-list {
+        font-size: 2rem;
+    }
+
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -238,6 +260,17 @@
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
+    #quick-updates-update-title {
+        font-size: 2rem;
+        line-height: 1.2em;
+    }
+
+    #quick-updates-update-body,
+    #quick-updates-update-date,
+    #quick-updates-update-list {
+        font-size: 2rem;
+    }
+
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -299,6 +332,17 @@
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
+    #quick-updates-update-title {
+        font-size: 1.6rem;
+        line-height: 1.2em;
+    }
+
+    #quick-updates-update-body,
+    #quick-updates-update-date,
+    #quick-updates-update-list {
+        font-size: 1.6rem;
+    }
+
     #site-intro span#site-title {
         font-size: 2.2em !important;
     }
@@ -361,6 +405,17 @@
 
 /* * QUERY FOR MEDIUM DEVICES * */
 @media (min-width: 768px) and (max-width: 991px) {
+    #quick-updates-update-title {
+        font-size: 1.2rem;
+        line-height: 1.2em;
+    }
+
+    #quick-updates-update-body,
+    #quick-updates-update-date,
+    #quick-updates-update-list {
+        font-size: 1.2rem;
+    }
+
     #site-intro span#site-title {
         font-size: 1.6em !important;
     }
@@ -487,6 +542,10 @@
     #navbarNav .nav-item .nav-link {
         padding: 10px 0 10px 0;
         font-size: 15px !important;
+    }
+
+    #site-introduction-paragraphs-column {
+        padding-bottom: 50px;
     }
 
     #submission-page-alert-text {

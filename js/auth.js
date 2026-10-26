@@ -466,13 +466,30 @@ async function mySamples(request, env, tables) {
     const results = await env.DB.batch(statements);
     const now = nowSeconds();
 
+    // Re-decode list, only shown here on each contributor's own page.
+    // Loaded separately so a database without the redecode_queue table (e.g. staging before the migration) still loads the page
+    let redecodeRows = [];
+    try {
+        redecodeRows = (await env.DB.prepare(`SELECT dataset_table, record_id FROM redecode_queue`).all()).results ?? [];
+    } catch (err) {
+        console.warn("Re-decode list unavailable (run migration-redecode.sql on this database):", err.message);
+    }
+
+    // IDs are UUIDs: compared as text, ignoring case and stray spaces
+    const redecodeKey = (table, id) => `${table}:${String(id ?? "").trim().toLowerCase()}`;
+    const needsRedecode = new Set(redecodeRows.map(entry => redecodeKey(entry.dataset_table, entry.record_id)));
+
     // Same row shape as /api/<dataset>, so results-renderer.js can render each group unchanged
     const datasets = entries
         .map(([key, config], index) => ({
             dataset: key,
             table: config.table,
             type: config.type,
-            rows: (results[index].results ?? []).map(row => ({ ...row, isNew: isNewRecord(row.Date_Added, now) }))
+            rows: (results[index].results ?? []).map(row => ({
+                ...row,
+                isNew: isNewRecord(row.Date_Added, now),
+                needsRedecode: needsRedecode.has(redecodeKey(config.table, row[config.idField || "ID"]))
+            }))
         }))
         .filter(group => group.rows.length > 0);
 
@@ -533,7 +550,7 @@ export async function handleAuth(request, env, tables) {
 
         if (request.method === "GET") {
             if (path === "/api/auth/me") return await me(request, env);
-            if (path === "/api/auth/my-samples") return await mySamples(request, env, tables);
+            if (path === "/api/auth/my-submissions") return await mySamples(request, env, tables);
             if (path === "/api/auth/admin/approve-name") return await approveName(url, env);
             if (path === "/api/auth/admin/submission-status") return await setSubmissionStatus(url, env);
         }

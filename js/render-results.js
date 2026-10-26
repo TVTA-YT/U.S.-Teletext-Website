@@ -184,63 +184,80 @@ function sortRowsByField(rows, field, type) {
 }
 
 // ! Render the table
+// Tables with more rows than this get a scrollable wrapper
+const SCROLL_ROW_THRESHOLD = 5;
+
+// ! Render the table
 function renderTable(rows, columns, groupByField, container, dataset) {
     container.innerHTML = '';
+    const headerCells = columns.map(c => `<th scope="col">${escapeHtml(c.label)}</th>`).join('');
 
+    // All records (no grouping): one table
     if (!groupByField) {
-        const headerCells = columns.map(c => `<th scope="col">${escapeHtml(c.label)}</th>`).join('');
-        container.innerHTML = `
+        const section = createTableSection(headerCells, columns, 'table-striped all-records');
+        const tbody = section.querySelector('tbody');
+        rows.forEach(r => appendRow(tbody, r, columns, dataset));
+        container.appendChild(section);
+        return;
+    }
+
+    // Grouped by month: one full-width table per group, stacked vertically
+    const groups = new Map();
+    for (const r of rows) {
+        const key = r[groupByField];
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(r);
+    }
+
+    for (const [groupValue, groupRows] of groups) {
+        const section = createTableSection(headerCells, columns, '', groupValue);
+        const tbody = section.querySelector('tbody');
+        groupRows.forEach(r => appendRow(tbody, r, columns, dataset));
+        applyScrollIfNeeded(section, groupRows.length, groupValue);
+        container.appendChild(section);
+    }
+}
+
+// Builds a heading (optional) + table wrapper
+function createTableSection(headerCells, columns, extraTableClasses = '', headingText = null) {
+    const section = document.createElement('section');
+    section.className = 'results-group mb-4';
+
+    const headingHtml = headingText !== null
+        ? `<h2 aria-label="Table row month: ${escapeHtml(headingText)}">${escapeHtml(headingText)}</h2>`
+        : '';
+
+    const hasFixedWidths = columns.some(c => c.width);
+    const colgroup = hasFixedWidths
+        ? `<colgroup>${columns.map(c =>
+            c.width ? `<col style="width: ${escapeHtml(c.width)}">` : '<col>'
+        ).join('')}</colgroup>`
+        : '';
+
+    section.innerHTML = `
+        ${headingHtml}
         <div class="table-responsive">
-            <table class="table table-bordered table-primary table-striped justify-content-center align-middle text-nowrap results-table${groupByField ? '' : ' all-records'}">
+            <table class="table table-bordered table-primary table-striped align-middle results-table ${hasFixedWidths ? 'fixed-columns' : 'text-nowrap'} ${extraTableClasses}">
+                ${colgroup}
                 <thead>
                     <tr>${headerCells}</tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
-        `;
+    `;
+    return section;
+}
 
-        const tbody = container.querySelector('tbody');
-        rows.forEach(r => appendRow(tbody, r, columns, dataset));
-        return;
-    }
+// Makes the table wrapper scrollable and keyboard-reachable when it has many rows
+function applyScrollIfNeeded(section, rowCount, label) {
+    if (rowCount <= SCROLL_ROW_THRESHOLD) return;
 
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'row';
-
-    let currentGroup = null;
-    let tbody = null;
-
-    for (const r of rows) {
-        const groupValue = r[groupByField];
-
-        if (groupValue !== currentGroup) {
-            currentGroup = groupValue;
-
-            const col = document.createElement('div');
-            col.className = 'col-xl-6 col-lg-6 col-md-6 col-sm-12';
-            const headerCells = columns.map(c => `<th scope="col">${escapeHtml(c.label)}</th>`).join('');
-
-            col.innerHTML = `
-            <h2 aria-label="Table row month: ${escapeHtml(groupValue)}">${escapeHtml(groupValue)}</h2>
-            <div class="table-responsive">
-                <table class="table table-bordered table-primary justify-content-center align-middle text-nowrap results-table">
-                    <thead>
-                        <tr>${headerCells}</tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            `;
-
-            rowDiv.appendChild(col);
-            tbody = col.querySelector('tbody');
-        }
-
-        appendRow(tbody, r, columns, dataset);
-    }
-
-    container.appendChild(rowDiv);
+    const wrapper = section.querySelector('.table-responsive');
+    wrapper.classList.add('table-scroll');
+    wrapper.setAttribute('tabindex', '0');
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', `${label} results, scrollable table`);
 }
 
 // visibleHtml: the raw HTML that should be seen but not spoken
