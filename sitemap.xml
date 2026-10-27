@@ -1,124 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-       <loc>https://nateletext.com/</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>1.0000</priority>
+    <loc>https://nateletext.com/</loc>
+    <lastmod>2026-10-26T19:20:09-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/services.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/abc-plus.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/other-text-services.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/about.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/stations-altered-vbi.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/acquire.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/electra-trivia.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/archiving-teletext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/starsight.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/contact.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/teletext-links.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/datavizion.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/archiving-teletext.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/edutel.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/news-oddities.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/electra-trivia.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/submissions.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/electra.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/about.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/extravision.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/contact.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/iptv-agids.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/sitemap.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/kcet-text.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/privacy-policy.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://nateletext.com/html/ket-agtext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/datavizion.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/keyfax.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/edutel.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/nbc-teletext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/electra.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/news-oddities.html</loc>
+    <lastmod>2026-10-26T19:20:09-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/extravision.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/other-text-services.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/keyfax.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/penntext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/nbc-teletext.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/privacy-policy.html</loc>
+    <lastmod>2026-10-20T22:53:52-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/sss-teletext.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/services.html</loc>
+    <lastmod>2026-10-26T19:20:09-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/abc-plus.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/silent-radio.html</loc>
+    <lastmod>2026-10-18T18:34:06+00:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/ket-agtext.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/sitemap.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
   </url>
   <url>
-       <loc>https://nateletext.com/html/wisconsin-infotext.html</loc>
-       <lastmod>2026-09-25T00:20:32+00:00</lastmod>
-       <priority>0.6400</priority>
+    <loc>https://nateletext.com/html/sss-teletext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/starsight.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/stations-altered-vbi.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/submissions.html</loc>
+    <lastmod>2026-10-23T16:43:46-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/teletext-links.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/virtext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/wisconsin-infotext.html</loc>
+    <lastmod>2026-10-20T20:51:23-04:00</lastmod>
+  </url>
+  <url>
+    <loc>https://nateletext.com/html/wst-editor.html</loc>
+    <lastmod>2026-10-26T19:34:35-04:00</lastmod>
   </url>
 </urlset>
