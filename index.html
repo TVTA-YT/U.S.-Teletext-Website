@@ -57,7 +57,6 @@
 
             dt {
                 font-weight: normal;
-                transform: scaleY(1.5);
             }
 
             #site-intro-container {
@@ -109,7 +108,7 @@
             }
 
             #quick-updates-container.samples-story {
-                background-color: #ff0000;
+                background-color: #f0f;
             }
 
             #quick-updates-list ul[data-field="list"] {
@@ -135,18 +134,28 @@
                 color: #fff !important;
             }
 
-            .quick-updates-cursor {
-                display: inline-block;
-                width: 0.6em;
-                height: 1em;
-                vertical-align: text-bottom;
-                background: #fff;
-                animation: quick-updates-cursor-blink 1s steps(1) infinite;
+            .double-height-wrap {
+                overflow: hidden;
+            }
+
+            .double-height {
+                display: block;
+                width: 200%;
+                font-size: 3em;
+                line-height: 1.2;
+                transform: scaleX(0.5);
+                transform-origin: left top;
             }
 
             @media (prefers-reduced-motion: reduce) {
                 #site-intro-container {
                     margin-top: 94px !important;
+                }
+            }
+
+            @keyframes blink {
+                50% {
+                    opacity: 0;
                 }
             }
 
@@ -426,7 +435,7 @@
                     <p class="fs-4 fw-bold text-center">Watch this space for quick updates.</p>
                     <div id="quick-updates" style="font-family: &quot;Teletext50&quot;, sans-serif">
                         <div id="quick-updates-container">
-                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #00d231">
+                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
                                 <span class="keep-text-white">NATA Updates</span>
                                 <br />
                                 <span class="keep-text-white" id="quick-updates-last-updated">Last Updated: 10/25/2026</span>
@@ -435,22 +444,32 @@
                                 <div id="quick-updates-sr" class="visually-hidden" aria-live="polite"></div>
                                 <dl id="quick-updates-list" aria-hidden="true">
                                     <dt
-                                        class="text-uppercase pb-2"
+                                        class="text-uppercase pb-2 double-height"
                                         id="quick-updates-update-title"
                                         style="color: #fff800 !important"
                                         data-field="title"
                                     ></dt>
                                     <dd class="text-uppercase">
-                                        <span class="keep-text-white" id="quick-updates-update-body" data-field="body"></span>
-                                        <ul id="quick-updates-update-list" data-field="list" class="mb-0"></ul>
-                                        <span class="d-block mt-4 keep-text-white" id="quick-updates-update-date" data-field="date"></span>
+                                        <div class="double-height-wrap">
+                                            <span
+                                                class="keep-text-white double-height"
+                                                id="quick-updates-update-body"
+                                                data-field="body"
+                                            ></span>
+                                            <ul id="quick-updates-update-list" data-field="list" class="mb-0"></ul>
+                                            <span
+                                                class="d-block mt-4 keep-text-white double-height"
+                                                id="quick-updates-update-date"
+                                                data-field="date"
+                                            ></span>
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
                             <div class="text-center" id="next-update-timer" aria-hidden="true">
                                 <span class="keep-text-white" id="next-update-timer-text">&nbsp;</span>
                             </div>
-                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #00d231">
+                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
                                 <span class="keep-text-white" id="quick-updates-counter">Update 1 / 5</span>
                             </div>
                         </div>
@@ -603,8 +622,8 @@
                         </div>
                         <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
                         <p class="fs-5">
-                            If you've got any content from WGBH (Boston, MA) dating from the early 1980s to approximately 1985, you've
-                            likely got something we've been trying hard to find.
+                            If you've got any content from WGBH (Boston, MA) dating from the early 1980s to approximately 1983 or 1984,
+                            you've likely got something we've been trying hard to find.
                         </p>
                         <p class="fs-5">
                             At that time, WGBH had a teletext service called "Scoop".

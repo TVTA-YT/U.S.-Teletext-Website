@@ -139,6 +139,10 @@
     .service-new-row-top-padding {
         padding-top: 100px !important;
     }
+
+    .double-height {
+        font-size: 2.5em !important;
+    }
 }
 
 
@@ -160,15 +164,9 @@
         display: none;
     }
 
-    #quick-updates-update-title {
-        font-size: 1rem;
-        line-height: 1em;
-    }
 
-    #quick-updates-update-body,
-    #quick-updates-update-date,
-    #quick-updates-update-list {
-        font-size: 1rem;
+    .double-height {
+        font-size: 2em !important;
     }
 
     /* .time-row > div {
@@ -180,17 +178,6 @@
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
 
 @media (min-width: 1400px) {
-    #quick-updates-update-title {
-        font-size: 2rem;
-        line-height: 1.2em;
-    }
-
-    #quick-updates-update-body,
-    #quick-updates-update-date,
-    #quick-updates-update-list {
-        font-size: 2rem;
-    }
-
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -260,17 +247,6 @@
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
-    #quick-updates-update-title {
-        font-size: 2rem;
-        line-height: 1.2em;
-    }
-
-    #quick-updates-update-body,
-    #quick-updates-update-date,
-    #quick-updates-update-list {
-        font-size: 2rem;
-    }
-
     #site-intro span#site-title {
         font-size: 2.5em !important;
     }
@@ -331,18 +307,13 @@
     }
 }
 
+@media (max-width: 1199px) {
+    #partial-teletext {
+        padding-bottom: 50px !important;
+    }
+}
+
 @media (min-width: 992px) and (max-width: 1199px) {
-    #quick-updates-update-title {
-        font-size: 1.6rem;
-        line-height: 1.2em;
-    }
-
-    #quick-updates-update-body,
-    #quick-updates-update-date,
-    #quick-updates-update-list {
-        font-size: 1.6rem;
-    }
-
     #site-intro span#site-title {
         font-size: 2.2em !important;
     }
@@ -405,17 +376,6 @@
 
 /* * QUERY FOR MEDIUM DEVICES * */
 @media (min-width: 768px) and (max-width: 991px) {
-    #quick-updates-update-title {
-        font-size: 1.2rem;
-        line-height: 1.2em;
-    }
-
-    #quick-updates-update-body,
-    #quick-updates-update-date,
-    #quick-updates-update-list {
-        font-size: 1.2rem;
-    }
-
     #site-intro span#site-title {
         font-size: 1.6em !important;
     }

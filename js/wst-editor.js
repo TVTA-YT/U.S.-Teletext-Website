@@ -29,7 +29,7 @@ const ROW_COUNT = 25
 const CELL_WIDTH = 12
 const CELL_HEIGHT = 20;
 
-const VIEWER_FONT_FAMILY = '"Bedstead Regular", monospace';
+const VIEWER_FONT_FAMILY = '"Teletext50", monospace';
 
 // Ask the browser to load the font
 const VIEWER_FONT = `${CELL_HEIGHT}px ${VIEWER_FONT_FAMILY}`;
@@ -62,6 +62,8 @@ const ControlCode = {
     ALPHA_MAGENTA: 0x05,
     ALPHA_CYAN: 0x06,
     ALPHA_WHITE: 0x07,
+    NORMAL_SIZE: 0x0c,
+    DOUBLE_HEIGHT: 0x0d,
     MOSAIC_BLACK: 0x10,
     MOSAIC_RED: 0x11,
     MOSAIC_GREEN: 0x12,
@@ -162,20 +164,31 @@ function drawMosaicCharacter(context, left, top, byteValue, color, isSeparated) 
 
 
 // & Draw the cell
-function drawCell(context, left, top, byteValue, foregroundColor, backgroundColor, isMosaic, isSeparated) {
+// * backgroundRows: how many rows tall the background is (2 on a double-height row, so the row below takes the colors of the row above)
+// * isDoubleHeight: stretch the character itself over two rows
+function drawCell(context, left, top, byteValue, foregroundColor, backgroundColor, isMosaic, isSeparated, backgroundRows = 1, isDoubleHeight = false) {
     context.fillStyle = PALETTE[backgroundColor];
-    context.fillRect(left, top, CELL_WIDTH, CELL_HEIGHT);
+    context.fillRect(left, top, CELL_WIDTH, CELL_HEIGHT * backgroundRows);
 
     if (isControlCode(byteValue)) return;
 
-    if (isMosaic && isMosaicShape(byteValue)) {
-        drawMosaicCharacter(context, left, top, byteValue, PALETTE[foregroundColor], isSeparated);
-        return;
-    }
+    // Draw the normal-size character, stretched to twice the height for double height
+    context.save();
+    context.translate(left, top);
+    if (isDoubleHeight) context.scale(1, 2);
 
-    context.fillStyle = PALETTE[foregroundColor];
-    context.fillText(characterForByte(byteValue), left + CELL_WIDTH / 2, top + viewerFont.baseline);
+    if (isMosaic && isMosaicShape(byteValue)) {
+        drawMosaicCharacter(context, 0, 0, byteValue, PALETTE[foregroundColor], isSeparated);
+    } else {
+        context.fillStyle = PALETTE[foregroundColor];
+        context.fillText(characterForByte(byteValue), CELL_WIDTH / 2, viewerFont.baseline);
+    }
+    context.restore();
 }
+
+// Double height isn't allowed on the header, the last display row, or the row after it
+const canUseDoubleHeight = rowNumber => rowNumber > 0 && rowNumber < ROW_COUNT - 2;
+const hasDoubleHeight = rowBytes => rowBytes.some(byteValue => (byteValue & SEVEN_BIT_MASK) === ControlCode.DOUBLE_HEIGHT);
 
 // & Measure the viewer font and pick the largest size where the tallest ascender and the deepest descender (g, j, p, q, y) both fit inside one cell, and no glyph is wider than a cell
 function fitViewerFontToCell() {
@@ -223,12 +236,17 @@ function prepareCanvasContext(canvas) {
     return context;
 }
 
-function drawRow(context, rowBytes, top, revealConcealed) {
+// & Draw one row. With useDoubleHeight, a row containing Double Height (0D) is drawn two rows tall and the function returns true so the caller skips the row below, as a TV does
+function drawRow(context, rowBytes, top, revealConcealed, useDoubleHeight = false) {
     let foregroundColor = WHITE;
     let backgroundColor = BLACK;
     let isMosaic = false;
     let isSeparated = false;
     let isConcealed = false;
+
+    const isDoubleHeightRow = useDoubleHeight && hasDoubleHeight(rowBytes);
+    const backgroundRows = isDoubleHeightRow ? 2 : 1;
+    let isDoubleHeight = false;
 
     // Hold Graphics (1E): while it's on, a control-code cell shows the last block graphic instead of a blank block
     // * Services use it to change color or background mid-shape without a gap
@@ -245,15 +263,23 @@ function drawRow(context, rowBytes, top, revealConcealed) {
             if (byteValue === ControlCode.NEW_BACKGROUND) backgroundColor = foregroundColor;
             else if (byteValue === ControlCode.BLACK_BACKGROUND) backgroundColor = BLACK;
             else if (byteValue === ControlCode.HOLD_MOSAICS) isHoldingMosaics = true;
+            else if (byteValue === ControlCode.NORMAL_SIZE && isDoubleHeightRow) {
+                // Normal Size is set-at. Changing size forgets the held block
+                if (isDoubleHeight) heldByte = SPACE;
+                isDoubleHeight = false;
+            }
 
             if (isHoldingMosaics && isMosaic) {
-                drawCell(context, left, top, heldByte, foregroundColor, backgroundColor, true, heldSeparated);
+                drawCell(context, left, top, heldByte, foregroundColor, backgroundColor, true, heldSeparated, backgroundRows, isDoubleHeight);
             } else {
-                drawCell(context, left, top, SPACE, foregroundColor, backgroundColor, false, false);
+                drawCell(context, left, top, SPACE, foregroundColor, backgroundColor, false, false, backgroundRows);
             }
 
             // Set-after codes take effect from the next cell. Switching between text and graphics forgets the held block
-            if (isAlphaColorCode(byteValue)) {
+            if (byteValue === ControlCode.DOUBLE_HEIGHT && isDoubleHeightRow) {
+                if (!isDoubleHeight) heldByte = SPACE;
+                isDoubleHeight = true;
+            } else if (isAlphaColorCode(byteValue)) {
                 if (isMosaic) heldByte = SPACE;
                 foregroundColor = byteValue;
                 isMosaic = false;
@@ -283,8 +309,10 @@ function drawRow(context, rowBytes, top, revealConcealed) {
 
         const byteToDraw = isConcealed && !revealConcealed ? SPACE : byteValue;
 
-        drawCell(context, left, top, byteToDraw, foregroundColor, backgroundColor, isMosaic, isSeparated);
+        drawCell(context, left, top, byteToDraw, foregroundColor, backgroundColor, isMosaic, isSeparated, backgroundRows, isDoubleHeight);
     }
+
+    return isDoubleHeightRow;
 }
 
 // & Numbers 0–24 down the gutter; the current row's number is brighter
@@ -309,7 +337,8 @@ function drawPage(canvas, pageRows, options = {}) {
         selection = null,
         pastePreview = null,
         showRowNumbers = false,
-        scale = 1  // 2 draws everything twice the size (e.g. for PNG export)
+        scale = 1,  // 2 draws everything twice the size (e.g. for PNG export)
+        doubleHeight = false  // Draw Double Height text as a TV would; the row below it is hidden. Off while editing so every row stays visible
     } = options;
 
     const gutterWidth = showRowNumbers ? ROW_NUMBER_GUTTER_WIDTH : 0;
@@ -343,13 +372,16 @@ function drawPage(canvas, pageRows, options = {}) {
             continue;
         }
 
-        drawRow(context, rowBytes, top, revealConcealed);
+        const drewTwoRows = drawRow(context, rowBytes, top, revealConcealed, doubleHeight && canUseDoubleHeight(rowNumber));
 
         if (rowOutlines[rowNumber]) {
             context.strokeStyle = rowOutlines[rowNumber];
             context.lineWidth = 2;
             context.strokeRect(1, top + 1, PAGE_WIDTH - 2, CELL_HEIGHT - 2);
         }
+
+        // The row below a double-height row is covered by its bottom half
+        if (drewTwoRows) rowNumber++;
     }
 
     if (selection) {
@@ -2330,7 +2362,8 @@ function renderPageAsPNG(pageRows) {
         drawPage(canvas, pageRows, {
             highlightMissingRows: false,
             revealConcealed: elements.revealOption.checked,
-            scale: PNG_EXPORT_SCALE
+            scale: PNG_EXPORT_SCALE,
+            doubleHeight: true
         });
         canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("the browser couldn't make the image")), "image/png");
     });

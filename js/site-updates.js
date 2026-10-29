@@ -8,6 +8,9 @@
     // ^ How long to wait to show the next story (5 seconds)
     const HOLD_TIME = 5000;
 
+    // ^ How long the screen stays blank between stories
+    const CLEAR_PAUSE = 500;
+
     // ^ Hosts that should use the backup data instead of the API ("" covers opening the file directly)
     const DEV_HOSTS = ["localhost", "127.0.0.1", ""];
     const IS_DEV = DEV_HOSTS.includes(location.hostname) || location.hostname.endsWith(".workers.dev");
@@ -115,7 +118,7 @@
         const counter = document.getElementById("quick-updates-counter");
         const lastUpdated = document.getElementById("quick-updates-last-updated");
         const timerText = document.getElementById("next-update-timer-text");
-        const container = document.getElementById("quick-updates-container");
+        const screen = document.getElementById("quick-updates-container");
         const titleEl = list.querySelector('[data-field="title"]');
         const bodyEl = list.querySelector('[data-field="body"]');
         const listEl = list.querySelector('[data-field="list"]');
@@ -140,7 +143,7 @@
         // & Make a list item with the given text
         function makeItem(text) {
             const li = document.createElement("li");
-            li.classList.add("keep-text-white");
+            li.classList.add("double-height", "keep-text-white")
             li.textContent = text;
             return li;
         }
@@ -172,9 +175,6 @@
             timerText.textContent = "\u00A0";
         }
 
-        const cursor = document.createElement("span");
-        cursor.className = "quick-updates-cursor";
-
         // Lock the box to the tallest story so the layout doesn't jump
         let maxHeight = 0;
         stories.forEach((story) => {
@@ -184,58 +184,44 @@
         list.style.minHeight = maxHeight + "px";
         clearStory();
 
-        // & Overwrite one element's text character by character
-        function typeOver(el, newText) {
-            const oldText = el.textContent;
-            const end = Math.max(newText.length, oldText.length);
+        // & Type text into an empty element character by character
+        function typeText(el, text) {
             let k = 0;
             return new Promise((resolve) => {
                 (function tick() {
-                    if (k > end) {
-                        // Trim trailing blanks
-                        el.textContent = newText;
-                        return resolve();
-                    }
-                    el.replaceChildren(
-                        // Past the end of the new text, pad with spaces to blank out old characters
-                        document.createTextNode(newText.slice(0, k).padEnd(k, " ")),
-                        cursor,
-                        document.createTextNode(oldText.slice(k)),
-                    );
+                    el.textContent = text.slice(0, k);
+                    if (k >= text.length) return resolve();
                     k++;
                     setTimeout(tick, TYPE_SPEED);
                 })();
             });
         }
 
-        // & Overwrite the list one item at a time; blank out and remove any extra old items
-        async function typeList(newLines) {
-            const oldItems = [...listEl.children];
-            const count = Math.max(oldItems.length, newLines.length);
-
-            for (let i = 0; i < count; i++) {
-                // Add a new item only when it's about to be typed, so empty bullets don't show early
-                let li = oldItems[i];
-                if (!li) {
-                    li = makeItem("");
-                    listEl.appendChild(li);
-                }
-                await typeOver(li, newLines[i] ?? "");
+        // & Type each list item in order, adding each one only when it's about to be typed
+        async function typeList(lines) {
+            for (const line of lines) {
+                const li = makeItem("");
+                listEl.appendChild(li);
+                await typeText(li, line);
             }
-
-            // Remove items the new story doesn't use
-            [...listEl.children].slice(newLines.length).forEach((li) => li.remove());
         }
 
         // & Show each update's content
-        async function showStory(i) {
+        async function showStory(i, isFirst) {
             const story = stories[i];
+
+            // Clear the screen before the next story, like the old cable text services
+            if (!isFirst) {
+                clearStory();
+                await sleep(CLEAR_PAUSE);
+            }
 
             // The update counter in the section's footer
             counter.textContent = `Update ${i + 1} / ${stories.length}`;
 
             // Red background for the new samples story, blue for everything else
-            container?.classList.toggle("samples-story", story.list.length > 0);
+            screen?.classList.toggle("samples-story", story.list.length > 0);
+
             srBox.textContent = [story.title + ".", story.body, story.list.join(", "), story.date].filter(Boolean).join(" ");
 
             // If a user has reduced motion enabled, display the text normally
@@ -244,27 +230,19 @@
                 return;
             }
 
-            await typeOver(titleEl, story.title);
-
-            // Clear whichever of the body or list is going away before typing the other,
-            // so the two are never on screen together and the box stays the same height
-            if (story.list.length > 0) {
-                await typeOver(bodyEl, story.body);
-                await typeList(story.list);
-            } else {
-                await typeList([]);
-                await typeOver(bodyEl, story.body);
-            }
-
-            await typeOver(dateEl, story.date);
-            cursor.remove();
+            await typeText(titleEl, story.title);
+            await typeText(bodyEl, story.body);
+            await typeList(story.list);
+            await typeText(dateEl, story.date);
         }
 
         // & Run everything
         async function run() {
             let i = 0;
+            let isFirst = true;
             while (true) {
-                await showStory(i);
+                await showStory(i, isFirst);
+                isFirst = false;
 
                 // With only one story, there's nothing to rotate to
                 if (stories.length === 1) break;

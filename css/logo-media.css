@@ -1,4 +1,4 @@
-@media only screen and (min-width: 1400px) {
+@media (min-width: 1400px) {
     /* LOGOS */
     .abc-plus-logo {
         width: 25% !important;
@@ -60,6 +60,10 @@
         width: 30% !important;
     }
 
+    #kiro-logo {
+        width: 70%;
+    }
+
     #kmtv-logo {
         width: 50%;
     }
@@ -116,6 +120,10 @@
         width: 65%;
     }
 
+    #wthi-logo {
+        width: 65%;
+    }
+
     .additions-table-logo-row {
         height: 60px !important;
     }
@@ -124,12 +132,13 @@
         height: 87.45px !important;
     }
 
-    #omitted-teletext-table-container {
+    #omitted-teletext-table-container,
+    #partial-teletext-table-container {
         max-height: 389px;
     }
 }
 
-@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+@media (min-width: 1200px) and (max-width: 1399px) {
     /* LOGOS */
     .abc-plus-logo {
         width: 25% !important;
@@ -191,6 +200,10 @@
         width: 30% !important;
     }
 
+    #kiro-logo {
+        width: 70%;
+    }
+
     #kmtv-logo {
         width: 50%;
     }
@@ -247,6 +260,10 @@
         width: 65%;
     }
 
+    #wthi-logo {
+        width: 65%;
+    }
+
     .additions-table-logo-row {
         height: 60px !important;
     }
@@ -255,12 +272,13 @@
         height: 87.45px !important;
     }
 
-    #omitted-teletext-table-container {
+    #omitted-teletext-table-container,
+    #partial-teletext-table-container {
         max-height: 394px;
     }
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1199px) {
     /* LOGOS */
     .abc-plus-logo {
         width: 35% !important;
@@ -322,6 +340,10 @@
         width: 35% !important;
     }
 
+    #kiro-logo {
+        width: 60%;
+    }
+
     #kmtv-logo {
         width: 35%;
     }
@@ -378,6 +400,10 @@
         width: 40%;
     }
 
+    #wthi-logo {
+        width: 50%;
+    }
+
     .additions-table-logo-row {
         height: 60px !important;
     }
@@ -386,12 +412,13 @@
         height: 92.2167px !important;
     }
 
-    #omitted-teletext-table-container {
+    #omitted-teletext-table-container,
+    #partial-teletext-table-container {
         max-height: 409px;
     }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991px) {
     /* LOGOS */
     .abc-plus-logo {
         width: 25% !important;
@@ -453,6 +480,10 @@
         width: 30% !important;
     }
 
+    #kiro-logo {
+        width: 70%;
+    }
+
     #kmtv-logo {
         width: 40%;
     }
@@ -509,6 +540,10 @@
         width: 45%;
     }
 
+    #wthi-logo {
+        width: 55%;
+    }
+
     .additions-table-logo-row {
         height: 60px !important;
     }
@@ -517,12 +552,13 @@
         height: 92.2167px !important;
     }
 
-    #omitted-teletext-table-container {
+    #omitted-teletext-table-container,
+    #partial-teletext-table-container {
         max-height: 409px;
     }
 }
 
-@media only screen and (max-width: 767px) {
+@media (max-width: 767px) {
     /* LOGOS */
     .abc-plus-logo {
         width: 25% !important;
@@ -584,6 +620,10 @@
         width: 35% !important;
     }
 
+    #kiro-logo {
+        width: 80%;
+    }
+
     #kmtv-logo {
         width: 50%;
     }
@@ -640,6 +680,10 @@
         width: 55%;
     }
 
+    #wthi-logo {
+        width: 60%;
+    }
+
     .additions-table-logo-row {
         height: 65px !important;
     }
@@ -648,7 +692,8 @@
         height: 92.2167px !important;
     }
 
-    #omitted-teletext-table-container {
+    #omitted-teletext-table-container,
+    #partial-teletext-table-container {
         max-height: 409px;
     }
 }
