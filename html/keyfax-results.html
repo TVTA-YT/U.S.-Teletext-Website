@@ -38,7 +38,12 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"
         ></script>
-        <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+        <script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id="fca7fa5d-3d18-4e74-afe2-5b880ffc204c"
+            data-domains="nateletext.com"
+        ></script>
         <title>Keyfax Results</title>
         <style>
             .container {
@@ -448,6 +453,7 @@
                 columns: [
                     { label: "Thumbnail", width: "7rem", renderThumbnail: true },
                     { label: "Date", key: "Date", width: "7rem" },
+                    { label: "Network", key: "Network", width: "6rem" },
                     { label: "Program", key: "Program_Title", width: "30rem" },
                     { label: "View Teletext Stream", key: "NABTS_Stream", width: "12rem", renderTeletext: true },
                     { label: "Tape", key: "Tape_Type", width: "5rem", accessibleMap: "BMAX_Name" },

@@ -1,7 +1,6 @@
-/*
-~ nabts.js — NABTS (.t33) stream decoder and NAPLPS page renderer/animator for the browser.
- ~ JavaScript port of NABTS code used by Decode-Orc, specifically pull request 328.
- * Licence: GPL-3.0-or-later (inherited from decode-orc).
+/*! nabts.js — NABTS (.t33) stream decoder and NAPLPS page renderer/animator for the browser.
+ * JavaScript port of pages/nabts.py from AssunaYuuki's Teletext Rescue, itself a port of decode-orc
+ * (orc/plugins/stages/nabts_sink). Licence: GPL-3.0-or-later (inherited from decode-orc).
  * See https://github.com/decode-orc/decode-orc
  */
 ((globalScope, createLibrary) => {
@@ -345,7 +344,19 @@
                 const previous = this.openGroups.get(packet.channel);
                 this.openGroups.delete(packet.channel);
                 this._emit(packet.channel, previous, 'superseded');
-            } else if (this.openGroups.size >= MAX_OPEN_GROUPS) return;
+            } else if (this.openGroups.size >= MAX_OPEN_GROUPS) {
+                // JS-only: decode-orc refuses a new group while 32 are open, but channels misread from damaged
+                // prefixes open groups that never hear another packet, and once they fill the table every later
+                // group on the service's own channel is refused (CBS 1985-04-14: two of the three copies of the Broad
+                // Street ad, and most of the pages after the first few minutes). The group that has waited longest for
+                // a packet is closed as unfinished to make room.
+                let stalest = null, stalestLine = Infinity;
+                for (const [channel, open] of this.openGroups) if (open.lastLine < stalestLine) { stalest = channel; stalestLine = open.lastLine; }
+                const evicted = this.openGroups.get(stalest);
+                this.openGroups.delete(stalest);
+                this.stats.groups_evicted = (this.stats.groups_evicted || 0) + 1;
+                this._emit(stalest, evicted, 'unfinished');
+            }
             const group = {
                 header, attested: packet.attested, lastIndex: packet.ci, lastLine: this.clock,
                 stream: [], present: [], nominalLength: packet.data.length, placeable: true, packetsSeen: 0,
@@ -375,13 +386,39 @@
         _extend(packet) {
             const group = this.openGroups.get(packet.channel);
             if (!group) { this.stats.orphans += 1; this._extendLoose(packet, false); return; }
+            // JS-only: a packet whose continuity index jumped, followed by one whose index falls inside the jump, had
+            // its own index misread (13 read as 15, 11 as 0: one bit of the Hamming byte). It was the packet just
+            // before the one that follows it, and of the packets the jump took for lost only those before it were;
+            // the rest of the hole held for them is taken out again. Left in, each misread moved the rest of the group
+            // a block or more and used up its count of packets early (CBS 1985-04-14: the second copy of the Broad
+            // Street ad came out with 30 packets "lost" and blocks out of place, and matched no other copy)
+            const pending = group.jumped;
+            group.jumped = null;
+            const fromBefore = pending ? pythonMod(packet.ci - pending.before, 16) : 0;
+            // (its index byte at most three bits from the one it stood for: two bits misread)
+            if (pending && fromBefore >= 2 && fromBefore <= pending.missing + 1 &&
+                countSetBits(pending.ciByte ^ HAMMING_CODEWORDS[pythonMod(packet.ci - 1, 16)]) <= 3) {
+                const reallyMissing = fromBefore - 2, extra = pending.missing - reallyMissing;
+                const bytes = extra * group.nominalLength;
+                group.stream.splice(pending.holeAt + reallyMissing * group.nominalLength, bytes);
+                group.present.splice(pending.holeAt + reallyMissing * group.nominalLength, bytes);
+                group.lastOffset -= bytes;
+                group.lost -= extra;
+                group.packetsSeen -= extra;
+                group.lastIndex = pythonMod(packet.ci - 1, 16);
+                this.stats.index_misreads = (this.stats.index_misreads || 0) + 1;
+            }
             const linesBetween = this.lineCountKnown ? this.clock - group.lastLine - 1 : 15;
             const missing = this._missingPackets(group, packet, linesBetween);
             if (missing) {
                 group.lost += missing;
                 const room = group.header.further - group.packetsSeen;
                 group.packetsSeen = Math.min(group.packetsSeen + missing, group.header.further);
-                if (missing > room) group.placeable = false; else this._appendHole(group, missing);
+                if (missing > room) group.placeable = false;
+                else {
+                    group.jumped = { ciByte: packet.ci_byte, before: group.lastIndex, missing, holeAt: group.stream.length, holeBytes: missing * group.nominalLength };
+                    this._appendHole(group, missing);
+                }
             }
             group.lastIndex = (group.lastIndex + 1 + missing) % 16;
             group.lastLine = this.clock;
@@ -742,8 +779,12 @@
                 if (winner === null) { winner = value; continue; }
                 const tier = tierOf(value), winnerTier = tierOf(winner);
                 if (tier < winnerTier) continue;
+                // JS-only: between readings level in their tier, the one more copies received in all wins before the
+                // newer (KDFW 1989-02-18's "M" of Alpha-bytes: one copy whose checks passed read twelve bytes
+                // otherwise, against two that agreed; the newer won every tie, and a white disc covered the page)
                 if (tier === winnerTier && !(weightOf(value) > weightOf(winner) ||
-                    (weightOf(value) === weightOf(winner) && newestOf(value) > newestOf(winner)))) continue;
+                    (weightOf(value) === weightOf(winner) && (weight.get(value) > weight.get(winner) ||
+                        (weight.get(value) === weight.get(winner) && newestOf(value) > newestOf(winner)))))) continue;
                 winner = value;
             }
             // JS-only: a reading that fails parity is one bit from what was sent, so it backs a passing reading one
@@ -776,7 +817,7 @@
             data[position] = winner;
             present[position] = tierOf(winner) === 2 ? 2 : 1;
             const tied = [...weight.keys()].filter((value) => value !== winner &&
-                tierOf(value) === tierOf(winner) && weightOf(value) === weightOf(winner));
+                tierOf(value) === tierOf(winner) && weightOf(value) === weightOf(winner) && weight.get(value) === weight.get(winner));
             if (tied.length) ties.push([position, [winner, ...tied]]);
             // JS-only: a reading outvoted but held by two or more copies and at least a sixth of the winner's weight,
             // passing parity as well, is kept as a contender the grammar may prefer (see settleContestedByGrammar)
@@ -1310,6 +1351,131 @@
         return words;
     };
     const spell = (data, from, to) => String.fromCharCode(...data.slice(from, to).map((byte) => byte & 0x7F)).toLowerCase();
+    /**
+     * JS-only: a page seen in two or three copies can carry a misread most of them share, passing every check (KDFW
+     * 1989-02-18: two of three copies of Alpha-bytes' "N" read a shadow's 0x45 as 0x49, and the shadow fell off the
+     * block). The drawing code of a service's pages repeats from page to page, so where a byte the copies disagreed
+     * on sits in no stretch of STRETCH_BYTES that another record holds, and one of the other readings puts it in a
+     * stretch two or more other records hold, that reading is taken.
+     */
+    const STRETCH_BYTES = 12, STRETCH_MAX_COPIES = 5, STRETCH_MIN_HOLDERS = 2, STRETCH_PARTNER_MAX_COPIES = 3, STRETCH_PARTNER_MIN_HOLDERS = 3, STRETCH_PAIR_MIN_COUNT = 8;
+    const settleCodeByStretches = (records, readingsOf, partners = new Map()) => {
+        const keyAt = (data, from) => String.fromCharCode(...data.slice(from, from + STRETCH_BYTES).map((byte) => byte & 0x7F));
+        const holders = new Map();
+        records.forEach((record, index) => {
+            if (!record.data || record.data.length < STRETCH_BYTES || !isPresentation(record.type)) return;
+            const own = new Set();
+            for (let i = 0; i + STRETCH_BYTES <= record.data.length; i++) own.add(keyAt(record.data, i));
+            for (const key of own) holders.set(key, (holders.get(key) || 0) + 1);
+        });
+        // The readings this recording's copies split between, wherever they did: its misreads, pair by pair
+        const pairCounts = new Map();
+        for (const alternatives of readingsOf.values()) {
+            for (const [, readings] of alternatives) {
+                const values = [...new Set(readings.map(([value]) => value).filter((value) => ODD_PARITY[value & 0xFF]).map((value) => value & 0x7F))];
+                for (let a = 0; a < values.length; a++) for (let b = a + 1; b < values.length; b++) {
+                    for (const [from, to] of [[values[a], values[b]], [values[b], values[a]]]) {
+                        if (!pairCounts.has(from)) pairCounts.set(from, new Map());
+                        pairCounts.get(from).set(to, (pairCounts.get(from).get(to) || 0) + 1);
+                    }
+                }
+            }
+        }
+        const misreads = new Map(partners);
+        for (const [from, tos] of pairCounts) {
+            const list = [...tos].filter(([, count]) => count >= STRETCH_PAIR_MIN_COUNT).sort((x, y) => y[1] - x[1]);
+            if (list.length) misreads.set(from, [...(misreads.get(from) || []), ...list]);
+        }
+        let changed = 0;
+        // Records voted from few copies: the bytes the copies disagreed on, and where three copies or fewer stand
+        // behind it, every byte, with the readings this recording's misreads make of it (its confusion partners)
+        const candidates = new Map();
+        for (const record of records) {
+            if (!record.data || !isPresentation(record.type) || !record.copies_voted || record.copies_voted > STRETCH_MAX_COPIES) continue;
+            candidates.set(record, readingsOf.get(record) || []);
+        }
+        for (const [record, alternatives] of candidates) {
+            const own = new Set();
+            for (let i = 0; i + STRETCH_BYTES <= record.data.length; i++) own.add(keyAt(record.data, i));
+            const othersHolding = (data, position) => {
+                let best = 0;
+                for (let from = Math.max(0, position - STRETCH_BYTES + 1); from <= position && from + STRETCH_BYTES <= data.length; from++) {
+                    const key = keyAt(data, from);
+                    best = Math.max(best, (holders.get(key) || 0) - (own.has(key) ? 1 : 0));
+                }
+                return best;
+            };
+            let data = record.data;
+            const disputed = new Map(alternatives.map(([position, readings]) => [position, readings.map(([value]) => value)]));
+            const unshared = [];
+            if (record.copies_voted <= STRETCH_PARTNER_MAX_COPIES && misreads.size) {
+                // Where windows starting at each byte are held by another record
+                const sharedFrom = [];
+                for (let i = 0; i + STRETCH_BYTES <= data.length; i++) {
+                    const key = keyAt(data, i);
+                    sharedFrom.push((holders.get(key) || 0) - (own.has(key) ? 1 : 0) > 0);
+                }
+                for (let position = STRETCH_BYTES; position + STRETCH_BYTES < data.length; position++) {
+                    if (disputed.has(position)) continue;
+                    let shared = false;
+                    for (let from = position - STRETCH_BYTES + 1; from <= position && !shared; from++) shared = sharedFrom[from];
+                    // Only a lone byte the stretches around it miss: the windows just clear of it on both sides are shared
+                    if (shared || !sharedFrom[position - STRETCH_BYTES] || !sharedFrom[position + 1]) continue;
+                    const options = (misreads.get(data[position] & 0x7F) || []).slice(0, 3)
+                        .map(([to]) => (data[position] & 0x80) | to).map((byte) => (ODD_PARITY[byte & 0xFF] ? byte : byte ^ 0x80));
+                    if (options.length) unshared.push([position, options, STRETCH_PARTNER_MIN_HOLDERS]);
+                }
+            }
+            const trials = [...[...disputed].map(([position, values]) => [position, values, STRETCH_MIN_HOLDERS]), ...unshared];
+            // Only between printable bytes (operands, commands, text): a control code read in or out (SI for ETB on
+            // KDFW 1989-02-04's "R") turns what follows into another kind of code, and stretches can't judge that
+            const printable = (byte) => (byte & 0x7F) >= 0x20;
+            // Drawing code only: text has the vocabulary to settle it, and short text repeats from page to page by
+            // chance ("\x0FIn" read "Ie" from a stretch other pages share: WCBS 1985-04-14's "Puss In Boots")
+            const roles = readRoles(data);
+            const isCode = (position) => roles[position] !== ROLE_TEXT;
+            for (const [position, values, minimum] of trials) {
+                if (!printable(data[position]) || !isCode(position) || othersHolding(data, position) > 0) continue;
+                let bestValue = null, bestHolders = 0;
+                for (const value of values) {
+                    if (value === data[position] || !ODD_PARITY[value & 0xFF] || !printable(value)) continue;
+                    const trial = data.slice(Math.max(0, position - STRETCH_BYTES), position + STRETCH_BYTES);
+                    trial[position - Math.max(0, position - STRETCH_BYTES)] = value;
+                    const count = othersHolding(trial, position - Math.max(0, position - STRETCH_BYTES));
+                    if (count > bestHolders) { bestValue = value; bestHolders = count; }
+                }
+                if (bestValue === null || bestHolders < minimum) continue;
+                if (data === record.data) data = [...record.data];
+                data[position] = bestValue;
+                changed++;
+            }
+            // Two disputed bytes close together, each misread: neither alone completes a stretch another record
+            // holds, both together can (KDFW 1989-02-18's "M": a shadow's color read wrong twice, six bytes apart)
+            const open = [...disputed.keys()].filter((position) => othersHolding(data, position) === 0).sort((x, y) => x - y);
+            for (let a = 0; a < open.length; a++) {
+                for (let b = a + 1; b < open.length && open[b] - open[a] < STRETCH_BYTES; b++) {
+                    const p = open[a], q = open[b];
+                    if (othersHolding(data, p) > 0 || othersHolding(data, q) > 0) continue;
+                    let best = null, bestHolders = 0;
+                    for (const u of disputed.get(p)) for (const v of disputed.get(q)) {
+                        if ((u === data[p] && v === data[q]) || !ODD_PARITY[u & 0xFF] || !ODD_PARITY[v & 0xFF]) continue;
+                        if (!printable(u) || !printable(v) || !printable(data[p]) || !printable(data[q]) || !isCode(p) || !isCode(q)) continue;
+                        const trial = [...data];
+                        trial[p] = u; trial[q] = v;
+                        const count = Math.min(othersHolding(trial, p), othersHolding(trial, q));
+                        if (count > bestHolders) { best = [u, v]; bestHolders = count; }
+                    }
+                    if (!best || bestHolders < STRETCH_MIN_HOLDERS) continue;
+                    if (data === record.data) data = [...record.data];
+                    data[p] = best[0]; data[q] = best[1];
+                    changed += 2;
+                }
+            }
+            if (data !== record.data) { record.data = data; record.settled_by_stretches = (record.settled_by_stretches || 0) + 1; }
+        }
+        return changed;
+    };
+
     const settleWordsByVocabulary = (records, readingsOf) => {
         if (!readingsOf.size) return;
         const vocabulary = new Map(), pending = [];
@@ -2344,6 +2510,8 @@
                 record.flags = Object.fromEntries(FLAGS_VOTED.map((name) => [name, flagCounts[name] * 2 > voters]));
                 record.type = Catalog.votedType(entry);
                 record.copies_voted = copies.length;
+                // Kept for salvage, which settles a byte two copies split on where a run of a third agrees with one
+                if (copies.length === 2) record.thin_copies = copies.map(([copyData, copyPresent]) => [copyData, copyPresent]);
                 record.unconfirmed = !!entry.unconfirmed;
                 // Pages sent under one identity with different contents are listed once per content, in order of arrival
                 const identity = Catalog.identityKey(entry);
@@ -2440,6 +2608,7 @@
                 }
             }
             settleWordsByVocabulary(built, readingsOf);
+            settleCodeByStretches(built, readingsOf, partners);
             settleSystematicMisreads(built);
             return built;
         }
@@ -2642,6 +2811,7 @@
      * side the run reaches, and at least one side vouches for it.
      */
     const SALVAGE_EDGE_WITNESSES = 6, SALVAGE_EDGE_REACH = 48, SALVAGE_EDGE_MIN = 4;
+    const SALVAGE_SPECK = 6;
     const salvageVouchedFills = (run, record, offset, fills) => {
         if (!fills.length) return fills;
         const present = record.present || [];
@@ -2732,7 +2902,7 @@
             }
             const recordBytes = (r) => [records[r].data, presentOf(records[r])];
 
-            const readings = new Map(), unmatched = [], taken = new Array(runs.length).fill(false);
+            const readings = new Map(), revotes = new Map(), unmatched = [], taken = new Array(runs.length).fill(false);
             runs.forEach((run, h) => {
                 if (!namedChannels.has(run.channel)) return;
                 const placed = placeRun(run, salvageProposals(recordIndex, run), recordBytes);
@@ -2757,6 +2927,27 @@
                     if (code === 0x0C || code === 0x18) continue;
                     fills.push(i);
                 }
+                // JS-only: where the record was voted from two copies that disagree, a run that agrees with one of
+                // them is the third reading, and two of three settle the byte (CBS 1985-04-14's Broad Street ad: two
+                // copies split on 278 bytes; its third copy's packets arrived with the group's start lost)
+                // A byte every copy received with bad parity is put right from a run that received it whole
+                {
+                    for (let i = 0; i < run.data.length; i++) {
+                        const at = offset + i;
+                        if (at < 0 || at >= record.data.length || present[at] === 0 || !salvageUsable(run.data, run.present, i)) continue;
+                        const value = run.data[i];
+                        if (value === record.data[at]) continue;
+                        const badParity = !ODD_PARITY[record.data[at] & 0xFF];
+                        if (!badParity) {
+                            if (!record.thin_copies) continue;
+                            const readings = record.thin_copies.map(([copyData, copyPresent]) => (copyPresent && copyPresent.length && !copyPresent[at]) || !ODD_PARITY[copyData[at] & 0xFF] ? null : copyData[at]);
+                            if (!readings.includes(value) || !readings.includes(record.data[at]) || readings[0] === readings[1]) continue;
+                        }
+                        const key = `${placed.best.target},${at}`;
+                        if (!revotes.has(key)) revotes.set(key, new Map());
+                        revotes.get(key).set(value, (revotes.get(key).get(value) || 0) + 1);
+                    }
+                }
                 for (const i of salvageVouchedFills(run, record, offset, fills)) {
                     const at = offset + i;
                     const key = `${placed.best.target},${at}`;
@@ -2767,6 +2958,9 @@
             });
             // JS-only: a hole is filled only where the runs deliver all of it. A hole half filled leaves the code
             // mid-command either way, and a run with a gap of its own inside a hole may have lost a packet there too.
+            // A byte or two the runs hold but failed parity on, between bytes they deliver, is no lost packet (a
+            // packet is 26 bytes or more): the hole is filled around it and the byte left lost, as decode-orc leaves it
+            // (CBS 1985-04-14's Broad Street ad: one copy, a noisy run for each of its three holes, none filled)
             const wholeHoles = new Set();
             for (const key of readings.keys()) {
                 const [target, at] = key.split(',').map(Number);
@@ -2774,9 +2968,22 @@
                 if (at > 0 && present[at - 1] === 0) continue;      // not the first byte of its hole
                 let end = at;
                 while (end < present.length && present[end] === 0) end++;
-                let covered = true;
-                for (let k = at; k < end && covered; k++) covered = readings.has(`${target},${k}`);
-                if (covered) for (let k = at; k < end; k++) wholeHoles.add(`${target},${k}`);
+                let covered = true, gap = 0;
+                for (let k = at; k < end && covered; k++) {
+                    if (readings.has(`${target},${k}`)) { gap = 0; continue; }
+                    covered = ++gap <= SALVAGE_SPECK && k + 1 < end;
+                }
+                if (covered) for (let k = at; k < end; k++) if (readings.has(`${target},${k}`)) wholeHoles.add(`${target},${k}`);
+            }
+            for (const [key, values] of revotes) {
+                const [target, at] = key.split(',').map(Number);
+                const ranked = [...values].sort((a, b) => b[1] - a[1]);
+                if (ranked.length > 1 && ranked[0][1] === ranked[1][1]) continue;
+                const record = records[target];
+                if (!record.revoted) { record.data = [...record.data]; record.revoted = 0; }
+                record.data[at] = ranked[0][0];
+                record.revoted++;
+                stats.bytes_revoted = (stats.bytes_revoted || 0) + 1;
             }
             const filledPerRecord = new Map();
             for (const [key, values] of readings) {
@@ -3179,6 +3386,7 @@
         reset() {
             this.rotation = 0; this.path = 0; this.ics = 0; this.irs = 0; this.move = 0;
             this.field = FIELD_NORMAL; this.reverse = false; this.underlined = false;
+            this.scroll = false;      // SCROLL ON (§6.2.7.13) / OFF (§6.2.7.14)
         }
     }
 
@@ -3435,6 +3643,7 @@
         switch (prim.kind) {
             case 'char': return paceCharacter(t, prim);
             case 'point': return t.point;
+            case 'scroll': return t.scroll;
             case 'line': {
                 const lengths = paceOutlineLengths(prim.points, false);
                 return t.line + t.lineHorizontalPixel * lengths.horizontal + t.lineVerticalPixel * lengths.vertical +
@@ -3914,6 +4123,8 @@
                     this.c1Blink = [...BLINK_C1, this.clock];
                     break;
                 case 0x5E: this.c1Blink = null; break;                          // BLINK STOP
+                case 0x57: this.text.scroll = true; break;                      // SCROLL ON
+                case 0x58: this.text.scroll = false; break;                     // SCROLL OFF
                 case 0x59: this.text.underlined = true; break;
                 case 0x5A: this.text.underlined = false; break;
                 default: break;
@@ -4528,8 +4739,36 @@
                     wrapped = true;
                 }
             }
+            // SCROLL ON (§6.2.7.13): a row down (or up) past the edge of the display area, or of the active field the
+            // cursor's field lies in, scrolls everything in it "far enough to bring the next intended character
+            // location just into the area or field" (decode-orc PR #328). With scrolling off the cursor stays at
+            // the edge, as before (JS-only: decode-orc wraps it to the opposite edge)
+            if ((this.text.scroll || this.scrollText) && (direction === 'down' || direction === 'up' || wrapped)) {
+                const extent = fieldExtent(text), area = this.scrollArea(extent);
+                const rowX = wrapped ? pathY : stepX, rowY = wrapped ? -pathX : stepY;
+                if (!moveFits(area, [newX, newY], extent, rowX, rowY)) {
+                    const [left, right, bottom, top] = area, [x0, x1, y0, y1] = extent;
+                    const displacement = [0, 0];
+                    if (rowY < 0) displacement[1] = bottom - (newY + y0);
+                    else if (rowY > 0) displacement[1] = top - (newY + y1);
+                    else if (rowX < 0) displacement[0] = left - (newX + x0);
+                    else if (rowX > 0) displacement[0] = right - (newX + x1);
+                    const scroll = this.make('scroll');
+                    scroll.origin = [left, bottom];
+                    scroll.size = [right - left, top - bottom];
+                    scroll.points = [displacement];
+                    this.emit(scroll);
+                    [newX, newY] = againstEdge([newX, newY], area, extent, rowX, rowY);
+                }
+            }
             this.moveCursor([newX, newY]);
             if (wrapped) this.wrap = 1;
+        }
+
+        /** The area a scroll moves: the active field where the cursor's character field lies in it, else the display. */
+        scrollArea(extent) {
+            const area = this.confiningArea(extent);
+            return area === UNIT_SCREEN_AREA ? [0.0, 1.0, 0.0, DISPLAY_HEIGHT] : area;
         }
 
         beginDefinition(what, code) {
@@ -5132,6 +5371,25 @@
 
         toCells(point) { return [point[0] * this.columnsPerUnit, point[1] * this.rowsPerUnit]; }
 
+        /** Move what lies in the area by `displacement` (unit space), filling what it leaves with `fill` (null: black). */
+        scrollArea(origin, size, displacement, fill) {
+            const surface = this.surface, empty = fill === null || fill === undefined ? -1 : fill;
+            const c0 = Math.max(0, Math.round(origin[0] * this.columnsPerUnit)), r0 = Math.max(0, Math.round(origin[1] * this.rowsPerUnit));
+            const c1 = Math.min(surface.w, Math.round((origin[0] + size[0]) * this.columnsPerUnit));
+            const r1 = Math.min(surface.h, Math.round((origin[1] + size[1]) * this.rowsPerUnit));
+            const dc = Math.round(displacement[0] * this.columnsPerUnit), dr = Math.round(displacement[1] * this.rowsPerUnit);
+            if (c1 <= c0 || r1 <= r0 || (!dc && !dr)) return;
+            const copy = new Int32Array((c1 - c0) * (r1 - r0));
+            for (let row = r0; row < r1; row++) for (let column = c0; column < c1; column++) copy[(row - r0) * (c1 - c0) + column - c0] = surface.cells[row * surface.w + column];
+            for (let row = r0; row < r1; row++) {
+                for (let column = c0; column < c1; column++) {
+                    const fromRow = row - dr, fromColumn = column - dc;
+                    surface.cells[row * surface.w + column] = fromRow >= r0 && fromRow < r1 && fromColumn >= c0 && fromColumn < c1
+                        ? copy[(fromRow - r0) * (c1 - c0) + fromColumn - c0] : empty;
+                }
+            }
+        }
+
         sizeToCells(size) { return [size[0] * this.columnsPerUnit, size[1] * this.rowsPerUnit]; }
 
         block(anchorColumn, anchorRow, pelSize, ink) {
@@ -5630,6 +5888,9 @@
             rasteriser.colorRun(prim.origin, prim.size, prim.pel, inks);
         } else if (kind === 'char') {
             rasteriser.depositCharacter(prim, drcs ?? (page ? page.drcs : new Map()), ink, background);
+        } else if (kind === 'scroll' && !definition) {
+            // What is scrolled in is "nominal black in color modes 0 and 1 and the background color in color mode 2"
+            rasteriser.scrollArea(prim.origin, prim.size, prim.points[0], background);
         }
     };
 
@@ -5990,6 +6251,14 @@
         const placed = new Map();          // position key → [y, x, height, width, text, order]
         let order = 0, pendingAccents = '';
         for (const prim of page.prims) {
+            // A scroll moves what is already on the screen: lines scrolled off stay in the text, in their order
+            if (prim.kind === 'scroll') {
+                const [dx, dy] = prim.points[0] || [0, 0];
+                const moved = [...placed.values()].map(([y, x, ...rest]) => [y + dy, x + dx, ...rest]);
+                placed.clear();
+                for (const entry of moved) placed.set(`${roundHalfEven(entry[1] * 1024)},${roundHalfEven(entry[0] * 1024)}`, entry);
+                continue;
+            }
             if (prim.kind === 'rect' && prim.filled) {
                 const [x0, y0] = prim.origin, x1 = x0 + prim.size[0], y1 = y0 + prim.size[1];
                 const minX = Math.min(x0, x1), maxX = Math.max(x0, x1), minY = Math.min(y0, y1), maxY = Math.max(y0, y1);
@@ -6123,6 +6392,7 @@
         const stats = groupAssembler.stats, notNabts = stats.packets >= 200 && stats.prefix_whole * 10 < stats.packets;
         const records = notNabts ? [] : catalog.records();
         const salvaged = notNabts ? null : salvage.apply(records);
+        for (const record of records) delete record.thin_copies;
         return {
             records,
             summary: {
@@ -6425,6 +6695,44 @@
      * 'classic' (the viewer's original fast, fixed time per figure), 'ttx650' (Norpak TTX 650), 'tu2000x'
      * (Panasonic TU-2000x) or 'off' (instant).
      */
+    const TELETYPE_MIN_LINES = 21;
+    const isTeletypeText = (bytes) => {
+        let lines = 0, printable = 0;
+        for (const byte of bytes) {
+            const code = byte & 0x7F;
+            if (code === 0x0A) lines++;
+            else if (code >= 0x20 && code < 0x7F) printable++;
+            else if (code !== 0x0D && code !== 0x00) return false;
+        }
+        return lines >= TELETYPE_MIN_LINES && printable > 0;
+    };
+
+    const TELETYPE_COLUMNS = 40;
+    const wrapTeletypeText = (bytes) => {
+        const out = [];
+        let line = [];
+        const flush = () => {
+            let rest = line;
+            while (rest.length > TELETYPE_COLUMNS) {
+                // The last space that leaves the line within the columns; none, and the word is cut at the edge
+                let cut = -1;
+                for (let i = TELETYPE_COLUMNS; i > 0; i--) if ((rest[i] & 0x7F) === 0x20) { cut = i; break; }
+                if (cut <= 0) { out.push(...rest.slice(0, TELETYPE_COLUMNS), 0x0D, 0x0A); rest = rest.slice(TELETYPE_COLUMNS); continue; }
+                out.push(...rest.slice(0, cut), 0x0D, 0x0A);
+                rest = rest.slice(cut + 1);
+            }
+            out.push(...rest);
+            line = [];
+        };
+        for (const byte of bytes) {
+            const code = byte & 0x7F;
+            if (code === 0x0D || code === 0x0A || code === 0x00) { flush(); out.push(byte); }
+            else line.push(byte);
+        }
+        flush();
+        return out;
+    };
+
     const interpret = (records, grid = [256, 200], { font = null, reconstruct = true, pace = 'classic' } = {}) => {
         const interpreter = new Interpreter(grid, { font, pace }), supportRecords = new Map(), latestByAddress = new Map();
         if (reconstruct) reconstructRecords(records);
@@ -6497,7 +6805,14 @@
             if (isCaption) interpreter.applyCaptionState();
             let keepDisplay = false;
             for (const page of earlierPages) { interpreter.run(codeOf(page), keepDisplay); keepDisplay = true; }
-            record.page = interpreter.run(codeOf(record), keepDisplay);
+            // JS-only: a record that is nothing but lines of plain text, more than the screen holds (the affiliate
+            // messages CBS sent its stations: KWTV 1985-10-22's 000100000, 75 lines), is shown as a terminal shows it,
+            // scrolling (SCROLL ON) instead of piling every line after the twentieth into the last row
+            interpreter.scrollText = isTeletypeText(codeOf(record));
+            // Its lines were written for a wider printer (70 columns and more): they are broken between words at the
+            // screen's 40 columns, as a terminal with word wrap would, not mid-word ("WI / LL")
+            record.page = interpreter.run(interpreter.scrollText ? wrapTeletypeText(codeOf(record)) : codeOf(record), keepDisplay);
+            interpreter.scrollText = false;
             record.text = pageText(record.page);
             record.linked_keys = record.flags.support_record ? 0 : interpreter.linkedKeys;
             // How the page was drawn, so its keys can be played over it again (playKeys)

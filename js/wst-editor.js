@@ -1438,6 +1438,9 @@ const MAX_MERGE_DIFFERENCE = 0.45;
 // ^ Once voted, real subpages differ by more thatn this (noise levels under 0.2)
 const DIFFERENT_SUBPAGE_LIMIT = 0.25;
 
+// ^ Two groups showing the same counter (both "3/5") are one subpage split up by noise, unless their text is wholly different (the page was rewritten during the capture)
+const SAME_COUNTER_MERGE_LIMIT = 0.5;
+
 // ^ Even on a clean capture, two copies of one page can differ by a stray character
 // * Never merge less leniently than this or those copies stay apart and get filed under a different page
 const MIN_MERGE_DIFFERENCE = 0.02;
@@ -1454,6 +1457,14 @@ function countersDiffer(firstRows, secondRows) {
     const secondCounter = readSubpageCounter(secondRows);
     return Boolean(firstCounter && secondCounter
         && firstCounter.total === secondCounter.total && firstCounter.number !== secondCounter.number);
+}
+
+// & True if both pages show the same counter (e.g. both "3/5")
+function countersMatch(firstRows, secondRows) {
+    const firstCounter = readSubpageCounter(firstRows);
+    const secondCounter = readSubpageCounter(secondRows);
+    return Boolean(firstCounter && secondCounter
+        && firstCounter.total === secondCounter.total && firstCounter.number === secondCounter.number);
 }
 
 // True if a transmission received at least one display row (rows 1–24), not just a header
@@ -1611,9 +1622,10 @@ function groupVersionsBySubpage(versions) {
         for (let first = 0; first < subpages.length; first++) {
             for (let second = first + 1; second < subpages.length; second++) {
                 // * Groups with no rows in common (partial transmissions, as on P287) can't disagree, so they count as the same
-                const difference = countersDiffer(votedSubpages[first].rows, votedSubpages[second].rows)
+                let difference = countersDiffer(votedSubpages[first].rows, votedSubpages[second].rows)
                     ? 1
                     : differenceRate(votedSubpages[first], votedSubpages[second]) ?? 0;
+                if (difference < SAME_COUNTER_MERGE_LIMIT && countersMatch(votedSubpages[first].rows, votedSubpages[second].rows)) difference = 0;
                 if (!closest || difference < closest.difference) closest = { first, second, difference };
             }
         }
@@ -1680,15 +1692,26 @@ function setDifference(firstVersions, secondVersions) {
 // * Read it from a voted page, but allow for one damaged separator (e.g. "3W5"). Returns { number, total } object or null
 
 // Do not use row 0 because a date (such as one formatted as 4/13) could be mistaken for a row
-const COUNTER_ROWS = [1, 2, 3, 24, 23, 22];
+// * The usual places are checked first (Electra: end of row 1; WTBS Keyfax: end of row 5), then every other row
+const COUNTER_ROWS = [1, 2, 3, 24, 23, 22, 4, 5, 6,
+    ...Array.from({ length: 15 }, (_, index) => index + 7)];
+
+// A counter sits at the right-hand end of its row, so text such as a "4/44" score in the middle of a story isn't mistaken for one
+const COUNTER_MIN_COLUMN = 28;
+
 function readSubpageCounter(pageRows) {
     for (const rowNumber of COUNTER_ROWS) {
         const rowBytes = pageRows[rowNumber];
         if (!rowBytes) continue;
         const text = String.fromCharCode(...rowBytes.map(byteValue =>
             (byteValue & SEVEN_BIT_MASK) < FIRST_PRINTABLE_BYTE ? SPACE : byteValue & SEVEN_BIT_MASK)).trimEnd();
-        const match = text.match(/\b(\d{1,2}) ?\/ ?(\d{1,2})\b/) ?? text.match(/\b(\d{1,2})[^\w\s](\d{1,2})$|\b(\d)W(\d)$/);
+        const match = text.match(/(?:^|\s)(\d{1,2}) ?\/ ?(\d{1,2})$/) ?? text.match(/(?:^|\s)(\d{1,2})[^\w\s](\d{1,2})$|(?:^|\s)(\d)W(\d)$/);
         if (!match) continue;
+
+        // Must be at the end of the row, either far right or alone on its row
+        const start = match.index + match[0].length - match[0].trimStart().length;
+        if (start < COUNTER_MIN_COLUMN && text.slice(0, start).trim() !== "") continue;
+
         const number = Number(match[1] ?? match[3]);
         const total = Number(match[2] ?? match[4]);
         if (number >= 1 && total >= 2 && number <= total) return { number, total };
@@ -1705,17 +1728,23 @@ function orderSubpages(groups) {
     // The total most of them agree on (a damaged copy, for example, might read 3/6 instead of 3/5)
     const totalVotes = new Map();
     counters.forEach(counter => { if (counter) totalVotes.set(counter.total, (totalVotes.get(counter.total) ?? 0) + 1); });
-    const [total] = [...totalVotes].sort((first, second) => second[1] - first[1])[0] ?? [];
+    const [votedTotal, totalVoteCount] = [...totalVotes].sort((first, second) => second[1] - first[1])[0] ?? [];
+
+    // One subpage's counter alone isn't enough to number the rest (it may be a misread), unless there are only 2 subpages
+    const total = totalVoteCount >= Math.min(2, groups.length - 1) ? votedTotal : undefined;
 
     const numbers = counters.map(counter => (total && counter?.total === total ? counter.number : null));
+    // Two cannot both be 3/5, so trust only the one seen most often (the other is usually a copy with rows from its neighbor mixed in)
     const used = new Set();
-    numbers.forEach((number, groupIndex) => {
-        if (number === null) return;
-
-        // Two cannot be bth 3/5, so trust only teh one that was first seen
-        if (used.has(number)) numbers[groupIndex] = null;
-        else used.add(number);
-    });
+    groups
+        .map((versions, groupIndex) => ({ groupIndex, size: versions.length }))
+        .sort((first, second) => second.size - first.size || first.groupIndex - second.groupIndex)
+        .forEach(({ groupIndex }) => {
+            const number = numbers[groupIndex];
+            if (number === null) return;
+            if (used.has(number)) numbers[groupIndex] = null;
+            else used.add(number);
+        });
 
     // A subpage with no readable counter, such as a title page, takes its number from where it sits in the rotation.
     // * for example, if sent right before 2/7, it is 1/7, and if sent right after 6/7, it is 7/7. Repeat this so a run of several can be worked out
@@ -1725,9 +1754,9 @@ function orderSubpages(groups) {
             .sort((first, second) => first.at - second.at)
             .map(entry => entry.groupIndex)
             .filter((groupIndex, position, order) => position === 0 || order[position - 1] !== groupIndex);   // one entry per run
-        let changed = true;
-        while (changed) {
-            changed = false;
+        // Each round, give out the one number with the most evidence (ties go to the subpage seen most often), so a small, damaged copy can't take a number before the real subpage does
+        while (true) {
+            let best = null;
             numbers.forEach((number, groupIndex) => {
                 if (number !== null) return;
                 const votes = new Map();
@@ -1738,13 +1767,15 @@ function orderSubpages(groups) {
                     if (next != null) { const guess = next === 1 ? total : next - 1; votes.set(guess, (votes.get(guess) ?? 0) + 1); }
                     if (previous != null) { const guess = previous === total ? 1 : previous + 1; votes.set(guess, (votes.get(guess) ?? 0) + 1); }
                 });
-                const [best] = [...votes].filter(([guess]) => !used.has(guess)).sort((first, second) => second[1] - first[1])[0] ?? [];
-                if (best !== undefined) {
-                    numbers[groupIndex] = best;
-                    used.add(best);
-                    changed = true;
+                for (const [guess, count] of votes) {
+                    if (used.has(guess)) continue;
+                    const size = groups[groupIndex].length;
+                    if (!best || count > best.count || (count === best.count && size > best.size)) best = { groupIndex, guess, count, size };
                 }
             });
+            if (!best) break;
+            numbers[best.groupIndex] = best.guess;
+            used.add(best.guess);
         }
     }
 

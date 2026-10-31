@@ -20,6 +20,12 @@ const TAPE_VALUE_MAPS = {
     },
 };
 
+const NETWORK_LOGOS = {
+    "MTV": "../images/logos/MTV.png",
+    "Nickelodeon": "../images/logos/Nickelodeon.png",
+    "PBS": "../images/logos/PBS.png"
+};
+
 // Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
 const WORKER_BASE = "";
 
@@ -330,7 +336,7 @@ function appendRow(tbody, row, columns, dataset) {
 
             const jsonUrl = epgDirectory + jsonFile;
             const guidePath = `starsight-data.html?json=${encodeURIComponent(jsonUrl)}`;
-            const visible = `<a href="${escapeHtml(guidePath)}" class="text-black">${escapeHtml(dateValue)}</a>`;
+            const visible = `<a href="${escapeHtml(guidePath)}" class="text-black fw-bold">${escapeHtml(dateValue)}</a>`;
             return renderAccessibleCell(visible, `${c.label}: ${dateValue}. View EPG guide`);
         }
 
@@ -373,6 +379,27 @@ function appendRow(tbody, row, columns, dataset) {
             const imagePath = row.Thumbnail;
             const visible = `<img src="${escapeHtml(imagePath)}" alt="" role="presentation" class="mw-100 teletext-preview" data-bs-target="#imageModal" data-bs-caption="${escapeHtml(row.Service_Name)} - ${escapeHtml(row.Date)}">`;
             return renderAccessibleCell(visible, `${c.label}: ${row.Service_Name} index page from ${row.Date}`, ' class="thumbnail-column"');
+        }
+
+        // For StarSight, show the network's logo. Fall back to plain text for any network without one
+        if (c.renderNetworkLogo) {
+            const network = String(row[c.key] ?? '').trim();
+            const spokenNetwork = SERVICE_SPOKEN_LABELS[network] || network;
+            const logoPath = NETWORK_LOGOS[network];
+
+            // No logo for this network: show the name as text
+            if (!logoPath) {
+                return renderAccessibleCell(escapeHtml(network), `${c.label}: ${spokenNetwork}`);
+            }
+
+            const visible = `<img src="${escapeHtml(logoPath)}" alt="" role="presentation" class="network-logo">`;
+            return renderAccessibleCell(visible, `${c.label}: ${spokenNetwork}`);
+        }
+        // Only PBS affiliates fill this in; leave the cell empty for every other network
+        if (c.renderAffiliate) {
+            if (!hasRealValue(row[c.key])) return '<td></td>';
+            const affiliate = String(row[c.key]).trim();
+            return renderAccessibleCell(escapeHtml(affiliate), `${c.label}: ${affiliate}`);
         }
 
         // Screen reader guide

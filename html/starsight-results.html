@@ -38,7 +38,12 @@
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"
         ></script>
-        <script data-goatcounter="https://us-teletext-archive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+        <script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id="fca7fa5d-3d18-4e74-afe2-5b880ffc204c"
+            data-domains="nateletext.com"
+        ></script>
         <title>StarSight EPG Results</title>
         <style>
             .container {
@@ -73,6 +78,12 @@
             .tape-notes {
                 text-decoration: none;
                 font-weight: 600;
+            }
+
+            .network-logo {
+                width: 6rem;
+                height: 2.5rem;
+                object-fit: contain;
             }
 
             .btn:not(#themeFab, .theme-choice) {
@@ -295,7 +306,7 @@
                     </span>
                     <br />
                     <br />
-                    <span> If EPG data is available to view, look for a linked value in the "Data" column. </span>
+                    <span> If EPG data is available to view, look for a linked value in the "Date Range" column. </span>
                 </div>
                 <hr aria-hidden="true" />
                 <div id="sort-controls"></div>
@@ -386,9 +397,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -437,15 +448,16 @@
                 sortOptions: [
                     { label: "Contributor", field: "Recovered_By", type: "string" },
                     { label: "Program Title", field: "Program_Title", type: "string" },
-                    { label: "Sample Date", field: "Date", type: "date" },
+                    { label: "Sample Date", field: "Record_Date", type: "date" },
                 ],
                 columns: [
                     { label: "Record Date", key: "Record_Date", width: "8rem" },
+                    { label: "Data Source", key: "Network", width: "8rem", renderNetworkLogo: true },
+                    { label: "Affiliate", key: "Affiliate", width: "6rem", renderAffiliate: true },
                     { label: "Program", key: "Program_Title", width: "30rem" },
-                    { label: "Data Range", key: "Dataset_Name", width: "15rem", renderStarSightDate: true },
+                    { label: "Data Range", key: "Dataset_Name", width: "18rem", renderStarSightDate: true },
                     { label: "Tape", key: "Tape_Type", width: "5rem", accessibleMap: "BMAX_Name" },
                     { label: "Speed", key: "Tape_Speed", width: "5rem", accessibleMap: "BMAX_Speed" },
-                    { label: "Data Source", key: "Network", width: "10rem" },
                     { label: "Contributor", key: "Recovered_By", width: "12rem" },
                     { label: "Date Added", key: "Date_Added", width: "7rem" },
                 ],

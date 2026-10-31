@@ -121,7 +121,7 @@ const tables = {
         type: "epg",
         dateField: "Record_Date",
         sampleCondition: `Data IS NOT NULL AND TRIM(CAST(Data AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Record_Date", "Program_Title", "Tape_Type", "Tape_Speed", "Data", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "Dataset_Name"]
+        columns: ["ID", "Year", "Month", "Record_Date", "Program_Title", "Tape_Type", "Tape_Speed", "Data", "Network", "Affiliate", "Service_Name", "Notes", "Date_Added", "Recovered_By", "Dataset_Name"]
     },
     virtext: {
         table: "Virtext",
