@@ -1,7 +1,8 @@
 (function () {
     "use strict";
     const API_BASE = "";
-    const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)$/i;
+    // e.g. "Record-000-002-v0", "Record-000-002-3-v1", "Record-000-002-v0-6"
+    const RECORD_PATTERN = /^Record-(\d+)-(\d+)(?:-(\d+))?-v([A-Za-z0-9]+)(?:-(\d+))?$/i;
     const PAGE_PATTERN = /^Page-(\d+)-(\d+)$/i;
 
     // Images exported from the site's teletext editor
@@ -270,12 +271,15 @@
         // This is used for CBS and NBC images (NABTS). These pages start with "Record"
         if (recordMatch) {
             const duplicateIndex = recordMatch[3] !== undefined ? parseInt(recordMatch[3], 10) : 0;
+            const partSuffix = recordMatch[5] !== undefined ? `-${recordMatch[5]}` : "";
+            const partIndex = recordMatch[5] !== undefined ? parseInt(recordMatch[5], 10) : 0;
 
             return {
                 kind: "record",
                 pageNumber: parseInt(recordMatch[2], 10),
-                displayNumber: `${recordMatch[2]}-v${recordMatch[4]}`,
+                displayNumber: `${recordMatch[2]}-v${recordMatch[4]}${partSuffix}`,
                 subIndex: recordMatch[4],
+                partIndex,
                 duplicateIndex,
                 collapse: false,
             };
@@ -366,13 +370,26 @@
                 pageNumber: parsed.pageNumber,
                 displayNumber: parsed.displayNumber,
                 subIndex: parsed.subIndex,
+                partIndex: parsed.partIndex ?? 0,
+                duplicateIndex: parsed.duplicateIndex ?? 0,
                 filename: entry.filename,
                 url: entry.url,
             });
         });
 
         // Sort images in order by page number, by page number and subpage number, or by index if page numbers are identical
-        frames.sort((a, b) => a.pageNumber - b.pageNumber || a.subIndex - b.subIndex || (a.duplicateIndex ?? 0) - (b.duplicateIndex ?? 0));
+        // Record versions are strings (e.g. "0", "A"), so compare them naturally instead of subtracting
+        const compareSubIndex = (x, y) =>
+            typeof x === "number" && typeof y === "number"
+                ? x - y
+                : String(x).localeCompare(String(y), undefined, { numeric: true, sensitivity: "base" });
+
+        frames.sort((a, b) =>
+            a.pageNumber - b.pageNumber ||
+            compareSubIndex(a.subIndex, b.subIndex) ||
+            a.partIndex - b.partIndex ||
+            a.duplicateIndex - b.duplicateIndex
+        );
 
         let i = 0;
 
