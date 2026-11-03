@@ -1,0 +1,19 @@
+.year-banner {
+  display: block;
+  padding-top: 20px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.year-banner-dark {
+  display: none;
+}
+
+[data-bs-theme=dark] .year-banner-dark {
+  display: block;
+}
+[data-bs-theme=dark] .year-banner-light {
+  display: none;
+}/*# sourceMappingURL=year-banners.css.map */

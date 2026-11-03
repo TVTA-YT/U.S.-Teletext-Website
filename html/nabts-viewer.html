@@ -46,8 +46,12 @@
         ></script>
         <title>T33 (NABTS) Teletext Viewer</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .btn {
@@ -254,6 +258,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -267,10 +274,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -287,6 +296,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -300,10 +312,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -320,10 +334,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -341,13 +355,14 @@
             </div>
         </nav>
         <main>
-            <div class="container">
+            <div class="heading-container">
                 <h1>
-                    <span class="visually-hidden" id="bannerTitle">T33 (NABTS) Teletext Viewer</span>
+                    <span class="visually-hidden" id="bannerTitle"></span>
                     <img src="" alt="" class="mw-100 light-mode-image" id="lightImageBanner" aria-hidden="true" hidden />
                     <img src="" alt="" class="mw-100 dark-mode-image" id="darkImageBanner" aria-hidden="true" hidden />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container">
                 <!-- Sample name and date -->
                 <h2 class="text-center display-6 fw-bold" id="sample-title"></h2>
                 <!-- Contributor name -->
@@ -678,9 +693,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">

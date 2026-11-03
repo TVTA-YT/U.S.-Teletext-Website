@@ -1052,6 +1052,11 @@
             }
 
             const manifest = await response.json();
+
+            // If the page was opened with an old USTT_/CATT_ ID, switch the URL to the sample's NAT ID
+            // ("render()" writes streamId into the "stream" URL parameter)
+            if (manifest.nat_id) streamId = manifest.nat_id;
+
             frames = buildFrameList(manifest.images || []);
 
             // Show error if the filename pattern is incorrect

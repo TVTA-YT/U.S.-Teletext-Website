@@ -50,8 +50,12 @@
         ></script>
         <title>Teletext Services</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .mobile-blue-border {
@@ -176,6 +180,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -189,10 +196,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -209,6 +218,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -222,10 +234,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -242,10 +256,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -263,12 +277,13 @@
             </div>
         </nav>
         <main>
-            <div class="container pb-3">
-                <h1>
+            <div class="heading-container">
+                <h1 class="page-title">
                     <span class="visually-hidden">Teletext Services</span>
                     <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container pb-3">
                 <p class="fs-5">
                     While teletext was not as popular in North America, a few teletext service were available. To search for archived
                     teletext from any of these services, click on one below.
@@ -474,8 +489,8 @@
                         class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding service-top-padding service-new-row-top-padding"
                     >
                         <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/WISINFOTEXT_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/WISINFOTEXT.png" alt="" class="mw-100 pb-4 dark-mode-image" />
+                            <img src="../images/banners/light/WISINFOTEXT_Teletext_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
+                            <img src="../images/banners/dark/WISINFOTEXT_Teletext.png" alt="" class="mw-100 pb-4 dark-mode-image" />
                         </div>
                         <a href="wisconsin-infotext.html">
                             <span class="visually-hidden">VirText</span>
@@ -576,14 +591,14 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
+
         <script src="../js/total-count.js"></script>
         <script>
             // Heading banner animation
             const pageHeadingImage = document.getElementById("page-heading-image");
             const imageSets = {
-                light: ["../images/banners/light/Teletext-Services_light.png", "../images/banners/light/Teletext-Services-2_light.png"],
-                dark: ["../images/banners/dark/Teletext-Services.png", "../images/banners/dark/Teletext-Services-2.png"],
+                light: ["../images/banners/light/Teletext-Services_1_light.png", "../images/banners/light/Teletext-Services_2_light.png"],
+                dark: ["../images/banners/dark/Teletext-Services_1.png", "../images/banners/dark/Teletext-Services_2.png"],
             };
 
             Object.values(imageSets)

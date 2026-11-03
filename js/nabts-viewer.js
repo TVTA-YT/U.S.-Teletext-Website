@@ -307,6 +307,8 @@
             // Pages salvaged without their header (decode-orc PR #328) are fragments with no page number: listed apart
             let channelLabel = record.channel === 0xA00 ? 'Channel A00 (captions)' : `Channel ${toHex3(record.channel)}`;
             if (record.identity_lost) channelLabel = `Channel ${toHex3(record.channel)}: fragments salvaged without a page number`;
+            // Text messages a network sent its affiliates as another data service, listed apart
+            if (record.message) channelLabel = `Channel ${toHex3(record.channel)}: messages to affiliates`;
 
             // If the first record, create its group
             if (!groupsByChannel.has(channelLabel)) {
@@ -322,6 +324,7 @@
             // Pages updated during the recording without a new version number are listed once per edition
             if (record.editions > 1) recordLabel += ` (edition ${record.edition} of ${record.editions})`;
             if (record.identity_lost) recordLabel = `Fragment ${record.addr_text.replace('LOST', '')}`;
+            if (record.message) recordLabel = `Message ${record.message.number}${record.message.slug ? ` (${record.message.slug})` : ''}`;
 
             // Page's first line
             let description = record.page ? firstTextLine(record) : (RECORD_TYPE_NAMES[record.type] || 'Record').toLowerCase();
@@ -465,8 +468,17 @@
     // & Build the record's name and its info line
     const describeRecord = (record, index) => {
         const subpages = subpageIndexesOf(record), subpageNumber = subpages.indexOf(index) + 1;
-        const name = record.identity_lost ? `Fragment ${record.addr_text.replace('LOST', '')}`
-            : pageNumberOf(record) ? `Page ${pageNumberOf(record)}` : `Record ${record.addr_text}`;
+        const name = record.message ? `Message ${record.message.number}`
+            : record.identity_lost ? `Fragment ${record.addr_text.replace('LOST', '')}`
+                : pageNumberOf(record) ? `Page ${pageNumberOf(record)}` : `Record ${record.addr_text}`;
+        if (record.message) {
+            const { slug, when, group_type: groupType, complete } = record.message;
+            const parts = [`${name} on channel ${toHex3(record.channel)}`,
+            `a text message to affiliates, sent as data group type ${groupType}, not as a page`];
+            if (slug) parts.push(slug + (when ? ` (${when})` : ''));
+            parts.push(complete ? 'received whole' : 'parts lost in the recording are shown as "?" or "[...]"');
+            return { name, summary: `${parts.join(' · ')}.` };
+        }
         const parts = [
             name + (record.channel ? ` on channel ${toHex3(record.channel)}` : ''),
             `version ${record.version}${subpages.length > 1 ? ` (subpage ${subpageNumber} of ${subpages.length})` : ''}`
@@ -663,7 +675,7 @@
         if (playKeysHelp) {
             playKeysHelp.hidden = !digits.length;
             playKeysHelp.textContent = !digits.length ? '' : state.playing
-                ? `The number keys now play this page (it answers ${describeKeys(digits)}). Redraw Page starts over. Press Play Game again to type page numbers.`
+                ? `The digit keys now play this page (it answers ${describeKeys(digits)}). Draw Page Again starts over; press Play This Page again to type page numbers.`
                 : `This page is interactive: it answers ${describeKeys(digits)}.`;
         }
     };
@@ -673,7 +685,7 @@
         state.playing = !state.playing;
         cancelEntry();
         updatePlayKeys(record);
-        announce(state.playing ? 'The number keys now play this page.' : 'The number keys enter page numbers again.');
+        announce(state.playing ? 'The digit keys now play this page.' : 'The digit keys enter page numbers again.');
     };
     const pressGameKey = (key) => {
         const record = state.records[state.currentIndex];
@@ -681,9 +693,6 @@
         if (!NABTS.linkedDigits(record).includes(key)) { announce(`Key ${key} does nothing on this page.`); return; }
         // The page number display keeps showing the page; game keys are not page numbers
         state.gameKeys.push(key);
-        entryDisplay.textContent = `${key}`;
-        clearTimeout(state.entryTimeout);
-        state.entryTimeout = setTimeout(updateEntryDisplay, 1500);
         playPage(NABTS.playKeys(record, state.gameKeys, state.grid, { font: state.font, pace: state.pace }));
     };
     const restartPage = () => {
@@ -849,15 +858,36 @@
     }
 
     // & Full screen toggle
+    // iPads before iPadOS 16.4 only have the webkit-prefixed calls, and iPhones can't show a page element full screen
+    // at all; there the screen is stretched over the whole window instead ("fills-window") until it's toggled off
+    const fullscreenElementNow = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+    const isScreenFullscreen = () => fullscreenElementNow() === screenElement || screenElement.classList.contains('fills-window');
+    const setWindowFill = (on) => {
+        screenElement.classList.toggle('fills-window', on);
+        document.documentElement.classList.toggle('screen-fills-window', on);
+        fullscreenChanged();
+    };
     const toggleFullscreen = () => {
-        if (document.fullscreenElement) document.exitFullscreen();
-        else screenElement.requestFullscreen?.();
+        if (screenElement.classList.contains('fills-window')) { setWindowFill(false); return; }
+        if (fullscreenElementNow()) { (document.exitFullscreen || document.webkitExitFullscreen)?.call(document); return; }
+        const request = screenElement.requestFullscreen || screenElement.webkitRequestFullscreen;
+        if (!request) { setWindowFill(true); return; }
+        // A refused request (some browsers refuse it inside a frame) falls back to filling the window
+        try { request.call(screenElement)?.catch?.(() => setWindowFill(true)); } catch { setWindowFill(true); }
     };
 
-    // Keep the full screen button's pressed state to the right when full screen mode is exited
-    document.addEventListener('fullscreenchange', () => {
-        fullscreenButton.setAttribute('aria-pressed', String(document.fullscreenElement === screenElement));
-    });
+    // Keep the full screen button's pressed state right when full screen is left some other way (Escape, the
+    // system's own close button), and on touch screens say how to move around, since there are no buttons there
+    const fullscreenChanged = () => {
+        const on = isScreenFullscreen();
+        fullscreenButton?.setAttribute('aria-pressed', String(on));
+        if (on) {
+            screenElement.focus({ preventScroll: true });
+            if (isTouchScreen()) showScreenLabel(TOUCH_HINT, 3500);
+        } else hideScreenLabel();
+    };
+    document.addEventListener('fullscreenchange', fullscreenChanged);
+    document.addEventListener('webkitfullscreenchange', fullscreenChanged);
 
     // Each keypad digit button types the corresponding digit
     for (const digitButton of document.querySelectorAll('[data-digit]')) {
@@ -1151,8 +1181,177 @@
         }
     });
 
+    // ^ Touch gestures on the screen
+    // Full screen has no buttons, and a tablet has no arrow keys, so the screen itself takes swipes:
+    // left and right change the page (like turning one), up and down change the subpage (full screen only, since
+    // outside it they scroll the viewer), a tap shows which page and subpage this is, and holding a finger on the
+    // screen leaves full screen
+    const TOUCH_HINT = 'Swipe ← → for pages, ↑ ↓ for subpages. Hold to exit.';
+    const SWIPE_DISTANCE = 50, SWIPE_MAX_MILLISECONDS = 800, TAP_SLOP = 12, HOLD_MILLISECONDS = 700;
+    const isTouchScreen = () => window.matchMedia?.('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+
+    const gestureStyle = document.createElement('style');
+    gestureStyle.textContent = `
+        .viewer-screen { position: relative; touch-action: pan-y pinch-zoom; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+        .viewer-screen:fullscreen, .viewer-screen.fills-window { touch-action: none; }
+        .viewer-screen.fills-window {
+            position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center;
+            padding: 0; border-radius: 0; background: #000;
+        }
+        /* Full screen: the page fits inside the screen both ways. iOS counts 100vh as the height with its toolbars
+           hidden, which is taller than what is shown in landscape, so the top and bottom were cut off; the box's
+           own size (container units) is used where the browser has them, else the visible height (dvh). The
+           notch and home indicator areas are kept clear */
+        .viewer-screen:fullscreen, .viewer-screen.fills-window {
+            container-type: size;
+            padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+        }
+        .viewer-screen:fullscreen canvas, .viewer-screen.fills-window canvas {
+            width: min(100vw, 100vh * var(--screen-ratio));
+            width: min(100dvw, 100dvh * var(--screen-ratio));
+            width: min(100cqw, 100cqh * var(--screen-ratio));
+        }
+        /* Not full screen, a phone turned sideways: the screen is narrowed so the whole page fits in the window */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .viewer-screen:not(:fullscreen):not(.fills-window) canvas {
+                margin-inline: auto;
+                width: min(100%, (100vh - 4rem) * var(--screen-ratio));
+                width: min(100%, (100dvh - 4rem) * var(--screen-ratio));
+            }
+        }
+        html.screen-fills-window, html.screen-fills-window body { overflow: hidden; }
+        .screen-label {
+            position: absolute; top: 4%; left: 50%; transform: translateX(-50%); max-width: 92%;
+            padding: 0.35em 0.9em; border-radius: 1em; background: rgba(0, 0, 0, 0.75); color: #fff;
+            font: 600 clamp(0.8rem, 2.4vmin, 1.15rem) / 1.3 system-ui, sans-serif; text-align: center;
+            pointer-events: none; opacity: 0; transition: opacity 0.25s;
+        }
+        .screen-label.shown { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) { .screen-label { transition: none; } }`;
+    document.head.appendChild(gestureStyle);
+
+    // A short label over the screen (screen readers already hear the change through announce())
+    const screenLabel = document.createElement('div');
+    screenLabel.className = 'screen-label';
+    screenLabel.setAttribute('aria-hidden', 'true');
+    screenElement.appendChild(screenLabel);
+    let screenLabelTimeout = 0;
+    function showScreenLabel(text, milliseconds = 1600) {
+        screenLabel.textContent = text;
+        screenLabel.classList.add('shown');
+        clearTimeout(screenLabelTimeout);
+        screenLabelTimeout = setTimeout(hideScreenLabel, milliseconds);
+    }
+    function hideScreenLabel() {
+        clearTimeout(screenLabelTimeout);
+        screenLabel.classList.remove('shown');
+    }
+
+    // "P051 · subpage 2 of 26" for the record on screen
+    const currentPlaceLabel = () => {
+        const record = state.records[state.currentIndex];
+        if (!record) return '';
+        const subpages = subpageIndexesOf(record);
+        const name = pageNumberOf(record) ? `P${pageNumberOf(record)}` : record.addr_text;
+        return subpages.length > 1 ? `${name} · subpage ${subpages.indexOf(state.currentIndex) + 1} of ${subpages.length}` : name;
+    };
+
+    const swipeTo = (kind, direction) => {
+        if (!state.records.length) return;
+        if (kind === 'subpage' && subpageIndexesOf(state.records[state.currentIndex]).length < 2) {
+            announce('This page has no other subpages.');
+            showScreenLabel(`${currentPlaceLabel()} · no other subpages`);
+            return;
+        }
+        if (kind === 'page') stepPage(direction); else stepSubpage(direction);
+        showScreenLabel(currentPlaceLabel());
+    };
+
+    // One finger at a time; a second finger (a pinch) cancels the gesture
+    let gesture = null;
+    const endGesture = () => { if (gesture) clearTimeout(gesture.holdTimeout); gesture = null; };
+    screenElement.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'mouse') return;
+        if (gesture) { endGesture(); return; }
+        gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, time: performance.now(), held: false };
+        gesture.holdTimeout = setTimeout(() => {
+            if (!gesture || !isScreenFullscreen()) return;
+            gesture.held = true;
+            toggleFullscreen();
+        }, HOLD_MILLISECONDS);
+    });
+    screenElement.addEventListener('pointermove', (event) => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        if (Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y) > TAP_SLOP) clearTimeout(gesture.holdTimeout);
+    });
+    screenElement.addEventListener('pointerup', (event) => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        const { x, y, time, held } = gesture;
+        endGesture();
+        if (held) return;
+        const dx = event.clientX - x, dy = event.clientY - y, elapsed = performance.now() - time;
+        if (Math.hypot(dx, dy) <= TAP_SLOP) {
+            if (state.records.length) showScreenLabel(currentPlaceLabel());
+            return;
+        }
+        if (elapsed > SWIPE_MAX_MILLISECONDS) return;
+        // Finger moving left brings the next page in, as when turning a page; moving up brings the next subpage
+        if (Math.abs(dx) >= SWIPE_DISTANCE && Math.abs(dx) > 1.5 * Math.abs(dy)) swipeTo('page', dx < 0 ? 1 : -1);
+        else if (isScreenFullscreen() && Math.abs(dy) >= SWIPE_DISTANCE && Math.abs(dy) > 1.5 * Math.abs(dx)) swipeTo('subpage', dy < 0 ? 1 : -1);
+    });
+    screenElement.addEventListener('pointercancel', endGesture);
+    // Escape leaves the window-filling full screen too, as it does the real one
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && screenElement.classList.contains('fills-window')) setWindowFill(false);
+    });
+
     // ---- Start ---------------------------------------------------------------------------
     screenElement.classList.toggle('aspect-ratio', aspectCheckbox.checked);
     clearScreen();
+    // & Local T33 files: a page with a file input (#t33File) opens .t33 files from the computer, picked or dropped
+    // on the page, without a server (the local viewer, "NABTS Viewer.html", which also works opened straight from disk)
+    const localFileInput = byID('t33File');
+    const openLocalFile = async (file) => {
+        if (!file) return;
+        state.playing = false;
+        state.gameKeys = [];
+        pageInfo.textContent = `Reading ${file.name}...`;
+        try {
+            state.streamBytes = await file.arrayBuffer();
+        } catch (error) {
+            pageInfo.textContent = `The file could not be read (${error.message})`;
+            announce(pageInfo.textContent);
+            return;
+        }
+        setSourceName(file.name);
+        const title = byID('sample-title');
+        if (title) title.textContent = file.name.replace(/\.t33$/i, '').replace(/_/g, ' ');
+        document.title = `${file.name} - NABTS Viewer`;
+        // A page named in the address bar belonged to the file opened before
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+        if (await decodeStream()) openFirstRecord(null);
+    };
+    if (localFileInput) {
+        localFileInput.addEventListener('change', () => {
+            openLocalFile(localFileInput.files[0]);
+            localFileInput.value = '';                    // the same file can be opened again
+        });
+        // Dropping a file anywhere on the page opens it
+        const dropZone = byID('t33Drop');
+        const hasFiles = (event) => [...(event.dataTransfer?.types || [])].includes('Files');
+        document.addEventListener('dragover', (event) => {
+            if (!hasFiles(event)) return;
+            event.preventDefault();
+            dropZone?.classList.add('over');
+        });
+        document.addEventListener('dragleave', (event) => { if (!event.relatedTarget) dropZone?.classList.remove('over'); });
+        document.addEventListener('drop', (event) => {
+            if (!hasFiles(event)) return;
+            event.preventDefault();
+            dropZone?.classList.remove('over');
+            openLocalFile(event.dataTransfer.files[0]);
+        });
+    }
+
     loadSample();
 })();

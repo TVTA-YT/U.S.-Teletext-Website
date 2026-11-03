@@ -1,6 +1,9 @@
 // Magic link login routes (/api/auth/*)
 import { handleAuth, handleAdmin } from "../../js/auth.js";
 
+// Teletext News routes (/api/news, /api/admin/news*)
+import { handleNews } from "./news.js";
+
 // ^ Show new records for 7 days
 const NEW_WINDOW_DAYS = 7;
 const NEW_WINDOW_SECONDS = NEW_WINDOW_DAYS * 24 * 60 * 60;
@@ -56,6 +59,15 @@ const tables = {
         sampleCondition: `(Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != '') OR (NABTS_Stream IS NOT NULL AND TRIM(CAST(NABTS_Stream AS TEXT)) != '')`,
         isNabts: true,
         columns: ["ID", "Year", "Month", "Date", "Affiliate", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "NABTS_Stream"]
+    },
+    gemstar: {
+        table: "Gemstar",
+        idField: "ID",
+        type: "epg",
+        epgFolder: "gemstar",
+        dateField: "Record_Date",
+        sampleCondition: `Data IS NOT NULL AND TRIM(CAST(Data AS TEXT)) != ''`,
+        columns: ["ID", "Year", "Month", "Record_Date", "Program_Title", "Tape_Type", "Tape_Speed", "Data", "Network", "Affiliate", "Service_Name", "Notes", "Date_Added", "Recovered_By", "Dataset_Name"]
     },
     iptvAgids: {
         table: "IPTV_AGIDS",
@@ -119,6 +131,7 @@ const tables = {
         table: "StarSight",
         idField: "ID",
         type: "epg",
+        epgFolder: "starsight",
         dateField: "Record_Date",
         sampleCondition: `Data IS NOT NULL AND TRIM(CAST(Data AS TEXT)) != ''`,
         columns: ["ID", "Year", "Month", "Record_Date", "Program_Title", "Tape_Type", "Tape_Speed", "Data", "Network", "Affiliate", "Service_Name", "Notes", "Date_Added", "Recovered_By", "Dataset_Name"]
@@ -212,6 +225,35 @@ function getDatasetConfig(datasetName) {
 }
 
 
+/* PUBLIC SAMPLE IDS (NAT_) */
+
+// & Turn a public NAT ID into the Internet Archive identifier the backend fetches with
+// Older samples are mapped in the "sample_ids" table. New uploads use the NAT ID as their IA ID, so they need no mapping.
+// USTT_/CATT_ IDs pass through unchanged, so old links keep working.
+async function toIaId(db, id) {
+    if (!/^NAT_/i.test(id)) return id;
+    const row = await db.prepare("SELECT IA_ID FROM sample_ids WHERE NAT_ID = ?").bind(id).first();
+    return row?.IA_ID ?? id;
+}
+
+// & The reverse: find the public NAT ID for an IA identifier (null if the sample has none yet)
+async function toNatId(db, iaID) {
+    if (/^NAT_/i.test(iaID)) return iaID;
+    const row = await db.prepare("SELECT NAT_ID FROM sample_ids WHERE IA_ID = ?").bind(iaID).first();
+    return row?.NAT_ID ?? null;
+}
+
+// & SQL pieces that add each row's public NAT ID (only for tables with an "IA_ID" column)
+// Older samples: NAT ID from "sample_ids". New uploads: the IA ID itself is the NAT ID.
+function natIdSql(config) {
+    if (!config.columns.includes("IA_ID")) return { select: "", join: "" };
+    return {
+        select: `, COALESCE(s.NAT_ID, CASE WHEN SUBSTR(t.IA_ID, 1, 4) = 'NAT_' THEN t.IA_ID END) AS NAT_ID`,
+        join: `LEFT JOIN sample_ids AS s ON s.Dataset = '${config.table}' COLLATE NOCASE AND s.Row_ID = t.${config.idField}`
+    };
+}
+
+
 /* EXPORT INDIVIDUAL DATASET */
 
 // Build dynamic SQL query
@@ -230,10 +272,12 @@ async function exportTable(db, config) {
     const now = Math.floor(Date.now() / 1000);
     const columns = [...config.columns, "Date_Updated"].map(column => `t.${column}`).join(", ");
     const dateField = config.dateField || "Date";
+    const nat = natIdSql(config);
 
     const sql = `
-        SELECT ${columns}
+        SELECT ${columns}${nat.select}
         FROM ${config.table} AS t
+        ${nat.join}
         ORDER BY t.Year, t.${dateField}
     `;
 
@@ -340,10 +384,12 @@ async function getRecentFromDataset(db, config) {
     // This selects the IA ID only from tables that have it
     if (config.columns.includes("IA_ID")) selectColumns.push("IA_ID");
     const columns = selectColumns.map(column => `t.${column}`).join(", ");
+    const nat = natIdSql(config);
 
     const sql = `
-        SELECT t.${dateField} AS Date, ${columns}
+        SELECT t.${dateField} AS Date, ${columns}${nat.select}
         FROM ${config.table} AS t
+        ${nat.join}
         WHERE t.Date_Added IS NOT NULL
             AND TRIM(CAST(t.Date_Added AS TEXT)) != ''
             AND LOWER(TRIM(CAST(t.Date_Added AS TEXT))) != 'null'
@@ -386,9 +432,14 @@ function galleryKey(identifier) {
     return `gallery/gallery-${identifier}.json`;
 }
 
-// & Generate Cloudflare R2 object path for StarSight data
-function starsightKey(identifier) {
-    return `starsight/${identifier}.json`;
+// & R2 folder for an EPG dataset's JSON files (StarSight: "starsight/", Gemstar: "gemstar/")
+function epgFolder(dataset) {
+    return dataset.config.epgFolder ?? dataset.key;
+}
+
+// & Generate Cloudflare R2 object path for EPG (StarSight or Gemstar) data
+function epgKey(dataset, identifier) {
+    return `${epgFolder(dataset)}/${identifier}.json`;
 }
 
 // & Get gallery manifests
@@ -398,11 +449,34 @@ async function getGalleryManifest(env, identifier) {
     return await object.json();
 }
 
-// & Get StarSight manifest
-async function getStarSightManifest(env, identifier) {
-    const object = await env.EPG.get(starsightKey(identifier));
+// & Get one EPG JSON file (StarSight or Gemstar)
+async function getEpgData(env, dataset, identifier) {
+    const object = await env.EPG.get(epgKey(dataset, identifier));
     if (!object) return null;
-    return await object.json()
+    return await object.json();
+}
+
+// & List the EPG JSON files in R2 for one dataset
+async function listEpgFiles(env, dataset) {
+    const folder = epgFolder(dataset);
+    const ids = [];
+    let cursor;
+
+    do {
+        const listing = await env.EPG.list({ prefix: `${folder}/`, cursor });
+
+        for (const object of listing.objects) {
+            const name = object.key.slice(folder.length + 1);
+            if (!name.toLowerCase().endsWith(".json")) continue;
+
+            const fileID = name.slice(0, -".json".length);
+            if (SAMPLE_ID_PATTERN.test(fileID)) ids.push(fileID);
+        }
+
+        cursor = listing.truncated ? listing.cursor : undefined;
+    } while (cursor);
+
+    return ids.sort();
 }
 
 // ^ ID pattern for fetching teletext JSON files
@@ -508,16 +582,19 @@ async function getRecentViewableSamples(env) {
         const config = items[0].config;
 
         // NABTS_Stream may be stored with or without ".t33", and in any case; compare lowercased without the extension
+        // "t." prefixes are needed because "sample_ids" also has an "IA_ID" column
         const matchExpr = config.isNabts
-            ? `REPLACE(LOWER(TRIM(CAST(NABTS_Stream AS TEXT))), '.t33', '')`
-            : `TRIM(CAST(IA_ID AS TEXT))`;
+            ? `REPLACE(LOWER(TRIM(CAST(t.NABTS_Stream AS TEXT))), '.t33', '')`
+            : `TRIM(CAST(t.IA_ID AS TEXT))`;
+        const nat = natIdSql(config);
 
         const fileIDs = items.map(item => config.isNabts ? item.fileID.toLowerCase() : item.fileID);
         const placeholders = fileIDs.map(() => "?").join(", ");
 
         const { results } = await env.DB.prepare(`
-            SELECT ${config.dateField || "Date"} AS Date, Service_Name, Recovered_By, IA_ID, ${matchExpr} AS File_ID
-            FROM ${config.table}
+            SELECT t.${config.dateField || "Date"} AS Date, t.Service_Name, t.Recovered_By, t.IA_ID, ${matchExpr} AS File_ID${nat.select}
+            FROM ${config.table} AS t
+            ${nat.join}
             WHERE ${matchExpr} IN (${placeholders})
         `).bind(...fileIDs).all();
 
@@ -536,6 +613,9 @@ async function getRecentViewableSamples(env) {
 
             // Both viewers look samples up by IA ID
             IA_ID: row?.IA_ID ?? (item.config.isNabts ? null : item.fileID),
+
+            // Public ID to show and link with (falls back to the IA ID if a sample has no NAT ID yet)
+            NAT_ID: row?.NAT_ID ?? null,
             Format: item.config.isNabts ? "T33" : "T34",
             Date: row?.Date ?? null,
             Service_Name: row?.Service_Name ?? null,
@@ -1061,29 +1141,32 @@ async function handleApi(request, env) {
             if (suffix && suffix !== "meta") return errorResponse("Unknown teletext sub-resource", 404);
             if (!SAMPLE_ID_PATTERN.test(id)) return errorResponse("Invalid sample ID", 400);
 
+            // Accept a NAT ID or an old USTT_/CATT_ ID; everything below uses the IA ID
+            const iaID = await toIaId(env.DB, id);
+
             const row = await env.DB.prepare(`
             SELECT Date, Service_Name, Recovered_By${dataset.config.isNabts ? ", NABTS_Stream" : ""}
             FROM ${dataset.config.table}
             WHERE IA_ID = ?
             LIMIT 1
-            `).bind(id).first();
+            `).bind(iaID).first();
 
             // Metadata-only request (used by the NABTS viewer, separately from the binary stream)
             if (suffix === "meta") {
 
                 // Only samples listed in EXTRAVISION_PRELAUNCH_BANNERS get a banner; the viewer shows nothing for the rest
-                const banner = EXTRAVISION_PRELAUNCH_BANNERS[id];
+                const banner = EXTRAVISION_PRELAUNCH_BANNERS[iaID];
 
                 return jsonResponse({
                     title: row ? `${row.Service_Name} - ${row.Date}` : null,
                     contributor: row?.Recovered_By ?? null,
-                    fileName: `${id}.${extension}`,
+                    fileName: `${iaID}.${extension}`,
                     ...(banner && { bannerLight: banner.light, bannerDark: banner.dark ?? banner.light, bannerTitle: banner.title })
                 });
             }
 
             // NABTS stream names come from the "NABTS_Stream" column; WST streams names come from the "IA_ID" column
-            let fileKeyID = id;
+            let fileKeyID = iaID;
 
             // NABTS (.t33) is binary — return it raw rather than parsing as JSON
             if (dataset.config.isNabts) {
@@ -1120,8 +1203,46 @@ async function handleApi(request, env) {
     }
 
     /*
+    * API CALL: /api/epg/<dataset>/<id>
+    * This is called on the StarSight and Gemstar EPG pages (e.g. gemstar-data.html?json=/api/epg/gemstar/<id>).
+    * This fetches one EPG JSON file from the R2 ("starsight/<id>.json" or "gemstar/<id>.json").
+    *
+    * API CALL: /api/epg/<dataset>
+    * This fetches the ID of every EPG JSON file for that dataset.
+    */
+    if (url.pathname.startsWith("/api/epg/")) {
+        try {
+            const [datasetName, id = "", ...extra] = url.pathname.slice("/api/epg/".length).split("/").map(part => decodeURIComponent(part).trim());
+            const dataset = getDatasetEntry(datasetName);
+
+            if (!dataset || dataset.config.type !== "epg" || extra.length) {
+                return errorResponse(`Unknown EPG dataset: ${datasetName}`, 404);
+            }
+
+            if (!id) {
+                const ids = await listEpgFiles(env, dataset);
+                return jsonResponse({ dataset: dataset.key, ids });
+            }
+
+            // Accept "<id>" or "<id>.json"
+            const fileID = id.replace(/\.json$/i, "");
+            if (!SAMPLE_ID_PATTERN.test(fileID)) return errorResponse("Invalid sample ID", 400);
+
+            const data = await getEpgData(env, dataset, fileID);
+            if (!data) return errorResponse("No EPG data found for this sample", 404);
+
+            const response = jsonResponse(data);
+            response.headers.set("cache-control", "public, max-age=3600");
+            return response;
+        } catch (error) {
+            console.error("EPG data lookup failed:", error);
+            return errorResponse(`EPG data lookup failed: ${error.message}`, 500);
+        }
+    }
+
+    /*
     * API CALL: /api/poster?title=<program title>
-    * This is called on the StarSight EPG page.
+    * This is called on the StarSight and Gemstar EPG pages.
     * This proxies a title lookup to OMDb server-side so the API key is never given to the browser.
     */
     if (url.pathname === "/api/poster") {
@@ -1150,9 +1271,13 @@ async function handleApi(request, env) {
         if (!identifier) return errorResponse("Missing Internet Archive identifier", 400);
 
         try {
-            const manifest = await getGalleryManifest(env, identifier);
+            // Accept a NAT ID or an old USTT_/CATT_ ID; manifests are stored under the IA ID
+            const iaID = await toIaId(env.DB, identifier);
+            const manifest = await getGalleryManifest(env, iaID);
             if (!manifest) return errorResponse("Gallery manifest not found", 404);
-            return jsonResponse(manifest);
+
+            // Include the public NAT ID so the gallery page can show it in the address bar
+            return jsonResponse({ ...manifest, nat_id: await toNatId(env.DB, iaID) });
         } catch (error) {
             console.error("Gallery manifest lookup failed:", error);
             return errorResponse(`Gallery manifest lookup failed: ${error.message}`, 500);
@@ -1189,6 +1314,10 @@ export default {
             return response ?? errorResponse("Not found", 404);
         }
 
+        // Teletext News routes are checked before the admin and dataset routes: "handleAdmin()"" doesn't know about "/api/admin/news*"", and "handleApi()"" would treat "news" as an unknown dataset
+        const newsResponse = await handleNews(request, env, ctx);
+        if (newsResponse) return newsResponse;
+
         // Admin dashboard routes (signed-in admin accounts only)
         if (url.pathname.startsWith("/api/admin/")) {
             const response = await handleAdmin(request, env, tables);
@@ -1199,11 +1328,11 @@ export default {
             return handleApi(request, env);
         }
 
-        // Text service HTML files and StarSight JSON from R2:
+        // Text service HTML files, T33 streams, and StarSight/Gemstar JSON (e.g. /files/gemstar/<id>.json) from R2:
         if (url.pathname.startsWith("/files/")) {
             const key = url.pathname.slice("/files/".length);
 
-            // T34 JSON files
+            // EPG JSON files (StarSight and Gemstar) are in the EPG bucket
             const isJson = key.toLowerCase().endsWith(".json");
 
             // T33 files

@@ -21,9 +21,16 @@ const TAPE_VALUE_MAPS = {
 };
 
 const NETWORK_LOGOS = {
+    "ABC Family": "../images/logos/ABC-Family.png",
     "MTV": "../images/logos/MTV.png",
     "Nickelodeon": "../images/logos/Nickelodeon.png",
     "PBS": "../images/logos/PBS.png"
+};
+
+// ^ EPG guide pages and their R2 folders (EPG bucket). "folder: null" keeps StarSight's existing links, which use the Service_Name column as the folder
+const EPG_GUIDES = {
+    starsight: { page: "starsight-data.html", folder: null },
+    gemstar: { page: "gemstar-data.html", folder: "gemstar" }
 };
 
 // Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
@@ -117,16 +124,34 @@ async function renderResults(config) {
             ? getSpokenText(serviceLabel, stationLabel, 'all records')
             : getSpokenText(serviceLabel, stationLabel, filterValue);
 
-        heading.removeAttribute('aria-label', spokenText);
         heading.innerHTML = '';
 
-        const visualSpan = document.createElement('span');
-        visualSpan.setAttribute('aria-hidden', 'true');
-        heading.appendChild(visualSpan);
+        // Screen readers read this; the banner/typed text beside it is aria-hidden
+        const srSpan = document.createElement('span');
+        srSpan.className = 'sr-only';
+        srSpan.textContent = spokenText;
+        heading.appendChild(srSpan);
 
-        // Animate heading
-        LetterReveal.type(visualSpan, headingText)
-        visualSpan.removeAttribute('aria-label');
+        // Typed heading: used for "All Records", non-year filters, or a missing banner image
+        const showTypedHeading = () => {
+            heading.querySelector('.year-banner')?.remove();
+            const visualSpan = document.createElement('span');
+            visualSpan.setAttribute('aria-hidden', 'true');
+            heading.appendChild(visualSpan);
+            LetterReveal.type(visualSpan, headingText);
+        };
+
+        // Pick the banner: the All Records banner, or the searched year's banner
+        const year = String(filterValue ?? '').trim();
+        const bannerName = showAllRows
+            ? ALL_RECORDS_BANNER
+            : (/^\d{4}$/.test(year) ? year : null);
+
+        if (bannerName) {
+            heading.appendChild(buildYearBanner(bannerName, showTypedHeading));
+        } else {
+            showTypedHeading();
+        }
     }
     if (countEl) countEl.textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} found`;
 
@@ -171,6 +196,42 @@ async function renderResults(config) {
     }
 
     renderTable(rows, columns, showAllRows ? null : groupByField, container, dataset);
+}
+
+// Folder holding the year banners: "dark/1980.png" and "light/1980_light.png"
+const YEAR_BANNER_DIR = "../images/banners/years/";
+
+// File name (without ".png" or "_light") of the All Records banner, kept in the same light/dark folders
+const ALL_RECORDS_BANNER = "All-Records";
+
+// Builds both theme variants of a year banner; CSS shows the one matching data-bs-theme
+// onFail runs once if either image is missing, so the page falls back to the typed heading
+function buildYearBanner(name, onFail) {
+    const wrap = document.createElement('span');
+    wrap.className = 'year-banner';
+    wrap.setAttribute('aria-hidden', 'true');
+
+    let failed = false;
+    const variants = [
+        { folder: 'dark', suffix: '', className: 'year-banner-dark' },
+        { folder: 'light', suffix: '_light', className: 'year-banner-light' }
+    ];
+
+    for (const { folder, suffix, className } of variants) {
+        const img = document.createElement('img');
+        img.src = `${YEAR_BANNER_DIR}${folder}/${encodeURIComponent(name)}${suffix}.png`;
+        img.alt = '';
+        img.className = className;
+        img.decoding = 'async';
+        img.addEventListener('error', () => {
+            if (failed) return;
+            failed = true;
+            onFail();
+        }, { once: true });
+        wrap.appendChild(img);
+    }
+
+    return wrap;
 }
 
 // Handles sorting based on the selected filter
@@ -243,7 +304,7 @@ function createTableSection(headerCells, columns, extraTableClasses = '', headin
     section.innerHTML = `
         ${headingHtml}
         <div class="table-responsive">
-            <table class="table table-bordered table-primary table-striped align-middle results-table ${hasFixedWidths ? 'fixed-columns' : 'text-nowrap'} ${extraTableClasses}">
+            <table class="table table-bordered table-striped align-middle results-table custom-results-table ${hasFixedWidths ? 'fixed-columns' : 'text-nowrap'} ${extraTableClasses}">
                 ${colgroup}
                 <thead>
                     <tr>${headerCells}</tr>
@@ -272,6 +333,12 @@ function renderAccessibleCell(visibleHtml, spokenText, extraAttributes = '') {
     return `<td${extraAttributes}><span class="cell-wrap"><span aria-hidden="true" class="table-result">${visibleHtml}</span><span class="sr-only">${escapeHtml(spokenText)}</span></span></td>`;
 }
 
+// The ID to show in links: the public NAT ID, or the IA ID for any sample that doesn't have one yet
+// The Worker accepts either, so old USTT_/CATT_ links keep working
+function getSampleLinkId(row) {
+    return String(hasRealValue(row.NAT_ID) ? row.NAT_ID : row.IA_ID).trim();
+}
+
 // Prevent any null or undefined values from being treated as real data
 function hasRealValue(v) {
     if (v === null || v === undefined) return false;
@@ -294,7 +361,9 @@ function appendRow(tbody, row, columns, dataset) {
     if (!hasAnyLink) tr.classList.add('row-no-download-link');
 
     const nonTeletextDirectory = `/files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
-    const epgDirectory = `/files/${encodeURIComponent(row.Service_Name)}/`;
+    // EPG services (StarSight, Gemstar): which guide page to open and which R2 folder holds the JSON
+    const epgGuide = EPG_GUIDES[String(dataset ?? '').toLowerCase()] ?? EPG_GUIDES.starsight;
+    const epgDirectory = `/files/${encodeURIComponent(epgGuide.folder ?? row.Service_Name)}/`;
 
     tr.innerHTML = columns.map(c => {
         // This is for KCET and KET AGTEXT. If the "HTML_Link" column has a value, display it. Otherwise, show an icon
@@ -305,7 +374,7 @@ function appendRow(tbody, row, columns, dataset) {
                 return renderAccessibleCell(visible, `${c.label}: No HTML file available`);
             }
             const htmlPath = nonTeletextDirectory + row.HTML_Link;
-            const visible = `<a href="${escapeHtml(htmlPath)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
+            const visible = `<a href="${escapeHtml(htmlPath)}" class="text-white"><i class="bi bi-filetype-html"></i></a>`;
             return renderAccessibleCell(visible, `${c.label}: HTML file available`);
         }
 
@@ -319,12 +388,12 @@ function appendRow(tbody, row, columns, dataset) {
             }
 
             const path = nonTeletextDirectory + value;
-            const visible = `<a href="${escapeHtml(path)}" class="text-black"><i class="bi bi-filetype-html"></i></a>`;
+            const visible = `<a href="${escapeHtml(path)}" class="text-white"><i class="bi bi-filetype-html"></i></a>`;
             return renderAccessibleCell(visible, `${c.label}: HTML file available`);
         }
 
-        // For StarSight, which uses its own datasets
-        if (c.renderStarSightDate) {
+        // For StarSight and Gemstar, which use their own datasets: link the date to the guide page
+        if (c.renderStarSightDate || c.renderEpgDate) {
             const jsonFile = row.Data;
             const dateValue = row[c.key];
 
@@ -334,16 +403,18 @@ function appendRow(tbody, row, columns, dataset) {
                 return renderAccessibleCell(visible, `${c.label}: ${dateValue}`);
             }
 
-            const jsonUrl = epgDirectory + jsonFile;
-            const guidePath = `starsight-data.html?json=${encodeURIComponent(jsonUrl)}`;
-            const visible = `<a href="${escapeHtml(guidePath)}" class="text-black fw-bold">${escapeHtml(dateValue)}</a>`;
+            // The Data column may hold "2001-12-12.json" or just "2001-12-12"
+            const jsonName = String(jsonFile).trim();
+            const jsonUrl = epgDirectory + (/\.json$/i.test(jsonName) ? jsonName : `${jsonName}.json`);
+            const guidePath = `${epgGuide.page}?json=${encodeURIComponent(jsonUrl)}`;
+            const visible = `<a href="${escapeHtml(guidePath)}" class="text-white fw-bold">${escapeHtml(dateValue)}</a>`;
             return renderAccessibleCell(visible, `${c.label}: ${dateValue}. View EPG guide`);
         }
 
         // Showing ZIP download link for all teletext services
         if (c.renderZip) {
             if (row.Download_Link) {
-                const visible = `<a href="${escapeHtml(row.Download_Link)}"><i class="bi bi-file-zip-fill"></i></a>`;
+                const visible = `<a href="${escapeHtml(row.Download_Link)}" class="text-white"><i class="bi bi-file-zip-fill"></i></a>`;
                 return renderAccessibleCell(visible, `${c.label}: Download link available`);
             }
 
@@ -362,11 +433,11 @@ function appendRow(tbody, row, columns, dataset) {
                 return renderAccessibleCell(visible, `${c.label}: Teletext stream not available for viewing`);
             }
 
-            const iaID = String(row.IA_ID).trim();
+            const sampleID = getSampleLinkId(row);
             const viewerPath = isNabts
-                ? `nabts-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`
-                : `wst-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(iaID)}`;
-            const visible = `<a href="${escapeHtml(viewerPath)}" class="text-black"><img src="../images/teletext-icon.png" class="mw-100 w-25" /></a>`;
+                ? `nabts-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(sampleID)}`
+                : `wst-viewer.html?service=${encodeURIComponent(dataset)}&sample=${encodeURIComponent(sampleID)}`;
+            const visible = `<a href="${escapeHtml(viewerPath)}" class="text-white"><img src="../images/teletext-icon.png" class="mw-100 w-25" /></a>`;
             return renderAccessibleCell(visible, `${c.label}: View teletext stream`);
         }
 
@@ -381,7 +452,7 @@ function appendRow(tbody, row, columns, dataset) {
             return renderAccessibleCell(visible, `${c.label}: ${row.Service_Name} index page from ${row.Date}`, ' class="thumbnail-column"');
         }
 
-        // For StarSight, show the network's logo. Fall back to plain text for any network without one
+        // For StarSight and Gemstar, show the network's logo. Fall back to plain text for any network without one
         if (c.renderNetworkLogo) {
             const network = String(row[c.key] ?? '').trim();
             const spokenNetwork = SERVICE_SPOKEN_LABELS[network] || network;
@@ -431,11 +502,10 @@ function appendRow(tbody, row, columns, dataset) {
 
         // Link the viewable sample, directing to the "Teletext Sample Image Gallery" page, inside the "Date" column
         if (c.key === 'Date') {
-            const stream = row.IA_ID;
-
-            if (hasRealValue(stream)) {
-                const galleryPath = `teletext-sample-image-gallery.html?stream=${encodeURIComponent(stream)}`;
-                const visible = `<a href="${escapeHtml(galleryPath)}" class="text-black fw-bold">${escapeHtml(row[c.key])}</a>`;
+            // Only samples with an IA item have a gallery
+            if (hasRealValue(row.IA_ID)) {
+                const galleryPath = `teletext-sample-image-gallery.html?stream=${encodeURIComponent(getSampleLinkId(row))}`;
+                const visible = `<a href="${escapeHtml(galleryPath)}" class="text-white fw-bold">${escapeHtml(row[c.key])}</a>`;
                 return renderAccessibleCell(visible, `${c.label}: ${row[c.key]}. View teletext images.`);
             }
             const visible = escapeHtml(row[c.key]);
@@ -486,7 +556,7 @@ function renderProgramTitles(rawTitle) {
         return escapeHtml(rawTitle);
     }
 
-    const items = titles.map(t => `<li class="text-black">${escapeHtml(t)}</li>`).join('');
+    const items = titles.map(t => `<li class="text-white">${escapeHtml(t)}</li>`).join('');
     return `<ul class="mb-0 ps-0 multiple-programs">${items}</ul>`
 }
 

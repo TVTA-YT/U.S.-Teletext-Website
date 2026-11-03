@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="../css/styles.css" />
         <link rel="stylesheet" href="../css/media.css" />
         <link rel="stylesheet" href="../css/navigation-bar-animation.css" />
+        <link rel="stylesheet" href="../css/year-banners.css" />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -52,8 +53,12 @@
         ></script>
         <title>Archiving Teletext</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .dropcap::first-letter {
@@ -181,6 +186,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -194,10 +202,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -214,6 +224,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -227,10 +240,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -247,10 +262,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -268,7 +283,7 @@
             </div>
         </nav>
         <main>
-            <div class="container">
+            <div class="heading-container">
                 <h1>
                     <span class="visually-hidden">Archiving Teletext</span>
                     <img
@@ -279,7 +294,8 @@
                     />
                     <img src="../images/banners/dark/Archiving-Teletext.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container">
                 <p class="fs-4 text-center">How is teletext recovery still possible all these years later? Have a look for yourself!</p>
                 <hr aria-hidden="true" />
                 <hr aria-hidden="true" />
@@ -492,6 +508,84 @@
                         Educational Television's (KET) AgText. These services can be decoded using
                         <a href="https://github.com/eshaz/cc_decoder" target="_blank">this fork</a> of the CC-Decoder project, just be sure
                         to specify the output as HTML.
+                    </p>
+                </section>
+                <section>
+                    <h2 class="display-5 text-primary">Can the Data Be Viewed With an Old Decoder Box? <strong>*NEW*</strong></h2>
+                    <p>
+                        One of the compromises required to make domestic video formats such as VHS and Betamax affordable to consumers was
+                        to design the systems to record less detail in the picture. For example, patterns of tight stripes or checks on
+                        clothing usually appear blurrier on a VHS or Betamax recording than they would have on a live broadcast. In
+                        technical terms, this lower level of detail is described as a lack of high-frequency content in the video signal.
+                    </p>
+                    <p>
+                        Teletext data is high-frequency digital data and as such, it reproduces poorly from direct playback of a VHS or
+                        Betamax recording. Modern software tools for teletext recovery, such as decode-orc, have ways to compensate for this
+                        that allow us to recover that high-frequency data even from these heavily filtered domestic video recordings.
+                    </p>
+                    <p>
+                        It should be noted that if one has access to a vintage teletext decoder box, feeding it the video from a direct
+                        playback of a VHS or Betamax recording with teletext generally won't result in decoded pages appearing on your TV
+                        screen. The original hardware decoders were designed to work only on live video and since teletext data reproduces
+                        poorly from domestic recordings, a hardware decoder will usually yield no decoded pages or pages with garbled
+                        gibberish if fed from a tape recording. One exception to this may be S-VHS, which unlike regular VHS, was designed
+                        to record a more detailed picture. An S-VHS recording of a broadcast with teletext may yield full pages if fed into
+                        an original hardware teletext decoder.
+                    </p>
+                    <div class="row justify-content-center text-center">
+                        <div class="col-6">
+                            <h4 class="text-center"><span aria-hidden="true">CVBS</span><span class="sr-only">C V B S</span></h4>
+                            <figure class="figure">
+                                <img
+                                    src="../images/frame_ntsc_chroma_ar43_1_sweep_cvbs.png"
+                                    alt="CVBS test pattern"
+                                    class="figure-img mw-100 border border-white rounded electra-images"
+                                    aria-label="A test pattern captured via CVBS."
+                                    data-bs-target="#imageModal"
+                                    data-bs-caption="A test pattern captured via CVBS."
+                                />
+                                <figcaption class="figure-caption text-center" aria-hidden="true">
+                                    A test pattern captured via CVBS.
+                                </figcaption>
+                            </figure>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-center">VHS</h4>
+                            <figure class="figure">
+                                <img
+                                    src="../images/frame_ntsc_chroma_ar43_1_sweep_fm_sp.png"
+                                    alt="VHS test pattern"
+                                    class="figure-img mw-100 border border-white rounded electra-images"
+                                    aria-label="A test pattern captured via CVBS."
+                                    data-bs-target="#imageModal"
+                                    data-bs-caption="A test pattern captured from a VHS tape."
+                                />
+                                <figcaption class="figure-caption text-center" aria-hidden="true">
+                                    A test pattern captured from a VHS tape.
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <p>
+                        Take a look at the two captures above. The first is a CVBS (Composite Video Baseband Signal) capture and the second
+                        is an SP VHS recording. The four markers in the bottom quarter of the frame indicate 1MHz, 2MHz, 3MHz, and 4MHz.
+                        Notice on the VHS recording that there's basically nothing left above 3MHz. That's why the hardware teletext
+                        decoders struggle with most tape recordings.
+                        <u>
+                            They literally can't "see" the bits in the data stream because the recording process has mangled them so badly.
+                        </u>
+                    </p>
+                    <p>
+                        On the other hand, CEA-608 data, including closed captioning and text services such as ABC PLUS, are another matter.
+                        The CEA-608 data services on Line 21 are low-speed digital data and survive being recorded to VHS and Betamax very
+                        well. In fact during the VHS era, many home video releases of feature films included CEA-608 captions for the
+                        hearing-impaired community.
+                    </p>
+                    <p>
+                        Because of this, it is possible to view closed captions and text services like PLUS simply by connecting a VCR to a
+                        TV with built-in caption decoder (most manufactured after 1993 have them) and turning the decoder on using the TV's
+                        remote or front panel controls. The TV's on-screen menus will generally provide a way to switch between different
+                        captioning and text mode services (CC1, CC2, T1, T2, etc.).
                     </p>
                 </section>
                 <section id="will-my-videotapes-have-teletext">
@@ -965,9 +1059,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -988,7 +1082,6 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
         <script src="../js/image-modal.js"></script>
     </body>
 </html>

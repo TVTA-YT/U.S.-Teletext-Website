@@ -512,11 +512,6 @@
         font-size: 1.1em;
     }
 
-    #recent-additions-column,
-    #newest-viewable-teletext-column {
-        padding-top: 50px;
-    }
-
     #encoded-extravision-image {
         max-width: 100%;
     }
@@ -591,13 +586,12 @@
         font-size: 15px !important;
     }
 
-    #submission-page-alert-text {
-        font-size: 1em;
+    #site-introduction-paragraphs-column {
+        padding-bottom: 50px;
     }
 
-    #recent-additions-column,
-    #newest-viewable-teletext-column {
-        padding-top: 50px;
+    #submission-page-alert-text {
+        font-size: 1em;
     }
 
     #footer-site-links {
@@ -647,7 +641,7 @@
     }
 
     .site-introduction {
-        font-size: 0.8em;
+        font-size: 1em;
     }
 
     .footer-logo {

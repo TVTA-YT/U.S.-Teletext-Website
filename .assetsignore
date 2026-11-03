@@ -7,14 +7,16 @@
 .dev.vars
 node_modules
 depreciated
+news-import
 TODO
 .DS_Store
 test.html
 silent-radio.html
 meta-site-images
-gemstar.js
 VCR-Plus_white.png
 VCR-Plus.png
+js/assign-nat-ids.mjs
+js/import-news.mjs
 .vscode
 
 

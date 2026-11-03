@@ -22,6 +22,7 @@ async function renderTotalRecordCount() {
     const ketAgtextCountEl = document.getElementById("ket-agtext-count");
     const wisconsinInfotextTextServiceCountEl = document.getElementById("wisconsin-infotext-text-count");
     const iptvAgidsCountEl = document.getElementById("iptv-agids-count");
+    const penntextCountEl = document.getElementById("penntext-count");
 
     // Don't make an API request if none of the count elements exist.
     const countElements = [
@@ -43,7 +44,8 @@ async function renderTotalRecordCount() {
         ketAgtextCountEl,
         wisconsinInfotextTeletextServiceCountEl,
         wisconsinInfotextTextServiceCountEl,
-        iptvAgidsCountEl
+        iptvAgidsCountEl,
+        penntextCountEl
     ];
 
     if (!countElements.some(Boolean)) return;
@@ -156,6 +158,10 @@ async function renderTotalRecordCount() {
             datasetCounts.iptvAgids?.availableSamples ?? 0
         );
 
+        const penntextSamples = Number(
+            datasetCounts.penntext?.availableSamples ?? 0
+        );
+
         // Teletext sample counts
         if (teletextCountEl) {
             teletextCountEl.textContent = teletextTotal.toLocaleString();
@@ -233,6 +239,10 @@ async function renderTotalRecordCount() {
 
         if (iptvAgidsCountEl) {
             iptvAgidsCountEl.textContent = iptvAgidsSamples.toLocaleString();
+        }
+
+        if (penntextCountEl) {
+            penntextCountEl.textContent = penntextSamples.toLocaleString();
         }
 
     } catch (error) {

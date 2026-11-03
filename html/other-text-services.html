@@ -52,8 +52,12 @@
         ></script>
         <title>Other Text Services</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .mobile-blue-border {
@@ -170,6 +174,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -183,10 +190,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -203,6 +212,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -216,10 +228,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -236,10 +250,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -257,12 +271,13 @@
             </div>
         </nav>
         <main>
-            <div class="container">
-                <h1>
+            <div class="heading-container">
+                <h1 class="page-title">
                     <span class="visually-hidden">Other Text Services</span>
                     <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container">
                 <p class="fs-5 text-center">
                     While some stations didn't have teletext, they did have other text services. Check them out below.
                 </p>
@@ -285,50 +300,60 @@
                 </div>
                 <div class="pt-4 pb-4" id="sample-availability-count">
                     <p class="fs-3 text-center">Available Samples by Service</p>
-                    <table class="table table-bordered text-center submission-count-table sample-availability-count-table text-m">
-                        <thead>
-                            <tr class="align-middle">
-                                <th>ABC PLUS</th>
-                                <th>KCET</th>
-                                <th>
-                                    <span aria-hidden="true">KET AGTEXT</span>
-                                    <span class="sr-only">Kentucky Educational Television AgText</span>
-                                </th>
-                                <th>
-                                    <span aria-hidden="true">IPTV AGIDS</span>
-                                    <span class="sr-only">Iowa Public Television Agricultural InfoData Service</span>
-                                </th>
-                                <th>
-                                    <span aria-hidden="true">Wis. Infotext</span>
-                                    <span class="sr-only"><span class="sr-only">Wisconsin Infotext</span></span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row-color">
-                                <td>
-                                    <span class="sr-only">Available ABC PLUS samples:</span>
-                                    <span class="fw-bolder" id="abc-plus-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available KCET samples:</span>
-                                    <span class="fw-bolder" id="kcet-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Kentucky Educational Television AgText samples:</span>
-                                    <span class="fw-bolder" id="ket-agtext-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Iowa Public Television Agricultural InfoData Service samples:</span>
-                                    <span class="fw-bolder" id="iptv-agids-count"></span>
-                                </td>
-                                <td>
-                                    <span class="sr-only">Available Wisconsin InfoText (text service) samples:</span>
-                                    <span class="fw-bolder" id="wisconsin-infotext-text-count"></span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center submission-count-table sample-availability-count-table text-m">
+                            <thead>
+                                <tr class="align-middle">
+                                    <th>ABC PLUS</th>
+                                    <th>KCET Newsline</th>
+                                    <th>
+                                        <span aria-hidden="true">KET AGTEXT</span>
+                                        <span class="sr-only">Kentucky Educational Television AgText</span>
+                                    </th>
+                                    <th>
+                                        <span aria-hidden="true">IPTV AGIDS</span>
+                                        <span class="sr-only">Iowa Public Television Agricultural InfoData Service</span>
+                                    </th>
+                                    <th>
+                                        <span aria-hidden="true">PENNTEXT</span>
+                                        <span class="sr-only"><span class="sr-only">Penn Text</span></span>
+                                    </th>
+                                    <th>
+                                        <span aria-hidden="true">Wis. Infotext</span>
+                                        <span class="sr-only"><span class="sr-only">Wisconsin Infotext</span></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row-color">
+                                    <td>
+                                        <span class="sr-only">Available ABC PLUS samples:</span>
+                                        <span class="fw-bolder" id="abc-plus-count"></span>
+                                    </td>
+                                    <td>
+                                        <span class="sr-only">Available KCET Newsline samples:</span>
+                                        <span class="fw-bolder" id="kcet-count"></span>
+                                    </td>
+                                    <td>
+                                        <span class="sr-only">Available Kentucky Educational Television AgText samples:</span>
+                                        <span class="fw-bolder" id="ket-agtext-count"></span>
+                                    </td>
+                                    <td>
+                                        <span class="sr-only">Available Iowa Public Television Agricultural InfoData Service samples:</span>
+                                        <span class="fw-bolder" id="iptv-agids-count"></span>
+                                    </td>
+                                    <td>
+                                        <span class="sr-only">Available Penn Text Service samples:</span>
+                                        <span class="fw-bolder" id="penntext-count"></span>
+                                    </td>
+                                    <td>
+                                        <span class="sr-only">Available Wisconsin InfoText (text service) samples:</span>
+                                        <span class="fw-bolder" id="wisconsin-infotext-text-count"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="row justify-content-center pb-4">
                     <!-- ABC PLUS -->
@@ -342,14 +367,14 @@
                             <img src="../images/ABC-PLUS-TV.png" alt="" class="mw-100 dark-mode-image" />
                         </a>
                     </div>
-                    <!-- KCET -->
+                    <!-- KCET Newsline -->
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding">
                         <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/KCET_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/KCET.png" alt="" class="mw-100 pb-4 dark-mode-image" />
+                            <img src="../images/banners/light/KCET-Newsline_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
+                            <img src="../images/banners/dark/KCET-Newsline.png" alt="" class="mw-100 pb-4 dark-mode-image" />
                         </div>
-                        <a href="kcet-text.html">
-                            <span class="visually-hidden">KCET</span>
+                        <a href="kcet-newsline.html">
+                            <span class="visually-hidden">KCET News Line</span>
                             <img src="../images/KCET-TV_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
                             <img src="../images/KCET-TV.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                         </a>
@@ -357,8 +382,8 @@
                     <!-- KET AGTEXT -->
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 service-xsmall-bottom-padding">
                         <div class="heading-images" aria-hidden="true">
-                            <img src="../images/banners/light/KET_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
-                            <img src="../images/banners/dark/KET.png" alt="" class="mw-100 pb-4 dark-mode-image" />
+                            <img src="../images/banners/light/KET-AGTEXT_light.png" alt="" class="mw-100 pb-4 light-mode-image" />
+                            <img src="../images/banners/dark/KET-AGTEXT.png" alt="" class="mw-100 pb-4 dark-mode-image" />
                         </div>
                         <a href="ket-agtext.html" aria-label="Kentucky Educational Television AgText">
                             <img src="../images/KET-AGTEXT-TV_light.png" alt="" class="mw-100 light-mode-image" />
@@ -398,8 +423,8 @@
                             <img src="../images/banners/dark/WISINFOTEXT.png" alt="" class="mw-100 pb-4 dark-mode-image" />
                         </div>
                         <a href="wisconsin-infotext.html" aria-label="Wisconsin InfoText">
-                            <img src="../images/Wisconsin-Infotext-TV_light.png" alt="" class="mw-100 light-mode-image" />
-                            <img src="../images/Wisconsin-Infotext-TV.png" alt="" class="mw-100 dark-mode-image" />
+                            <img src="../images/Wisconsin-Infotext-Text-TV_light.png" alt="" class="mw-100 light-mode-image" />
+                            <img src="../images/Wisconsin-Infotext-Text-TV.png" alt="" class="mw-100 dark-mode-image" />
                         </a>
                     </div>
                 </div>
@@ -467,9 +492,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -490,14 +515,17 @@
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
+
         <script src="../js/total-count.js"></script>
         <script>
             // Heading banner animation
             const pageHeadingImage = document.getElementById("page-heading-image");
             const imageSets = {
-                light: ["../images/banners/light/Other-Text-Services_light.png", "../images/banners/light/Other-Text-Services-2_light.png"],
-                dark: ["../images/banners/dark/Other-Text-Services.png", "../images/banners/dark/Other-Text-Services-2.png"],
+                light: [
+                    "../images/banners/light/Other-Text-Services_1_light.png",
+                    "../images/banners/light/Other-Text-Services_2_light.png",
+                ],
+                dark: ["../images/banners/dark/Other-Text-Services_1.png", "../images/banners/dark/Other-Text-Services_2.png"],
             };
 
             Object.values(imageSets)

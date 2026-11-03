@@ -47,8 +47,12 @@
         ></script>
         <title></title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .btn {
@@ -66,21 +70,31 @@
                 outline-offset: 3px;
             }
 
-            .viewer-screen:fullscreen {
+            /* Full screen. Safari on older iPads doesn't match "":fullscreen"). This produces a round margin clear of notches and rounded corners */
+            .viewer-screen.is-fullscreen {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 0;
+                box-sizing: border-box;
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
                 border-radius: 0;
+                container-type: size;
+                padding: max(5vmin, env(safe-area-inset-top)) max(5vmin, env(safe-area-inset-right)) max(5vmin, env(safe-area-inset-bottom))
+                    max(5vmin, env(safe-area-inset-left));
             }
 
-            /* Largest size that fits the display: 480 × 500 as drawn, or 4:3 like a TV */
-            .viewer-screen:fullscreen canvas {
-                width: min(100vw, 100vh * 480 / 500);
+            /* Largest size that fits inside the margin: 480 × 500 as drawn, or 4:3. The first width is for browsers without container units (cqw/cqh) */
+            .viewer-screen.is-fullscreen canvas {
+                height: auto;
+                width: min(100%, calc((100dvh - 10vmin) * 480 / 500));
+                width: min(100cqw, 100cqh * 480 / 500);
             }
 
-            .viewer-screen.viewer-screen.aspect-ratio:fullscreen canvas {
-                width: min(100vw, 100vh * 4 / 3);
+            .viewer-screen.aspect-ratio.is-fullscreen canvas {
+                width: min(100%, calc((100dvh - 10vmin) * 4 / 3));
+                width: min(100cqw, 100cqh * 4 / 3);
             }
 
             .viewer-screen canvas {
@@ -89,7 +103,7 @@
                 height: auto;
             }
 
-            /* Stretch the 480 × 500 page to a 4:3 picture, as on a TV */
+            /* Stretch the 480 × 500 page to a 4:3 picture */
             .viewer-screen.aspect-ratio canvas {
                 aspect-ratio: 4 / 3;
             }
@@ -244,6 +258,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -257,10 +274,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -277,6 +296,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -290,10 +312,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -310,10 +334,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -331,16 +355,16 @@
             </div>
         </nav>
         <main>
-            <div class="container">
+            <div class="heading-container">
                 <h1>
                     <span class="visually-hidden" id="bannerTitle"></span>
                     <img src="" alt="" class="mw-100 light-mode-image" id="lightImageBanner" aria-hidden="true" />
                     <img src="" alt="" class="mw-100 dark-mode-image" id="darkImageBanner" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container">
                 <!-- Sample name and date -->
                 <h2 class="text-center display-6 fw-bold" id="sample-title"></h2>
-
                 <!-- Contributor name -->
                 <p class="text-center fs-4">Submitted by: <span id="contributor-name"></span></p>
                 <div class="text-center fst-italic mb-3">
@@ -607,9 +631,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">

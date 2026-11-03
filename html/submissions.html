@@ -54,8 +54,12 @@
         <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
         <title>Submissions</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .btn {
@@ -176,6 +180,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -189,10 +196,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -209,6 +218,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -222,10 +234,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -242,10 +256,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -263,12 +277,13 @@
             </div>
         </nav>
         <main>
-            <div class="container pb-3">
+            <div class="heading-container">
                 <h1>
                     <span class="visually-hidden">Submissions</span>
                     <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container pb-3">
                 <p class="fs-5 text-center">
                     Got any decoded teletext/non-teletext services that you'd like added to the site? Use this form to let me know.
                 </p>
@@ -566,13 +581,13 @@
         <script src="../js/account.js"></script>
         <script src="../js/add-new-form.js"></script>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
+
         <script>
             // Heading banner animation
             const pageHeadingImage = document.getElementById("page-heading-image");
             const imageSets = {
-                light: ["../images/banners/light/Submissions_light.png", "../images/banners/light/Submissions-2_light.png"],
-                dark: ["../images/banners/dark/Submissions.png", "../images/banners/dark/Submissions-2.png"],
+                light: ["../images/banners/light/Submissions_1_light.png", "../images/banners/light/Submissions_2_light.png"],
+                dark: ["../images/banners/dark/Submissions_1.png", "../images/banners/dark/Submissions_2.png"],
             };
 
             Object.values(imageSets)

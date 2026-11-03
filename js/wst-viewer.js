@@ -928,11 +928,45 @@ function handleFullscreenChange() {
 
     // Focus the screen so the arrow keys work straight away
     if (isFullscreen) elements.screen.focus();
-    announce(isFullscreen ? "Full screen on. Press Escape to exit." : "Full screen off.");
+
+    // In full screen, swipes on the screen change pages instead of scrolling or zooming
+    elements.screen.style.touchAction = isFullscreen ? "none" : "";
+
+    // A plain class for the full-screen CSS, so it doesn't depend on :fullscreen or Safari's :-webkit-full-screen
+    elements.screen.classList.toggle("is-fullscreen", isFullscreen);
+    announce(isFullscreen ? "Full screen on. Press Escape to exit, or swipe to change pages." : "Full screen off.");
 }
 
 document.addEventListener("fullscreenchange", handleFullscreenChange);
 document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+// & Swipes in full screen, for phones and tablets: the buttons below the screen are hidden there and there's no keyboard
+// * Left/right changes the page, as phone apps turn pages; up/down changes the subpage
+const SWIPE_MIN_DISTANCE = 40;    // pixels, so a tap or a shaky finger doesn't count
+const SWIPE_MAX_MS = 800;         // a slow drag isn't a swipe
+let swipeStart = null;
+
+elements.screen.addEventListener("touchstart", event => {
+    swipeStart = fullscreenElement() === elements.screen && event.touches.length === 1
+        ? { x: event.touches[0].clientX, y: event.touches[0].clientY, at: performance.now() }
+        : null;
+}, { passive: true });
+
+elements.screen.addEventListener("touchend", event => {
+    if (!swipeStart || fullscreenElement() !== elements.screen) return;
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - swipeStart.x;
+    const deltaY = touch.clientY - swipeStart.y;
+    const isQuick = performance.now() - swipeStart.at <= SWIPE_MAX_MS;
+    swipeStart = null;
+    if (!isQuick || Math.max(Math.abs(deltaX), Math.abs(deltaY)) < SWIPE_MIN_DISTANCE) return;
+
+    // Swiping left (finger moves left) is the next page, like turning a page; swiping up is the next subpage
+    if (Math.abs(deltaX) >= Math.abs(deltaY)) stepPage(deltaX < 0 ? 1 : -1);
+    else stepSubpage(deltaY < 0 ? 1 : -1);
+});
+
+elements.screen.addEventListener("touchcancel", () => { swipeStart = null; });
 
 // Hide the button where full screen isn't supported (iPhone Safari)
 document.querySelectorAll('[data-command="fullscreen"]').forEach(button => { button.hidden = !canUseFullscreen; });
@@ -1231,7 +1265,7 @@ elements.unscrambleOption?.addEventListener("change", () => {
 
 // Change aspect ratio of viewer
 elements.aspectOption.addEventListener("change", () => {
-    elements.screen.classList.toggle("tv-aspect", elements.aspectOption.checked);
+    elements.screen.classList.toggle("aspect-ratio", elements.aspectOption.checked);
 });
 
 
@@ -1247,7 +1281,7 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     elements.flashOption.checked = false;
     if (elements.rowRevealOption) elements.rowRevealOption.checked = false;
 }
-elements.screen.classList.toggle("tv-aspect", elements.aspectOption.checked);
+elements.screen.classList.toggle("aspect-ratio", elements.aspectOption.checked);
 
 fitViewerFontToCell();
 render();

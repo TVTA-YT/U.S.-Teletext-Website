@@ -52,8 +52,12 @@
         ></script>
         <title>About the Site</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                margin-top: 100px;
+                padding-top: 25px;
             }
 
             .dropcap::first-letter {
@@ -163,6 +167,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -176,10 +183,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -196,6 +205,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -209,10 +221,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -229,10 +243,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -250,13 +264,14 @@
             </div>
         </nav>
         <main>
-            <div class="container">
+            <div class="heading-container">
                 <h1>
                     <span class="visually-hidden">About the Site</span>
-                    <img src="../images/banners/light/About-the-Site_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/About-the-Site.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/light/About_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/About.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
-                <hr aria-hidden="true" />
+            </div>
+            <div class="container">
                 <p class="dropcap" aria-hidden="true">
                     For the last few years, there have been software tools that are able to extract European (PAL) teletext, made possible,
                     in part, thanks to the agreed-upon use of a single standard called World System Teletext (WST) among European
@@ -267,7 +282,7 @@
                 <p class="sr-only">
                     For the last few years, there have been software tools that are able to extract European (PAL) teletext, made possible,
                     in part, thanks to the agreed-upon use of a single standard called World System Teletext (WST) among European
-                    broadcasters such as the BBC and I-TV. In the North America, while some services used the WST standard (with some
+                    broadcasters such as the BBC and I-TV. In North America, while some services used the WST standard (with some
                     modifications), such as Keyfax/Electra in the U.S, there was a competing standard, the North American Broadcast Teletext
                     Standard (N A B T S), used by U.S. services such as CBS's ExtraVision and NBC's NBC Teletext.
                 </p>
@@ -282,8 +297,8 @@
                     <a href="https://github.com/ali1234/vhs-teletext" target="_blank">VHS-Teletext</a>, there was hope that, at some point,
                     software would be developed to decode long-forgotten U.S. teletext services. However, as the years began to pass, there
                     were still no such software tools available. Besides the fact that Europe and North America used different analog
-                    broadcast standards (PAL and NTSC), which complicated things, not much was known about the specific standards used by
-                    WST and NABTS in the U.S. Still, hope was not lost among those who had a interest in this field.
+                    broadcast standards (PAL and NTSC), which complicated things, not much was known about the specifications used by the
+                    WST and NABTS in North America. Still, hope was not lost among those who had a interest in this field.
                 </p>
                 <p>
                     All that brings me to August 2026. Thanks to the effort put in by a developer of the
@@ -291,12 +306,13 @@
                     project, I am proud to say that
                     <span style="text-decoration: underline">North American teletext data can now officially be decoded.</span>
                     However, it's important to note that this wasn't the work of just one person, rather a group of dedicated people who've
-                    invested their time over these last few years to researching the mechanics behind U.S. teletext standards.
+                    invested their time over these last few years to researching the mechanics behind North American teletext standard
+                    specifications.
                 </p>
                 <p aria-hidden="true">
                     The purpose of this site is act as a repository for these newly decoded services, providing access to decoded files
-                    provided by the people who have decoded them. Teletext in the U.S. was not widely known during its short-lived lifespan
-                    &ndash; it's about time that changes.
+                    provided by the people who have decoded them. Teletext in North America was not widely known during its short-lived
+                    lifespan &ndash; it's about time that changes.
                 </p>
                 <p class="sr-only">
                     The purpose of this site is act as a repository for these newly decoded services, providing access to decoded files
@@ -370,9 +386,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website<span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website<span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -384,15 +400,14 @@
                 </small>
                 <br />
                 <br />
-                <small class="text-white"
-                    ><strong>
+                <small class="text-white">
+                    <strong>
                         This site respects your privacy &mdash; no ad tracking. The only cookie is set when a contributor signs in, a cookie
                         that is used to keep them signed in.
-                    </strong></small
-                >
+                    </strong>
+                </small>
             </div>
         </footer>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/heading-reveal.js"></script>
     </body>
 </html>

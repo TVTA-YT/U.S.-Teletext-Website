@@ -46,8 +46,12 @@
         ></script>
         <title>WST Teletext Editor</title>
         <style>
+            .heading-container {
+                padding-top: 120px;
+            }
+
             .container {
-                padding-top: 110px;
+                padding-top: 25px;
             }
 
             .btn {
@@ -262,6 +266,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -275,10 +282,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -295,6 +304,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -308,10 +320,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -328,10 +342,10 @@
                         <a class="nav-link" href="archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="submissions.html">Submissions</a>
@@ -349,25 +363,15 @@
             </div>
         </nav>
         <main>
+            <div class="heading-container">
+                <h1>
+                    <span class="visually-hidden">W S T Teletext Editor</span>
+                    <img src="../images/banners/light/WST-Editor_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/WST-Editor.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                </h1>
+            </div>
             <!-- * PRIMARY CONTAINER -->
             <div class="container">
-                <h1>
-                    <span class="visually-hidden">T42 Teletext Editor</span>
-                    <img
-                        src="../images/banners/light/Teletext-Editor_light.png"
-                        alt=""
-                        class="mw-100 light-mode-image"
-                        id="lightImageBanner"
-                        aria-hidden="true"
-                    />
-                    <img
-                        src="../images/banners/dark/Teletext-Editor.png"
-                        alt=""
-                        class="mw-100 dark-mode-image"
-                        id="darkImageBanner"
-                        aria-hidden="true"
-                    />
-                </h1>
                 <hr aria-hidden="true" />
                 <p class="text-center">
                     Use the editor below to edit the found pages in the converted T34 (T42) file. For help, refer to the guide below.
@@ -773,6 +777,10 @@
                             <label for="optMissing" class="form-check-label small">Highlight missing rows</label>
                         </div>
                         <div class="form-check form-switch mb-0">
+                            <input type="checkbox" class="form-check-input" id="optSpelling" role="switch" checked />
+                            <label for="optSpelling" class="form-check-label small">Check spelling</label>
+                        </div>
+                        <div class="form-check form-switch mb-0">
                             <input type="checkbox" class="form-check-input" id="optReveal" role="switch" />
                             <label for="optReveal" class="form-check-label small">Reveal concealed text</label>
                         </div>
@@ -1119,9 +1127,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">

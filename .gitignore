@@ -1,19 +1,15 @@
 test.html
-gemstar.html
-gemstar-data.html
-gemstar-results.html
 silent-radio.html
 wavetop.html
 wavetop-results.html
 package-lock.json
-gemstar.js
-GemStar.png
-GemStar_light.png
 WaveTop.png
 WaveTop_light.png
 VCR-Plus_white.png
 VCR-Plus.png
 package.json
+js/assign-nat-ids.mjs
+js/import-news.mjs
 depreciated/
 node_modules/
 TODO/
@@ -21,6 +17,7 @@ json/
 sql/
 .vscode/
 images/meta-site-images
+news-import/
 
 # wrangler files
 .wrangler

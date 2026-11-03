@@ -36,3 +36,11 @@
     --bs-table-border-color: #fff;
     --bs-table-striped-bg: #6072ff;
 }
+
+.custom-results-table {
+    --bs-table-color: #fff !important;
+    --bs-table-striped-color: #fff !important;
+    --bs-table-bg: #3c48ff;
+    --bs-table-border-color: #fff;
+    --bs-table-striped-bg: #2932ba;
+}

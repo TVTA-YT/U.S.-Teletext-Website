@@ -269,6 +269,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -282,10 +285,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="html/login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -302,6 +307,9 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
+                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                            </li>
+                            <li class="dropdown-options">
                                 <a href="html/silent-radio-data.html" class="dropdown-item text-dropdown-option">Silent Radio</a>
                             </li>
                             <li class="dropdown-options">
@@ -315,10 +323,12 @@
                                 </a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/login.html" class="dropdown-item text-dropdown-option">Contributor Login *NEW*</a>
+                                <a href="html/login.html" class="dropdown-item text-dropdown-option">Contributor Login</a>
                             </li>
                             <li class="dropdown-options">
-                                <a href="html/electra-trivia.html" class="dropdown-item text-dropdown-option">Electra Trivia Pages</a>
+                                <a href="html/electra-keyfax-trivia.html" class="dropdown-item text-dropdown-option">
+                                    Electra/Keyfax Trivia Pages
+                                </a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/wst-editor.html" class="dropdown-item text-dropdown-option">WST Teletext Editor</a>
@@ -335,10 +345,10 @@
                         <a class="nav-link" href="html/archiving-teletext.html">Archiving Teletext</a>
                     </li>
                     <li class="nav-item desktop-link">
-                        <a class="nav-link" href="html/news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="html/teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item mobile-link">
-                        <a class="nav-link" href="html/news-oddities.html">News &amp; Oddities</a>
+                        <a class="nav-link" href="html/teletext-news.html">Teletext News</a>
                     </li>
                     <li class="nav-item desktop-link">
                         <a class="nav-link" href="html/submissions.html">Submissions</a>
@@ -614,8 +624,8 @@
                     </div>
                 </div>
             </div>
-            <div class="p-3" id="samples-div">
-                <h2 class="display-1 fw-bolder text-center" id="samples-text">Samples Wanted!</h2>
+            <div id="samples-wanted-heading">
+                <img src="" alt="" class="mw-100" id="samples-wanted-heading-image" aria-hidden="true" />
             </div>
             <div class="container" id="secondary-container">
                 <div class="row">
@@ -664,6 +674,8 @@
                     </div>
                 </div>
                 <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 0.4" />
+                <img src="images/banners/light/Local-ExtraVision-Wanted_light.png" alt="" class="mw-100 light-mode-image" />
+                <img src="images/banners/dark/Local-ExtraVision-Wanted.png" alt="" class="mw-100 dark-mode-image" />
                 <p class="fs-5 text-center pt-1 pb-1">
                     We are currently looking for more teletext samples to add to the site! We are looking for samples from the following
                     <strong>CBS O&amp;O</strong> (owned &amp; operated) stations and three CBS affiliates.
@@ -787,9 +799,9 @@
                 </p>
             </div>
             <div class="pt-4">
-                <small class="text-white"
-                    >Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA</small
-                >
+                <small class="text-white">
+                    Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
+                </small>
                 <br />
                 <br />
                 <small class="text-white">
@@ -1032,6 +1044,41 @@
 
                 if (clock) updateClock();
             }
+        </script>
+        <script>
+            // Heading banner animation
+            const pageHeadingImage = document.getElementById("samples-wanted-heading-image");
+            const imageSets = {
+                light: ["images/banners/light/Samples-Wanted_1_light.png", "images/banners/light/Samples-Wanted_2_light.png"],
+                dark: ["images/banners/dark/Samples-Wanted_1.png", "images/banners/dark/Samples-Wanted_2.png"],
+            };
+
+            Object.values(imageSets)
+                .flat()
+                .forEach((src) => {
+                    new Image().src = src;
+                });
+
+            function getTheme() {
+                return document.documentElement.getAttribute("data-bs-theme" || "light");
+            }
+
+            let i = 0;
+            pageHeadingImage.src = imageSets[getTheme()][0];
+
+            setInterval(() => {
+                i = (i + 1) % 2;
+                pageHeadingImage.src = imageSets[getTheme()][i];
+            }, 1000);
+
+            const observer = new MutationObserver(() => {
+                pageHeadingImage.src = imageSets[getTheme()][i];
+            });
+
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ["data-bs-theme"],
+            });
         </script>
     </body>
 </html>

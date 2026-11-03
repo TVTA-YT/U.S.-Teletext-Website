@@ -338,7 +338,8 @@ function drawPage(canvas, pageRows, options = {}) {
         pastePreview = null,
         showRowNumbers = false,
         scale = 1,  // 2 draws everything twice the size (e.g. for PNG export)
-        doubleHeight = false  // Draw Double Height text as a TV would; the row below it is hidden. Off while editing so every row stays visible
+        doubleHeight = false,  // Draw Double Height text as a TV would; the row below it is hidden. Off while editing so every row stays visible
+        misspellings = []  // Words to underline: { row, startColumn, endColumn }
     } = options;
 
     const gutterWidth = showRowNumbers ? ROW_NUMBER_GUTTER_WIDTH : 0;
@@ -408,11 +409,29 @@ function drawPage(canvas, pageRows, options = {}) {
         context.restore();
     }
 
+    misspellings.forEach(word => drawSpellingUnderline(context, word));
+
     if (cursor) {
         context.strokeStyle = "#fff";
         context.lineWidth = 2;
         context.strokeRect(cursor.column * CELL_WIDTH + 1, cursor.row * CELL_HEIGHT + 1, CELL_WIDTH - 2, CELL_HEIGHT - 2);
     }
+}
+
+// & Red wavy line along the bottom of a misspelled word
+const SPELLING_UNDERLINE_COLOR = "#ff4d4f";
+function drawSpellingUnderline(context, { row, startColumn, endColumn }) {
+    const left = startColumn * CELL_WIDTH;
+    const right = (endColumn + 1) * CELL_WIDTH;
+    const baseline = (row + 1) * CELL_HEIGHT - 2;
+    context.save();
+    context.strokeStyle = SPELLING_UNDERLINE_COLOR;
+    context.lineWidth = 1.5;
+    context.beginPath();
+    context.moveTo(left, baseline);
+    for (let x = left, up = true; x < right; x += 2, up = !up) context.lineTo(Math.min(x + 2, right), baseline + (up ? -1.5 : 0));
+    context.stroke();
+    context.restore();
 }
 
 const rowToPlainText = rowBytes => rowBytes.map(byteValue => {
@@ -424,6 +443,155 @@ const rowToPlainText = rowBytes => rowBytes.map(byteValue => {
 function pageToScreenReaderText(pageRows) {
     return pageRows.map((rowBytes, rowNumber) =>
         rowBytes ? `Row ${rowNumber}: ${rowToPlainText(rowBytes).trimEnd()}` : `Row ${rowNumber}: not received`).join("\n");
+}
+
+
+// ! Spell check
+// * Misspelled words on the final page get a red wavy underline. Only the final page is checked, and the underline is never exported
+// * Uses Hunspell's US English dictionary (the same one as LibreOffice and Firefox) through nspell, loaded the first time it's needed
+const SPELLING_LIBRARY_URL = "https://cdn.jsdelivr.net/npm/nspell@2.1.5/+esm";
+const SPELLING_DICTIONARY_URL = "https://cdn.jsdelivr.net/npm/dictionary-en@4.0.0/";
+
+// Words the dictionary doesn't know that turn up on US teletext pages. Add more here (case doesn't matter)
+const SPELLING_ALLOWED_WORDS = [
+    "Keyfax", "teletext", "Electra", "DaTaVizion",
+    "winless", "hander", "handers", "rebounder", "rebounders", "baserunner", "lineman", "midseason", "preseason", "nightcap", "postgame", "pregame"
+];
+
+// Leave short all-capital words alone, since most are abbreviations (NBC, USA, AM)
+const SPELLING_SKIP_CAPITALS_UP_TO = 4;
+
+// ^ Capitalized words are mostly names (Gabe, Steelers, Costa Rica, El Salvador, Notre Dame), which no dictionary can keep up with, so they're skipped
+// * Set to true to check them too
+const SPELLING_CHECK_CAPITALIZED = false;    // Words like "Rica" and "Oilers"
+const SPELLING_CHECK_ALL_CAPITALS = false;   // Words like "PENDLETON" and "HANCOCK"; headlines are often all capitals, but so are names in them
+
+const spelling = {
+    checker: null,       // nspell instance once loaded
+    loading: null,       // promise while the dictionary downloads
+    failed: false,
+    results: new Map()   // word = true if spelled correctly
+};
+
+// & Download the dictionary the first time spell check is used, then redraw the page
+function loadSpellChecker() {
+    if (spelling.checker || spelling.loading || spelling.failed) return;
+    announceStatus("Loading the spelling dictionary…");
+    spelling.loading = Promise.all([
+        import(SPELLING_LIBRARY_URL),
+        fetch(SPELLING_DICTIONARY_URL + "index.aff").then(response => response.text()),
+        fetch(SPELLING_DICTIONARY_URL + "index.dic").then(response => response.text())
+    ]).then(([library, aff, dic]) => {
+        const nspell = library.default ?? library;
+        spelling.checker = nspell(aff, dic);
+        SPELLING_ALLOWED_WORDS.forEach(word => spelling.checker.add(word));
+        spelling.results.clear();
+        announceStatus("Spell check is on. Misspelled words on the final page are underlined in red.");
+        if (editorState.selectedPageIndex >= 0) renderPageViews();
+    }).catch(error => {
+        spelling.failed = true;
+        announceStatus(`Couldn't load the spelling dictionary (${error.message}). Spell check is off.`);
+    }).finally(() => { spelling.loading = null; });
+}
+
+const isSpellCheckOn = () => elements.spellingOption ? elements.spellingOption.checked : true;
+
+function isSpelledCorrectly(word) {
+    if (!spelling.results.has(word)) {
+        const lower = word.toLowerCase();
+        spelling.results.set(word, spelling.checker.correct(word) || spelling.checker.correct(lower)
+            || SPELLING_ALLOWED_WORDS.some(allowed => allowed.toLowerCase() === lower));
+    }
+    return spelling.results.get(word);
+}
+
+// & Which columns of a row show text, as on screen: block graphics, control codes and concealed text aren't words
+function textCellsOfRow(rowBytes) {
+    let isMosaic = false;
+    let isConcealed = false;
+    return rowBytes.map(rawByte => {
+        const byteValue = rawByte & SEVEN_BIT_MASK;
+        if (isControlCode(byteValue)) {
+            if (isAlphaColorCode(byteValue)) { isMosaic = false; isConcealed = false; }
+            else if (isMosaicColorCode(byteValue)) { isMosaic = true; isConcealed = false; }
+            else if (byteValue === ControlCode.CONCEAL) isConcealed = true;
+            return null;
+        }
+        if (isConcealed || (isMosaic && isMosaicShape(byteValue))) return null;
+        return characterForByte(byteValue);
+    });
+}
+
+const isLetter = character => /[A-Za-z]/.test(character ?? "");
+
+// & Whether a word is one to check at all
+function shouldCheckWord(word, cells, startColumn, endColumn) {
+    if (word.length < 2) return false;
+
+    // Joined to a number (10th, 4PM)
+    if (/\d/.test(cells[startColumn - 1] ?? "") || /\d/.test(cells[endColumn + 1] ?? "")) return false;
+
+    // Abbreviations, including plurals such as GIs and RBIs
+    const stem = word.endsWith("s") ? word.slice(0, -1) : word;
+    const isAllCapitals = word === word.toUpperCase();
+    if (stem === stem.toUpperCase() && stem.length <= SPELLING_SKIP_CAPITALS_UP_TO) return false;
+    if (isAllCapitals) return SPELLING_CHECK_ALL_CAPITALS;
+
+    // Names and other capitalized words
+    if (word[0] === word[0].toUpperCase()) return SPELLING_CHECK_CAPITALIZED;
+    return true;
+}
+
+// & Part of a hyphenated word (left-hander, pre-game, twi-night) that's fine as part of the whole
+function isKnownCompoundPart(cells, startColumn, endColumn) {
+    const joinedBefore = cells[startColumn - 1] === "-" && isLetter(cells[startColumn - 2]);
+    const joinedAfter = cells[endColumn + 1] === "-" && isLetter(cells[endColumn + 2]);
+    if (!joinedBefore && !joinedAfter) return false;
+
+    // Short pieces such as "pre", "co" and "twi" are fine
+    if (endColumn - startColumn + 1 <= 3) return true;
+
+    // The whole thing is a word without the hyphen (double-header = doubleheader)
+    let left = startColumn;
+    while (left > 0 && (isLetter(cells[left - 1]) || (cells[left - 1] === "-" && isLetter(cells[left - 2])))) left--;
+    let right = endColumn;
+    while (right < COLUMN_COUNT - 1 && (isLetter(cells[right + 1]) || (cells[right + 1] === "-" && isLetter(cells[right + 2])))) right++;
+    const whole = cells.slice(left, right + 1).join("");
+    return isSpelledCorrectly(whole) || isSpelledCorrectly(whole.replaceAll("-", ""));
+}
+
+// & Find the misspelled words on a page. Row 0 (the header) is skipped
+function findMisspellings(pageRows) {
+    if (!spelling.checker) return [];
+    const found = [];
+    for (let row = 1; row < ROW_COUNT; row++) {
+        const rowBytes = pageRows[row];
+        if (!rowBytes) continue;
+        const cells = textCellsOfRow(rowBytes);
+
+        // A word is letters with apostrophes inside it (night's), split by anything else (spaces, hyphens, slashes, control codes)
+        let column = 0;
+        while (column < COLUMN_COUNT) {
+            if (!/[A-Za-z]/.test(cells[column] ?? "")) { column++; continue; }
+            const startColumn = column;
+            while (column < COLUMN_COUNT && /[A-Za-z']/.test(cells[column] ?? "")) column++;
+            let endColumn = column - 1;
+            while (cells[endColumn] === "'") endColumn--;
+            const word = cells.slice(startColumn, endColumn + 1).join("");
+
+            if (shouldCheckWord(word, cells, startColumn, endColumn) && !isSpelledCorrectly(word) && !isKnownCompoundPart(cells, startColumn, endColumn)) {
+                found.push({ row, startColumn, endColumn });
+            }
+        }
+    }
+    return found;
+}
+
+// & The underlines to draw on the final page right now
+function finalPageMisspellings() {
+    if (!isSpellCheckOn()) return [];
+    if (!spelling.checker) { loadSpellChecker(); return []; }
+    return findMisspellings(editorState.finalPageRows);
 }
 
 const editorState = {
@@ -480,6 +648,7 @@ const elements = {
     colorCodes: getElement("colorCodes"),
     highlightMissingOptions: getElement("optMissing"),
     revealOption: getElement("optReveal"),
+    spellingOption: getElement("optSpelling"),
     splitOption: getElement("optSplit"),
     groupOption: getElement("optGroup"),
     removeCheckedButton: getElement("removeCheckedButton"),
@@ -1104,6 +1273,7 @@ function renderPageViews() {
 
     drawPage(elements.finalCanvas, editorState.finalPageRows, {
         ...getDisplayOptions(),
+        misspellings: finalPageMisspellings(),
         cursor: editorState.cursor,
         selection: editorState.finalSelection,
         pastePreview,
@@ -2842,6 +3012,7 @@ window.addEventListener("beforeunload", event => {
 elements.pageFilter.addEventListener("input", renderPageList);
 elements.highlightMissingOptions.addEventListener("change", renderEverything);
 elements.revealOption.addEventListener("change", renderEverything);
+elements.spellingOption?.addEventListener("change", () => { if (editorState.selectedPageIndex >= 0) renderPageViews(); });
 
 // Either switch rebuilds the page list and stays on the same page number
 function rebuildPageListKeepingNumber() {

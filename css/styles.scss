@@ -18,7 +18,7 @@ h1 {
 }
 
 .table-result {
-    color: #000 !important;
+    color: #fff !important;
 }
 
 .display-1,
@@ -246,23 +246,23 @@ h1 {
 
 .row-new,
 .row-new td {
-    --bs-table-bg: #a5ffba;
-    --bs-table-striped-bg: #a5ffba;
-    background-color: #a5ffba !important;
+    --bs-table-bg: #00821e;
+    --bs-table-striped-bg: #00821e;
+    background-color: #00821e !important;
 }
 
 .row-no-download-link,
 .row-no-download-link td {
-    --bs-table-bg: #ffa5a5;
-    --bs-table-striped-bg: #ffa5a5;
-    background-color: #ffa5a5 !important;
+    --bs-table-bg: #900;
+    --bs-table-striped-bg: #900;
+    background-color: #900 !important;
 }
 
 .row-updated,
 .row-updated td {
-    --bs-table-bg: #8be9ff;
-    --bs-table-striped-bg: #8be9ff;
-    background-color: #8be9ff !important;
+    --bs-table-bg: #00566a;
+    --bs-table-striped-bg: #00566a;
+    background-color: #00566a !important;
 }
 
 .cell-wrap {

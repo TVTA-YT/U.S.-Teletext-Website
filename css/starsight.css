@@ -165,7 +165,7 @@
 }
 .guide .guide-scroll .program-row div {
   grid-column: span 1;
-  font-size: 0.8em;
+  font-size: 0.6em;
   height: 100px;
   padding: 10px;
   display: flex;

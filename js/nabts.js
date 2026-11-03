@@ -603,6 +603,8 @@
             this.sequence = 0;
             this.stats = { groups: 0, foreign: 0, header_bad: 0, records: 0 };
             this.foreign = new Map();
+            this.foreignGroups = [];                  // other services' groups, for the messages they carry
+            this.foreignBytes = 0;
         }
 
         /** A group of a reserved type that plainly carries a page: clean identity, presentation type, opens with SO. */
@@ -635,6 +637,10 @@
                 if (group.channel_attested && group.hdr.attested) {
                     const key = `${group.channel},${group.hdr.type}`;
                     this.foreign.set(key, (this.foreign.get(key) || 0) + 1);
+                    if (group.data.length && this.foreignBytes + group.data.length <= FOREIGN_MAX_BYTES) {
+                        this.foreignGroups.push({ channel: group.channel, type: group.hdr.type, clock: group.clock, data: group.data, present: group.present });
+                        this.foreignBytes += group.data.length;
+                    }
                 }
                 return;
             }
@@ -3994,6 +4000,7 @@
                 case 0x08: this.moveBy('back'); break;                                    // APB
                 case 0x09: this.moveBy('fwd'); break;                                     // APF
                 case 0x0A:                                                                // APD
+                    if (this.scrollText && (this.classicPace || this.paceTable)) this.clock = Math.min(this.clock + TELETYPE_CHARACTER_SECONDS, 15 * 60);
                     if (this.wrap === 1) { this.wrap = 3; return; }
                     if (this.wrap === 2) { this.wrap = 0; return; }
                     this.moveBy('down');
@@ -4635,6 +4642,17 @@
 
         emit(prim) {
             if (this.collecting === 'drcs' || this.collecting === 'mask') { this.drawIntoDefinition(prim); return; }
+            // JS-only: plain-text messages are typed out at a terminal's speed (TELETYPE_CHARACTER_SECONDS a character,
+            // 120 a second, as 1200 baud printed), whatever the receiver's drawing times; a scroll takes no time of its own
+            if (this.scrollText && (this.classicPace || this.paceTable) && !this.checkingOnly) {
+                this.snapState();
+                prim.t = this.clock;
+                prim.draw = 0;
+                this.prims.push(prim);
+                this.events.push(['p', this.clock, prim]);
+                if (prim.kind === 'char') this.clock = Math.min(this.clock + TELETYPE_CHARACTER_SECONDS, 15 * 60);
+                return;
+            }
             if (this.checkingOnly && prim.kind !== 'char' && prim.points.some(([x, y]) => (prim.kind === 'rect' ? !(x >= -1 / 256 && x <= 1 + 1 / 256 && y >= -1 / 256 && y <= 1 + 1 / 256) : !(x > -1 / 256 && x < 1 + 1 / 256 && y > -1 / 256 && y < 1 + 1 / 256)))) this.noteOffScreen();
             if (this.classicPace) {
                 // The original nominal drawing speed: the figure appears at once, then a fixed time per kind of figure
@@ -6379,6 +6397,196 @@
         return { groupAssembler, recordAssembler };
     };
 
+    /**
+     * JS-only: text messages a network sent its affiliates as another data service in the same lines (CBS 1992's
+     * story advisories to WCAU, on channel CFD as group type 15). Each group opens with a header of its own, Hamming
+     * coded; after it the groups of a channel, in turn, carry a wire-service stream: SOH, a header line ("v0474",
+     * the source, the story's slug and time), STX, the text with "<" ending each line, ETX. Each message found becomes
+     * a record of plain text (MSG0474), shown as a terminal shows it. Groups carrying other data (CBS's encoded files
+     * between the messages) are passed over.
+     */
+    const FOREIGN_MAX_BYTES = 16 << 20, MESSAGE_ADDRESS_BASE = 2 ** 41, MESSAGE_MIN_TEXT = 40;
+    const HAMMING_BYTES = new Set([0x15, 0x02, 0x49, 0x5E, 0x64, 0x73, 0x38, 0x2F, 0xD0, 0xC7, 0x8C, 0x9B, 0xA1, 0xB6, 0xFD, 0xEA]);
+    const findWireMessages = (groups) => {
+        const streams = new Map();
+        for (const group of groups) {
+            const key = `${group.channel},${group.type}`;
+            if (!streams.has(key)) streams.set(key, []);
+            streams.get(key).push(group);
+        }
+        const found = new Map();
+        for (const list of streams.values()) {
+            // The service's own header: the run of Hamming-coded bytes most of its groups open with
+            const counts = new Map();
+            for (const { data } of list) {
+                let n = 0;
+                while (n < data.length && n < 32 && HAMMING_BYTES.has(data[n])) n++;
+                counts.set(n, (counts.get(n) || 0) + 1);
+            }
+            let header = 0, most = 0;
+            for (const [n, count] of counts) if (count > most) { header = n; most = count; }
+            // A header nibble that counts the groups (CBS: the fifth): where it skips, groups were lost there
+            const nibble = (byte) => [...HAMMING_BYTES].indexOf(byte);
+            let counter = -1;
+            for (let at = 0; at < header && counter < 0; at++) {
+                let steps = 0;
+                for (let g = 1; g < list.length; g++) {
+                    const a = nibble(list[g - 1].data[at]), b = nibble(list[g].data[at]);
+                    if (a >= 0 && b >= 0 && (b - a + 16) % 16 === 1) steps++;
+                }
+                if (list.length > 4 && steps >= (list.length - 1) * 0.6) counter = at;
+            }
+            // The stream: each group's bytes after its header; a byte lost or failing parity read as DEL, and groups
+            // lost marked with a NUL
+            const bytes = [];
+            let last = -1;
+            for (const { data, present } of list) {
+                if (counter >= 0) {
+                    const value = nibble(data[counter]);
+                    if (last >= 0 && value >= 0 && value !== (last + 1) % 16) bytes.push(0x00);
+                    if (value >= 0) last = value;
+                }
+                for (let i = Math.min(header, data.length); i < data.length; i++) {
+                    bytes.push((present && present.length && !present[i]) || !ODD_PARITY[data[i] & 0xFF] ? 0x7F : data[i] & 0x7F);
+                }
+            }
+            const text = bytes.map((byte) => String.fromCharCode(byte)).join('');
+            const pattern = /\x01(v(\d{4})\x1F([^\x02\x01]{0,240}))\x02([^\x01\x02\x03]*)(\x03)?/g;
+            // (a NUL inside a message is a lost group: shown as "[...]")
+            let match;
+            while ((match = pattern.exec(text))) {
+                const [, , number, heading, whole, ended] = match;
+                // A message whose end never arrived stops at the first group lost: what follows the gap is the
+                // service's next data, not the rest of the message
+                const body = ended || !whole.includes('\x00') ? whole : whole.slice(0, whole.indexOf('\x00') + 1);
+                const cleaned = body.replace(/\x7F/g, '?').replace(/\x00+/g, ' [...] ').replace(/<+\r\n/g, '\r\n').replace(/<+\s*$/g, '')
+                    .replace(/[^\r\n\x20-\x7E]/g, '').replace(/^[\^]/, '');
+                if (cleaned.replace(/\s/g, '').length < MESSAGE_MIN_TEXT) continue;
+                const slug = (heading.match(/\b(BC-[^\s,]+)/) || [])[1] || '';
+                const when = (heading.match(/(\d\d-\d\d \d{4})\s*$/m) || [])[1] || '';
+                const complete = !!ended && !body.includes('\x7F') && !body.includes('\x00');
+                const previous = found.get(number);
+                if (previous && (previous.message.complete || !complete)) continue;
+                const data = [...cleaned].map((character) => character.charCodeAt(0));
+                found.set(number, {
+                    channel: list[0].channel, address: MESSAGE_ADDRESS_BASE + Number(number), addr_text: `MSG${number}`,
+                    long_form: true, version: 0, content: 0, edition: 1, editions: 1, type: 0, records: 1, complete,
+                    more_address: null, flags: Object.fromEntries(FLAGS_VOTED.map((name) => [name, false])),
+                    data, present: new Array(data.length).fill(1), first: list[0].clock, last: list[list.length - 1].clock,
+                    seen: 1, intact_n: 0, attested_n: 0, header_attested_n: 0, copies_voted: 0, unconfirmed: false,
+                    identity_lost: true, purpose: '', message: { number, slug, when, group_type: list[0].type, complete }
+                });
+            }
+        }
+        // Messages sent a group at a time (CBS 1992 on channel CD0: "CALL", "FM LANE 29", "RE: CBS THIS MORNING
+        // LISTINGS…"): each group, after its header, holds SOH and one part of the text, its header counting the
+        // parts; the last part ends with ETX, a routing line and EOT. A group is sent twice over and the whole message
+        // again, so each part is voted from every copy of it
+        const partedOf = (list) => {
+            const nibble = (byte) => [...HAMMING_BYTES].indexOf(byte);
+            const parts = [];
+            for (const { data, present, clock } of list) {
+                let at = 0;
+                while (at < data.length && HAMMING_BYTES.has(data[at])) at++;
+                const counter = at > 4 ? nibble(data[4]) : -1;
+                while (at < data.length && ((data[at] & 0x7F) === 0x00 || data[at] === 0x15)) at++;
+                if (at >= data.length || (data[at] & 0x7F) !== 0x01 || (present && present.length && !present[at])) continue;
+                const bytes = [];
+                for (let i = at + 1; i < data.length; i++) {
+                    bytes.push((present && present.length && !present[i]) || !ODD_PARITY[data[i] & 0xFF] ? -1 : data[i] & 0x7F);
+                }
+                parts.push({ counter, bytes, clock, ends: bytes.includes(0x03) });
+            }
+            // Runs of parts in turn, each to a part with ETX: one transmission of a message
+            const messages = [];
+            let run = [], last = null;
+            for (const part of parts) {
+                // A part sent twice running is another copy of it, even after the message it ends was closed
+                if (last && part.counter === last.counter) { last.copies.push(part.bytes); last.ends ||= part.ends; continue; }
+                const previous = run[run.length - 1];
+                if (previous && part.counter !== (previous.counter + 1) % 16) { if (run.length) messages.push(run); run = []; }
+                last = { counter: part.counter, copies: [part.bytes], ends: part.ends, clock: part.clock };
+                run.push(last);
+                if (part.ends) { messages.push(run); run = []; }
+            }
+            if (run.length) messages.push(run);
+            // A message sent again is the same text: its parts' copies are voted together
+            const voteBytes = (copies) => {
+                const length = Math.max(...copies.map((copy) => copy.length)), out = [];
+                for (let i = 0; i < length; i++) {
+                    const counts = new Map();
+                    for (const copy of copies) if (i < copy.length && copy[i] >= 0) counts.set(copy[i], (counts.get(copy[i]) || 0) + 1);
+                    let best = -1, most = 0;
+                    for (const [value, count] of counts) if (count > most) { best = value; most = count; }
+                    out.push(best);
+                }
+                return out;
+            };
+            const merged = new Map();
+            for (const message of messages) {
+                if (!message[message.length - 1].ends && message.length < 2) continue;
+                // The same message, sent again, has a first part of the same length that agrees nine bytes in ten
+                // (copies damaged differently, so their texts are not equal)
+                const first = voteBytes(message[0].copies);
+                const same = (other) => {
+                    if (Math.abs(other.length - first.length) > first.length / 20) return false;
+                    let judged = 0, agreed = 0;
+                    for (let i = 0; i < Math.min(first.length, other.length); i++) {
+                        if (first[i] < 0 || other[i] < 0) continue;
+                        judged++;
+                        if (first[i] === other[i]) agreed++;
+                    }
+                    return judged >= 16 && agreed * 10 >= judged * 9;
+                };
+                let entry = [...merged.values()].find((candidate) => same(candidate.first) &&
+                    candidate.parts.length === message.length);
+                if (!entry) {
+                    entry = { parts: [], clock: message[0].clock, whole: false, first };
+                    merged.set(merged.size, entry);
+                }
+                message.forEach((part, k) => {
+                    if (!entry.parts[k]) entry.parts[k] = [];
+                    // The routing line after ETX differs from one sending to the next: the copies end at ETX
+                    entry.parts[k].push(...part.copies.map((copy) => (copy.includes(0x03) ? copy.slice(0, copy.indexOf(0x03) + 1) : copy)));
+                });
+                if (message[0].counter >= 0 && message[message.length - 1].ends) entry.whole = true;
+            }
+            return [...merged.values()].map((entry) => {
+                let text = '', lost = false;
+                for (const copies of entry.parts) {
+                    if (!copies || !copies.length) { text += ' [...] '; lost = true; continue; }
+                    const voted = voteBytes(copies);
+                    const end = voted.indexOf(0x03);
+                    for (const byte of end >= 0 ? voted.slice(0, end) : voted) {
+                        if (byte < 0) { text += '?'; lost = true; } else text += String.fromCharCode(byte);
+                    }
+                    if (end >= 0) break;
+                }
+                return { text, complete: entry.whole && !lost, clock: entry.clock };
+            });
+        };
+        let partedNumber = 0;
+        for (const list of streams.values()) {
+            if ([...found.values()].some((record) => record.channel === list[0].channel)) continue;
+            for (const { text, complete, clock } of partedOf(list)) {
+                const cleaned = text.replace(/[^\r\n\x20-\x7E]/g, '').replace(/\n{4,}/g, '\n\n\n');
+                if (cleaned.replace(/\s/g, '').length < MESSAGE_MIN_TEXT) continue;
+                const number = String(++partedNumber).padStart(4, '0');
+                const subject = (cleaned.match(/^RE:\s*(.+)$/m) || [])[1]?.trim() || cleaned.trim().split(/\r?\n/)[0].trim();
+                const data = [...cleaned].map((character) => character.charCodeAt(0));
+                found.set(`${list[0].channel},${number}`, {
+                    channel: list[0].channel, address: MESSAGE_ADDRESS_BASE + Number(number), addr_text: `MSG${number}`,
+                    long_form: true, version: 0, content: 0, edition: 1, editions: 1, type: 0, records: 1, complete,
+                    more_address: null, flags: Object.fromEntries(FLAGS_VOTED.map((name) => [name, false])),
+                    data, present: new Array(data.length).fill(1), first: clock, last: clock,
+                    seen: 1, intact_n: 0, attested_n: 0, header_attested_n: 0, copies_voted: 0, unconfirmed: false,
+                    identity_lost: true, purpose: '', message: { number, slug: subject.slice(0, 60), when: '', group_type: list[0].type, complete }
+                });
+            }
+        }
+        return [...found.values()].sort((a, b) => a.channel - b.channel || a.address - b.address);
+    };
+
     const readT33 = (input, onProgress) => {
         const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
         const packetCount = Math.floor(bytes.length / PACKET_SIZE);
@@ -6392,6 +6600,8 @@
         const stats = groupAssembler.stats, notNabts = stats.packets >= 200 && stats.prefix_whole * 10 < stats.packets;
         const records = notNabts ? [] : catalog.records();
         const salvaged = notNabts ? null : salvage.apply(records);
+        const messages = notNabts ? [] : findWireMessages(recordAssembler.foreignGroups);
+        for (const message of messages) records.push(message);
         for (const record of records) delete record.thin_copies;
         return {
             records,
@@ -6400,7 +6610,7 @@
                 groups: groupAssembler.stats, records: recordAssembler.stats,
                 foreign: recordAssembler.foreign, identities_folded: reconciled.folded, identities_dropped: reconciled.dropped,
                 identities_kept: reconciled.kept, identities_misaddressed: reconciled.misaddressed,
-                pages_with_contents: [...catalog.identities.values()].filter((contents) => contents.length > 1).length, cataloged: records.length, not_nabts: notNabts, salvage: salvaged
+                pages_with_contents: [...catalog.identities.values()].filter((contents) => contents.length > 1).length, cataloged: records.length, not_nabts: notNabts, salvage: salvaged, messages: messages.length
             }
         };
     };
@@ -6695,7 +6905,7 @@
      * 'classic' (the viewer's original fast, fixed time per figure), 'ttx650' (Norpak TTX 650), 'tu2000x'
      * (Panasonic TU-2000x) or 'off' (instant).
      */
-    const TELETYPE_MIN_LINES = 21;
+    const TELETYPE_MIN_LINES = 21, TELETYPE_CHARACTER_SECONDS = 1 / 20;
     const isTeletypeText = (bytes) => {
         let lines = 0, printable = 0;
         for (const byte of bytes) {
@@ -6808,7 +7018,7 @@
             // JS-only: a record that is nothing but lines of plain text, more than the screen holds (the affiliate
             // messages CBS sent its stations: KWTV 1985-10-22's 000100000, 75 lines), is shown as a terminal shows it,
             // scrolling (SCROLL ON) instead of piling every line after the twentieth into the last row
-            interpreter.scrollText = isTeletypeText(codeOf(record));
+            interpreter.scrollText = !!record.message || isTeletypeText(codeOf(record));
             // Its lines were written for a wider printer (70 columns and more): they are broken between words at the
             // screen's 40 columns, as a terminal with word wrap would, not mid-word ("WI / LL")
             record.page = interpreter.run(interpreter.scrollText ? wrapTeletypeText(codeOf(record)) : codeOf(record), keepDisplay);
