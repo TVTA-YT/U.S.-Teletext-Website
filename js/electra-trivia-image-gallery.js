@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthSelect = document.getElementById('trivia-month');
     const status = document.getElementById('trivia-status');
 
-    const TRIVIA_API_URL = '';
+    const TRIVIA_API_URL = '/api/electra-keyfax-trivia';
 
     // Delay between image requests by 500 ms
     const REQUEST_DELAY_MS = 500;
