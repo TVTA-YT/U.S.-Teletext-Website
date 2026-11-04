@@ -29,7 +29,7 @@ const NETWORK_LOGOS = {
 
 // ^ EPG guide pages and their R2 folders (EPG bucket). "folder: null" keeps StarSight's existing links, which use the Service_Name column as the folder
 const EPG_GUIDES = {
-    starsight: { page: "starsight-data.html", folder: null },
+    starsight: { page: "starsight-data.html", folder: "starsight" },
     gemstar: { page: "gemstar-data.html", folder: "gemstar" }
 };
 
