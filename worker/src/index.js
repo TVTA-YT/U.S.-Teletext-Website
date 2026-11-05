@@ -1327,7 +1327,7 @@ export default {
             return handleApi(request, env);
         }
 
-        // Text service HTML files, T33 streams, and StarSight/Gemstar JSON (e.g. /files/gemstar/<id>.json) from R2:
+        // Text service HTML files, news images, T33 streams, and StarSight/Gemstar JSON (e.g. /files/gemstar/<id>.json) from R2:
         if (url.pathname.startsWith("/files/")) {
             const key = url.pathname.slice("/files/".length);
 
@@ -1336,8 +1336,9 @@ export default {
 
             // T33 files
             const isT33 = key.toLowerCase().endsWith(".t33");
-
-            const bucket = isJson ? env.EPG : env.TEXT_ARCHIVE;
+            
+            const isNewsMedia = key.startsWith("news/");
+            const bucket = isNewsMedia ? env.NEWS_MEDIA : isJson ? env.EPG : env.TEXT_ARCHIVE;
             const object = await bucket.get(key);
             if (!object) return new Response("Not found", { status: 404 });
 
