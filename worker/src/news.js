@@ -38,7 +38,7 @@ export async function handleNews(request, env, ctx) {
         if (path === "/api/news" && request.method === "GET") {
             return await cached(request, ctx, async () => {
                 const { results } = await env.NEWS_DB.prepare(`
-                    SELECT id, date, title, author, summary, preview, preview_alt AS previewAlt, is_new AS isNew
+                    SELECT id, date, title, author, summary, preview, preview_alt AS previewAlt, (is_new = 1 AND date >= date('now', '-7 days')) AS isNew
                     FROM news_stories
                     WHERE published = 1
                     ORDER BY date DESC, updated_at DESC
@@ -58,7 +58,7 @@ export async function handleNews(request, env, ctx) {
 
             return await cached(request, ctx, async () => {
                 const row = await env.NEWS_DB.prepare(`
-                    SELECT id, date, title, author, body, is_new AS isNew
+                    SELECT id, date, title, author, body, (is_new = 1 AND date >= date('now', '-7 days')) AS isNew
                     FROM news_stories
                     WHERE id = ? AND published = 1
                 `).bind(id).first();
