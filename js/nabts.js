@@ -1,6 +1,5 @@
 /*! nabts.js — NABTS (.t33) stream decoder and NAPLPS page renderer/animator for the browser.
- * JavaScript port of pages/nabts.py from AssunaYuuki's Teletext Rescue, itself a port of decode-orc
- * (orc/plugins/stages/nabts_sink). Licence: GPL-3.0-or-later (inherited from decode-orc).
+ * JavaScript port of NABTS code from Decode-Orc (orc/plugins/stages/nabts_sink). Licence: GPL-3.0-or-later.
  * See https://github.com/decode-orc/decode-orc
  */
 ((globalScope, createLibrary) => {
@@ -152,7 +151,7 @@
     };
 
     // * * * Data groups (§4) * * *
-    const GROUP_HEADER_SIZE = 8, MAX_FURTHER_PACKETS = 67, MAX_OPEN_GROUPS = 32, LOOSE_RUN_MAX_GAP = 2, MAX_OPEN_LOOSE_RUNS = 8;
+    const GROUP_HEADER_SIZE = 8, MAX_FURTHER_PACKETS = 67, MAX_FURTHER_PACKETS_CLEAN = 127, MAX_OPEN_GROUPS = 32, LOOSE_RUN_MAX_GAP = 2, MAX_OPEN_LOOSE_RUNS = 8;
 
     /** The nibble whose Hamming 8/4 codeword is nearest a byte (the preferred one where it ties for nearest). */
     const nearestNibble = (byte, preferred = -1) => {
@@ -339,7 +338,10 @@
                 this.stats.type_misreads += 1;
             }
             this._endLoose(packet.channel);              // whatever ran loose on the channel ended before this group
-            if (header.further > MAX_FURTHER_PACKETS) return;
+            // CEA-516 caps a group at 67 further blocks, but some services sent longer ones (WBBM 1983-10-31: its
+            // largest pages in groups of 69 to 75 packets, every copy dropped, so ten pages were missing). A header
+            // whose every byte arrived clean may run longer; a damaged one keeps the standard's limit
+            if (header.further > (header.attested && !header.guessed ? MAX_FURTHER_PACKETS_CLEAN : MAX_FURTHER_PACKETS)) return;
             if (this.openGroups.has(packet.channel)) {
                 const previous = this.openGroups.get(packet.channel);
                 this.openGroups.delete(packet.channel);
@@ -802,6 +804,10 @@
                     let backing = 0;
                     for (const [failed, failedWeight] of weight) {
                         if (ODD_PARITY[failed] || countSetBits((failed ^ value) & 0xFF) !== 1) continue;
+                        // ... not 0xFF, which is what a copy holds where its packets lost the signal (a run of them),
+                        // and backs DEL only by chance (CBS 1992-04-06 page 003: 30 copies holding 0xFF there outweighed
+                        // 26 that read the SO switching to the drawing set, and the drawing came out as text)
+                        if (failed === 0xFF) continue;
                         backing += failedWeight;
                     }
                     return backing;
@@ -1646,6 +1652,7 @@
     const SAME_CONTENT_PERCENT = 50, MAX_RECORD_SLIP = 8, OUTLIER_MIN_JUDGED = 16;
     const CONTENT_WINDOW_BYTES = 54, CONTENT_WINDOW_SLIP = 32, CONTENT_WINDOW_MIN_JUDGED = 8, CONTENT_WINDOW_PERCENT = 70;
     const JOIN_WINDOW_SLIP = 81;
+    const NOVEL_RUN = 12, NOVEL_MIN_SEEN = 2, NOVEL_MIN_TEXT = 96, NOVEL_TEXT_PERCENT = 85;
     const PAGE_DIFFERENCE_BYTES = 32, PAGE_DIFFERENCE_RUN = 4, PAGE_DIFFERENCE_QUIET_REACH = 14, PAGE_DIFFERENCE_QUIET_FAILURES = 2;
     const PAGE_DIFFERENCE_VOUCHED_BYTES = 6, PAGE_DIFFERENCE_VOUCHED_PERCENT = 8, DISPLACEMENT_CONTEXT = 3, DISPLACEMENT_REACH = 96;
     const IDENTITY_MIN_JUDGED = 48, MISREAD_VERSION_RATIO = 20, MISREAD_VERSION_MIN_MAIN = 20, MISREAD_VERSION_AGREEMENT = 0.9;
@@ -2156,12 +2163,13 @@
         /**
          * JS-only: a lone intact copy can carry a misread its checks let through. Where three or more of the other
          * copies, all holding the byte, agree on another reading, theirs is taken (CBS 1985-06-29's KKGO ad: its one
-         * intact copy read "America's" as "Hmerica's").
+         * intact copy read "America's" as "Hmerica's"). Where only most of them agree, the grammar settles it.
          */
         static overruledIntact(data, spare) {
             const others = spare.filter(([held]) => held.length === data.length && held !== data);
             if (others.length < OVERRULE_MIN_COPIES) return data;
             let result = data;
+            const contested = [];
             for (let i = 0; i < data.length; i++) {
                 // The reading most of the copies that received the byte hold, where nine in ten hold it (all of them,
                 // where there are only a few: a stray reading or two among dozens of copies is a tape's noise)
@@ -2175,11 +2183,19 @@
                 let first = null, agree = 0;
                 for (const [value, count] of counts) if (count > agree) { first = value; agree = count; }
                 if (first === null || first === data[i]) continue;
-                if (agree < OVERRULE_MIN_COPIES || agree < received * OVERRULE_SHARE || !ODD_PARITY[first & 0xFF]) continue;
+                if (agree < OVERRULE_MIN_COPIES || !ODD_PARITY[first & 0xFF]) continue;
+                // Where most of them, but fewer than nine in ten, hold another reading, the grammar decides
+                if (agree < received * OVERRULE_SHARE) {
+                    if (agree * 2 > received) contested.push([i, [data[i], first]]);
+                    continue;
+                }
                 if (result === data) result = [...data];
                 result[i] = first;
             }
-            return result;
+            // (CBS 1992-05-01 KLFY page 000: two 0x2A, LINE, read as 0x52 in one packet, which cancelled out in its
+            // check, so the lone intact copy and a quarter of the others drew the HEADLINES ribbon's strokes as long
+            // lines across the page; two thirds of the copies read LINE)
+            return contested.length ? settleContestedByGrammar(result, contested) : result;
         }
 
         static addTallies(target, source) {
@@ -2225,6 +2241,40 @@
 
         /** Once every copy is in, contents of one identity that turn out to be one page are joined. */
         joinContents() {
+            // JS-only: every stretch of NOVEL_RUN bytes the recording's contents hold, to tell a content that carries
+            // something of its own from one spliced together from blocks found elsewhere (see below)
+            const stretchKey = (data, from) => String.fromCharCode(...data.slice(from, from + NOVEL_RUN).map((byte) => byte & 0x7F));
+            const stretchHolders = new Map();
+            for (const [key, entry] of this.entries) {
+                const [data, present] = Catalog.viewOf(entry);
+                for (let i = 0; i + NOVEL_RUN <= data.length; i++) {
+                    let usable = true;
+                    for (let k = i; k < i + NOVEL_RUN && usable; k++) usable = salvageUsable(data, present, k);
+                    if (!usable) continue;
+                    const stretch = stretchKey(data, i), holder = stretchHolders.get(stretch);
+                    if (holder === undefined) stretchHolders.set(stretch, key); else if (holder !== key) stretchHolders.set(stretch, null);
+                }
+            }
+            // Text a content alone carries: its bytes read as text that no stretch found in another content covers
+            const novelText = (key, data, present) => {
+                const covered = new Uint8Array(data.length), usable = new Uint8Array(data.length);
+                for (let i = 0; i < data.length; i++) usable[i] = salvageUsable(data, present, i) ? 1 : 0;
+                for (let i = 0; i + NOVEL_RUN <= data.length; i++) {
+                    let ok = true;
+                    for (let k = i; k < i + NOVEL_RUN && ok; k++) ok = usable[k] === 1;
+                    if (!ok) continue;
+                    const holder = stretchHolders.get(stretchKey(data, i));
+                    if (holder === null || (holder !== undefined && holder !== key)) covered.fill(1, i, i + NOVEL_RUN);
+                }
+                const roles = readRoles(data);
+                let novel = 0, text = 0;
+                for (let i = 0; i < data.length; i++) {
+                    if (!usable[i] || covered[i]) continue;
+                    novel++;
+                    if (roles[i] === ROLE_TEXT) text++;
+                }
+                return [novel, text];
+            };
             for (const [identity, contents] of this.identities) {
                 if (contents.length < 2) continue;
                 const keys = contents.map((content) => `${identity},${content}`);
@@ -2289,6 +2339,15 @@
                     // Seen at most a fifth as often, losses or a shared layout are enough; seen nearly as often (both
                     // rare), it takes losses and a layout the damage left recognizable
                     const rare = entry.seen * 5 <= mainEntry.seen;
+                    // ... but not a rare one received whole that reads, where no other content holds its bytes, as
+                    // a story of its own: a spliced or misplaced copy is made of blocks other contents hold, and what is
+                    // new in a damaged one is drawing code gone wrong; a page revised on the air has new text (CBS
+                    // 1992-04-06: UPI News Briefs 002 to 0206 sent two or three stories each under one version, the later
+                    // ones seen a tenth as often, and only the first was listed)
+                    if (rare && lostBytes === 0 && entry.seen >= NOVEL_MIN_SEEN) {
+                        const [novel, text] = novelText(key, minorData, minorPresent);
+                        if (text >= NOVEL_MIN_TEXT && text * 100 >= novel * NOVEL_TEXT_PERCENT) return;
+                    }
                     // ... or, however often seen, exactly as long as the main content with its layout shared: a page
                     // revised on the air changes length, while a recording whose packets are often misread (WCBS April
                     // 1985) gathers its spliced copies, which keep the length, into a content of their own
@@ -2909,16 +2968,9 @@
             const recordBytes = (r) => [records[r].data, presentOf(records[r])];
 
             const readings = new Map(), revotes = new Map(), unmatched = [], taken = new Array(runs.length).fill(false);
-            runs.forEach((run, h) => {
-                if (!namedChannels.has(run.channel)) return;
-                const placed = placeRun(run, salvageProposals(recordIndex, run), recordBytes);
-                if (!placed.passing.length) { unmatched.push(h); return; }
-                taken[h] = true;
-                stats.runs_matched++;
-                if (placed.ambiguous) return;
-                const record = records[placed.best.target], present = record.present;
+            const fillFrom = (run, target, offset) => {
+                const record = records[target], present = record.present;
                 if (!present || !present.length) return;          // arrived whole: nothing to fill
-                const offset = placed.best.offset;
                 const fills = [];
                 for (let i = 0; i < run.data.length; i++) {
                     const at = offset + i;
@@ -2949,18 +3001,41 @@
                             const readings = record.thin_copies.map(([copyData, copyPresent]) => (copyPresent && copyPresent.length && !copyPresent[at]) || !ODD_PARITY[copyData[at] & 0xFF] ? null : copyData[at]);
                             if (!readings.includes(value) || !readings.includes(record.data[at]) || readings[0] === readings[1]) continue;
                         }
-                        const key = `${placed.best.target},${at}`;
+                        const key = `${target},${at}`;
                         if (!revotes.has(key)) revotes.set(key, new Map());
                         revotes.get(key).set(value, (revotes.get(key).get(value) || 0) + 1);
                     }
                 }
                 for (const i of salvageVouchedFills(run, record, offset, fills)) {
                     const at = offset + i;
-                    const key = `${placed.best.target},${at}`;
+                    const key = `${target},${at}`;
                     if (!readings.has(key)) readings.set(key, new Map());
                     const values = readings.get(key);
                     values.set(run.data[i], (values.get(run.data[i]) || 0) + 256);
                 }
+            };
+            runs.forEach((run, h) => {
+                if (!namedChannels.has(run.channel)) return;
+                const placed = placeRun(run, salvageProposals(recordIndex, run), recordBytes);
+                if (!placed.passing.length) { unmatched.push(h); return; }
+                taken[h] = true;
+                stats.runs_matched++;
+                if (placed.ambiguous) {
+                    // JS-only: a run that ran on from the end of one page into the next, its group start lost, matches
+                    // both. Where the two placements cover parts of the run that do not overlap, each part fills its
+                    // own page (CBS 1984-01-02: page 034's missing packets came only in runs that began in 033's)
+                    const other = placed.passing.find((candidate) => candidate.target !== placed.best.target);
+                    if (!other) return;
+                    const span = ({ target, offset }) => [Math.max(0, -offset), Math.min(run.data.length, records[target].data.length - offset)];
+                    const [a, b] = [span(placed.best), span(other)];
+                    if (a[0] >= a[1] || b[0] >= b[1] || (a[1] > b[0] && b[1] > a[0])) return;
+                    for (const [candidate, [lo, hi]] of [[placed.best, a], [other, b]]) {
+                        const part = { ...run, data: run.data.slice(lo, hi), present: run.present ? run.present.slice(lo, hi) : run.present };
+                        fillFrom(part, candidate.target, candidate.offset + lo);
+                    }
+                    return;
+                }
+                fillFrom(run, placed.best.target, placed.best.offset);
             });
             // JS-only: a hole is filled only where the runs deliver all of it. A hole half filled leaves the code
             // mid-command either way, and a run with a gap of its own inside a hole may have lost a packet there too.
