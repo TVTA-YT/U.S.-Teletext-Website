@@ -2565,6 +2565,25 @@
             entries.sort((a, b) => a.channel - b.channel || a.address - b.address || a.version - b.version ||
                 b.seen - a.seen || a.content - b.content);
             const rank = new Map(), confusions = new Map(), readingsOf = new Map(), entryOf = new Map();
+            // JS-only: an intact copy whose length nearly every other copy disagrees with is not the record: a group
+            // can lose a whole packet and still pass every check (KDFW 1989-03-29 page 040: one intact copy of 881
+            // bytes, 56 of 64 others 908; taken as the record, its missing packet joined a TEXT command to the menu
+            // text, every space in it read as RESET, and the page came out blank). Its copies are voted instead.
+            for (const entry of entries) {
+                if (!entry.kept_intact || entry.intactDisagree || !entry.spareCopies || !isPresentation(entry.type)) continue;
+                const lengths = new Map();
+                for (const [copyData] of entry.spareCopies) lengths.set(copyData.length, (lengths.get(copyData.length) || 0) + 1);
+                let commonLength = -1, commonCount = 0;
+                for (const [length, count] of lengths) if (count > commonCount) { commonLength = length; commonCount = count; }
+                const own = lengths.get(entry.data.length) || 0;
+                if (commonLength === entry.data.length || commonCount < OVERRULE_MIN_COPIES) continue;
+                if (commonCount * 3 < entry.spareCopies.length * 2 || own * 4 > entry.spareCopies.length) continue;
+                entry.kept_intact = false;
+                entry.kept_rank = 1;
+                entry.copies = [...entry.spareCopies, ...(entry.intactCopies || [])].slice(-MAX_COPIES);
+                entry.spareCopies = null;
+                entry.voteCache = null;
+            }
             const built = entries.map((entry) => {
                 const { copies, representative, types, types_att, voteCache, intactReadings, spareCopies, intactCopies, ...fields } = entry;
                 const record = { ...fields };

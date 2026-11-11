@@ -370,7 +370,6 @@
                 <div class="text-center fst-italic mb-3">
                     <span>T42 Name: <span id="sourceName">none chosen</span></span>
                 </div>
-
                 <div class="row g-4">
                     <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
                         <div class="viewer-screen aspect-ratio" id="screen" tabindex="0" aria-describedby="pageInfo screenHelp">
@@ -429,47 +428,123 @@
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                         <section class="mb-4" id="keypad-section" aria-labelledby="remoteHeading">
-                            <h2 id="remoteHeading" class="h5">Keypad</h2>
+                            <h3 id="remoteHeading" class="text-center">Keypad</h3>
+                            <hr />
                             <div class="entry-display mb-3" id="entryDisplay" aria-hidden="true"></div>
                             <div class="keypad mb-3" role="group" aria-label="Page number keys">
-                                <button type="button" class="btn btn-outline-secondary" data-digit="1">1</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="2">2</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="3">3</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="4">4</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="5">5</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="6">6</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="7">7</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="8">8</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="9">9</button>
-                                <button type="button" class="btn btn-outline-secondary" data-command="hold">Hold</button>
-                                <button type="button" class="btn btn-outline-secondary" data-digit="0">0</button>
-                                <button type="button" class="btn btn-outline-secondary" data-command="reveal">Reveal</button>
+                                <button type="button" class="btn btn-primary" data-digit="1">1</button>
+                                <button type="button" class="btn btn-primary" data-digit="2">2</button>
+                                <button type="button" class="btn btn-primary" data-digit="3">3</button>
+                                <button type="button" class="btn btn-primary" data-digit="4">4</button>
+                                <button type="button" class="btn btn-primary" data-digit="5">5</button>
+                                <button type="button" class="btn btn-primary" data-digit="6">6</button>
+                                <button type="button" class="btn btn-primary" data-digit="7">7</button>
+                                <button type="button" class="btn btn-primary" data-digit="8">8</button>
+                                <button type="button" class="btn btn-primary" data-digit="9">9</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="hold">Hold</button>
+                                <button type="button" class="btn btn-primary" data-digit="0">0</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="reveal">Reveal</button>
                             </div>
                             <div class="d-grid gap-2 mb-3" style="grid-template-columns: 1fr 1fr">
-                                <button type="button" class="btn btn-outline-secondary" data-command="prev-page">Previous Page</button>
-                                <button type="button" class="btn btn-outline-secondary" data-command="next-page">Next Page</button>
-                                <button type="button" class="btn btn-outline-secondary" data-command="prev-subpage">
-                                    Previous Subpage
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" data-command="next-subpage">Next Subpage</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="prev-page">Previous Page</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="next-page">Next Page</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="prev-subpage">Previous Subpage</button>
+                                <button type="button" class="btn btn-outline-primary" data-command="next-subpage">Next Subpage</button>
                             </div>
                             <button
                                 type="button"
-                                class="btn btn-outline-secondary w-100 mb-3"
+                                class="btn btn-outline-primary w-100 mb-3"
                                 data-command="boxed"
                                 aria-pressed="false"
                                 disabled
                             >
                                 Newsflash Box Only
                             </button>
-                            <button
-                                type="button"
-                                class="btn btn-outline-secondary w-100 mb-3"
-                                data-command="fullscreen"
-                                aria-pressed="false"
-                            >
+                            <button type="button" class="btn btn-outline-primary w-100 mb-3" data-command="fullscreen" aria-pressed="false">
                                 <i class="bi bi-fullscreen" aria-hidden="true"></i> Full screen
                             </button>
+                            <div class="text-center pb-4">
+                                <button
+                                    type="button"
+                                    class="btn w-100 mb-3"
+                                    id="keyboard-shortcut-button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#keyboardShortCut"
+                                    style="background-color: #00a2cb; color: #fff"
+                                >
+                                    Keyboard Shortcuts
+                                </button>
+                            </div>
+                            <!-- * GUIDE MODAL * -->
+                            <div
+                                class="modal fade"
+                                id="keyboardShortCut"
+                                tabindex="-1"
+                                aria-labelledby="keyboardShortCutLabel"
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title h3" id="keyboardShortCutLabel">Keyboard Shortcuts</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table
+                                                class="table custom-results-table table-bordered table-striped mb-3 text-center align-middle"
+                                            >
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Keys</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="fw-bold">Num keys</td>
+                                                        <td>Go to a specific page</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">Period key</td>
+                                                        <td>Hold current page</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">R</td>
+                                                        <td>Reveal hidden text</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">X</td>
+                                                        <td>Newsflash box only / full page</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">U</td>
+                                                        <td>Unscramble/re-scramble subscription pages</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">+ / -</td>
+                                                        <td>Next / previous page</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">Up / Down arrow</td>
+                                                        <td>Next / previous page (when viewer is focused)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">Left / Right arrow</td>
+                                                        <td>View subpages (when viewer is focused)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold">Escape / Delete (macOS)</td>
+                                                        <td>Cancel page entry</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <label for="pageSelect" class="form-label">Pages in this sample</label>
                             <select class="form-select" id="pageSelect" disabled></select>
                         </section>

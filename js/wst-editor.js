@@ -1,17 +1,20 @@
 "use strict";
 
 const CaptureDecoder = {
-    async loadFile(name, bytes) {
+    // * onProgress (optional) is called with the share decoded so far, from 0 to 1
+    async loadFile(name, bytes, onProgress) {
         if (name.endsWith(".json")) {
             const data = JSON.parse(new TextDecoder().decode(bytes));
 
             // If the input file is a session JSON, restore the user's saved work
-            if (data.format === SESSION_FORMAT) return { session: data };
+            // * Also recognized by its contents (pages with transmitted versions), in case it was saved with a different format label or none
+            const looksLikeSession = Array.isArray(data.pages) && data.pages.some(page => Array.isArray(page?.versions));
+            if (data.format === SESSION_FORMAT || looksLikeSession) return { session: data };
             return data;
         }
 
         if (name.endsWith(".t42")) {
-            return decodeT42(bytes);
+            return decodeT42(bytes, onProgress);
         }
 
         throw new Error("Unsupported file type. Choose a T42 or JSON file.")
@@ -616,7 +619,10 @@ const editorState = {
     lastCheckedIndex: null,              // * For shift-click range selection
     editedPageRows: new Map(),           // * Entry key: its final final page that's kept when switching pages
     sourceFileName: "",
-    hasUnsavedChanges: false             // * Set by any change, cleared by "Save Work" or opening a file
+    hasUnsavedChanges: false,            // * Set by any change, cleared by "Save Work" or opening a file
+    importSource: null,                  // * Session or JSON export to import pages from: { fileName, entries: [{ number, subcode, subpage, transmission, rows, edited }] }
+    importedPages: new Map(),            // * Entry key: where its imported page came from (saved with the session and listed in the JSON export)
+    rowsFromOtherSamples: new Map()      // * Entry key: Map of row number to the sample and page its pasted characters came from
 };
 
 // Limit undo steps to 200
@@ -715,7 +721,22 @@ function undoLastChange() {
         return;
     }
 
-    editorState.finalPageRows = editorState.undoHistory.pop();
+    const step = editorState.undoHistory.pop();
+    editorState.finalPageRows = step;
+
+    // Undoing a paste from another sample takes its record back to what it was
+    if ("otherSampleRowsBefore" in step) {
+        const key = pageKey(getSelectedPage());
+        if (step.otherSampleRowsBefore.size) editorState.rowsFromOtherSamples.set(key, step.otherSampleRowsBefore);
+        else editorState.rowsFromOtherSamples.delete(key);
+    }
+
+    // Undoing an import also takes the page's "imported from" note back to what it was
+    if ("importedBefore" in step) {
+        const key = pageKey(getSelectedPage());
+        if (step.importedBefore) editorState.importedPages.set(key, step.importedBefore);
+        else editorState.importedPages.delete(key);
+    }
     rememberEdits();
     renderEverything();
     announceStatus("Undid previous change.")
@@ -846,8 +867,12 @@ function copyRegion(sourceRows, selection, sourceLabel) {
         width: bounds.right - bounds.left + 1,
         height: bounds.bottom - bounds.top + 1,
         rows: copiedRows,
-        startAttributes
+        startAttributes,
+        sourceFileName: editorState.sourceFileName,
+        sourcePage: pageLabel(getSelectedPage()),
+        copiedAt: Date.now()
     };
+    shareClipboard(editorState.clipboard);
 
     // Put plain text version of page contents in clipboard
     const plainText = copiedRows.map(rowBytes => rowBytes ? rowToPlainText(rowBytes) : "").join("\n");
@@ -864,6 +889,7 @@ function copyRegion(sourceRows, selection, sourceLabel) {
 
 // & Paste content copied to the clipboard
 function pasteClipboard(targetColumn, targetRow) {
+    takeNewerSharedClipboard();
     const clipboard = editorState.clipboard;
 
     if (!clipboard) {
@@ -872,6 +898,11 @@ function pasteClipboard(targetColumn, targetRow) {
     }
 
     saveUndoStep();
+
+    // Rows pasted from a different sample are recorded for the JSON export. Undo puts the record back as it was
+    const key = pageKey(getSelectedPage());
+    const fromOtherSample = isFromOtherSample(clipboard) ? `${clipboard.sourceFileName}, ${clipboard.sourcePage}` : null;
+    if (fromOtherSample) editorState.undoHistory.at(-1).otherSampleRowsBefore = new Map(editorState.rowsFromOtherSamples.get(key) ?? []);
 
     let pastedCount = 0;
     const rowsWithAddedCodes = [];
@@ -883,6 +914,10 @@ function pasteClipboard(targetColumn, targetRow) {
 
         const destinationBytes = getOrCreateFinalRow(destinationRow);
         const originalBytes = destinationBytes.slice();
+        if (fromOtherSample) {
+            if (!editorState.rowsFromOtherSamples.has(key)) editorState.rowsFromOtherSamples.set(key, new Map());
+            editorState.rowsFromOtherSamples.get(key).set(destinationRow, fromOtherSample);
+        }
         copiedBytes.forEach((byteValue, columnOffset) => {
             const destinationColumn = targetColumn + columnOffset;
 
@@ -915,7 +950,8 @@ function pasteClipboard(targetColumn, targetRow) {
     // The copy is still there for another pste job
     editorState.showPastePreview = false;
     renderEverything();
-    let message = `Pasted: ${pastedCount} character${pastedCount === 1 ? "" : "s"} at row ${targetRow}, column ${targetColumn}.`;
+    let message = `Pasted: ${pastedCount} character${pastedCount === 1 ? "" : "s"} at row ${targetRow}, column ${targetColumn}`
+        + (fromOtherSample ? ` from ${fromOtherSample}.` : ".");
     if (rowsWithAddedCodes.length) {
         message += ` Added color/mosaic codes just left of the paste on row(s) ${rowsWithAddedCodes.join(", ")} so it looks the same as the copy.`;
     }
@@ -928,6 +964,7 @@ function pasteClipboard(targetColumn, targetRow) {
 
 // & If data from comparison page is pasted in the same position as the editing page
 function pasteAtOriginalPosition() {
+    takeNewerSharedClipboard();
     if (editorState.clipboard) {
         pasteClipboard(editorState.clipboard.sourceColumn, editorState.clipboard.sourceRow);
     } else {
@@ -970,9 +1007,13 @@ const MIN_VERSIONS_TO_DROP_STRAY_ROWS = 4;
 const STRAY_ROW_SHARE = 0.4;
 
 function buildFinalPageFromVersions(versions) {
-    const copiesByRow = Array.from({ length: ROW_COUNT }, (_, rowNumber) => versions
-        .filter(version => version.rows[rowNumber])
-        .map(version => ({ rowBytes: version.rows[rowNumber], badColumns: version.parityErrors?.[rowNumber] ?? [] })));
+    // Copies marked as blends of two subpages only count for a row no clean copy has
+    const copiesByRow = Array.from({ length: ROW_COUNT }, (_, rowNumber) => {
+        const withRow = versions.filter(version => version.rows[rowNumber]);
+        const clean = withRow.filter(version => !version.isBlend);
+        return (clean.length ? clean : withRow)
+            .map(version => ({ rowBytes: version.rows[rowNumber], badColumns: version.parityErrors?.[rowNumber] ?? [] }));
+    });
 
     // Typical number of copies a real row has in these versions (median over the rows received at all)
     const rowCounts = copiesByRow.slice(1).map(copies => copies.length).filter(Boolean).sort((first, second) => first - second);
@@ -1250,11 +1291,50 @@ function renderCursorDetails() {
 }
 
 
+// ! Copying between samples
+// * A copy is also kept in the browser's storage for this site, so it can be pasted after opening another sample, after a reload, or in another tab
+const SHARED_CLIPBOARD_KEY = "teletextEditorClipboard";
+
+function shareClipboard(clipboard) {
+    try {
+        localStorage.setItem(SHARED_CLIPBOARD_KEY, JSON.stringify(clipboard));
+    } catch {
+        // Storage can be full or turned off; copying still works within this tab
+    }
+}
+
+function readSharedClipboard() {
+    try {
+        const stored = JSON.parse(localStorage.getItem(SHARED_CLIPBOARD_KEY) ?? "null");
+        return stored && Array.isArray(stored.rows) ? stored : null;
+    } catch {
+        return null;
+    }
+}
+
+// & Pick up a copy made in another tab, or before this page was reloaded
+function takeNewerSharedClipboard() {
+    const stored = readSharedClipboard();
+    if (stored && (stored.copiedAt ?? 0) > (editorState.clipboard?.copiedAt ?? 0)) {
+        editorState.clipboard = stored;
+        renderClipboardSummary();
+    }
+}
+window.addEventListener("storage", event => {
+    if (event.key === SHARED_CLIPBOARD_KEY) takeNewerSharedClipboard();
+});
+
+// A copy from a different capture (a session keeps the name of the capture it came from)
+const isFromOtherSample = clipboard => Boolean(clipboard.sourceFileName && editorState.sourceFileName)
+    && clipboard.sourceFileName.replace(/(\.session)?\.[^.]+$/, "") !== editorState.sourceFileName.replace(/(\.session)?\.[^.]+$/, "");
+
 // & Render clipboard summary
 function renderClipboardSummary() {
     const clipboard = editorState.clipboard;
     elements.clipboardSummary.textContent = clipboard
-        ? `Clipboard: ${clipboard.width} × ${clipboard.height} from row ${clipboard.sourceRow}, column ${clipboard.sourceColumn}.`
+        ? `Clipboard: ${clipboard.width} × ${clipboard.height} from `
+        + (clipboard.sourcePage ? `${clipboard.sourceFileName ? `${clipboard.sourceFileName}, ` : ""}${clipboard.sourcePage}, ` : "")
+        + `row ${clipboard.sourceRow}, column ${clipboard.sourceColumn}.`
         : `Drag across the compared version to select characters to copy.`;
 }
 
@@ -1314,6 +1394,7 @@ function renderEverything() {
     renderVersionThumbnails();
     renderRowComparisonTable();
     renderInspector();
+    renderImportBar();
 }
 
 
@@ -1657,14 +1738,179 @@ function nearestInBroadcastOrder(subpages, version) {
 }
 
 
+// ! Blended copies
+/*
+* On some badly damaged captures, most copies of a rotating page are a character-by-character mix of its subpages
+* (e.g. "The Bradys" and "Falcon Crest" read as "Fhe Bn drs"). Those copies sit halfway between the subpages, so the usual grouping can't find the dividing line and blends everything into one.
+* So instead:
+*   1. Find the characters where the subpages differ: places where a second value turns up again and again (random damage rarely repeats)
+*   2. Start each subpage from the copy least like the others (a blend of two subpages is only about half different from each)
+*   3. Every copy joins the subpage it's closest to. A copy that takes a good share from two subpages is marked as blended,
+*      each subpage is rebuilt from its clean copies only, and this repeats until it settles. Blended copies don't vote while clean copies of that row exist
+* This only takes over on badly damaged pages, so other captures are sorted as before
+*/
+const BLEND_MIN_VERSIONS = 6;
+const BLEND_SECOND_VALUE_SHARE = 0.15;  // A place where the second most common character is at least this share of the copies
+const BLEND_MIN_PLACES = 20;            // Need at least this many such places to judge
+const BLEND_MIN_COMPARED = 10;
+const BLEND_NEW_SUBPAGE_DIFFERENCE = 0.65;  // A copy differing from every subpage found so far on this share of those places is another subpage (a blend of two differs from each by about half)
+const BLEND_MAX_SUBPAGES = 8;
+const BLEND_ROUNDS = 6;
+const BLEND_MIN_MINORITY = 0.2;         // A copy taking at least this share from a second subpage is a blend
+
+// ^ Only take over on pages where each copy's closest match typically differs by at least this much
+// * 1990 KOIN P114/P120/P133/P134: 0.25-0.35. 1983 WTBS: usually 0.003 and never more than 0.17, where this would split pages that have no subpages
+const BLEND_NOISY_PAGE = 0.2;
+
+function findSubpagesInBlendedCopies(versions, noiseLevel) {
+    if (versions.length < BLEND_MIN_VERSIONS || noiseLevel < BLEND_NOISY_PAGE) return null;
+    const isBad = (version, rowNumber, column) => (version.parityErrors?.[rowNumber] ?? []).includes(column);
+    const valueAt = (version, rowNumber, column) => {
+        const rowBytes = version.rows[rowNumber];
+        return !rowBytes || isBad(version, rowNumber, column) ? -1 : rowBytes[column] & SEVEN_BIT_MASK;
+    };
+
+    // 1. Places where the subpages differ
+    const places = [];
+    for (let rowNumber = 1; rowNumber < ROW_COUNT; rowNumber++) {
+        for (let column = 0; column < COLUMN_COUNT; column++) {
+            const counts = new Map();
+            let seen = 0;
+            for (const version of versions) {
+                const value = valueAt(version, rowNumber, column);
+                if (value < 0) continue;
+                counts.set(value, (counts.get(value) ?? 0) + 1);
+                seen++;
+            }
+            const [, second = 0] = [...counts.values()].sort((first, other) => other - first);
+            if (seen >= 4 && second >= Math.max(2, seen * BLEND_SECOND_VALUE_SHARE)) places.push([rowNumber, column]);
+        }
+    }
+    if (places.length < BLEND_MIN_PLACES) return null;
+
+    const profiles = versions.map(version => places.map(([rowNumber, column]) => valueAt(version, rowNumber, column)));
+    const profileDifference = (first, second) => {
+        let compared = 0;
+        let different = 0;
+        for (let index = 0; index < places.length; index++) {
+            if (first[index] < 0 || second[index] < 0) continue;
+            compared++;
+            if (first[index] !== second[index]) different++;
+        }
+        return compared >= BLEND_MIN_COMPARED ? different / compared : null;
+    };
+
+    // 2. One starting copy per subpage: the copy that has the most text, then repeatedly whichever copy is least like every subpage found so far, while it's unlike them all
+    const seenPlaces = profile => profile.filter(value => value >= 0).length;
+    const seeds = [profiles.reduce((best, profile, index) => seenPlaces(profile) > seenPlaces(profiles[best]) ? index : best, 0)];
+    while (seeds.length < BLEND_MAX_SUBPAGES) {
+        let farthest = null;
+        profiles.forEach((profile, index) => {
+            if (seeds.includes(index)) return;
+            const differences = seeds.map(seed => profileDifference(profile, profiles[seed]));
+            if (differences.some(difference => difference === null)) return;
+            const nearest = Math.min(...differences);
+            if (!farthest || nearest > farthest.difference) farthest = { index, difference: nearest };
+        });
+        if (!farthest || farthest.difference < BLEND_NEW_SUBPAGE_DIFFERENCE) break;
+        seeds.push(farthest.index);
+    }
+    if (seeds.length < 2) return null;
+
+    // The usual character at every place among a set of copies
+    const usualProfile = members => places.map((_, index) => {
+        const counts = new Map();
+        for (const member of members) {
+            const value = profiles[member][index];
+            if (value >= 0) counts.set(value, (counts.get(value) ?? 0) + 1);
+        }
+        return counts.size ? [...counts].sort((first, other) => other[1] - first[1])[0][0] : -1;
+    });
+
+    // Where the two closest subpages differ, the share of a copy's characters that come from the second one
+    const shareFromRunnerUp = (profile, closestProfile, runnerUpProfile) => {
+        let fromClosest = 0;
+        let fromRunnerUp = 0;
+        closestProfile.forEach((value, index) => {
+            const other = runnerUpProfile[index];
+            if (value < 0 || other < 0 || value === other || profile[index] < 0) return;
+            if (profile[index] === value) fromClosest++;
+            else if (profile[index] === other) fromRunnerUp++;
+        });
+        return fromClosest + fromRunnerUp >= BLEND_MIN_COMPARED ? fromRunnerUp / (fromClosest + fromRunnerUp) : 0;
+    };
+
+    // 3. Each copy joins the closest subpage, then each subpage is rebuilt from its clean copies only. Repeat until it settles
+    let subpageProfiles = seeds.map(seed => profiles[seed]);
+    let assignment = [];
+    let isBlended = [];
+    const settle = () => {
+        for (let round = 0; round < BLEND_ROUNDS; round++) {
+            assignment = profiles.map(profile => {
+                const ranked = subpageProfiles
+                    .map((subpageProfile, subpageIndex) => ({ subpageIndex, difference: profileDifference(profile, subpageProfile) }))
+                    .filter(entry => entry.difference !== null)
+                    .sort((first, second) => first.difference - second.difference);
+                return ranked.length ? ranked : null;
+            });
+            isBlended = assignment.map((ranked, index) => Boolean(ranked && ranked[1]
+                && shareFromRunnerUp(profiles[index], subpageProfiles[ranked[0].subpageIndex], subpageProfiles[ranked[1].subpageIndex]) >= BLEND_MIN_MINORITY));
+            subpageProfiles = subpageProfiles.map((oldProfile, subpageIndex) => {
+                const members = profiles.map((_, index) => index).filter(index => assignment[index]?.[0].subpageIndex === subpageIndex);
+                const clean = members.filter(index => !isBlended[index]);
+                return clean.length ? usualProfile(clean) : members.length ? usualProfile(members) : oldProfile;
+            });
+        }
+    };
+
+    // A subpage needs at least 2 clean copies and a fair share of the clean copies the biggest one has
+    // * Otherwise it started from a badly damaged copy (such as one with rows from another page mixed in). Drop the weakest, let the rest settle again, and repeat
+    while (true) {
+        settle();
+        const cleanCounts = subpageProfiles.map((_, subpageIndex) =>
+            assignment.filter((ranked, index) => ranked?.[0].subpageIndex === subpageIndex && !isBlended[index]).length);
+        const mostClean = Math.max(...cleanCounts);
+        const weakest = cleanCounts.indexOf(Math.min(...cleanCounts));
+        if (cleanCounts[weakest] >= Math.max(MIN_SUBPAGE_SIZE, mostClean * RARE_LEFTOVER_SHARE)) break;
+        subpageProfiles.splice(weakest, 1);
+        if (subpageProfiles.length < 2) return null;
+    }
+
+    const subpages = subpageProfiles.map(() => []);
+    const blends = new Set();
+    const unplaced = [];
+    versions.forEach((version, index) => {
+        const ranked = assignment[index];
+        if (!ranked) { unplaced.push(version); return; }
+        if (isBlended[index]) blends.add(version);
+        subpages[ranked[0].subpageIndex].push(version);
+    });
+
+    versions.forEach(version => { version.isBlend = blends.has(version); });
+    const result = subpages.filter(group => group.length > 0);
+    unplaced.forEach(version => nearestInBroadcastOrder(result, version).push(version));
+    return result;
+}
+
+// & How damaged a page's copies are: how much each differs from its closest match, typically (a quick check over the first 40)
+function pageNoiseLevel(versions) {
+    const sample = versions.slice(0, MAX_VERSIONS_TO_MATCH);
+    const closest = sample.map((version, index) => Math.min(...sample
+        .map((other, otherIndex) => otherIndex === index ? null : differenceRate(version, other))
+        .filter(value => value !== null))).filter(Number.isFinite).sort((first, second) => first - second);
+    return closest.length ? closest[Math.floor(closest.length / 2)] : 0;
+}
+
 // & Sort a page's transmissions into subpages by how alike they are
 /*
 * Every transmission starts on its own. The two most alike groups keep merging until what's left differs by more than the capture's noise,
 * Copies of one subpage differ only by errors, while different subpages differ in their actual text content.
 */
 function groupVersionsBySubpage(versions) {
+    versions.forEach(version => { version.isBlend = false; });
     const count = Math.min(versions.length, MAX_VERSIONS_TO_CLUSTER);
     if (count < 2) return [versions];
+
 
     // How different every pair is
     const differences = Array.from({ length: count }, () => Array(count).fill(null));
@@ -1681,6 +1927,14 @@ function groupVersionsBySubpage(versions) {
         .sort((first, second) => first - second);
     if (closestDifferences.length === 0) return [versions];
     const noiseLevel = closestDifferences[Math.floor(closestDifferences.length / 2)];
+
+    // Badly damaged pages, where copies mix subpages together
+    const fromBlends = findSubpagesInBlendedCopies(versions, noiseLevel);
+    if (fromBlends) {
+        return fromBlends
+            .map(group => group.sort((first, second) => first.transmissionNumber - second.transmissionNumber))
+            .sort((first, second) => first[0].transmissionNumber - second[0].transmissionNumber);
+    }
 
     // Merge anything within a couple of times the noise level (a clean capture merges only exact matches)
     const mergeLimit = Math.min(MAX_MERGE_DIFFERENCE, Math.max(MIN_MERGE_DIFFERENCE, noiseLevel * 2.5 + 0.002));
@@ -1843,6 +2097,13 @@ const looksDamaged = page =>
 // Match 40 versions per set to keep long captures quick
 const MAX_VERSIONS_TO_MATCH = 40;
 
+// & How different the voted pages of two sets of transmissions are
+function votedDifference(firstVersions, secondVersions) {
+    return differenceRate(
+        { rows: buildFinalPageFromVersions(firstVersions) },
+        { rows: buildFinalPageFromVersions(secondVersions) }) ?? 1;
+}
+
 // & How alike two sets of transmissions are: the third-closest pair's difference (so one lucky match isn't enough for this case)
 function setDifference(firstVersions, secondVersions) {
     const rates = [];
@@ -1862,9 +2123,8 @@ function setDifference(firstVersions, secondVersions) {
 // * Read it from a voted page, but allow for one damaged separator (e.g. "3W5"). Returns { number, total } object or null
 
 // Do not use row 0 because a date (such as one formatted as 4/13) could be mistaken for a row
-// * The usual places are checked first (Electra: end of row 1; WTBS Keyfax: end of row 5), then every other row
-const COUNTER_ROWS = [1, 2, 3, 24, 23, 22, 4, 5, 6,
-    ...Array.from({ length: 15 }, (_, index) => index + 7)];
+// * Electra: end of row 1; WTBS Keyfax: end of row 5. Only the top and bottom rows are checked, since tables in between (such as stock prices ending in "3/8") look just like counters
+const COUNTER_ROWS = [1, 2, 3, 24, 23, 22, 4, 5, 6, 21];
 
 // A counter sits at the right-hand end of its row, so text such as a "4/44" score in the middle of a story isn't mistaken for one
 const COUNTER_MIN_COLUMN = 28;
@@ -1892,8 +2152,25 @@ function readSubpageCounter(pageRows) {
 
 // & Put separated subpages in their on-screen order (1/5, 2/5, etc.) when the pages show a counter, otherwise keep the order they first turned up in
 // * Each keeps a subpageId (first-seen order) for its key
+// & A subpage's counter: from its voted page, or else, on badly damaged pages, the one most of its clean copies show (most copies there lose it, so the vote comes out blank)
+function counterForSubpage(versions) {
+    const voted = readSubpageCounter(buildFinalPageFromVersions(versions));
+    if (voted || !versions.some(version => version.isBlend)) return voted;
+    const votes = new Map();
+    for (const version of versions) {
+        if (version.isBlend) continue;
+        const counter = readSubpageCounter(version.rows);
+        if (!counter) continue;
+        const key = `${counter.number}/${counter.total}`;
+        votes.set(key, { counter, count: (votes.get(key)?.count ?? 0) + 1 });
+    }
+    const [best, runnerUp] = [...votes.values()].sort((first, second) => second.count - first.count);
+    return best && best.count >= MIN_COUNTER_VOTES && best.count > (runnerUp?.count ?? 0) ? best.counter : null;
+}
+const MIN_COUNTER_VOTES = 2;
+
 function orderSubpages(groups) {
-    const counters = groups.map(versions => readSubpageCounter(buildFinalPageFromVersions(versions)));
+    const counters = groups.map(counterForSubpage);
 
     // The total most of them agree on (a damaged copy, for example, might read 3/6 instead of 3/5)
     const totalVotes = new Map();
@@ -1964,61 +2241,104 @@ function orderSubpages(groups) {
 }
 
 // & Clean up how a capture's transmissions are filed into pages and subpages
-function sortOutSubpages(pages) {
+function pagesGroupedByNumber(pages) {
     const pagesByNumber = new Map();
     pages.forEach(page => {
         if (!pagesByNumber.has(page.number)) pagesByNumber.set(page.number, []);
         pagesByNumber.get(page.number).push(page);
     });
+    return [...pagesByNumber.values()];
+}
+
+function sortOutSubpages(pages) {
+    return pagesGroupedByNumber(pages).flatMap(sortOutOnePageNumber);
+}
+
+// Let the page redraw (e.g. a progress bar) about this often while sorting out subpages, in milliseconds
+const SORT_PROGRESS_INTERVAL_MS = 50;
+
+// & Pause briefly so the browser can redraw the page
+// * Its own name, so the editor doesn't depend on (or clash with) the decoder script's helper
+const pauseForRedraw = () => new Promise(resolve => setTimeout(resolve, 0));
+
+// & The same, a page number at a time, reporting progress (0 to 1) and letting the page redraw in between
+// * Each page number counts by its transmissions squared, since comparing them all with each other is what takes the time
+async function sortOutSubpagesWithProgress(pages, onProgress) {
+    const groups = pagesGroupedByNumber(pages);
+    const workFor = group => group.reduce((total, page) => total + page.versions.length, 0) ** 2;
+    const totalWork = groups.reduce((total, group) => total + workFor(group), 0) || 1;
 
     const result = [];
-    for (const samePagesNumber of pagesByNumber.values()) {
-
-        // First, merge subcodes with matching text
-        const bySize = [...samePagesNumber].sort((first, second) => second.versions.length - first.versions.length);
-        const realPages = [];
-        for (const page of bySize) {
-            const versions = page.versions.map(version => ({ ...version }));
-            let closest = null;
-            for (const realPage of realPages) {
-                const difference = setDifference(versions, realPage.versions);
-                if (difference > samePageLimit(page, realPage, bySize[0].versions.length)) continue;
-                if (!closest || difference < closest.difference) closest = { realPage, difference };
-            }
-            if (closest) closest.realPage.versions.push(...versions);
-            else realPages.push({ ...page, versions });
+    let doneWork = 0;
+    let lastProgressTime = performance.now();
+    for (const group of groups) {
+        result.push(...sortOutOnePageNumber(group));
+        doneWork += workFor(group);
+        if (performance.now() - lastProgressTime > SORT_PROGRESS_INTERVAL_MS) {
+            onProgress(doneWork / totalWork);
+            await pauseForRedraw();
+            lastProgressTime = performance.now();
         }
-        realPages.sort((first, second) => first.subcode.localeCompare(second.subcode));
-
-        // Put each page's transmissions in broadcast order and number them
-        realPages.forEach(page => {
-            page.versions.sort((first, second) => (first.receivedAt ?? 0) - (second.receivedAt ?? 0));
-            page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; });
-        });
-
-        // Next, if there is 1 real subcode, separate its subpages by content
-        // * Damaged subcodes that were too scrambled to join in step 1 (P134/3700) don't count as a second subcode
-        // * Their transmissions are sorted in with the rest and join the nearest subpage
-        const mostSent = Math.max(...realPages.map(page => page.versions.length));
-        const isStray = page => looksDamaged(page)
-            || (parseInt(page.subcode, 16) > HIGHEST_USUAL_SUBCODE && page.versions.length <= mostSent * RARE_SUBCODE_SHARE);
-        const genuinePages = realPages.filter(page => !isStray(page));
-        if (genuinePages.length === 1) {
-            const allVersions = realPages
-                .flatMap(page => page.versions.map(version => ({ ...version })))
-                .sort((first, second) => (first.receivedAt ?? 0) - (second.receivedAt ?? 0));
-            allVersions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; });
-
-            const groups = groupVersionsBySubpage(allVersions);
-            if (groups.length > 1) {
-                orderSubpages(groups).forEach(({ versions, subpageId, subpage }) =>
-                    result.push({ ...genuinePages[0], subpageId, subpage, versions }));
-                continue;
-            }
-        }
-        result.push(...realPages);
     }
+    onProgress(1);
     return result;
+}
+
+// & Merge damaged subcodes and separate subpages for all the pages with one page number
+function sortOutOnePageNumber(samePagesNumber) {
+
+    // First, merge subcodes with matching text
+    const bySize = [...samePagesNumber].sort((first, second) => second.versions.length - first.versions.length);
+    const realPages = [];
+    for (const page of bySize) {
+        const versions = page.versions.map(version => ({ ...version }));
+        let closest = null;
+        for (const realPage of realPages) {
+            const limit = samePageLimit(page, realPage, bySize[0].versions.length);
+
+            // Two real-looking subcodes, each sent often: compare their voted pages
+            // * Partial copies that only share a title look identical, which would merge subpages laid out alike (1990 TBS P291-P298)
+            const difference = limit === SAME_PAGE_LIMIT_FOR_USUAL_SUBCODES
+                ? votedDifference(versions, realPage.versions)
+                : setDifference(versions, realPage.versions);
+            if (difference > limit) continue;
+            if (!closest || difference < closest.difference) closest = { realPage, difference };
+        }
+        if (closest) closest.realPage.versions.push(...versions);
+        else realPages.push({ ...page, versions });
+    }
+    realPages.sort((first, second) => first.subcode.localeCompare(second.subcode));
+
+    // Put each page's transmissions in broadcast order and number them
+    realPages.forEach(page => {
+        page.versions.sort((first, second) => (first.receivedAt ?? 0) - (second.receivedAt ?? 0));
+        page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; });
+    });
+
+    // Next, if there is 1 real subcode, separate its subpages by content
+    // * Damaged subcodes that were too scrambled to join in step 1 (P134/3700) don't count as a second subcode
+    // * Their transmissions are sorted in with the rest and join the nearest subpage
+    const mostSent = Math.max(...realPages.map(page => page.versions.length));
+    // * On a badly damaged page from a service that doesn't use subcodes (most sent as 0000), any other subcode seen far less often is a damaged header
+    const mainPage = realPages.find(page => page.versions.length === mostSent);
+    const isNoisyPageWithoutSubcodes = mainPage?.subcode === "0000" && pageNoiseLevel(mainPage.versions) >= BLEND_NOISY_PAGE;
+    const isStray = page => looksDamaged(page)
+        || (parseInt(page.subcode, 16) > HIGHEST_USUAL_SUBCODE && page.versions.length <= mostSent * RARE_SUBCODE_SHARE)
+        || (isNoisyPageWithoutSubcodes && page.subcode !== "0000" && page.versions.length <= mostSent * RARE_USUAL_SUBCODE_SHARE);
+    const genuinePages = realPages.filter(page => !isStray(page));
+    if (genuinePages.length === 1) {
+        const allVersions = realPages
+            .flatMap(page => page.versions.map(version => ({ ...version })))
+            .sort((first, second) => (first.receivedAt ?? 0) - (second.receivedAt ?? 0));
+        allVersions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; });
+
+        const groups = groupVersionsBySubpage(allVersions);
+        if (groups.length > 1) {
+            return orderSubpages(groups).map(({ versions, subpageId, subpage }) =>
+                ({ ...genuinePages[0], subpageId, subpage, versions }));
+        }
+    }
+    return realPages;
 }
 
 
@@ -2112,17 +2432,20 @@ function rejoinTransmission() {
 
 
 // & Load new set of decoded pages
-function loadPages(decodedPages, { separatedTransmissions = [] } = {}) {
+async function loadPages(decodedPages, { separatedTransmissions = [], onProgress = () => { } } = {}) {
 
     // Number each transmission in capture order, so it keeps its number when subpages are separated
     decodedPages.forEach(page => page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; }));
+    const sortedPages = await sortOutSubpagesWithProgress(decodedPages, onProgress);
     editorState.decodedPages = decodedPages;
-    editorState.sortedPages = sortOutSubpages(decodedPages);
+    editorState.sortedPages = sortedPages;
     editorState.separatedTransmissions = new Set(separatedTransmissions);
     editorState.groupedPages = applySeparatedTransmissions(editorState.sortedPages);
     editorState.removedPageKeys.clear();
     editorState.removalSteps = [];
     editorState.editedPageRows.clear();
+    editorState.importedPages.clear();
+    editorState.rowsFromOtherSamples.clear();
     editorState.checkedPageKeys.clear();
     editorState.lastCheckedIndex = null;
     editorState.hasUnsavedChanges = false;
@@ -2193,7 +2516,11 @@ function selectPage(pageIndex, { startOver = false } = {}) {
     editorState.selectedPageIndex = pageIndex;
 
     const page = getSelectedPage();
-    if (startOver) editorState.editedPageRows.delete(pageKey(page));
+    if (startOver) {
+        editorState.editedPageRows.delete(pageKey(page));
+        editorState.importedPages.delete(pageKey(page));
+        editorState.rowsFromOtherSamples.delete(pageKey(page));
+    }
     const savedRows = editorState.editedPageRows.get(pageKey(page));
 
     // Split mode: compare with the most similar other transmission. Otherwise, start with version 1
@@ -2557,6 +2884,22 @@ function rowsForExport(page, pageIndex) {
 }
 
 // & Draw a page and turn it into a PNG
+// & Make exported images pixel-sharp, like a TV and Decode-Orc
+// * The browser smooths the font's edges with in-between shades (gray around white text, dark cyan around cyan text), which makes text look slightly blurry
+// * Every teletext color has each of red, green and blue either fully on or fully off, so rounding each channel to 0 or 255 puts every pixel back on its nearest teletext color
+function snapToTeletextColors(canvas) {
+    const context = canvas.getContext("2d");
+    const image = context.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = image.data;
+    for (let index = 0; index < pixels.length; index += 4) {
+        pixels[index] = pixels[index] >= 128 ? 255 : 0;
+        pixels[index + 1] = pixels[index + 1] >= 128 ? 255 : 0;
+        pixels[index + 2] = pixels[index + 2] >= 128 ? 255 : 0;
+        pixels[index + 3] = 255;
+    }
+    context.putImageData(image, 0, 0);
+}
+
 function renderPageAsPNG(pageRows) {
     return new Promise((resolve, reject) => {
         const canvas = document.createElement("canvas");
@@ -2566,6 +2909,7 @@ function renderPageAsPNG(pageRows) {
             scale: PNG_EXPORT_SCALE,
             doubleHeight: true
         });
+        snapToTeletextColors(canvas);
         canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("the browser couldn't make the image")), "image/png");
     });
 }
@@ -2717,6 +3061,20 @@ function exportAllPagesAsJSON() {
         };
         if (page.subpage) exportedPage.subpage = page.subpage;
         if (page.transmission) exportedPage.transmission = page.transmission;
+
+        // A page imported from another sample says where from, so the archive shows it wasn't rebuilt from this broadcast
+        if (editorState.importedPages.has(key) && exportedPage.edited) exportedPage.importedFrom = editorState.importedPages.get(key);
+
+        // Rows with characters pasted from another sample, e.g. [{ source: "1990-03-06_KOIN.t42, P114 subpage 1", rows: [3, 4, 5] }]
+        const pastedFromOtherSamples = editorState.rowsFromOtherSamples.get(key);
+        if (pastedFromOtherSamples?.size && exportedPage.edited) {
+            const bySource = new Map();
+            [...pastedFromOtherSamples].sort((first, second) => first[0] - second[0]).forEach(([rowNumber, source]) => {
+                if (!bySource.has(source)) bySource.set(source, []);
+                bySource.get(source).push(rowNumber);
+            });
+            exportedPage.rowsFromOtherSamples = [...bySource].map(([source, rows]) => ({ source, rows }));
+        }
         return exportedPage;
     });
 
@@ -2736,7 +3094,12 @@ const SESSION_FORMAT = "editor-session";
 const SESSION_VERSION = 1;
 
 const rowToHex = rowBytes => rowBytes ? rowBytes.map(toHexString).join("") : null;
-const hexToRow = hexText => hexText ? Array.from({ length: hexText.length / 2 }, (_, index) => parseInt(hexText.substr(index * 2, 2), 16)) : null;
+// * Rows are saved as hex text, but a row saved as a list of numbers is accepted too
+const hexToRow = hexText => {
+    if (!hexText) return null;
+    if (Array.isArray(hexText)) return hexText.map(Number);
+    return Array.from({ length: hexText.length / 2 }, (_, index) => parseInt(hexText.substr(index * 2, 2), 16));
+};
 
 
 // & Download everything needed to carry on later
@@ -2755,6 +3118,9 @@ function saveSession() {
         removalSteps: editorState.removalSteps,
         editedPageRows: Object.fromEntries(
             [...editorState.editedPageRows].map(([key, rows]) => [key, rows.map(rowToHex)])),
+        importedPages: Object.fromEntries(editorState.importedPages),
+        rowsFromOtherSamples: Object.fromEntries(
+            [...editorState.rowsFromOtherSamples].map(([key, rows]) => [key, Object.fromEntries(rows)])),
         pages: editorState.decodedPages.map(page => ({
             number: page.number,
             subcode: page.subcode,
@@ -2817,7 +3183,7 @@ function reattachSavedEdits() {
 
 
 // & Put a saved session back exactly as it was
-function restoreSession(session) {
+async function restoreSession(session, onProgress) {
     if (session.version > SESSION_VERSION) {
         throw new Error("This session was saved by a newer version of the editor.");
     }
@@ -2841,9 +3207,13 @@ function restoreSession(session) {
     editorState.sourceFileName = session.sourceFileName || "session";
 
     // Clears the old state and shows the first page
-    loadPages(pages, { separatedTransmissions: session.separatedTransmissions ?? [] });
+    await loadPages(pages, { separatedTransmissions: session.separatedTransmissions ?? [], onProgress });
 
     session.removedPageKeys?.forEach(key => editorState.removedPageKeys.add(key));
+    Object.entries(session.importedPages ?? {}).forEach(([key, source]) => editorState.importedPages.set(key, source));
+    Object.entries(session.rowsFromOtherSamples ?? {}).forEach(([key, rows]) => {
+        editorState.rowsFromOtherSamples.set(key, new Map(Object.entries(rows).map(([rowNumber, source]) => [Number(rowNumber), source])));
+    });
 
     // Older saved work has no steps. Treat everything it removed as one step
     editorState.removalSteps = session.removalSteps
@@ -2873,6 +3243,186 @@ function restoreSession(session) {
 
 
 // Menu action buttons
+
+// ! Import a page from another sample
+/*
+* Another capture of the same service may have a page that's damaged in this one. Once it's cleaned up there and saved as a session,
+* its page can be imported here: rows 1-24 replace this page's (the header row stays, as it holds this broadcast's page number, time and date).
+* It can be undone, and the JSON export lists the page's "importedFrom", so the archive shows it wasn't rebuilt from its own broadcast.
+* A session's edited pages are used as edited; its other pages are sorted and voted as when it's opened. A JSON export's pages are used as exported.
+*/
+
+// & The import file's entries with this page's number
+function importEntriesFor(page) {
+    if (!editorState.importSource || !page) return [];
+    return editorState.importSource.entries.filter(entry => entry.number === page.number);
+}
+
+// & e.g. "1990-03-06_KOIN_Electra.session.json, P114 subpage 1"
+function importEntryLabel(entry) {
+    let label = `P${entry.number}`;
+    if (entry.subcode && entry.subcode !== "0000") label += `/${entry.subcode}`;
+    if (entry.subpage) label += ` subpage ${entry.subpage}`;
+    if (entry.transmission) label += ` #${entry.transmission}`;
+    return label;
+}
+
+// & Turn a session or JSON export into a list of finished pages
+function importEntriesFromFile(data) {
+    // JSON export: its pages are already finished
+    if (data.format !== SESSION_FORMAT) {
+        if (!Array.isArray(data.pages)) throw new Error("This isn't a saved session or a JSON export from the editor.");
+        return data.pages.filter(page => Array.isArray(page.rows)).map(page => ({
+            number: String(page.page),
+            subcode: page.subcode ?? "",
+            subpage: page.subpage,
+            transmission: page.transmission,
+            rows: page.rows.map(rowBytes => rowBytes ? rowBytes.slice() : null),
+            edited: Boolean(page.edited)
+        }));
+    }
+
+    // Session: sort out its pages and vote as when it's opened, then use its edited pages where there are any
+    const pages = data.pages.map(page => ({
+        number: page.number,
+        subcode: page.subcode,
+        versions: page.versions.map(version => ({
+            subcode: version.subcode,
+            flags: version.flags ?? [],
+            rows: version.rows.map(hexToRow),
+            parityErrors: version.parityErrors ?? undefined,
+            receivedAt: version.receivedAt
+        }))
+    }));
+    pages.forEach(page => page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; }));
+    const editedRows = data.editedPageRows ?? {};
+
+    return sortOutSubpages(pages).map(page => {
+        const edited = editedRows[pageKey(page)];
+        return {
+            number: page.number,
+            subcode: page.subcode,
+            subpage: page.subpage,
+            rows: edited ? edited.map(hexToRow) : buildFinalPageFromVersions(page.versions),
+            edited: Boolean(edited)
+        };
+    });
+}
+
+// & Choose the session to import from
+const importFileInput = Object.assign(document.createElement("input"), { type: "file", accept: ".json", hidden: true });
+document.body.append(importFileInput);
+
+importFileInput.addEventListener("change", async event => {
+    const chosenFile = event.target.files[0];
+    if (!chosenFile) return;
+    event.target.value = "";
+
+    let entries;
+    try {
+        entries = importEntriesFromFile(JSON.parse(await chosenFile.text()));
+    } catch (error) {
+        announceStatus(`Couldn't read ${chosenFile.name}: ${error.message}`);
+        return;
+    }
+    if (!entries.length) {
+        announceStatus(`No pages found in ${chosenFile.name}.`);
+        return;
+    }
+
+    editorState.importSource = { fileName: chosenFile.name, entries };
+    renderImportBar();
+    const matching = importEntriesFor(getSelectedPage());
+    announceStatus(`Ready to import from ${chosenFile.name} (${entries.filter(entry => entry.edited).length} edited page(s)). `
+        + (matching.length
+            ? `Pick its copy of P${getSelectedPage().number} and choose Import page.`
+            : `It has no P${getSelectedPage().number}; pick a page it has.`));
+});
+
+// & Replace this page's rows 1-24 with the chosen page from the session
+function importChosenPage() {
+    const entry = importEntriesFor(getSelectedPage())[Number(importSelect.value)];
+    if (!entry) {
+        announceStatus("Choose a session to import from first, and a page it has.");
+        return;
+    }
+
+    saveUndoStep();
+    editorState.undoHistory.at(-1).importedBefore = editorState.importedPages.get(pageKey(getSelectedPage())) ?? null;
+    for (let rowNumber = 1; rowNumber < ROW_COUNT; rowNumber++) {
+        editorState.finalPageRows[rowNumber] = entry.rows[rowNumber] ? entry.rows[rowNumber].slice() : null;
+    }
+    const source = `${editorState.importSource.fileName}, ${importEntryLabel(entry)}`;
+    editorState.importedPages.set(pageKey(getSelectedPage()), source);
+    renderEverything();
+    announceStatus(`Imported rows 1-24 from ${source}. The header row is this sample's own. Undo puts the page back.`);
+}
+
+function closeImportSource() {
+    editorState.importSource = null;
+    renderImportBar();
+    announceStatus("Closed the session to import from. Imported pages stay.");
+}
+
+// & Bar above the version thumbnails: choose a session, pick its copy of this page, import
+const importBar = document.createElement("div");
+importBar.className = "d-flex flex-wrap align-items-center gap-2 mb-2";
+importBar.innerHTML = `
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-action="choose-import-session">Import page from session…</button>
+    <select class="form-select form-select-sm w-auto" aria-label="Page to import" hidden></select>
+    <button type="button" class="btn btn-sm btn-primary" data-action="import-page" hidden>Import page</button>
+    <span class="small"></span>
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-action="close-import-session" hidden>Close session</button>
+    <figure class="w-100 mb-0" hidden>
+        <canvas style="width: 100%; max-width: 480px; height: auto; image-rendering: pixelated;"></canvas>
+        <figcaption class="small"></figcaption>
+        <pre class="visually-hidden"></pre>
+    </figure>
+`;
+const importSelect = importBar.querySelector("select");
+const importPreview = importBar.querySelector("figure");
+elements.versionStrip.before(importBar);
+importSelect.addEventListener("change", renderImportPreview);
+
+// & Show the page that would be imported, with this sample's header row, as it will look after importing
+function renderImportPreview() {
+    const entry = importEntriesFor(getSelectedPage())[Number(importSelect.value)];
+    importPreview.hidden = !entry;
+    if (!entry) return;
+    const previewRows = [editorState.finalPageRows[0], ...entry.rows.slice(1)];
+    drawPage(importPreview.querySelector("canvas"), previewRows, { ...getDisplayOptions(), highlightMissingRows: false });
+    importPreview.querySelector("figcaption").textContent =
+        `Preview: ${importEntryLabel(entry)}${entry.edited ? " (edited)" : ""} from ${editorState.importSource.fileName}, with this sample's header row`;
+    importPreview.querySelector("pre").textContent = pageToScreenReaderText(previewRows);
+}
+
+function renderImportBar() {
+    const source = editorState.importSource;
+    const entries = source ? importEntriesFor(getSelectedPage()) : [];
+    const note = importBar.querySelector("span");
+    const importButton = importBar.querySelector('[data-action="import-page"]');
+    importBar.querySelector('[data-action="choose-import-session"]').textContent = source ? "Choose another session…" : "Import page from session…";
+    importBar.querySelector('[data-action="close-import-session"]').hidden = !source;
+    importSelect.hidden = importButton.hidden = entries.length === 0;
+    note.textContent = !source ? "" : entries.length ? `from ${source.fileName}` : `${source.fileName} has no P${getSelectedPage()?.number}`;
+
+    // Offer the same subpage as this one first
+    const page = getSelectedPage();
+    const previous = importSelect.value;
+    importSelect.innerHTML = "";
+    entries.forEach((entry, entryIndex) => {
+        const option = document.createElement("option");
+        option.value = entryIndex;
+        option.textContent = `${importEntryLabel(entry)}${entry.edited ? " (edited)" : ""}`;
+        importSelect.append(option);
+    });
+    const sameSubpage = entries.findIndex(entry => (entry.subpage ?? null) === (page?.subpage ?? null));
+    const key = page ? pageKey(page) : "";
+    importSelect.value = entries[previous] && importSelect.dataset.key === key ? previous : String(Math.max(0, sameSubpage));
+    importSelect.dataset.key = key;
+    renderImportPreview();
+}
+
 const menuActions = {
     "open": () => {
         if (editorState.hasUnsavedChanges
@@ -2896,7 +3446,10 @@ const menuActions = {
     "paste-cursor": () => pasteClipboard(editorState.cursor.column, editorState.cursor.row),
     "paste-same": pasteAtOriginalPosition,
     "undo": undoLastChange,
-    "update-hex": applyHexFromInspector
+    "update-hex": applyHexFromInspector,
+    "choose-import-session": () => importFileInput.click(),
+    "import-page": importChosenPage,
+    "close-import-session": closeImportSource
 };
 
 
@@ -2948,40 +3501,94 @@ document.addEventListener("click", event => {
     }
 });
 
+// ! Progress bar while opening a file
+// * Decoding the packets fills the first part of the bar and sorting out subpages the rest. A session has no decoding, so its bar starts there
+const DECODE_SHARE_OF_PROGRESS = 0.5;
+
+const progressBox = document.createElement("div");
+progressBox.className = "my-2";
+progressBox.hidden = true;
+progressBox.innerHTML = `
+    <div class="small mb-1" aria-hidden="true"></div>
+    <div class="progress" role="progressbar" aria-label="Opening file" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height: 1.25rem;">
+        <div class="progress-bar" style="width: 0%">0%</div>
+    </div>
+`;
+elements.statusBar.after(progressBox);
+
+// & Show the bar at a share (0 to 1) with what's happening, e.g. "Decoding packets: 42%"
+function showProgress(stage, share) {
+    const percent = Math.max(0, Math.min(100, Math.round(share * 100)));
+    progressBox.hidden = false;
+    progressBox.querySelector(".small").textContent = `${stage}: ${percent}%`;
+    const bar = progressBox.querySelector(".progress");
+    bar.setAttribute("aria-valuenow", percent);
+    bar.setAttribute("aria-valuetext", `${stage}, ${percent}%`);
+    const fill = progressBox.querySelector(".progress-bar");
+    fill.style.width = `${percent}%`;
+    fill.textContent = `${percent}%`;
+}
+
+function hideProgress() {
+    progressBox.hidden = true;
+}
+
 elements.fileInput.addEventListener("change", async event => {
     const chosenFile = event.target.files[0];
     if (!chosenFile) return;
-
     event.target.value = "";
+
+    // Opening a second file while one is still loading would mix the two up
+    if (editorState.isLoading) {
+        announceStatus(`Still opening ${editorState.loadingFileName}. Wait for it to finish, then open ${chosenFile.name}.`);
+        return;
+    }
+    editorState.isLoading = true;
+    editorState.loadingFileName = chosenFile.name;
     announceStatus(`Reading ${chosenFile.name}...`);
+    showProgress("Reading the file", 0);
 
     let decoded;
 
     try {
-        const fileBytes = new Uint8Array(await chosenFile.arrayBuffer());
-        decoded = await CaptureDecoder.loadFile(chosenFile.name.toLowerCase(), fileBytes);
-    } catch (error) {
-        announceStatus(`Couldn't open ${chosenFile.name}: ${error.message}`);
-        return;
-    }
-
-    if (decoded.session) {
         try {
-            restoreSession(decoded.session);
+            const fileBytes = new Uint8Array(await chosenFile.arrayBuffer());
+            decoded = await CaptureDecoder.loadFile(chosenFile.name.toLowerCase(), fileBytes,
+                share => showProgress("Decoding packets", share * DECODE_SHARE_OF_PROGRESS));
         } catch (error) {
-            announceStatus(`Couldn't restore ${chosenFile.name}: ${error.message}`);
+            announceStatus(`Couldn't open ${chosenFile.name}: ${error.message}`);
+            return;
         }
-        return;
-    }
 
-    if (!decoded.pages?.length) {
-        announceStatus(`No teletext pages found in ${chosenFile.name}.`);
-        return;
-    }
+        // Decoding is the first part of the bar; sorting out subpages is the rest
+        const sortingProgress = share => showProgress("Sorting out subpages", DECODE_SHARE_OF_PROGRESS + share * (1 - DECODE_SHARE_OF_PROGRESS));
 
-    editorState.sourceFileName = chosenFile.name;
-    if (elements.groupOption) elements.groupOption.checked = true;
-    loadPages(decoded.pages);
+        if (decoded.session) {
+            try {
+                await restoreSession(decoded.session, sortingProgress);
+            } catch (error) {
+                announceStatus(`Couldn't restore ${chosenFile.name}: ${error.message}`);
+            }
+            return;
+        }
+
+        if (!decoded.pages?.length) {
+            announceStatus(`No teletext pages found in ${chosenFile.name}.`);
+            return;
+        }
+
+        editorState.sourceFileName = chosenFile.name;
+        if (elements.groupOption) elements.groupOption.checked = true;
+        try {
+            await loadPages(decoded.pages, { onProgress: sortingProgress });
+        } catch (error) {
+            announceStatus(`Couldn't sort out the pages in ${chosenFile.name}: ${error.message}`);
+            return;
+        }
+    } finally {
+        editorState.isLoading = false;
+        hideProgress();
+    }
 
     const versionCount = decoded.pages.reduce((total, page) => total + page.versions.length, 0);
     let summary = `Loaded ${decoded.pages.length} page(s), ${versionCount} transmitted version(s) from ${chosenFile.name}.`
@@ -3246,6 +3853,9 @@ fitViewerFontToCell();
 renderCharacterMap();
 renderColorCodeButtons();
 showEmptyEditor();
+
+// A copy made earlier (in another tab, or before a reload) is ready to paste
+takeNewerSharedClipboard();
 
 // Once the web font has loaded, measure it again and redraw
 document.fonts?.load(VIEWER_FONT).then(() => {

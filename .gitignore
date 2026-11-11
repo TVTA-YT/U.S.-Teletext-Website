@@ -10,6 +10,14 @@ VCR-Plus.png
 package.json
 js/assign-nat-ids.mjs
 js/import-news.mjs
+jtes-results.html
+jtes-viewer.html
+jtes.html
+jtes-core.js
+jtes-render.js
+jtes-sound.js
+jtes-viewer.js
+NATA-ID-Generator.py
 depreciated/
 node_modules/
 TODO/
@@ -18,6 +26,7 @@ sql/
 .vscode/
 images/meta-site-images
 news-import/
+jtes-assets/
 
 # wrangler files
 .wrangler

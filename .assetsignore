@@ -15,6 +15,7 @@ silent-radio.html
 meta-site-images
 VCR-Plus_white.png
 VCR-Plus.png
+NATA-ID-Generator.py
 js/assign-nat-ids.mjs
 js/import-news.mjs
 .vscode
