@@ -119,19 +119,46 @@ function parityErrorColumns(packet, firstIndex, firstColumn) {
 const displayBytesFrom = (packet, firstIndex) =>
     Array.from(packet.subarray(firstIndex, 2 + T42_COLUMNS), byteValue => byteValue & 0x7f);
 
+// The editor checks this to make sure it isn't paired with an older copy of this file
+// * 2: progress reporting, and rows after a missed header are no longer attached to the previous page
+const T42_DECODER_VERSION = 2;
+
+// ^ Rows after a missed header
+// * A page's rows are normally sent in ascending order, so a row number that goes back usually means the next page's header was missed,
+// * and the rows that follow belong to that page. They're set aside, and dropped if the page's transmissions are normally in order.
+// * A few pages send rows out of order on purpose (1983 WTBS P410 slips a row 20 in between), so for those they're kept as before
+const IN_ORDER_SHARE = 0.9;            // A page counts as sent in order if at least this share of its transmissions are
+const MIN_ROWS_TO_JUDGE_ORDER = 3;     // Transmissions with fewer rows than this don't count either way
+
+// Let the page redraw (e.g. a progress bar) about this often while decoding, in milliseconds
+const DECODE_PROGRESS_INTERVAL_MS = 50;
+
+// & Pause briefly so the browser can redraw the page
+const nextFrame = () => new Promise(resolve => setTimeout(resolve, 0));
+
 // ! Main decoder function
-function decodeT42(fileBytes) {
+// * onProgress (optional) is called with the share decoded so far, from 0 to 1
+async function decodeT42(fileBytes, onProgress) {
     const pagesByKey = new Map();              // ^ "110/0001" = { number, subcode, versions }
     const openVersionByMagazine = new Map();   // ^ magazine = page version currently being received
-    const stats = { packets: 0, damagedAddresses: 0, damagedHeaders: 0, parityErrors: 0 };
+    const stats = { packets: 0, damagedAddresses: 0, damagedHeaders: 0, parityErrors: 0, rowsAfterMissedHeader: 0 };
 
     // Keep track of the page currently being received for each magazine
     const closeAllOpenVersions = () => openVersionByMagazine.clear();
 
-    // Process the packets 42 bits at a time
+    let lastProgressTime = performance.now();
+
+    // Process the packets 42 bytes at a time
     for (let offset = 0; offset + T42_PACKET_LENGTH <= fileBytes.length; offset += T42_PACKET_LENGTH) {
         const packet = fileBytes.subarray(offset, offset + T42_PACKET_LENGTH);
         stats.packets++;
+
+        // Every so often, report how far along this is and let the page redraw
+        if (onProgress && (stats.packets & 0x3ff) === 0 && performance.now() - lastProgressTime > DECODE_PROGRESS_INTERVAL_MS) {
+            onProgress(offset / fileBytes.length);
+            await nextFrame();
+            lastProgressTime = performance.now();
+        }
 
         // Decode the address
         const address = decodePacketAddress(packet);
@@ -180,7 +207,9 @@ function decodeT42(fileBytes) {
                 flags: header.flags,
                 rows,
                 parityErrors,
-                receivedAt: stats.packets   // packet number of its header, so transmissions can be put back in broadcast order
+                receivedAt: stats.packets,  // packet number of its header, so transmissions can be put back in broadcast order
+                lastRowNumber: 0,           // the highest row received so far
+                setAside: null              // rows that arrived after the row number went back: { rowNumber: { bytes, badColumns } }
             };
             const pageKey = `${pageNumber}/${version.subcode}`;
             if (!pagesByKey.has(pageKey)) {
@@ -206,11 +235,46 @@ function decodeT42(fileBytes) {
         // Get how many characters failed
         stats.parityErrors += badColumns.length;
 
+        // Once the row number goes back, set the rest aside until the next header (see "Rows after a missed header")
+        if (version.setAside === null && rowNumber <= version.lastRowNumber) version.setAside = {};
+        if (version.setAside !== null) {
+            version.setAside[rowNumber] = { bytes: displayBytesFrom(packet, 2), badColumns };
+            continue;
+        }
+        version.lastRowNumber = rowNumber;
+
         // Record damaged rows
         version.parityErrors[rowNumber] = badColumns;
 
         // Store the 7-bit character values
         version.rows[rowNumber] = displayBytesFrom(packet, 2);
+    }
+
+    // Rows set aside after a missed header: drop them if the page is normally sent in order, otherwise put them back
+    const versionsByNumber = new Map();
+    for (const page of pagesByKey.values()) {
+        if (!versionsByNumber.has(page.number)) versionsByNumber.set(page.number, []);
+        versionsByNumber.get(page.number).push(...page.versions);
+    }
+    for (const versions of versionsByNumber.values()) {
+        const judged = versions.filter(version =>
+            version.rows.slice(1).filter(Boolean).length + Object.keys(version.setAside ?? {}).length >= MIN_ROWS_TO_JUDGE_ORDER);
+        const inOrder = judged.filter(version => version.setAside === null).length;
+        const sentInOrder = judged.length === 0 || inOrder >= judged.length * IN_ORDER_SHARE;
+        for (const version of versions) {
+            if (version.setAside !== null) {
+                if (sentInOrder) {
+                    stats.rowsAfterMissedHeader += Object.keys(version.setAside).length;
+                } else {
+                    for (const [rowNumber, { bytes, badColumns }] of Object.entries(version.setAside)) {
+                        version.rows[rowNumber] = bytes;
+                        version.parityErrors[rowNumber] = badColumns;
+                    }
+                }
+            }
+            delete version.setAside;
+            delete version.lastRowNumber;
+        }
     }
 
     // Drop versions that only ever received a header because they add nothing to compare
@@ -221,5 +285,6 @@ function decodeT42(fileBytes) {
         .sort((firstPage, secondPage) =>
             firstPage.number.localeCompare(secondPage.number) || firstPage.subcode.localeCompare(secondPage.subcode));
 
+    onProgress?.(1);
     return { pages, stats };
 }

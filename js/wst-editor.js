@@ -189,6 +189,18 @@ function drawCell(context, left, top, byteValue, foregroundColor, backgroundColo
     context.restore();
 }
 
+// & Whether the row under a Double Height code is free for the bottom half of the text
+// * Broadcasters leave that row empty (or send the same text again), since a TV never shows it.
+// * A row below with its own text means the code is damage (a stray 0D in the middle of a story), so the row is drawn normally and the one below stays visible
+const DOUBLE_HEIGHT_REPEAT_SHARE = 0.8;
+function isRowFreeForDoubleHeight(rowBelow, rowBytes) {
+    if (!rowBelow) return true;
+    const visible = rowBelow.filter(byteValue => (byteValue & SEVEN_BIT_MASK) > SPACE);
+    if (visible.length === 0) return true;
+    const same = rowBelow.filter((byteValue, column) => (byteValue & SEVEN_BIT_MASK) === (rowBytes[column] & SEVEN_BIT_MASK)).length;
+    return same >= rowBelow.length * DOUBLE_HEIGHT_REPEAT_SHARE;
+}
+
 // Double height isn't allowed on the header, the last display row, or the row after it
 const canUseDoubleHeight = rowNumber => rowNumber > 0 && rowNumber < ROW_COUNT - 2;
 const hasDoubleHeight = rowBytes => rowBytes.some(byteValue => (byteValue & SEVEN_BIT_MASK) === ControlCode.DOUBLE_HEIGHT);
@@ -376,7 +388,8 @@ function drawPage(canvas, pageRows, options = {}) {
             continue;
         }
 
-        const drewTwoRows = drawRow(context, rowBytes, top, revealConcealed, doubleHeight && canUseDoubleHeight(rowNumber));
+        const drewTwoRows = drawRow(context, rowBytes, top, revealConcealed,
+            doubleHeight && canUseDoubleHeight(rowNumber) && isRowFreeForDoubleHeight(pageRows[rowNumber + 1], rowBytes));
 
         if (rowOutlines[rowNumber]) {
             context.strokeStyle = rowOutlines[rowNumber];
@@ -999,12 +1012,17 @@ function isSameRowText(firstCopy, secondCopy) {
 /*
 * First, sort the copites of the row into families of the same text and keep the one with the mot copies.
 * Next, inside that family, iterate each character and vote on it. Each chaeracter is whichever value most page copies agree on
-* If a row only turns up a few transmissions, the row is dropped.
+* If a row only turns up a few transmissions, the row is dropped (unless its copies agree often enough to be real).
 */
 const MIN_VERSIONS_TO_DROP_STRAY_ROWS = 4;
 
 // Applies to the typical number of copies per row
 const STRAY_ROW_SHARE = 0.4;
+
+// ^ A row whose copies agree this many times is kept however rarely it arrived
+// * Some captures lose the same rows almost every cycle (1984 TBS: P102's row 19 arrived 11 times in 596 transmissions, while most rows arrived about 340 times),
+// * and a stray row from another page rarely turns up with the same text this often
+const KEEP_ROW_COPIES = 8;
 
 function buildFinalPageFromVersions(versions) {
     // Copies marked as blends of two subpages only count for a row no clean copy has
@@ -1034,7 +1052,8 @@ function buildFinalPageFromVersions(versions) {
                 || (family.length === best.length && visibleCharacterCount(family[0].rowBytes) > visibleCharacterCount(best[0].rowBytes))
                 ? family : best);
 
-        if (dropStrayRows && rowNumber > 0 && winningFamily.length < typicalCopies * STRAY_ROW_SHARE) return null;
+        if (dropStrayRows && rowNumber > 0 && winningFamily.length < typicalCopies * STRAY_ROW_SHARE
+            && winningFamily.length < KEEP_ROW_COPIES) return null;
 
         return Array.from({ length: COLUMN_COUNT }, (_, column) => {
             const votes = new Map();   // byte → score
@@ -3501,6 +3520,9 @@ document.addEventListener("click", event => {
     }
 });
 
+// Version of t42-decoder.js this editor was made for
+const EXPECTED_DECODER_VERSION = 2;
+
 // ! Progress bar while opening a file
 // * Decoding the packets fills the first part of the bar and sorting out subpages the rest. A session has no decoding, so its bar starts there
 const DECODE_SHARE_OF_PROGRESS = 0.5;
@@ -3546,6 +3568,12 @@ elements.fileInput.addEventListener("change", async event => {
     editorState.isLoading = true;
     editorState.loadingFileName = chosenFile.name;
     announceStatus(`Reading ${chosenFile.name}...`);
+
+    // The decoder is a separate script; an older copy still works but misses newer fixes
+    if (typeof T42_DECODER_VERSION === "undefined" || T42_DECODER_VERSION < EXPECTED_DECODER_VERSION) {
+        console.warn("teletext editor: t42-decoder.js is out of date. Replace it with the copy that came with this editor.");
+        editorState.decoderIsOutdated = true;
+    }
     showProgress("Reading the file", 0);
 
     let decoded;
@@ -3603,8 +3631,12 @@ elements.fileInput.addEventListener("change", async event => {
     }
 
     if (decoded.stats) {
-        const { damagedAddresses, damagedHeaders, parityErrors } = decoded.stats;
+        const { damagedAddresses, damagedHeaders, parityErrors, rowsAfterMissedHeader } = decoded.stats;
         summary += ` Skipped ${damagedAddresses} damaged packet(s) and ${damagedHeaders} damaged header(s); ${parityErrors} byte(s) failed the parity check.`;
+        if (rowsAfterMissedHeader) summary += ` Left out ${rowsAfterMissedHeader} row(s) that arrived after a missed header (they belong to the next page).`;
+    }
+    if (editorState.decoderIsOutdated) {
+        summary += " Note: t42-decoder.js is out of date, so some fixes are missing. Replace it with the copy that came with this editor.";
     }
     announceStatus(summary);
 });
