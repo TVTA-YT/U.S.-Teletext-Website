@@ -737,11 +737,54 @@ function rollHeader() {
     viewer.headerPositions.set(magazine, position);
 
     const { number, row } = pages[position];
+
+    // Once the page is on screen, its own header stays, as on a TV set; other pages in the magazine only bring the time.
+    // * Otherwise headers that carry the page's title (P400 "CLOCK CRACKER 1", P402 "CHARACTER TEST PAGE") would cycle
+    // * through every page in the magazine
+    const pageHeader = viewer.search ? null : displayedSubpage()?.rows[0];
+    if (pageHeader) {
+        // The page number in the header (e.g. "P104" before "TAFTEMPO") still rolls, as each header carries its own
+        viewer.headerNumber = number;
+        viewer.headerSource = withNewTime(pageHeader, row ?? viewer.headerSource ?? pageHeader, viewer.displayed.number, number);
+        return true;
+    }
+
+    // Still looking for the page: the header rolls through the magazine
     viewer.headerNumber = number;
 
     // Keep the last received header text if this page's wasn't received
     if (row) viewer.headerSource = row;
     return true;
+}
+
+
+// ^ A running time in a header: Electra 08:24:31 and 08:13.57, Keyfax 08 24/31
+const HEADER_TIME_PATTERN = /\d\d[:. ]\d\d[:./]\d\d/g;
+
+// & The displayed page's header with the time and page number from a newer header in the same magazine
+// * Each is only copied where the page's own header has one too, so a header with only a title (P400 "CLOCK CRACKER 1")
+// * never changes
+function withNewTime(pageHeader, newHeader, pageNumber = null, newNumber = null) {
+    const merged = pageHeader.slice();
+    const pageText = headerText(pageHeader);
+
+    // The page number: where the page's header shows its own number, show the incoming header's number instead
+    if (pageNumber && newNumber) {
+        const column = pageText.toUpperCase().indexOf(pageNumber, HEADER_TEXT_START);
+        if (column >= 0 && headerText(newHeader).toUpperCase().slice(column, column + 3) === newNumber) {
+            for (let offset = 0; offset < 3; offset++) merged[column + offset] = newHeader[column + offset];
+        }
+    }
+
+    for (const match of headerText(newHeader).matchAll(HEADER_TIME_PATTERN)) {
+        const start = match.index;
+        const end = start + match[0].length;
+        if (start < HEADER_TEXT_START) continue;
+        if (!new RegExp(`^${HEADER_TIME_PATTERN.source}$`).test(pageText.slice(start, end))) continue;
+        for (let column = start; column < end; column++) merged[column] = newHeader[column];
+    }
+
+    return merged;
 }
 
 

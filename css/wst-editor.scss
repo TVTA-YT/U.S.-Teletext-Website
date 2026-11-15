@@ -1,0 +1,120 @@
+:root {
+    --editor-panel-bg: #2b00ff;
+    --editor-panel-text: #fff;
+    --editor-accent-color: var(--bs-primary);
+    --editor-row-missing: rgba(220, 53, 69, 0.35);
+    --editor-row-differs: rgba(255, 193, 7, 0.3);
+    --bs-btn-active-bg: #000 !important;
+}
+
+.editor-panel {
+    font-family: "Bedstead Regular";
+}
+
+.editor-panel-blue {
+    background: var(--editor-panel-bg);
+    color: var(--editor-panel-text);
+}
+
+.editor-page-list {
+    max-height: 45vh;
+    overflow-y: auto;
+}
+
+.editor-screen,
+.editor-version-thumbnails,
+#charMap {
+    canvas {
+        width: 100%;
+        height: auto;
+        display: block;
+        image-rendering: pixelated;
+        background: #000;
+    }
+}
+
+.editor-screen {
+    canvas {
+        border: 2px solid var(--bs-border-color);
+        border-radius: 0.25rem;
+        width: min(100%, calc((100vh - 330px) * 1.004));
+
+        &:focus-visible {
+            outline: 3px solid var(--editor-accent-color);
+            outline-offset: 2px;
+        }
+    }
+}
+
+.editor-version-thumbnails {
+    flex: 0 0 auto;
+    width: 150px;
+    padding: 0.35rem;
+    border: 2px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    background: var(--bs-body-bg);
+    color: inherit;
+    text-align: left;
+
+    &[aria-pressed="true"] {
+        border-color: var(--editor-accent-color);
+    }
+}
+
+#charMap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(32px, 44px));
+    gap: 2px;
+
+    button {
+        padding: 0;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 0;
+        background: #000;
+        line-height: 0;
+    }
+}
+
+.editor-different-versions {
+    max-height: 170px;
+    overflow-y: auto;
+
+    thead {
+        th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: var(--bs-body-bg);
+        }
+    }
+}
+
+.row-missing {
+    td,
+    th {
+        background: var(--editor-row-missing) !important;
+    }
+}
+
+.row-differs {
+    td,
+    th {
+        background: var(--editor-row-differs) !important;
+    }
+}
+
+.btn-check + .btn {
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #fff;
+    --bs-btn-active-color: #fff;
+}
+
+.btn-check[name="cmSet"]:checked + .btn {
+    background-color: #000;
+    border-color: #fff;
+    color: #fff;
+}
+
+.background-button:hover {
+    color: #000 !important;
+}

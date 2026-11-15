@@ -95,6 +95,10 @@
         font-size: 2em !important;
     }
 
+    #newest-viewable-teletext-column {
+        padding-top: 50px;
+    }
+
     /* .time-row > div {
         width: 150px !important;
         min-width: 150px !important;

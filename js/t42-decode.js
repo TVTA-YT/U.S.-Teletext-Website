@@ -121,7 +121,14 @@ const displayBytesFrom = (packet, firstIndex) =>
 
 // The editor checks this to make sure it isn't paired with an older copy of this file
 // * 2: progress reporting, and rows after a missed header are no longer attached to the previous page
-const T42_DECODER_VERSION = 2;
+// * 3: rows after a damaged or missed header are kept apart as "unattributed" copies, with the readable headers around them
+const T42_DECODER_VERSION = 3;
+
+// ^ Unattributed copies: rows whose header was damaged or missed can't be given a page number here. They're kept with the page
+// ^ numbers of the readable headers just before and after them, so the editor can work out the number where pages were sent in order
+// ^ (e.g. KOIN 1990-03-15, where a test page went out under every page number in turn)
+const UNATTRIBUTED_MIN_ROWS = 3;      // Copies with fewer rows than this are dropped
+const NEIGHBOR_HEADERS = 4;           // How many readable headers to keep on each side
 
 // ^ Rows after a missed header
 // * A page's rows are normally sent in ascending order, so a row number that goes back usually means the next page's header was missed,
@@ -141,7 +148,9 @@ const nextFrame = () => new Promise(resolve => setTimeout(resolve, 0));
 async function decodeT42(fileBytes, onProgress) {
     const pagesByKey = new Map();              // ^ "110/0001" = { number, subcode, versions }
     const openVersionByMagazine = new Map();   // ^ magazine = page version currently being received
-    const stats = { packets: 0, damagedAddresses: 0, damagedHeaders: 0, parityErrors: 0, rowsAfterMissedHeader: 0 };
+    const stats = { packets: 0, damagedAddresses: 0, damagedHeaders: 0, parityErrors: 0, rowsAfterMissedHeader: 0, unattributedCopies: 0 };
+    const headersByMagazine = new Map();      // ^ magazine = [{ number, at }] for every readable header, in order
+    const unattributed = [];                  // ^ { magazine, version } for rows after a damaged header
 
     // Keep track of the page currently being received for each magazine
     const closeAllOpenVersions = () => openVersionByMagazine.clear();
@@ -175,11 +184,21 @@ async function decodeT42(fileBytes, onProgress) {
         if (rowNumber === 0) {
             const header = decodePageHeader(packet);
 
-            // If the decode fails, close the current page transmission for that magazine and don't attach next rows to the wrong page
+            // If the decode fails, the rows that follow go into a copy without a page number, so they aren't attached to the wrong page
             if (!header) {
                 stats.damagedHeaders++;
-                openVersionByMagazine.delete(magazine);
+                const version = {
+                    subcode: "0000", flags: [], rows: Array(T42_DISPLAY_ROWS).fill(null), parityErrors: Array(T42_DISPLAY_ROWS).fill(null),
+                    receivedAt: stats.packets, lastRowNumber: 0, setAside: null
+                };
+                unattributed.push({ magazine, version });
+                openVersionByMagazine.set(magazine, version);
                 continue;
+            }
+
+            if (header.pageNumber !== FILLER_PAGE_NUMBER) {
+                if (!headersByMagazine.has(magazine)) headersByMagazine.set(magazine, []);
+                headersByMagazine.get(magazine).push({ number: magazine.toString() + header.pageNumber.toString(16).toUpperCase().padStart(2, "0"), at: stats.packets });
             }
 
             // In serial mode, a header from any magazine ends the page being sent
@@ -209,7 +228,8 @@ async function decodeT42(fileBytes, onProgress) {
                 parityErrors,
                 receivedAt: stats.packets,  // packet number of its header, so transmissions can be put back in broadcast order
                 lastRowNumber: 0,           // the highest row received so far
-                setAside: null              // rows that arrived after the row number went back: { rowNumber: { bytes, badColumns } }
+                setAside: null,             // rows that arrived after the row number went back: { rowNumber: { bytes, badColumns } }
+                magazine
             };
             const pageKey = `${pageNumber}/${version.subcode}`;
             if (!pagesByKey.has(pageKey)) {
@@ -236,7 +256,10 @@ async function decodeT42(fileBytes, onProgress) {
         stats.parityErrors += badColumns.length;
 
         // Once the row number goes back, set the rest aside until the next header (see "Rows after a missed header")
-        if (version.setAside === null && rowNumber <= version.lastRowNumber) version.setAside = {};
+        if (version.setAside === null && rowNumber <= version.lastRowNumber) {
+            version.setAside = {};
+            version.setAsideAt = stats.packets;
+        }
         if (version.setAside !== null) {
             version.setAside[rowNumber] = { bytes: displayBytesFrom(packet, 2), badColumns };
             continue;
@@ -265,6 +288,17 @@ async function decodeT42(fileBytes, onProgress) {
             if (version.setAside !== null) {
                 if (sentInOrder) {
                     stats.rowsAfterMissedHeader += Object.keys(version.setAside).length;
+
+                    // They belong to the page whose header was missed: keep them as a copy without a page number
+                    const missed = {
+                        subcode: "0000", flags: [], rows: Array(T42_DISPLAY_ROWS).fill(null), parityErrors: Array(T42_DISPLAY_ROWS).fill(null),
+                        receivedAt: version.setAsideAt
+                    };
+                    for (const [rowNumber, { bytes, badColumns }] of Object.entries(version.setAside)) {
+                        missed.rows[rowNumber] = bytes;
+                        missed.parityErrors[rowNumber] = badColumns;
+                    }
+                    unattributed.push({ magazine: version.magazine, version: missed });
                 } else {
                     for (const [rowNumber, { bytes, badColumns }] of Object.entries(version.setAside)) {
                         version.rows[rowNumber] = bytes;
@@ -273,6 +307,8 @@ async function decodeT42(fileBytes, onProgress) {
                 }
             }
             delete version.setAside;
+            delete version.setAsideAt;
+            delete version.magazine;
             delete version.lastRowNumber;
         }
     }
@@ -285,6 +321,25 @@ async function decodeT42(fileBytes, onProgress) {
         .sort((firstPage, secondPage) =>
             firstPage.number.localeCompare(secondPage.number) || firstPage.subcode.localeCompare(secondPage.subcode));
 
+    // Copies without a page number, with the readable headers around them
+    const unattributedCopies = unattributed
+        .filter(({ version }) => version.rows.slice(1).filter(Boolean).length >= UNATTRIBUTED_MIN_ROWS)
+        .map(({ magazine, version }) => {
+            const headers = headersByMagazine.get(magazine) ?? [];
+            let after = headers.findIndex(header => header.at > version.receivedAt);
+            if (after < 0) after = headers.length;
+            delete version.setAside;
+            delete version.lastRowNumber;
+            return {
+                magazine,
+                headersBefore: headers.slice(Math.max(0, after - NEIGHBOR_HEADERS), after),
+                headersAfter: headers.slice(after, after + NEIGHBOR_HEADERS),
+                version
+            };
+        })
+        .sort((first, second) => first.version.receivedAt - second.version.receivedAt);
+    stats.unattributedCopies = unattributedCopies.length;
+
     onProgress?.(1);
-    return { pages, stats };
+    return { pages, stats, unattributed: unattributedCopies };
 }

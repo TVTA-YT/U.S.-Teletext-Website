@@ -191,7 +191,8 @@ function drawCell(context, left, top, byteValue, foregroundColor, backgroundColo
 
 // & Whether the row under a Double Height code is free for the bottom half of the text
 // * Broadcasters leave that row empty (or send the same text again), since a TV never shows it.
-// * A row below with its own text means the code is damage (a stray 0D in the middle of a story), so the row is drawn normally and the one below stays visible
+// * A row below with its own text means the code is damage (a stray 0D in the middle of a story), so the row is drawn normally and the one below stays visible,
+// * unless the row starts with the code (see startsWithDoubleHeight)
 const DOUBLE_HEIGHT_REPEAT_SHARE = 0.8;
 function isRowFreeForDoubleHeight(rowBelow, rowBytes) {
     if (!rowBelow) return true;
@@ -199,6 +200,19 @@ function isRowFreeForDoubleHeight(rowBelow, rowBytes) {
     if (visible.length === 0) return true;
     const same = rowBelow.filter((byteValue, column) => (byteValue & SEVEN_BIT_MASK) === (rowBytes[column] & SEVEN_BIT_MASK)).length;
     return same >= rowBelow.length * DOUBLE_HEIGHT_REPEAT_SHARE;
+}
+
+// & Whether a row starts with Double Height: nothing but control codes before the 0D (e.g. red, then 0D, then "TELETEXT TRANSMISSION")
+// * That's how pages are laid out, while damage puts a stray 0D among the text. Such a row is drawn double height even when the row below
+// * has text of its own, as a TV does (it never shows that row), e.g. the KOIN and WTBS test pages. Column 0 is skipped, as the
+// * edge of the line is often damaged
+function startsWithDoubleHeight(rowBytes) {
+    for (let column = 1; column < COLUMN_COUNT; column++) {
+        const byteValue = rowBytes[column] & SEVEN_BIT_MASK;
+        if (byteValue === ControlCode.DOUBLE_HEIGHT) return true;
+        if (!isControlCode(byteValue)) return false;
+    }
+    return false;
 }
 
 // Double height isn't allowed on the header, the last display row, or the row after it
@@ -389,7 +403,8 @@ function drawPage(canvas, pageRows, options = {}) {
         }
 
         const drewTwoRows = drawRow(context, rowBytes, top, revealConcealed,
-            doubleHeight && canUseDoubleHeight(rowNumber) && isRowFreeForDoubleHeight(pageRows[rowNumber + 1], rowBytes));
+            doubleHeight && canUseDoubleHeight(rowNumber)
+            && (startsWithDoubleHeight(rowBytes) || isRowFreeForDoubleHeight(pageRows[rowNumber + 1], rowBytes)));
 
         if (rowOutlines[rowNumber]) {
             context.strokeStyle = rowOutlines[rowNumber];
@@ -615,6 +630,7 @@ const editorState = {
     groupedPages: [],                    // * decodedPages with subpages that share a subcode separated by content
     sortedPages: [],                     // * groupedPages before any transmissions were separated by hand
     separatedTransmissions: new Set(),   // * receivedAt of each transmission made its own subpage by hand
+    unattributed: [],                    // * copies whose header was damaged or missed that joined a page sent under many numbers (saved with a session)
     pages: [],
     selectedPageIndex: -1,
     comparedVersionIndex: 0,
@@ -1078,6 +1094,84 @@ function buildFinalPageFromVersions(versions) {
 }
 
 
+// ! Rows that rarely came through
+/*
+* Some captures lose certain rows of a page almost every time (1985-02 WTBS: P101's row 10 arrived in 4 of 140 copies, P103's row 7 in 2 of 30),
+* so voting drops them as strays. Here, a row the vote dropped comes back if its copies are real:
+*   - at least 2 copies that agree almost exactly, and most of the row's copies (random damage doesn't repeat)
+*   - its text isn't another row of the same page (a copy whose row number was damaged)
+*   - and no other page or subpage has it at that row (a row from another page with a damaged magazine or page number)
+*/
+const RARE_ROW_MIN_COPIES = 2;
+const RARE_ROW_AGREEMENT = 0.1;    // Share of characters that may differ between copies that agree
+const RARE_ROW_AGREEING_SHARE = 0.5;   // ...and they must be at least this share of the copies of the row (on a badly damaged capture, a few garbled copies can agree among many that don't)
+
+// & Share of characters that differ between two copies of a row, skipping parity failures and shared spaces
+function rowDifference(firstCopy, secondCopy) {
+    let compared = 0;
+    let different = 0;
+    for (let column = 0; column < COLUMN_COUNT; column++) {
+        if (firstCopy.badColumns.includes(column) || secondCopy.badColumns.includes(column)) continue;
+        const firstByte = firstCopy.rowBytes[column] & SEVEN_BIT_MASK;
+        const secondByte = secondCopy.rowBytes[column] & SEVEN_BIT_MASK;
+        if (firstByte === SPACE && secondByte === SPACE) continue;
+        compared++;
+        if (firstByte !== secondByte) different++;
+    }
+    return compared ? different / compared : 0;
+}
+
+// & Every copy of every row in the capture, by row number, to tell whether a row turns up on other pages. Built once per capture
+let rowCopiesIndex = null;
+function rowCopiesByRowNumber() {
+    if (rowCopiesIndex?.source === editorState.decodedPages) return rowCopiesIndex.byRow;
+    const byRow = Array.from({ length: ROW_COUNT }, () => []);
+    for (const page of editorState.decodedPages) {
+        for (const version of page.versions) {
+            version.rows.forEach((rowBytes, rowNumber) => {
+                if (rowBytes && rowNumber > 0 && hasVisibleCharacters(rowBytes)) {
+                    byRow[rowNumber].push({ receivedAt: version.receivedAt, rowBytes, badColumns: version.parityErrors?.[rowNumber] ?? [] });
+                }
+            });
+        }
+    }
+    rowCopiesIndex = { source: editorState.decodedPages, byRow };
+    return byRow;
+}
+
+// & Put back rows of an entry's voted page that were dropped as strays but are real (see above)
+function addRareRows(versions, pageRows) {
+    const ownTransmissions = new Set(versions.map(version => version.receivedAt));
+    const result = pageRows.slice();
+    for (let rowNumber = 1; rowNumber < ROW_COUNT; rowNumber++) {
+        if (result[rowNumber]) continue;
+        const copies = versions.filter(version => version.rows[rowNumber])
+            .map(version => ({ rowBytes: version.rows[rowNumber], badColumns: version.parityErrors?.[rowNumber] ?? [] }));
+        if (copies.length < RARE_ROW_MIN_COPIES) continue;
+
+        // The copies that agree best: start from each copy in turn and keep the largest close-agreeing set
+        let agreeing = [];
+        for (const start of copies) {
+            const close = copies.filter(copy => rowDifference(copy, start) <= RARE_ROW_AGREEMENT);
+            if (close.length > agreeing.length) agreeing = close;
+        }
+        if (agreeing.length < RARE_ROW_MIN_COPIES || agreeing.length < copies.length * RARE_ROW_AGREEING_SHARE) continue;
+        const rowBytes = buildFinalPageFromVersions(agreeing.map(copy => ({ rows: { [rowNumber]: copy.rowBytes }, parityErrors: { [rowNumber]: copy.badColumns } })))[rowNumber];
+        if (!rowBytes || !hasVisibleCharacters(rowBytes)) continue;
+        const candidate = { rowBytes, badColumns: [] };
+
+        // Another row of this page with its row number damaged
+        if (result.some((other, otherRow) => other && otherRow !== rowNumber && isSameRowText({ rowBytes: other, badColumns: [] }, candidate))) continue;
+
+        // A row from another page or subpage
+        if (rowCopiesByRowNumber()[rowNumber].some(copy => !ownTransmissions.has(copy.receivedAt) && isSameRowText(copy, candidate))) continue;
+
+        result[rowNumber] = rowBytes;
+    }
+    return result;
+}
+
+
 // & This is needed because in bit 7, WST transmits each byte with odd parity
 function addOddParityBit(byteValue) {
     const sevenBitValue = byteValue & SEVEN_BIT_MASK;
@@ -1230,7 +1324,7 @@ function renderVersionThumbnails() {
         drawPage(thumbnail, version.rows, getDisplayOptions());
         button.append(thumbnail);
         button.insertAdjacentHTML("beforeend",
-            `<div class="small mt-1">v${versionIndex + 1} · ${receivedRowCount}/${ROW_COUNT} rows${isFinalSource ? " · final" : ""}</div>`
+            `<div class="small mt-1">v${versionIndex + 1} · ${receivedRowCount}/${ROW_COUNT} rows${sentAsLabel(version, getSelectedPage().number)}${isFinalSource ? " · final" : ""}</div>`
         );
 
         button.addEventListener("click", () => {
@@ -1240,6 +1334,14 @@ function renderVersionThumbnails() {
 
         elements.versionStrip.append(button);
     });
+}
+
+// & For a copy of a page sent under many page numbers: which number it came under, if not this one
+function sentAsLabel(version, pageNumber) {
+    if (version.sentAs === undefined) return "";
+    if (version.sentAs === null) return " · header damaged";
+    if (version.sentAsGuessed) return ` · header damaged, likely P${version.sentAs}`;
+    return version.sentAs !== pageNumber ? ` · sent as P${version.sentAs}` : "";
 }
 
 // & List rows where the compared version could fill a gap or differs from final page
@@ -1547,7 +1649,7 @@ function startingRowsFor(page) {
     if (page.baseVersionIndex !== undefined) {
         return page.versions[page.baseVersionIndex].rows.map(rowBytes => rowBytes ? rowBytes.slice() : null);
     }
-    return buildFinalPageFromVersions(page.versions);
+    return addRareRows(page.versions, buildFinalPageFromVersions(page.versions));
 }
 
 
@@ -2361,6 +2463,232 @@ function sortOutOnePageNumber(samePagesNumber) {
 }
 
 
+/*
+* *** ! Pages sent under many page numbers ! ***
+* When a service broke down, its system could send one page (e.g. KOIN 1990-03-15's "SERVICE INTERRUPTION ... TEST PAGE") under
+* every page number in a magazine for a few seconds. Each page number then only gets one or two copies of it, which its usual
+* copies outvote, so it never shows. Here, such a page is found across page numbers and given its own subpage on each one,
+* voted from every copy sent under any number.
+*/
+
+// ^ Finding the page: transmissions this close to each other (share of characters that differ) under different page numbers,
+// ^ among the next few transmissions in the same magazine, are copies of one page
+const SHARED_CORE_DIFFERENCE = 0.2;
+const SHARED_NEIGHBORS = 12;
+
+// ^ It counts once it was sent under at least this many page numbers. A few pages laid out alike (stock tables, test pages)
+// ^ can look the same; they're ruled out by matching their own page's usual content
+const SHARED_MIN_PAGE_NUMBERS = 5;
+
+// ^ A copy differing from its own page's usual content (from outside the time the page was being sent everywhere) by more than this
+const SHARED_OWN_PAGE_DIFFERENCE = 0.5;
+
+// ^ Damaged copies sent during that time join it if they're at least this close to it, and closer than to their own page
+const SHARED_JOIN_DIFFERENCE = 0.5;
+
+// ^ Share of the sorting progress bar for the search
+const SHARED_SEARCH_SHARE_OF_PROGRESS = 0.3;
+
+// ^ Copies whose header was damaged or missed (from the decoder's "unattributed" list) join it too. While a page goes out under
+// ^ every page number in turn (152, 153, 154...), their page number is worked out from the readable headers around them
+const SHARED_MAX_SEQUENCE_STEP = 2;
+
+// & A page number's place in a magazine's order, 0-99, for numbers written in decimal (e.g. "153" = 53); null for others (e.g. "1D4")
+const sequenceIndex = number => /^[1-8][0-9]{2}$/.test(number) ? Number(number.slice(1)) : null;
+
+// & The page number a copy without a readable header was most likely sent under, or null if it can't be told
+// * Uses the nearest readable headers before and after it that are in order (a stray "1D4" from a damaged header is skipped)
+// * hasRowsAt(number, at) says whether the header at that packet brought rows of its own
+function guessPageNumber(copy, hasRowsAt) {
+    let best = null;
+    const before = [...(copy.headersBefore ?? [])].reverse();
+    before.forEach((previous, previousDistance) => {
+        (copy.headersAfter ?? []).forEach((next, nextDistance) => {
+            const from = sequenceIndex(previous.number);
+            const to = sequenceIndex(next.number);
+            if (from === null || to === null || previous.number[0] !== next.number[0]) return;
+            const step = (to - from + 100) % 100;    // 199 to 100 is a step of 1
+            if (step > SHARED_MAX_SEQUENCE_STEP) return;
+            const distance = previousDistance + nextDistance;
+            if (!best || distance < best.distance) best = { previous, from, step, distance };
+        });
+    });
+    if (!best) return null;
+
+    const { previous, from, step } = best;
+    const magazine = previous.number[0];
+
+    // One number was skipped between the two headers: this copy is that page
+    if (step === 2) return magazine + String((from + 1) % 100).padStart(2, "0");
+
+    // The header before had no rows of its own (e.g. P153 sent three times, the last header damaged): these are its rows
+    if (step === 0 || !hasRowsAt(previous.number, previous.at)) return previous.number;
+    return null;
+}
+
+// & The voted rows of some versions, as a version to compare with
+const votedVersion = versions => ({ rows: buildFinalPageFromVersions(versions) });
+
+// & Find pages sent under many page numbers. Returns the decoded pages without those copies, and one entry per page number for them
+// * Reports progress (0 to 1) and lets the page redraw now and then, since comparing neighbors takes a few seconds on a long capture
+async function separateSharedPages(decodedPages, onProgress = () => { }, unattributed = []) {
+    const transmissions = decodedPages
+        .flatMap(page => page.versions.map(version => ({ number: page.number, subcode: page.subcode, version })))
+        .sort((first, second) => (first.version.receivedAt ?? 0) - (second.version.receivedAt ?? 0));
+    const byMagazine = new Map();
+    transmissions.forEach((transmission, index) => {
+        const magazine = transmission.number[0];
+        if (!byMagazine.has(magazine)) byMagazine.set(magazine, []);
+        byMagazine.get(magazine).push(index);
+    });
+
+    // Link close copies under different page numbers that were sent near each other
+    const parent = transmissions.map((transmission, index) => index);
+    const root = index => {
+        while (parent[index] !== index) index = parent[index] = parent[parent[index]];
+        return index;
+    };
+    let compared = 0;
+    let lastProgressTime = performance.now();
+    for (const indexes of byMagazine.values()) {
+        for (let first = 0; first < indexes.length; first++) {
+            if (performance.now() - lastProgressTime > SORT_PROGRESS_INTERVAL_MS) {
+                onProgress(compared / transmissions.length);
+                await pauseForRedraw();
+                lastProgressTime = performance.now();
+            }
+            compared++;
+            for (let second = first + 1; second < Math.min(indexes.length, first + 1 + SHARED_NEIGHBORS); second++) {
+                const firstCopy = transmissions[indexes[first]];
+                const secondCopy = transmissions[indexes[second]];
+                if (firstCopy.number === secondCopy.number) continue;
+                const difference = differenceRate(firstCopy.version, secondCopy.version);
+                if (difference !== null && difference <= SHARED_CORE_DIFFERENCE) parent[root(indexes[first])] = root(indexes[second]);
+            }
+        }
+    }
+    const linked = new Map();
+    transmissions.forEach((transmission, index) => {
+        const group = root(index);
+        if (!linked.has(group)) linked.set(group, []);
+        linked.get(group).push(transmission);
+    });
+    const pageNumberCount = group => new Set(group.map(transmission => transmission.number)).size;
+
+    const sharedEntries = [];
+    const sharedVersions = new Set();
+    const usedUnattributed = new Set();
+    const receivedHeaders = new Set(transmissions.map(transmission => `${transmission.number}@${transmission.version.receivedAt}`));
+    const hasRowsAt = (number, at) => receivedHeaders.has(`${number}@${at}`);
+    for (let group of linked.values()) {
+        if (pageNumberCount(group) < SHARED_MIN_PAGE_NUMBERS) continue;
+
+        // Each page number's usual content, from the transmissions outside the time the page was being sent everywhere
+        const first = group[0].version.receivedAt;
+        const last = group[group.length - 1].version.receivedAt;
+        const magazine = group[0].number[0];
+        const isDuring = transmission => transmission.number[0] === magazine
+            && transmission.version.receivedAt >= first && transmission.version.receivedAt <= last;
+        const usualByNumber = new Map();
+        const usualFor = number => {
+            if (!usualByNumber.has(number)) {
+                const outside = transmissions.filter(transmission => transmission.number === number && !isDuring(transmission));
+                usualByNumber.set(number, outside.length ? votedVersion(outside.map(transmission => transmission.version)) : null);
+            }
+            return usualByNumber.get(number);
+        };
+
+        // Copies that match their own page are only pages laid out alike
+        const differenceFromOwnPage = transmission => {
+            const usual = usualFor(transmission.number);
+            return usual ? differenceRate(transmission.version, usual) : null;
+        };
+        group = group.filter(transmission => {
+            const difference = differenceFromOwnPage(transmission);
+            return difference === null || difference > SHARED_OWN_PAGE_DIFFERENCE;
+        });
+        if (pageNumberCount(group) < SHARED_MIN_PAGE_NUMBERS) continue;
+
+        // Damaged copies sent at the same time join if they look more like it than like their own page
+        const shared = votedVersion(group.map(transmission => transmission.version));
+        const inGroup = new Set(group);
+        const joining = transmissions.filter(transmission => {
+            if (inGroup.has(transmission) || !isDuring(transmission) || sharedVersions.has(transmission.version)) return false;
+            const difference = differenceRate(transmission.version, shared);
+            if (difference === null || difference > SHARED_JOIN_DIFFERENCE) return false;
+            const ownDifference = differenceFromOwnPage(transmission);
+            return ownDifference === null || difference < ownDifference;
+        });
+        // So do copies whose header was damaged or missed, numbered from the headers around them where that can be told.
+        // Those that can't still help vote
+        const withoutHeader = unattributed
+            .filter(copy => String(copy.magazine) === magazine && !usedUnattributed.has(copy)
+                && copy.version.receivedAt >= first && copy.version.receivedAt <= last)
+            .filter(copy => {
+                const difference = differenceRate(copy.version, shared);
+                return difference !== null && difference <= SHARED_JOIN_DIFFERENCE;
+            });
+        withoutHeader.forEach(copy => usedUnattributed.add(copy));
+        const numbered = withoutHeader.map(copy => ({ number: guessPageNumber(copy, hasRowsAt), subcode: "0000", version: copy.version, isGuessed: true }));
+
+        group = [...group, ...joining, ...numbered].sort((firstCopy, secondCopy) => firstCopy.version.receivedAt - secondCopy.version.receivedAt);
+
+        // One entry per page number it was sent under, each with every copy (so all of them vote), in broadcast order
+        group.forEach(transmission => sharedVersions.add(transmission.version));
+        const numbers = [...new Set(group.map(transmission => transmission.number).filter(Boolean))];
+        for (const number of numbers) {
+            const ownCopy = group.find(transmission => transmission.number === number);
+            sharedEntries.push({
+                number,
+                subcode: ownCopy.subcode,
+                subpageId: `shared${first}`,
+                sharedAcross: numbers.length,
+                versions: group.map((transmission, index) => ({
+                    ...transmission.version,
+                    sentAs: transmission.number,
+                    sentAsGuessed: Boolean(transmission.isGuessed),
+                    transmissionNumber: index + 1
+                }))
+            });
+        }
+    }
+
+    onProgress(1);
+    const unattributedUsed = unattributed.filter(copy => usedUnattributed.has(copy));
+    if (sharedEntries.length === 0) return { pages: decodedPages, sharedEntries, unattributedUsed };
+    const pages = decodedPages
+        .map(page => ({ ...page, versions: page.versions.filter(version => !sharedVersions.has(version)) }))
+        .filter(page => page.versions.length > 0);
+    return { pages, sharedEntries, unattributedUsed };
+}
+
+
+// & Put each shared page's entry with the other entries of its page number, as that page's last subpage
+function addSharedEntries(sortedPages, sharedEntries) {
+    if (sharedEntries.length === 0) return sortedPages;
+    const result = [...sortedPages];
+    for (const entry of sharedEntries) {
+        const others = result.filter(page => page.number === entry.number);
+        if (others.length === 0) {
+            result.push({ ...entry, subpage: null });
+            continue;
+        }
+
+        // A page number that was one entry becomes subpage 1, keeping its key (subpageId 0 adds nothing to it)
+        others.forEach(page => {
+            if (page.subpage) return;
+            result[result.indexOf(page)] = { ...page, subpageId: page.subpageId ?? 0, subpage: 1 };
+        });
+        // It takes the page's own subcode, not a damaged one its copy may have had
+        const highest = Math.max(...result.filter(page => page.number === entry.number).map(page => page.subpage ?? 0));
+        result.push({ ...entry, subcode: others[0].subcode, subpage: highest + 1 });
+    }
+
+    // Back into page order; entries of the same page number keep their order (sorting is stable)
+    return result.sort((first, second) => first.number.localeCompare(second.number));
+}
+
+
 // & Move each hand-separated transmission out of its entry and into a new subpage entry
 // * "sortedPage"s" is left as it was. Entries that change are copied
 function applySeparatedTransmissions(sortedPages) {
@@ -2451,11 +2779,16 @@ function rejoinTransmission() {
 
 
 // & Load new set of decoded pages
-async function loadPages(decodedPages, { separatedTransmissions = [], onProgress = () => { } } = {}) {
+async function loadPages(decodedPages, { separatedTransmissions = [], unattributed = [], onProgress = () => { } } = {}) {
 
     // Number each transmission in capture order, so it keeps its number when subpages are separated
     decodedPages.forEach(page => page.versions.forEach((version, versionIndex) => { version.transmissionNumber = versionIndex + 1; }));
-    const sortedPages = await sortOutSubpagesWithProgress(decodedPages, onProgress);
+    // The first part of the progress goes to finding pages sent under many page numbers, the rest to sorting out subpages
+    const { pages: pagesToSort, sharedEntries, unattributedUsed } = await separateSharedPages(decodedPages, share => onProgress(share * SHARED_SEARCH_SHARE_OF_PROGRESS), unattributed);
+    const sortedPages = addSharedEntries(
+        await sortOutSubpagesWithProgress(pagesToSort, share => onProgress(SHARED_SEARCH_SHARE_OF_PROGRESS + share * (1 - SHARED_SEARCH_SHARE_OF_PROGRESS))),
+        sharedEntries);
+    editorState.unattributed = unattributedUsed;
     editorState.decodedPages = decodedPages;
     editorState.sortedPages = sortedPages;
     editorState.separatedTransmissions = new Set(separatedTransmissions);
@@ -3108,6 +3441,136 @@ function exportAllPagesAsJSON() {
     announceStatus(`Exported ${exportedPages.length} page(s); ${editorState.removedPageKeys.size} removed page(s) left out.`);
 }
 
+// ! Export as a capture (T42 or T34)
+/*
+* Writes the final pages (edited, or as voted) back out as teletext packets, one transmission per entry, in page order,
+* so they can be opened in other teletext tools, or in this editor again. Removed pages are left out.
+*   T42: 42 bytes a packet; 2 address bytes, then 40 columns (a header has 8 bytes of page number, subcode and control bits, then columns 8-39)
+*   T34: 34 bytes a packet, as sent on 525-line (NTSC) systems; 2 address bytes, then columns 0-31 (a header: 8 control bytes, then columns 8-31).
+*        Columns 32-39 go in extension packets on magazine M+4, rows 1/4/8/12/16/20, each holding 8 columns for 4 rows (rows 0-3, 4-7 ... 20-23),
+*        sent after the rows they belong to. Row 24 isn't carried in T34, and a magazine's columns 32-39 are left out
+*        if its carrier magazine (M+4) has pages of its own.
+* Each header's control bits (erase, newsflash, serial mode...) are the ones most of the page's transmissions had.
+*/
+const HEADER_BYTES_BEFORE_TEXT = 8;   // A header's page number, subcode and control bits take the place of columns 0-7
+const HAMMING_8_4_CODEWORDS = [0x15, 0x02, 0x49, 0x5E, 0x64, 0x73, 0x38, 0x2F, 0xD0, 0xC7, 0x8C, 0x9B, 0xA1, 0xB6, 0xFD, 0xEA];
+const T34_COLUMNS = 32;
+const T34_LAST_ROW = 23;
+const EXTENSION_COLUMNS = 8;
+const ROWS_PER_EXTENSION_PACKET = 4;
+const EXTENSION_PACKET_FOR_GROUP = [1, 4, 8, 12, 16, 20];   // Extension packet number carrying rows 0-3, 4-7 ... 20-23
+
+const hamming = value => HAMMING_8_4_CODEWORDS[value & 0x0F];
+
+// & A character with its odd-parity bit set
+function withOddParity(byteValue) {
+    const character = byteValue & SEVEN_BIT_MASK;
+    let bits = 0;
+    for (let bit = 0; bit < 7; bit++) bits += (character >> bit) & 1;
+    return bits % 2 === 0 ? character | 0x80 : character;
+}
+
+// & The 2 address bytes: magazine (0-7, magazine 8 is sent as 0) and row
+const packetAddress = (magazine, rowNumber) => [hamming((magazine & 0x07) | ((rowNumber & 0x01) << 3)), hamming(rowNumber >> 1)];
+
+// & The 8 header bytes: page units and tens, subcode with C4-C6, then C7-C10 and C11-C14
+function headerControlBytes(pageNumber, subcodeText, flags) {
+    const subcode = parseInt(subcodeText || "0000", 16) || 0;
+    const has = controlBit => flags.includes(controlBit) ? 1 : 0;
+    const bitsFrom = firstControlBit => [0, 1, 2, 3].reduce((nibble, bit) => nibble | (has(firstControlBit + bit) << bit), 0);
+    return [
+        parseInt(pageNumber[2], 16),
+        parseInt(pageNumber[1], 16),
+        subcode & 0x0F,
+        ((subcode >> 4) & 0x07) | (has(4) << 3),
+        (subcode >> 8) & 0x0F,
+        ((subcode >> 12) & 0x03) | (has(5) << 2) | (has(6) << 3),
+        bitsFrom(7),
+        bitsFrom(11)
+    ].map(hamming);
+}
+
+// & Columns of a row as packet bytes with parity; missing columns are spaces
+const rowColumns = (rowBytes, firstColumn, lastColumn) => Array.from({ length: lastColumn - firstColumn + 1 },
+    (_, index) => withOddParity(rowBytes?.[firstColumn + index] ?? SPACE));
+
+// & The pages to write, as { number, subcode, flags, rows }
+function pagesForCapture() {
+    return editorState.pages.map(page => ({
+        number: page.number,
+        subcode: page.subcode ?? page.versions[page.baseVersionIndex ?? 0].subcode ?? "0000",
+        flags: votedFlagsFor(page),
+        rows: editorState.editedPageRows.get(pageKey(page)) ?? startingRowsFor(page)
+    }));
+}
+
+const magazineOf = pageNumber => Number(pageNumber[0]) % 8;
+
+// & Build a T42 file
+function buildT42(pages) {
+    const packets = [];
+    for (const page of pages) {
+        const magazine = magazineOf(page.number);
+        packets.push([...packetAddress(magazine, 0), ...headerControlBytes(page.number, page.subcode, page.flags),
+        ...rowColumns(page.rows[0], HEADER_BYTES_BEFORE_TEXT, COLUMN_COUNT - 1)]);
+        for (let rowNumber = 1; rowNumber < ROW_COUNT; rowNumber++) {
+            if (page.rows[rowNumber]) packets.push([...packetAddress(magazine, rowNumber), ...rowColumns(page.rows[rowNumber], 0, COLUMN_COUNT - 1)]);
+        }
+    }
+    return { bytes: Uint8Array.from(packets.flat()), packetCount: packets.length, notes: [] };
+}
+
+// & Build a T34 file
+function buildT34(pages) {
+    // Magazines 0-3 carry columns 32-39 on magazine M+4, unless that magazine has pages of its own
+    const magazinesWithPages = new Set(pages.map(page => magazineOf(page.number)));
+    const carrierFor = magazine => magazine < 4 && !magazinesWithPages.has(magazine + 4) ? magazine + 4 : null;
+
+    const packets = [];
+    const notes = [];
+    const magazinesWithoutCarrier = new Set();
+    let droppedRow24 = 0;
+    for (const page of pages) {
+        const magazine = magazineOf(page.number);
+        const carrier = carrierFor(magazine);
+        const hasExtraColumns = page.rows.slice(0, T34_LAST_ROW + 1)
+            .some(rowBytes => rowBytes?.slice(T34_COLUMNS).some(byteValue => (byteValue & SEVEN_BIT_MASK) !== SPACE));
+        if (carrier === null && hasExtraColumns) magazinesWithoutCarrier.add(magazine || 8);
+        if (page.rows[T34_LAST_ROW + 1]) droppedRow24++;
+
+        packets.push([...packetAddress(magazine, 0), ...headerControlBytes(page.number, page.subcode, page.flags),
+        ...rowColumns(page.rows[0], HEADER_BYTES_BEFORE_TEXT, T34_COLUMNS - 1)]);
+
+        for (let group = 0; group < EXTENSION_PACKET_FOR_GROUP.length; group++) {
+            const firstRow = group * ROWS_PER_EXTENSION_PACKET;
+            const groupRows = Array.from({ length: ROWS_PER_EXTENSION_PACKET }, (_, index) => firstRow + index);
+            for (const rowNumber of groupRows) {
+                if (rowNumber > 0 && page.rows[rowNumber]) packets.push([...packetAddress(magazine, rowNumber), ...rowColumns(page.rows[rowNumber], 0, T34_COLUMNS - 1)]);
+            }
+
+            // Columns 32-39 of these 4 rows, after the rows themselves
+            if (carrier !== null && groupRows.some(rowNumber => page.rows[rowNumber])) {
+                packets.push([...packetAddress(carrier, EXTENSION_PACKET_FOR_GROUP[group]),
+                ...groupRows.flatMap(rowNumber => rowColumns(page.rows[rowNumber], T34_COLUMNS, T34_COLUMNS + EXTENSION_COLUMNS - 1))]);
+            }
+        }
+    }
+    if (magazinesWithoutCarrier.size) {
+        notes.push(`Columns 32-39 left out for magazine ${[...magazinesWithoutCarrier].join(", ")}, as its carrier magazine has pages of its own.`);
+    }
+    if (droppedRow24) notes.push(`Row 24 left out of ${droppedRow24} page(s), as T34 doesn't carry it.`);
+    return { bytes: Uint8Array.from(packets.flat()), packetCount: packets.length, notes };
+}
+
+function exportAsCapture(format) {
+    const pages = pagesForCapture();
+    const { bytes, packetCount, notes } = format === "t34" ? buildT34(pages) : buildT42(pages);
+    const baseName = editorState.sourceFileName.replace(/(\.session)?\.[^.]+$/, "");
+    downloadFile(`${baseName}-final.${format}`, new Blob([bytes], { type: "application/octet-stream" }));
+    announceStatus(`Exported ${pages.length} page(s) as ${format.toUpperCase()} (${packetCount} packets); `
+        + `${editorState.removedPageKeys.size} removed page(s) left out.` + (notes.length ? ` ${notes.join(" ")}` : ""));
+}
+
 
 const SESSION_FORMAT = "editor-session";
 const SESSION_VERSION = 1;
@@ -3140,6 +3603,12 @@ function saveSession() {
         importedPages: Object.fromEntries(editorState.importedPages),
         rowsFromOtherSamples: Object.fromEntries(
             [...editorState.rowsFromOtherSamples].map(([key, rows]) => [key, Object.fromEntries(rows)])),
+        unattributed: editorState.unattributed.map(({ magazine, headersBefore, headersAfter, version }) => ({
+            magazine,
+            headersBefore,
+            headersAfter,
+            version: { subcode: version.subcode, flags: version.flags ?? [], rows: version.rows.map(rowToHex), parityErrors: version.parityErrors ?? null, receivedAt: version.receivedAt }
+        })),
         pages: editorState.decodedPages.map(page => ({
             number: page.number,
             subcode: page.subcode,
@@ -3226,7 +3695,11 @@ async function restoreSession(session, onProgress) {
     editorState.sourceFileName = session.sourceFileName || "session";
 
     // Clears the old state and shows the first page
-    await loadPages(pages, { separatedTransmissions: session.separatedTransmissions ?? [], onProgress });
+    const unattributed = (session.unattributed ?? []).map(copy => ({
+        ...copy,
+        version: { ...copy.version, rows: copy.version.rows.map(hexToRow), parityErrors: copy.version.parityErrors ?? undefined }
+    }));
+    await loadPages(pages, { separatedTransmissions: session.separatedTransmissions ?? [], unattributed, onProgress });
 
     session.removedPageKeys?.forEach(key => editorState.removedPageKeys.add(key));
     Object.entries(session.importedPages ?? {}).forEach(([key, source]) => editorState.importedPages.set(key, source));
@@ -3450,6 +3923,8 @@ const menuActions = {
     },
     "save-session": saveSession,
     "export-all-json": exportAllPagesAsJSON,
+    "export-t42": () => exportAsCapture("t42"),
+    "export-t34": () => exportAsCapture("t34"),
     "export-png": exportCurrentPageAsPNG,
     "export-all-png": exportAllPagesAsPNG,
     "rebuild": () => selectPage(editorState.selectedPageIndex, { startOver: true }),
@@ -3521,7 +3996,7 @@ document.addEventListener("click", event => {
 });
 
 // Version of t42-decoder.js this editor was made for
-const EXPECTED_DECODER_VERSION = 2;
+const EXPECTED_DECODER_VERSION = 3;
 
 // ! Progress bar while opening a file
 // * Decoding the packets fills the first part of the bar and sorting out subpages the rest. A session has no decoding, so its bar starts there
@@ -3608,7 +4083,7 @@ elements.fileInput.addEventListener("change", async event => {
         editorState.sourceFileName = chosenFile.name;
         if (elements.groupOption) elements.groupOption.checked = true;
         try {
-            await loadPages(decoded.pages, { onProgress: sortingProgress });
+            await loadPages(decoded.pages, { unattributed: decoded.unattributed ?? [], onProgress: sortingProgress });
         } catch (error) {
             announceStatus(`Couldn't sort out the pages in ${chosenFile.name}: ${error.message}`);
             return;
@@ -3621,13 +4096,20 @@ elements.fileInput.addEventListener("change", async event => {
     const versionCount = decoded.pages.reduce((total, page) => total + page.versions.length, 0);
     let summary = `Loaded ${decoded.pages.length} page(s), ${versionCount} transmitted version(s) from ${chosenFile.name}.`
 
-    const separatedNumbers = [...new Set(editorState.groupedPages.filter(page => page.subpage).map(page => `P${page.number}`))];
+    const separatedNumbers = [...new Set(editorState.groupedPages.filter(page => page.subpage && !page.sharedAcross).map(page => `P${page.number}`))];
     const mergedCount = editorState.decodedPages.length
         - new Set(editorState.groupedPages.map(page => `${page.number}/${page.subcode}`)).size;
     if (mergedCount > 0) summary += ` Merged ${mergedCount} damaged subcode(s) back into their pages.`;
     if (separatedNumbers.length > 0) {
         summary += ` Separated subpages sharing a subcode in ${separatedNumbers.length} page(s)`
             + (separatedNumbers.length <= 8 ? ` (${separatedNumbers.join(", ")}).` : ".");
+    }
+
+    const sharedEntries = editorState.groupedPages.filter(page => page.sharedAcross);
+    if (sharedEntries.length > 0) {
+        const sharedNumbers = sharedEntries.map(page => `P${page.number}`);
+        summary += ` Found a page sent under ${sharedNumbers.length} page numbers at once (${sharedNumbers[0]}–${sharedNumbers[sharedNumbers.length - 1]}),`
+            + " such as a test page during a service breakdown, and gave it its own subpage on each.";
     }
 
     if (decoded.stats) {
