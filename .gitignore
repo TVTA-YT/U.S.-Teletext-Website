@@ -21,6 +21,7 @@ NATA-ID-Generator.py
 used.txt
 ia_manifest_upload.py
 IA.json
+image-gallery/migrate-gallery-to-r2.mjs
 depreciated/
 node_modules/
 TODO/

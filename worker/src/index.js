@@ -634,14 +634,23 @@ const GALLERY_TABLES = ["Acquire", "DaTaVizion", "Edutel", "Electra", "ExtraVisi
 const GALLERY_FILE_PATTERN = /^(?:Record-\d+-\d+(?:-\d+)?-v[A-Za-z0-9]+(?:-\d+)?|Page-\d+-\d+|(?:P|Page-)\d{3}-[0-9A-F]{4}(?:-subpage-\d+)?(?:-version-\d+-of-\d+)?|\d{3}_[0-9A-F]{4}(?:_v\d+)?)\.(?:png|jpg|jpeg|gif)$/i;
 const GALLERY_ZIP_PATTERN = /\.zip$/i;
 
-// & Get metadata from IA
-async function fetchIaMetadata(identifier) {
-    const url = `https://archive.org/metadata/${encodeURIComponent(identifier)}`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Internet Archive metadata returned HTTP ${response.status}`);
-    const data = await response.json();
-    if (!data || !Array.isArray(data.files)) throw new Error(`Malformed Internet Archive metadata for ${identifier}`);
-    return data;
+// ^ Gallery images live in the GALLERY bucket under "gallery-images/<IA ID>/..." and are served at "/files/gallery-images/..."
+const GALLERY_IMAGE_PREFIX = "gallery-images/";
+
+// & R2 folder holding one sample's gallery images
+function galleryImageFolder(identifier) {
+    return `${GALLERY_IMAGE_PREFIX}${identifier}/`;
+}
+
+// & Public URL for one R2 image key (each path segment is encoded, so spaces, etc. are safe)
+function galleryImageUrl(key) {
+    return "/files/" + key.split("/").map(segment => encodeURIComponent(segment)).join("/");
+}
+
+// & Content type for a gallery image in case it was uploaded without one
+function galleryImageContentType(key) {
+    const extension = key.slice(key.lastIndexOf(".") + 1).toLowerCase();
+    return { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif" }[extension] ?? "application/octet-stream";
 }
 
 // & Query all tables to find IA ID
@@ -690,144 +699,18 @@ async function getGalleryDatabase(db, identifier) {
     return { Recovered_By: null, Program_Title: null, Date: null, Service_Name: null, Network: null };
 }
 
-// & Building the image URL
-function buildZipEntryUrl(identifier, zipFilename, entryPath) {
-    const segments = entryPath.split("/").map(segment => encodeURIComponent(segment));
-    return `https://archive.org/download/${encodeURIComponent(identifier)}/${encodeURIComponent(zipFilename)}/${segments.join("/")}`;
-}
-
-// & Download specific byte range
-async function fetchByteRange(url, start, end) {
-    const response = await fetch(url, { headers: { "Range": `bytes=${start}-${end}` } });
-
-    if (response.status !== 206) throw new Error(`Range requests failed: HTTP ${response.status} (${start}-${end})`);
-
-    // Return raw binary response
-    return new Uint8Array(await response.arrayBuffer());
-}
-
-// & Get the file size of the ZIP
-async function fetchRemoteFileSize(url) {
-    const response = await fetch(url, { headers: { "Range": "bytes=0-0" } });
-
-    if (response.status !== 206) throw new Error(`Range probe failed: HTTP ${response.status}`);
-
-    const contentRange = response.headers.get("Content-Range");
-    if (!contentRange) throw new Error("No Content-Range header returned");
-
-    const match = contentRange.match(/\/(\d+)$/);
-    if (!match) throw new Error(`Could not parse Content-Range: ${contentRange}`);
-
-    return Number(match[1]);
-}
-
-
-/* LOCATING AND PARSING ZIP */
-
-// & Find the ZIP's End of Central Directory (EOCD) record and extract information about the Central Directory
-function locateEocd(buffer) {
-
-    // Hexadecimal bytes that identify the EOCD record
-    const signature = [0x50, 0x4b, 0x05, 0x06];
-
-    // Search backwards through the buffer. Minimum EOCD structure is 22.
-    for (let i = buffer.length - 22; i >= 0; i--) {
-
-        // These four bytes must match the EOCD hexadecimal values
-        if (buffer[i] === signature[0] && buffer[i + 1] === signature[1] && buffer[i + 2] === signature[2] && buffer[i + 3] === signature[3]) {
-
-            // Interpret specific bytes as numbers
-            const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
-
-            // Return number of files in the ZIP, the number of bytes in the Central Directory, and where it starts in the ZIP
-            return {
-                entryCount: view.getUint16(i + 10, true),
-                cdSize: view.getUint32(i + 12, true),
-                cdOffset: view.getUint32(i + 16, true)
-            };
-        }
-    }
-
-    return null;
-}
-
-// & Read the Central Directory and extract the filename of every file in the ZIP
-function parseCentralDirectoryFilenames(buffer, entryCount) {
-    const decoder = new TextDecoder();
-    const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
-    const filenames = [];
-    let offset = 0;
-
-    for (let i = 0; i < entryCount; i++) {
-        if (offset + 46 > buffer.length) break;
-
-        // Check to see if valid Central Directory entry
-        const signature = view.getUint32(offset, true);
-        if (signature !== 0x02014b50) break;
-
-        /*
-        * Get how many bytes long the filename is.
-        * Look for additional metadata and its length.
-        * Look for comments and their length.
-        * Filename starts 46 bytes after the beginning of the Central Directory entry.
-        * Calculate where filename ends
-        */
-        const nameLength = view.getUint16(offset + 28, true);
-        const extraLength = view.getUint16(offset + 30, true);
-        const commentLength = view.getUint16(offset + 32, true);
-        const nameStart = offset + 46;
-        const nameEnd = nameStart + nameLength;
-
-        // Turn bytes into string
-        filenames.push(decoder.decode(buffer.slice(nameStart, nameEnd)));
-
-        // Move to next entry
-        offset = nameEnd + extraLength + commentLength;
-    }
-
-    return filenames;
-}
-
-// & Call previous functions to generate
-async function fetchZipEntries(identifier, zipFilename) {
-    const zipUrl = "https://archive.org/download/" + encodeURIComponent(identifier) + "/" + encodeURIComponent(zipFilename);
-
-    // Find the ZIP's size, get the end, and download the tail
-    const fileSize = await fetchRemoteFileSize(zipUrl);
-    const tailSize = Math.min(fileSize, 65557);
-    const tail = await fetchByteRange(zipUrl, fileSize - tailSize, fileSize - 1);
-
-    // Find the EOCD
-    const eocd = locateEocd(tail);
-    if (!eocd) throw new Error(`Could not locate ZIP EOCD for ${zipFilename}`);
-
-    // Throw error is ZIP64
-    if (eocd.entryCount === 0xffff || eocd.cdOffset === 0xffffffff) throw new Error(`ZIP64 is not supported: ${zipFilename}`);
-    if (eocd.cdSize <= 0) return [];
-
-    // Download the Central Directory, not the entire ZIP
-    const centralDirectory = await fetchByteRange(zipUrl, eocd.cdOffset, eocd.cdOffset + eocd.cdSize - 1);
-
-    // Parse the binary Central Directory into a list of filenames excluding directory entries
-    return parseCentralDirectoryFilenames(centralDirectory, eocd.entryCount).filter(filename => !filename.endsWith("/"));
-}
-
-// & Loop over all image files from IA to build the image gallery list
-async function buildGalleryImageList(identifier, files) {
+// & List every image in R2 for one sample to build the image gallery list
+// Images can sit in subfolders (e.g. "gallery-images/<id>/<zip name>/Page-100-1.png"), so two captures of the same page don't overwrite each other
+async function buildGalleryImageList(env, identifier) {
     const images = [];
+    const prefix = galleryImageFolder(identifier);
+    let cursor;
 
-    for (const file of files) {
-        const filename = file?.name ?? "";
+    do {
+        const listing = await env.GALLERY.list({ prefix, cursor });
 
-        // Ignore anything that isn't a ZIP file
-        if (!GALLERY_ZIP_PATTERN.test(filename)) continue;
-
-        console.log(`Expanding ZIP ${identifier}/${filename}`);
-        const entries = await fetchZipEntries(identifier, filename);
-
-        // Loop through each ZIP entry and split the path wherever " / " is present
-        for (const entryPath of entries) {
-            const parts = entryPath.split("/");
+        for (const object of listing.objects) {
+            const parts = object.key.split("/");
 
             // Only return the filename
             const baseName = parts[parts.length - 1];
@@ -835,10 +718,11 @@ async function buildGalleryImageList(identifier, files) {
             // Check filename against accepted pattern
             if (!GALLERY_FILE_PATTERN.test(baseName)) continue;
 
-            // Only push images with matching filenames
-            images.push({ filename: baseName, url: buildZipEntryUrl(identifier, filename, entryPath) });
+            images.push({ filename: baseName, url: galleryImageUrl(object.key) });
         }
-    }
+
+        cursor = listing.truncated ? listing.cursor : undefined;
+    } while (cursor);
 
     return images;
 }
@@ -849,12 +733,11 @@ async function buildGalleryImageList(identifier, files) {
 // & Generate the image gallery manifest
 async function generateGalleryManifest(env, identifier) {
 
-    // Get the files, information about the record, and the relevant images
-    const metadata = await fetchIaMetadata(identifier);
+    // Get information about the record and its images in R2
     const databaseMeta = await getGalleryDatabase(env.DB, identifier);
-    const images = await buildGalleryImageList(identifier, metadata.files);
+    const images = await buildGalleryImageList(env, identifier);
 
-    if (images.length === 0) throw new Error(`No matching images found for ${identifier}`);
+    if (images.length === 0) throw new Error(`No matching images found in R2 under ${galleryImageFolder(identifier)}`);
 
     // Create the manifest key/value pair
     const manifest = {
@@ -895,7 +778,7 @@ async function generateAllGalleries(env, force = false) {
     const skipped = [];
     const failed = [];
 
-    // ! NOTE: This prevents a bulk run from creating a huge burst of simultaneous requests to IA.
+    // ! NOTE: Run one at a time to stay well under the Worker's per-request subrequest limit.
     for (const identifier of identifiers) {
         const key = galleryKey(identifier);
 
@@ -1021,7 +904,7 @@ async function handleApi(request, env) {
         if (url.searchParams.get("key") !== env.ADMIN_KEY) return errorResponse("Forbidden", 403);
         const identifier = decodeURIComponent(url.pathname.slice("/api/gallery/generate/".length)).trim();
 
-        if (!identifier) return errorResponse("Missing Internet Archive identifier", 400);
+        if (!identifier) return errorResponse("Missing IA ID", 400);
 
         // This is optional. This would be used to force updates to a specific manifest
         const force = url.searchParams.get("force") === "1";
@@ -1336,9 +1219,20 @@ export default {
 
             // T33 files
             const isT33 = key.toLowerCase().endsWith(".t33");
-            
+
             const isNewsMedia = key.startsWith("news/");
-            const bucket = isNewsMedia ? env.NEWS_MEDIA : isJson ? env.EPG : env.TEXT_ARCHIVE;
+
+            // Gallery images (e.g. /files/gallery-images/<IA ID>/<zip name>/Page-100-1.png) are in the GALLERY bucket
+            const isGalleryImage = key.startsWith(GALLERY_IMAGE_PREFIX);
+
+            // Gallery images rarely change, so serve repeat requests from Cloudflare's edge cache instead of R2
+            const cache = caches.default;
+            if (isGalleryImage) {
+                const cached = await cache.match(request);
+                if (cached) return cached;
+            }
+
+            const bucket = isGalleryImage ? env.GALLERY : isNewsMedia ? env.NEWS_MEDIA : isJson ? env.EPG : env.TEXT_ARCHIVE;
             const object = await bucket.get(key);
             if (!object) return new Response("Not found", { status: 404 });
 
@@ -1347,11 +1241,21 @@ export default {
             headers.set("etag", object.httpEtag);
 
             if (!headers.has("content-type")) {
-                headers.set("content-type", isJson
-                    ? "application/json; charset=utf-8"
-                    : isT33
-                        ? "application/octet-stream"
-                        : "text/html; charset=utf-8");
+                headers.set("content-type", isGalleryImage
+                    ? galleryImageContentType(key)
+                    : isJson
+                        ? "application/json; charset=utf-8"
+                        : isT33
+                            ? "application/octet-stream"
+                            : "text/html; charset=utf-8");
+            }
+
+            if (isGalleryImage) {
+                // Browsers keep images for a day; the edge keeps them for a week
+                headers.set("cache-control", "public, max-age=86400, s-maxage=604800");
+                const response = new Response(object.body, { headers });
+                ctx.waitUntil(cache.put(request, response.clone()));
+                return response;
             }
 
             return new Response(object.body, { headers });

@@ -21,6 +21,7 @@ js/import-news.mjs
 used.txt
 ia_manifest_upload.py
 IA.json
+image-gallery/migrate-gallery-to-r2.mjs
 .vscode
 
 

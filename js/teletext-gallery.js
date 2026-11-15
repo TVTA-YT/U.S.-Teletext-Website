@@ -17,14 +17,14 @@
     // Timeout time: 10 seconds
     const SLOW_LOAD_TIMEOUT_MS = 10000;
 
-    // Load only 1 thumbnail at a time to prevent excess requests
-    const THUMBNAIL_CONCURRENCY_LIMIT = 1;
+    // Load up to 6 thumbnails at a time (images now come from R2, so the old archive.org throttle isn't needed)
+    const THUMBNAIL_CONCURRENCY_LIMIT = 6;
 
-    // Send 1 requests every 750 ms
-    const THUMBNAIL_REQUEST_DELAY_MS = 750;
+    // No forced gap between thumbnail requests
+    const THUMBNAIL_REQUEST_DELAY_MS = 0;
 
-    // If thumbnail fails to load, wait 2 seconds before retrying to prevent excess requests
-    const RETRY_DELAY_MS = 2000;
+    // If an image fails to load, wait 1 second before retrying
+    const RETRY_DELAY_MS = 1000;
 
     // Scroll to image once 60px have passed when using mouse wheel or trackpad
     const FS_WHEEL_THRESHOLD = 60;
@@ -174,8 +174,8 @@
 
         // Depending on the failure, display one of these in the alert
         els.imageLoadAlert.textContent = isHardFailure
-            ? `Failed to load ${pageRef} — archive.org may be experiencing issues. Try again later or refresh the page.`
-            : `${pageRef} is taking longer than usual to load — archive.org may be slow right now. Still trying...`;
+            ? `Failed to load image${pageRef}. Try again later or refresh the page.`
+            : `Image${pageRef} is taking longer than usual to load. Still trying...`;
         els.imageLoadAlert.classList.remove("d-none");
     }
 
