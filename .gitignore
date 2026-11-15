@@ -19,6 +19,8 @@ jtes-sound.js
 jtes-viewer.js
 NATA-ID-Generator.py
 used.txt
+ia_manifest_upload.py
+IA.json
 depreciated/
 node_modules/
 TODO/

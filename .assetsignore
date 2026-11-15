@@ -19,6 +19,8 @@ NATA-ID-Generator.py
 assign-nat-ids.mjs
 js/import-news.mjs
 used.txt
+ia_manifest_upload.py
+IA.json
 .vscode
 
 
