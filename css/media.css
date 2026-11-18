@@ -139,6 +139,10 @@
         width: 10% !important;
     }
 
+    #footer-site-links {
+        font-size: 1.4rem;
+    }
+
     .electra-images {
         width: 50%;
     }
@@ -208,6 +212,10 @@
         width: 8% !important;
     }
 
+    #footer-site-links {
+        font-size: 1.2rem;
+    }
+
     .electra-images {
         width: 50%;
     }
@@ -273,6 +281,10 @@
 
     #input-number {
         width: 10% !important;
+    }
+
+    #footer-site-links {
+        font-size: 1.0rem;
     }
 
     .electra-images {
@@ -454,6 +466,10 @@
         width: 18% !important;
     }
 
+    #footer-site-links {
+        font-size: 0.8rem;
+    }
+
     .electra-images {
         width: 70%;
     }
@@ -538,6 +554,10 @@
 
     #input-number {
         width: 22% !important;
+    }
+
+    #footer-site-links {
+        font-size: 0.6rem;
     }
 
     .electra-images {

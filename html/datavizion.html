@@ -265,7 +265,8 @@
             </div>
             <div class="container">
                 <p>Use the form below to view all submissions or to search for submissions by year.</p>
-                <form action="datavizion-results.html" method="get">
+                <form action="results.html" method="get">
+                    <input type="hidden" name="service" value="datavizion" />
                     <div class="mb-3">
                         <label for="year" class="form-label">Select a year (leave blank to view all)</label>
                         <select name="year" id="year" class="form-select">
@@ -321,26 +322,21 @@
                 </div>
             </div>
         </main>
-        <footer class="end-footer pt-4 text-center">
+        <footer class="end-footer text-center">
+            <img src="../images/NATA-Footer-Banner.png" alt="" class="mw-100" />
             <div id="footer-site-links">
-                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
-                <p>
-                    Issues? &nbsp;
-                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
-                </p>
-                <p>
-                    Have questions or information? &nbsp;
-                    <a href="contact.html">Contact us.</a>
-                </p>
-                <p>
-                    Looking for a specific page? &nbsp;
-                    <a href="sitemap.html">Site map.</a>
-                </p>
-                <p class="pb-4">
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                </p>
+                <table class="table" id="footer-table">
+                    <tr>
+                        <td>
+                            <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">GitHub Repo</a>
+                        </td>
+                        <td><a href="contact.html">Contact Us</a></td>
+                        <td><a href="sitemap.html">Sitemap</a></td>
+                        <td><a href="privacy-policy.html">Privacy Policy</a></td>
+                    </tr>
+                </table>
             </div>
-            <div class="pt-4">
+            <div style="padding: 20px">
                 <small class="text-white">
                     Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
                 </small>

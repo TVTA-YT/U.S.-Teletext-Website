@@ -33,10 +33,10 @@ const EPG_GUIDES = {
     gemstar: { page: "gemstar-data.html", folder: "gemstar" }
 };
 
-// Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
+// ^ Base URL (none since the site is hosted on Cloudflare and will fetch data from there)
 const WORKER_BASE = "";
 
-// API call
+// ^ API call
 const API_BASE = `${WORKER_BASE}/api`;
 
 async function renderResults(config) {
@@ -50,6 +50,7 @@ async function renderResults(config) {
         serviceLabel = null,
         stationLabel = null,
         sortOptions = null,
+        affiliateSearch = null,
         columns
     } = config;
 
@@ -132,7 +133,7 @@ async function renderResults(config) {
         srSpan.textContent = spokenText;
         heading.appendChild(srSpan);
 
-        // Typed heading: used for "All Records", non-year filters, or a missing banner image
+        // & Typed heading: used for "All Records", non-year filters, or a missing banner image
         const showTypedHeading = () => {
             heading.querySelector('.year-banner')?.remove();
             const visualSpan = document.createElement('span');
@@ -144,7 +145,7 @@ async function renderResults(config) {
         // Pick the banner: the All Records banner, or the searched year's banner
         const year = String(filterValue ?? '').trim();
         const bannerName = showAllRows
-            ? ALL_RECORDS_BANNER
+            ? ALL_SAMPLES_BANNER
             : (/^\d{4}$/.test(year) ? year : null);
 
         if (bannerName) {
@@ -153,12 +154,91 @@ async function renderResults(config) {
             showTypedHeading();
         }
     }
-    if (countEl) countEl.textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} found`;
+    if (countEl) {
+        countEl.textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} found`;
+
+        // Announce count changes while the user types in the affiliate search
+        if (!countEl.hasAttribute('aria-live')) countEl.setAttribute('aria-live', 'polite');
+    }
 
     if (rows.length === 0) {
         container.innerHTML = '<p>No results found.</p>';
         if (sortControls) sortControls.innerHTML = '';
         return;
+    }
+
+    // ^ Affiliate search: which field to search, and the current query (also read from ?affiliate= in the URL)
+    // Only offered on All Records; a year/filtered view ignores it, including any ?affiliate= left in the URL
+    const affiliateField = showAllRows ? resolveAffiliateField(affiliateSearch, columns) : null;
+    const affiliateLabel = affiliateSearch?.label ?? 'Search affiliates with available samples';
+    let affiliateQuery = affiliateField ? (params.get('affiliate') ?? '').trim() : '';
+    let activeSort = 'default';
+
+    // & Rows after the affiliate search and the chosen sort
+    function getVisibleRows() {
+        let list = rows;
+
+        if (affiliateField && affiliateQuery) {
+            const q = affiliateQuery.toLowerCase();
+            list = list.filter(r =>
+                rowHasAvailableSample(r) &&
+                String(r[affiliateField] ?? '').toLowerCase().includes(q)
+            );
+        }
+
+        if (activeSort === 'default') return applyDefaultSort(list);
+
+        const opt = sortOptions[Number(activeSort)];
+        return sortRowsByField(list, opt.field, opt.type);
+    }
+
+    // & Re-draw the table and result count
+    function refresh() {
+        const visible = getVisibleRows();
+
+        if (countEl) countEl.textContent = `${visible.length} result${visible.length === 1 ? '' : 's'} found`;
+
+        if (visible.length === 0) {
+            container.innerHTML = affiliateQuery
+                ? `<p>No available samples found for "${escapeHtml(affiliateQuery)}".</p>`
+                : '<p>No results found.</p>';
+            return;
+        }
+
+        // Custom sort overrides month-grouping
+        const grouping = (showAllRows || activeSort !== 'default') ? null : groupByField;
+        renderTable(visible, columns, grouping, container, dataset);
+    }
+
+    // Clear a page-provided #affiliate-controls container when the search isn't offered
+    if (!affiliateField) {
+        const existingHost = document.getElementById('affiliate-controls');
+        if (existingHost) existingHost.innerHTML = '';
+    }
+
+    if (affiliateField) {
+
+        // Only affiliates with at least one available sample are suggested
+        const affiliates = [...new Set(
+            rows
+                .filter(r => rowHasAvailableSample(r) && hasRealValue(r[affiliateField]))
+                .map(r => String(r[affiliateField]).trim())
+        )].sort((a, b) => a.localeCompare(b));
+
+        if (affiliates.length > 0) {
+            buildAffiliateSearch({
+                affiliates,
+                label: affiliateLabel,
+                initialValue: affiliateQuery,
+                sortControls,
+                container,
+                onSearch: value => {
+                    affiliateQuery = value;
+                    updateUrlParam('affiliate', value);
+                    refresh();
+                }
+            });
+        }
     }
 
     // Sort dropdown field that will only show when viewing all records
@@ -179,30 +259,109 @@ async function renderResults(config) {
             const sortSelect = document.getElementById('sort-select');
 
             sortSelect.addEventListener('change', () => {
-                if (sortSelect.value === 'default') {
-                    renderTable(applyDefaultSort(rows), columns, showAllRows ? null : groupByField, container, dataset);
-                    return;
-                }
-
-                const opt = sortOptions[Number(sortSelect.value)];
-                const sorted = sortRowsByField(rows, opt.field, opt.type);
-
-                // Custom sort overrides month-grouping
-                renderTable(sorted, columns, null, container, dataset);
+                activeSort = sortSelect.value;
+                refresh();
             });
         } else {
             sortControls.innerHTML = '';
         }
     }
 
-    renderTable(rows, columns, showAllRows ? null : groupByField, container, dataset);
+    refresh();
 }
 
-// Folder holding the year banners: "dark/1980.png" and "light/1980_light.png"
+// & A row has a downloadable/linked file (ZIP, HTML, TEXT1/TEXT2, or EPG JSON)
+function rowHasDownload(row) {
+    return hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) ||
+        hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);
+}
+
+// * NABTS services (Edutel, ExtraVision, NBC Teletext) use NABTS_Stream; WST services use Teletext_Sample
+function rowHasViewableSample(row) {
+    const isNabts = row.NABTS_Stream !== undefined;
+    const hasSample = isNabts ? hasRealValue(row.NABTS_Stream) : hasRealValue(row.Teletext_Sample);
+    return hasSample && hasRealValue(row.IA_ID);
+}
+
+// & Used by the affiliate search. Any viewable stream or downloadable file counts as an available sample
+function rowHasAvailableSample(row) {
+    return rowHasViewableSample(row) || rowHasDownload(row);
+}
+
+// ^ Column keys tried, in order, when "affiliateSearch" is true and no column has "renderAffiliate"
+const AFFILIATE_FIELD_FALLBACKS = ['Affiliate', 'Station', 'Station_Name', 'Call_Letters'];
+
+function resolveAffiliateField(affiliateSearch, columns) {
+    if (!affiliateSearch) return null;
+    if (affiliateSearch.field) return affiliateSearch.field;
+
+    const markedColumn = columns.find(c => c.renderAffiliate);
+    if (markedColumn) return markedColumn.key;
+
+    const keys = columns.map(c => c.key);
+    const fallback = AFFILIATE_FIELD_FALLBACKS.find(k => keys.includes(k));
+    if (!fallback) console.warn('affiliateSearch is on, but no affiliate column was found. Pass { field: "..." }.');
+    return fallback ?? null;
+}
+
+// & Keeps a URL parameter in sync with the search box so filtered views can be shared
+function updateUrlParam(name, value) {
+    const url = new URL(window.location.href);
+    if (value) url.searchParams.set(name, value);
+    else url.searchParams.delete(name);
+    history.replaceState(null, '', url);
+}
+
+// ! Affiliate search field
+// & Uses a DIV with the ID "affiliate-controls" if the page has one; otherwise, it's placed directly below the sort controls (or above the results if the page has no sort controls)
+function buildAffiliateSearch({ affiliates, label, initialValue, sortControls, container, onSearch }) {
+    let host = document.getElementById('affiliate-controls');
+    if (!host) {
+        host = document.createElement('div');
+        host.id = 'affiliate-controls';
+        if (sortControls) sortControls.after(host);
+        else container?.before(host);
+    }
+
+    const count = affiliates.length;
+    host.innerHTML = `
+        <form role="search" class="mb-3">
+            <label for="affiliate-search" class="form-label">${escapeHtml(label)}</label>
+            <div class="input-group">
+                <input type="search" id="affiliate-search" class="form-control" list="affiliate-options"
+                    autocomplete="off" aria-describedby="affiliate-help" value="${escapeHtml(initialValue)}">
+            </div>
+            <datalist id="affiliate-options">
+                ${affiliates.map(a => `<option value="${escapeHtml(a)}"></option>`).join('')}
+            </datalist>
+            <div class="form-text" id="affiliate-help" style="color: #485dff">${count} affiliate${count === 1 ? ' has' : 's have'} available samples</div>
+        </form>
+    `;
+
+    const form = host.querySelector('form');
+    const input = host.querySelector('#affiliate-search');
+
+    let timer = null;
+    const run = () => onSearch(input.value.trim());
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        clearTimeout(timer);
+        run();
+    });
+
+    // Short delay so the table doesn't re-draw on every keystroke
+    input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(run, 150);
+    });
+}
+
+// ^ Folder holding the year banners: "dark/1980.png" and "light/1980_light.png"
 const YEAR_BANNER_DIR = "../images/banners/years/";
 
-// File name (without ".png" or "_light") of the All Records banner, kept in the same light/dark folders
-const ALL_RECORDS_BANNER = "All-Records";
+// ^ File name (without ".png" or "_light") of the "All Samples" banner, kept in the same light/dark folders
+const ALL_SAMPLES_BANNER = "All-Samples";
 
 // Builds both theme variants of a year banner; CSS shows the one matching data-bs-theme
 // onFail runs once if either image is missing, so the page falls back to the typed heading
@@ -234,7 +393,7 @@ function buildYearBanner(name, onFail) {
     return wrap;
 }
 
-// Handles sorting based on the selected filter
+// & Handles sorting based on the selected filter
 function sortRowsByField(rows, field, type) {
     return [...rows].sort((a, b) => {
         const aVal = a[field];
@@ -285,7 +444,7 @@ function renderTable(rows, columns, groupByField, container, dataset) {
     }
 }
 
-// Builds a heading (optional) + table wrapper
+// & Builds a heading (optional) + table wrapper
 function createTableSection(headerCells, columns, extraTableClasses = '', headingText = null) {
     const section = document.createElement('section');
     section.className = 'results-group mb-4';
@@ -316,7 +475,7 @@ function createTableSection(headerCells, columns, extraTableClasses = '', headin
     return section;
 }
 
-// Makes the table wrapper scrollable and keyboard-reachable when it has many rows
+// & Makes the table wrapper scrollable and keyboard-reachable when it has many rows
 function applyScrollIfNeeded(section, rowCount, label) {
     if (rowCount <= SCROLL_ROW_THRESHOLD) return;
 
@@ -357,8 +516,7 @@ function appendRow(tbody, row, columns, dataset) {
     if (isUpdatedRecord) tr.classList.add('row-updated');
 
     // if (row.isNew) (now - Number(firstSeen)) <= NEW_WINDOW_SECONDS;
-    const hasAnyLink = hasRealValue(row.Download_Link) || hasRealValue(row.HTML_Link) || hasRealValue(row.TEXT1) || hasRealValue(row.TEXT2) || hasRealValue(row.Data);
-    if (!hasAnyLink) tr.classList.add('row-no-download-link');
+    if (!rowHasDownload(row)) tr.classList.add('row-no-download-link');
 
     const nonTeletextDirectory = `/files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
     // EPG services (StarSight, Gemstar): which guide page to open and which R2 folder holds the JSON

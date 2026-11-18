@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const networkServices = {
         'ABC': ['ABCPLUS'],
-        'CBS': ['ExtraVision'],
+        'CBS': ['ExtraVision', 'Gemstar'],
+        'Discovery': ['DaTaVizion'],
         'IPTV': ['IPTVAGIDS'],
         'KET': ['KETAGTEXT'],
         'MTV': ['Gemstar', 'StarSight'],

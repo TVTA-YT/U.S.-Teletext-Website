@@ -286,20 +286,7 @@
                 </div>
                 <p id="trivia-status" class="visually-hidden" aria-live="polite"></p>
                 <div id="gallery-container"></div>
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <img id="imageModalImg" src="" alt="" class="img-fluid mb-3" />
-                                <p id="imageModalCaption" class="mb-2"></p>
-                                <p id="imageModalContributor" class="small text-muted mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <!-- Floating theme button, bottom-right -->
                 <button
                     id="themeFab"
@@ -344,26 +331,21 @@
                 </div>
             </div>
         </main>
-        <footer class="end-footer pt-4 text-center">
+        <footer class="end-footer text-center">
+            <img src="../images/NATA-Footer-Banner.png" alt="" class="mw-100" />
             <div id="footer-site-links">
-                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
-                <p>
-                    Issues? &nbsp;
-                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
-                </p>
-                <p>
-                    Have questions or information? &nbsp;
-                    <a href="contact.html">Contact us.</a>
-                </p>
-                <p>
-                    Looking for a specific page? &nbsp;
-                    <a href="sitemap.html">Site map.</a>
-                </p>
-                <p class="pb-4">
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                </p>
+                <table class="table" id="footer-table">
+                    <tr>
+                        <td>
+                            <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">GitHub Repo</a>
+                        </td>
+                        <td><a href="contact.html">Contact Us</a></td>
+                        <td><a href="sitemap.html">Sitemap</a></td>
+                        <td><a href="privacy-policy.html">Privacy Policy</a></td>
+                    </tr>
+                </table>
             </div>
-            <div class="pt-4">
+            <div style="padding: 20px">
                 <small class="text-white">
                     Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
                 </small>

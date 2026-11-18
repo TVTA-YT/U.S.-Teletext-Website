@@ -1550,6 +1550,31 @@
      */
     const SYSTEMATIC_MIN_LESSONS = 20, SYSTEMATIC_STRONG_LESSONS = 50, SYSTEMATIC_RATIO = 5, SYSTEMATIC_MIN_WORD = 3;
     const isWordByte = (byte) => isLetter(byte) || (byte & 0x7F) === 0x28;
+    // JS-only: a SELECT COLOR (0x3E) read as the operand byte 0x5E (bits 5 and 6 both flipped, which keeps the parity) in
+    // a run of colour-map entries, each SELECT COLOR n then SET COLOR or BLINK (CBS 1987-11-30: the News Update and index
+    // pages define their colour map so, and that tape reads 0x3E as 0x5E so often that every copy of some entries has
+    // it: the entry was never selected, its colours went to the one before, and the pages came out pink and orange).
+    // A 0x5E read as drawing code, followed by an operand and then the SET COLOR or BLINK its neighbours one entry
+    // away (6 or 7 bytes) begin with SELECT COLOR before, is put back.
+    const repairColorSelects = (data) => {
+        let result = data, roles = null;
+        for (let i = 0; i + 2 < data.length; i++) {
+            if ((data[i] & 0x7F) !== 0x5E) continue;
+            const next = data[i + 2] & 0x7F;
+            if (next !== 0x3C && next !== 0x3F) continue;
+            const operand = data[i + 1] & 0x7F;
+            if (operand < 0x40) continue;
+            const neighbour = [i - 7, i - 6, i + 6, i + 7].some((j) => j >= 0 && j + 2 < data.length &&
+                (data[j] & 0x7F) === 0x3E && (data[j + 2] & 0x7F) === next && (data[j + 1] & 0x7F) >= 0x40);
+            if (!neighbour) continue;
+            if (!roles) roles = readRoles(data);
+            if (roles[i] === ROLE_TEXT) continue;
+            if (result === data) result = [...data];
+            result[i] = (data[i] & 0x80) | 0x3E;
+        }
+        return result;
+    };
+
     const settleSystematicMisreads = (records) => {
         const spans = [], counts = new Map();
         for (const record of records) {
@@ -2352,7 +2377,21 @@
                     // revised on the air changes length, while a recording whose packets are often misread (WCBS April
                     // 1985) gathers its spliced copies, which keep the length, into a content of their own
                     const spliced = sameLength && sharesLayout;
-                    if (rare ? lostBytes < 27 && !sharesLayout : (lostBytes < 27 || !damagedLayout) && !spliced) return;
+                    // ... or, seen at most a fifth as often, a cut-short copy: shorter than the main content, its bytes
+                    // agreeing with the main content's from the start for the most part (CBS 1991-05-26: a lone copy of
+                    // World Cities' 01405, 111 of its 435 bytes with its record header read into the start, was listed as
+                    // an edition, and drawn over the pages before it, it laid black bars over them)
+                    let cutShort = false;
+                    if (rare && minorData.length < mainData.length) {
+                        let judged = 0, agreed = 0;
+                        for (let i = 0; i < minorData.length; i++) {
+                            if (!salvageUsable(minorData, minorPresent, i) || !salvageUsable(mainData, mainPresent, i)) continue;
+                            judged++;
+                            if ((minorData[i] & 0x7F) === (mainData[i] & 0x7F)) agreed++;
+                        }
+                        cutShort = judged >= 64 && agreed * 10 >= judged * 6;
+                    }
+                    if (rare ? lostBytes < 27 && !sharesLayout && !cutShort : (lostBytes < 27 || !damagedLayout) && !spliced) return;
                     // Its copies only fill the room the main content's own copies leave: appended, they would push the
                     // main content's out of the 64 kept (CBS 1984-02-27 page 041: 46 copies with a block of packets
                     // misplaced outvoted the page's good ones)
@@ -2694,6 +2733,7 @@
             settleWordsByVocabulary(built, readingsOf);
             settleCodeByStretches(built, readingsOf, partners);
             settleSystematicMisreads(built);
+            for (const record of built) if (record.data && isPresentation(record.type)) record.data = repairColorSelects(record.data);
             return built;
         }
     }

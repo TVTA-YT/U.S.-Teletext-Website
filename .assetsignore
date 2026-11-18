@@ -8,19 +8,21 @@
 node_modules
 depreciated
 news-import
-TODO
+other/TODO
 .DS_Store
 test.html
 silent-radio.html
 meta-site-images
 VCR-Plus_white.png
 VCR-Plus.png
-NATA-ID-Generator.py
-assign-nat-ids.mjs
+other/NATA-ID-Generator.py
+other/assign-nat-ids.mjs
 js/import-news.mjs
-used.txt
-ia_manifest_upload.py
-IA.json
+other/used.txt
+other/ia_manifest_upload.py
+other/IA.json
+other/json
+other/sql
 image-gallery/migrate-gallery-to-r2.mjs
 .vscode
 

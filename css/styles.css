@@ -257,17 +257,24 @@ h1 .type-cursor {
 }
 
 .end-footer {
-  background: #152de3;
-  padding: 20px;
+  background: #000099;
 }
 .end-footer #footer-site-links {
   border-bottom: 1px solid #fff;
+  padding-top: 20px;
 }
-.end-footer #footer-site-links p {
-  font-size: 1.2em;
-  color: #fff !important;
+.end-footer #footer-site-links #footer-table {
+  --bs-table-bg: none;
+  width: 100%;
+  table-layout: fixed;
 }
-.end-footer #footer-site-links p a,
-.end-footer #footer-site-links p span {
+.end-footer #footer-site-links #footer-table * {
+  border-bottom-width: 0px !important;
+}
+.end-footer #footer-site-links #footer-table tr td {
+  font-weight: bold;
+}
+.end-footer #footer-site-links #footer-table tr td a,
+.end-footer #footer-site-links #footer-table tr td span {
   color: #fff !important;
 }/*# sourceMappingURL=styles.css.map */

@@ -299,26 +299,26 @@
                 <hr aria-hidden="true" />
                 <p class="text-center fs-4 fw-bold">
                     Last Updated: <br />
-                    November 8, 2026
+                    November 15, 2026
                 </p>
                 <hr aria-hidden="true" />
                 <div class="row pt-4">
                     <div class="col-xl-6" id="partial-teletext">
                         <h3 class="text-center">Partial Teletext</h3>
-                        <p class="text-center fs-4">Total: 5</p>
+                        <p class="text-center fs-4">Total: 6</p>
                         <div class="table-responsive overflow-y-auto" id="partial-teletext-table-container">
                             <table class="table table-primary table-bordered table-striped text-center align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 15%; height: 25%">Affiliate</th>
-                                        <th scope="col">City/State</th>
+                                        <th scope="col" style="width: 130px">City/State</th>
                                         <th scope="col">Network</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Source</th>
+                                        <th scope="col" style="width: 250px">Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="station-logo-row" id="kmtv-row">
+                                    <tr class="station-logo-row">
                                         <td>
                                             <img src="../images/station-logos/KMTV.png" alt="KMTV" class="mw-100" id="kmtv-logo" />
                                             <span class="station-name">KMTV</span>
@@ -327,6 +327,16 @@
                                         <td>CBS</td>
                                         <td>Partial</td>
                                         <td>Recording from September 1987.</td>
+                                    </tr>
+                                    <tr class="station-logo-row">
+                                        <td>
+                                            <img src="../images/station-logos/WDAF.png" alt="WDAF" class="mw-100" id="wdaf-logo" />
+                                            <span class="station-name">WDAF</span>
+                                        </td>
+                                        <td>Kansas City, MO</td>
+                                        <td>NBC</td>
+                                        <td>Partial</td>
+                                        <td>Recording from 1984.</td>
                                     </tr>
                                     <tr class="station-logo-row">
                                         <td>
@@ -374,19 +384,29 @@
                     </div>
                     <div class="col-xl-6">
                         <h3 class="text-center">Omitted Teletext</h3>
-                        <p class="text-center fs-4">Total: 12</p>
+                        <p class="text-center fs-4">Total: 13</p>
                         <div class="table-responsive overflow-y-auto" id="omitted-teletext-table-container">
                             <table class="table table-danger table-bordered table-striped text-center align-middle">
                                 <thead class="table-light sticky-top">
                                     <tr>
                                         <th scope="col" style="width: 15%">Affiliate</th>
-                                        <th scope="col">City/State</th>
+                                        <th scope="col" style="width: 130px">City/State</th>
                                         <th scope="col">Network</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Source</th>
+                                        <th scope="col" style="width: 250px">Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr class="station-logo-row">
+                                        <td>
+                                            <img src="../images/station-logos/KFMB.png" alt="KFMB" class="mw-100" id="kfmb-logo" />
+                                            <span class="station-name">KFMB</span>
+                                        </td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>CBS</td>
+                                        <td>Omitted</td>
+                                        <td>Multiple recordings from 1984.</td>
+                                    </tr>
                                     <tr class="station-logo-row">
                                         <td>
                                             <img src="../images/station-logos/KGAN.png" alt="KGAN" class="mw-100" id="kgan-logo" />
@@ -568,26 +588,21 @@
                 </div>
             </div>
         </main>
-        <footer class="end-footer pt-4 text-center">
+        <footer class="end-footer text-center">
+            <img src="../images/NATA-Footer-Banner.png" alt="" class="mw-100" />
             <div id="footer-site-links">
-                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
-                <p>
-                    Issues? &nbsp;
-                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
-                </p>
-                <p>
-                    Have questions or information? &nbsp;
-                    <a href="contact.html">Contact us.</a>
-                </p>
-                <p>
-                    Looking for a specific page? &nbsp;
-                    <a href="sitemap.html">Site map.</a>
-                </p>
-                <p class="pb-4">
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                </p>
+                <table class="table" id="footer-table">
+                    <tr>
+                        <td>
+                            <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">GitHub Repo</a>
+                        </td>
+                        <td><a href="contact.html">Contact Us</a></td>
+                        <td><a href="sitemap.html">Sitemap</a></td>
+                        <td><a href="privacy-policy.html">Privacy Policy</a></td>
+                    </tr>
+                </table>
             </div>
-            <div class="pt-4">
+            <div style="padding: 20px">
                 <small class="text-white">
                     Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
                 </small>

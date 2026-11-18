@@ -17,20 +17,13 @@ jtes-core.js
 jtes-render.js
 jtes-sound.js
 jtes-viewer.js
-NATA-ID-Generator.py
-used.txt
-ia_manifest_upload.py
-IA.json
 image-gallery/migrate-gallery-to-r2.mjs
 depreciated/
 node_modules/
-TODO/
-json/
-sql/
 .vscode/
 images/meta-site-images
 news-import/
-jtes-assets/
+other/
 
 # wrangler files
 .wrangler

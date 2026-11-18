@@ -296,20 +296,33 @@ h1 {
     overflow-wrap: anywhere;
 }
 
+
+
 .end-footer {
-    background: #152de3;
-    padding: 20px;
+    background: #000099;
 
     #footer-site-links {
         border-bottom: 1px solid #fff;
+        padding-top: 20px;
 
-        p {
-            font-size: 1.2em;
-            color: #fff !important;
+        #footer-table {
+            --bs-table-bg: none;
+            width: 100%;
+            table-layout: fixed;
 
-            a,
-            span {
-                color: #fff !important;
+            * {
+                border-bottom-width: 0px !important;
+            }
+
+            tr {
+                td {
+                    font-weight: bold;
+
+                    a,
+                    span {
+                        color: #fff !important;
+                    }
+                }
             }
         }
     }

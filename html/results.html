@@ -1,16 +1,16 @@
 <!doctype html>
-<!-- Created September 5, 2026, 15:39 -->
+<!-- Created November 18, 2026, 12:44 -->
 <html lang="en" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="View a list of available samples from the PENNTEXT text service." />
+        <meta name="description" content="View available samples from a selected teletext, text, or VBI service." />
         <meta name="robots" content="noindex, nofollow" />
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="North American Teletext Archive - PENNTEXT Samples" />
-        <meta property="og:description" content="View a list of available samples from the PENNTEXT text service." />
-        <meta property="og:url" content="https://nateletext.com/penntext-results.html" />
+        <meta property="og:title" content="North American Teletext Archive - Samples" />
+        <meta property="og:description" content="View available samples from a selected teletext, text, or VBI service." />
+        <meta property="og:url" content="https://nateletext.com/html/results.html" />
         <meta property="og:image" content="https://nateletext.com/images/og-site-image.png" />
         <meta property="og:image:alt" content="North American Teletext Archive" />
         <meta property="og:site_name" content="North American Teletext Archive" />
@@ -45,7 +45,7 @@
             data-website-id="fca7fa5d-3d18-4e74-afe2-5b880ffc204c"
             data-domains="nateletext.com"
         ></script>
-        <title>PENNTEXT Results</title>
+        <title>Results</title>
         <style>
             .heading-container {
                 padding-top: 120px;
@@ -287,9 +287,9 @@
         <main>
             <div class="heading-container">
                 <h1 class="page-title">
-                    <span class="visually-hidden">Pennsylvania Public Television Network PennText Results</span>
-                    <img src="../images/banners/light/PENNTEXT_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="../images/banners/dark/PENNTEXT.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
+                    <span class="visually-hidden"></span>
+                    <img alt="" class="mw-100 light-mode-image" aria-hidden="true" />
+                    <img alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
                 </h1>
                 <h2>
                     <span id="year-heading"></span>
@@ -298,31 +298,49 @@
             <div class="container">
                 <p class="fs-2" id="result-count"></p>
                 <div class="alert alert-secondary" role="alert">
-                    <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong
-                    ><span>: Some lines may have decoding issues due to imperfections with the original recording.</span>
-                    <br />
-                    <br />
-                    <span
-                        ><span aria-hidden="true">
-                            The table(s) below are responsive; to view more of the information, simply scroll the table (if applicable). </span
-                        ><span class="sr-only">
-                            The table or tables below are responsive; to view more of the information, simply scroll the table (if
-                            applicable).
-                        </span>
+                    <i class="bi bi-info-circle-fill"></i> <strong>NOTE</strong>
+                    <span>
+                        : Some teletext pages may have imperfections, either due to corruption present in the source material or
+                        imperfections with the software decoders.
                     </span>
                     <br />
                     <br />
                     <span>
-                        If an HTML file is available for viewing, look for the HTML icon (<i class="bi bi-filetype-html"></i>) in the TEXT1
-                        or TEXT2 columns.
+                        <span aria-hidden="true">
+                            The table(s) below are responsive; to view more of the information, simply scroll the table in both directions.
+                        </span>
+                        <span class="sr-only">
+                            The table or tables below are responsive; to view more of the information, simply scroll the table both
+                            horizontally and vertically.
+                        </span>
                     </span>
+                    <br />
+                    <br />
+                    <p class="fs-5">Downloading/Viewing Data</p>
+                    <p>
+                        <strong style="color: #1c4ded">Teletext</strong>: To download a sample, look for the ZIP icon (<i
+                            class="bi bi-file-zip-fill"
+                        ></i
+                        >) in the ZIP column. To view images from each sample, click the sample date in the "Date" column. To view the
+                        teletext stream, click the teletext icon in the "View Teletext Stream" column.
+                    </p>
+                    <p>
+                        <strong style="color: #00aaff">Text</strong>: To view a sample, look for the HTML icon (<i
+                            class="bi bi-filetype-html"
+                        ></i
+                        >) in the "HTML," "TEXT1," or "TEXT2" columns.
+                    </p>
+                    <p>
+                        <strong style="color: #9d00ff">Gemstar/StarSight</strong>: To view EPG data, look for a linked value in the "Date
+                        Range" column.
+                    </p>
                 </div>
                 <hr aria-hidden="true" />
                 <div id="sort-controls"></div>
                 <div id="results"></div>
                 <div class="pb-3" id="return-to-form-button">
-                    <a href="penntext.html">
-                        <button type="submit" class="btn form-control">
+                    <a href="services.html">
+                        <button type="button" class="btn form-control">
                             <span class="button-text">Return to Form</span>
                         </button>
                     </a>
@@ -386,26 +404,21 @@
                 </div>
             </div>
         </main>
-        <footer class="end-footer pt-4 text-center">
+        <footer class="end-footer text-center">
+            <img src="../images/NATA-Footer-Banner.png" alt="" class="mw-100" />
             <div id="footer-site-links">
-                <img src="../images/North-American-Teletext-Archive-Logo.png" alt="Site footer logo" class="mw-100 pt-2 pb-4 footer-logo" />
-                <p>
-                    Issues? &nbsp;
-                    <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">Report on GitHub.</a>
-                </p>
-                <p>
-                    Have questions or information? &nbsp;
-                    <a href="contact.html">Contact us.</a>
-                </p>
-                <p>
-                    Looking for a specific page? &nbsp;
-                    <a href="sitemap.html">Site map.</a>
-                </p>
-                <p class="pb-4">
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                </p>
+                <table class="table" id="footer-table">
+                    <tr>
+                        <td>
+                            <a href="https://github.com/TVTA-YT/U.S.-Teletext-Website" target="_blank">GitHub Repo</a>
+                        </td>
+                        <td><a href="contact.html">Contact Us</a></td>
+                        <td><a href="sitemap.html">Sitemap</a></td>
+                        <td><a href="privacy-policy.html">Privacy Policy</a></td>
+                    </tr>
+                </table>
             </div>
-            <div class="pt-4">
+            <div style="padding: 20px">
                 <small class="text-white">
                     Website <span class="copyright-symbol" aria-hidden="true">&copy;</span> Copyright 2026 - TVTA
                 </small>
@@ -431,45 +444,7 @@
         <script src="../js/color-modes.js"></script>
         <script src="../js/image-modal.js"></script>
         <script src="../js/render-results.js"></script>
-        <script>
-            renderResults({
-                dataset: "penntext",
-                filterParam: "year",
-                filterField: "Year",
-                serviceLabel: "PENNTEXT",
-                stationLabel: "PPTN",
-                groupByField: "Month",
-                groupOrder: [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                ],
-                sortSecondaryField: "Date",
-                sortOptions: [
-                    { label: "Contributor", field: "Recovered_By", type: "string" },
-                    { label: "Program Title", field: "Program_Title", type: "string" },
-                    { label: "Sample Date", field: "Date", type: "date" },
-                ],
-                columns: [
-                    { label: "Date", key: "Date", width: "7rem" },
-                    { label: "Program", key: "Program_Title", width: "30rem" },
-                    { label: "Tape", key: "Tape_Type", width: "5rem", accessibleMap: "BMAX_Name" },
-                    { label: "Speed", key: "Tape_Speed", width: "5rem", accessibleMap: "BMAX_Speed" },
-                    { label: "TEXT1", key: "TEXT1", width: "5rem", renderABCPlus: true },
-                    { label: "TEXT2", key: "TEXT2", width: "5rem", renderABCPlus: true },
-                    { label: "Contributor", key: "Recovered_By", width: "12rem" },
-                    { label: "Date Added", key: "Date_Added", width: "7rem" },
-                ],
-            });
-        </script>
+        <script src="../js/results-config.js"></script>
+        <script src="../js/results.js"></script>
     </body>
 </html>
