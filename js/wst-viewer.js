@@ -835,8 +835,9 @@ function tick() {
         }
     }
 
-    // The reconstructed clock needs a redraw once a second
-    if (elements.reconstructOption?.checked && hasCapture() && viewer.tickCount % (1000 / TICK_MS) === 0) needsDraw = true;
+    // The running clock needs a redraw once a second
+    const hasRunningClock = elements.reconstructOption?.checked || viewer.headerTemplates.has(viewer.requestedNumber?.[0]);
+    if (hasRunningClock && hasCapture() && viewer.tickCount % (1000 / TICK_MS) === 0) needsDraw = true;
 
     if (needsDraw) render();
 }
@@ -914,6 +915,18 @@ function findClock(template, rows, pageColumn) {
     }
 
     return best;
+}
+
+
+// & The column where most received headers show a time that changes between them, or null
+function findClockInHeaders(rows) {
+    let best = null;
+    for (let column = HEADER_TEXT_START; column <= COLUMN_COUNT - 8; column++) {
+        const times = rows.map(row => readClock(row, column)).filter(seconds => seconds !== null);
+        const changes = new Set(times).size > 1 || rows.length === 1;
+        if (changes && times.length > (best?.count ?? 0)) best = { column, count: times.length };
+    }
+    return best?.column ?? null;
 }
 
 
@@ -1027,7 +1040,12 @@ function buildHeaderTemplates(headersByMagazine) {
     const templates = new Map();
     const allTimes = [];
 
-    for (const [magazine, headers] of headersByMagazine) {
+    for (const [magazine, allHeaders] of headersByMagazine) {
+        // Only headers with a clock vote, so headers without one (e.g. KOIN 1990-03-15's test page, sent under every page
+        // during a breakdown) can't outvote the clock's digits, which differ from header to header
+        const clockColumn = findClockInHeaders(allHeaders.map(header => header.row));
+        const headers = clockColumn === null ? allHeaders : allHeaders.filter(header => readClock(header.row, clockColumn) !== null);
+
         const rows = headers.map(header => header.row);
         const template = voteHeader(rows);
         const details = describeTemplate(template, headers);
@@ -1047,20 +1065,24 @@ function buildHeaderTemplates(headersByMagazine) {
     return templates;
 }
 
-// & A clean header for this page, with a running clock that starts from the capture's time
-function reconstructedHeader(pageNumber) {
-    const details = viewer.headerTemplates.get(pageNumber[0]);
-    if (!details) return null;
-
-    const row = details.template.slice();
-
+// & A header with the clock at a column set to the running time: one clock for the whole sample, starting from the capture's time
+// * Keeps the service's own separators (":" or ".") and only replaces the digits
+function withRunningClock(row, clockColumn) {
     const elapsed = Math.floor((Date.now() - viewer.loadedAt) / 1000);
     const total = (viewer.clockStartSeconds + elapsed) % SECONDS_PER_DAY;
     const digits = [Math.floor(total / 3600), Math.floor(total / 60) % 60, total % 60]
         .map(value => String(value).padStart(2, "0")).join("");
 
-    // Keep the service's own separators (":" or ".") and only replace the digits
-    [0, 1, 3, 4, 6, 7].forEach((offset, index) => { row[details.clockColumn + offset] = digits.charCodeAt(index); });
+    [0, 1, 3, 4, 6, 7].forEach((offset, index) => { row[clockColumn + offset] = digits.charCodeAt(index); });
+    return row;
+}
+
+// & A clean header for this page, with a running clock that starts from the capture's time
+function reconstructedHeader(pageNumber) {
+    const details = viewer.headerTemplates.get(pageNumber[0]);
+    if (!details) return null;
+
+    const row = withRunningClock(details.template.slice(), details.clockColumn);
 
     if (details.pageColumn !== null) {
         [...pageNumber].forEach((character, index) => { row[details.pageColumn + index] = character.charCodeAt(0); });
@@ -1075,7 +1097,15 @@ function reconstructedHeader(pageNumber) {
 function buildHeaderRow() {
     const reconstructed = elements.reconstructOption?.checked ? reconstructedHeader(viewer.headerNumber ?? viewer.requestedNumber) : null;
     const sourceHeader = reconstructed ?? viewer.headerSource ?? displayedSubpage()?.rows[0] ?? null;
-    const row = sourceHeader ? sourceHeader.slice() : makeRows("");
+    let row = sourceHeader ? sourceHeader.slice() : makeRows("");
+
+    // Received headers keep the time each was received at, which jumps around as they roll (each page's header is from a
+    // different moment of the capture). The clock runs from one time instead, where the header has one
+    // * A header without a clock (e.g. KOIN's test page during a breakdown) stays without one
+    const clockColumn = viewer.headerTemplates.get(viewer.requestedNumber?.[0])?.clockColumn ?? null;
+    if (!reconstructed && sourceHeader && clockColumn !== null && readClock(row, clockColumn) !== null) {
+        row = withRunningClock(row, clockColumn);
+    }
 
     let label = `P${viewer.requestedNumber}`;
     let color = ControlCode.ALPHA_WHITE;

@@ -204,6 +204,20 @@ h1 .type-cursor {
   border: 0;
 }
 
+.row-not-cleaned,
+.row-not-cleaned td {
+  --bs-table-bg: #830096;
+  --bs-table-striped-bg: #830096;
+  background-color: #830096 !important;
+}
+
+.row-updated,
+.row-updated td {
+  --bs-table-bg: #00566a;
+  --bs-table-striped-bg: #00566a;
+  background-color: #00566a !important;
+}
+
 .row-new,
 .row-new td {
   --bs-table-bg: #00821e;
@@ -216,13 +230,6 @@ h1 .type-cursor {
   --bs-table-bg: #900;
   --bs-table-striped-bg: #900;
   background-color: #900 !important;
-}
-
-.row-updated,
-.row-updated td {
-  --bs-table-bg: #00566a;
-  --bs-table-striped-bg: #00566a;
-  background-color: #00566a !important;
 }
 
 .cell-wrap {

@@ -70,8 +70,13 @@
                 outline-offset: 3px;
             }
 
-            /* Full screen. Safari on older iPads doesn't match "":fullscreen"). This produces a round margin clear of notches and rounded corners */
+            /*
+            Full screen. Safari on older iPads doesn't match "":fullscreen").
+            This produces a round margin clear of notches and rounded corners.
+            Only notches and rounded corners (env(safe-area-inset-*)) are kept clear.
+            */
             .viewer-screen.is-fullscreen {
+                --fullscreen-margin: 0px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -81,19 +86,26 @@
                 height: 100dvh;
                 border-radius: 0;
                 container-type: size;
-                padding: max(5vmin, env(safe-area-inset-top)) max(5vmin, env(safe-area-inset-right)) max(5vmin, env(safe-area-inset-bottom))
-                    max(5vmin, env(safe-area-inset-left));
+                padding: max(var(--fullscreen-margin), env(safe-area-inset-top)) max(var(--fullscreen-margin), env(safe-area-inset-right))
+                    max(var(--fullscreen-margin), env(safe-area-inset-bottom)) max(var(--fullscreen-margin), env(safe-area-inset-left));
             }
 
-            /* Largest size that fits inside the margin: 480 × 500 as drawn, or 4:3. The first width is for browsers without container units (cqw/cqh) */
+            /* Phones and tablets keep a margin all round, clear of rounded screen corners */
+            @media (pointer: coarse) {
+                .viewer-screen.is-fullscreen {
+                    --fullscreen-margin: 5vmin;
+                }
+            }
+
+            /* Largest size that fits inside the margin: 480x500 as drawn, or 4:3. The first width is for browsers without container units */
             .viewer-screen.is-fullscreen canvas {
                 height: auto;
-                width: min(100%, calc((100dvh - 10vmin) * 480 / 500));
+                width: min(100%, calc((100dvh - 2 * var(--fullscreen-margin)) * 480 / 500));
                 width: min(100cqw, 100cqh * 480 / 500);
             }
 
             .viewer-screen.aspect-ratio.is-fullscreen canvas {
-                width: min(100%, calc((100dvh - 10vmin) * 4 / 3));
+                width: min(100%, calc((100dvh - 2 * var(--fullscreen-margin)) * 4 / 3));
                 width: min(100cqw, 100cqh * 4 / 3);
             }
 

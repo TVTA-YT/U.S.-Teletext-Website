@@ -24,7 +24,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     datavizion: {
         table: "DaTaVizion",
@@ -32,7 +32,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     edutel: {
         table: "Edutel",
@@ -49,7 +49,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     extravision: {
         table: "ExtraVision",
@@ -99,7 +99,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     nbcTeletext: {
         table: "NBC_Teletext",
@@ -125,7 +125,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     starsight: {
         table: "StarSight",
@@ -142,7 +142,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     },
     wisconsinInfotextText: {
         table: "Wis_Infotext",
@@ -158,7 +158,7 @@ const tables = {
         type: "teletext",
         dateField: "Date",
         sampleCondition: `Download_Link IS NOT NULL AND TRIM(CAST(Download_Link AS TEXT)) != ''`,
-        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample"]
+        columns: ["ID", "Year", "Month", "Date", "Program_Title", "Tape_Type", "Tape_Speed", "Download_Link", "Thumbnail", "Network", "Service_Name", "Notes", "Date_Added", "Recovered_By", "IA_ID", "Teletext_Sample", "Cleaned"]
     }
 };
 
@@ -265,6 +265,16 @@ function toUnixSeconds(value) {
     if (value === null || value === undefined || String(value).trim() === "") return null;
     const ms = new Date(value).getTime();
     return Number.isNaN(ms) ? null : Math.floor(ms / 1000);
+}
+
+// & Sort comparator for two date values. Newest is first and missing/invalid dates are last
+function compareDatesDesc(a, b) {
+    const aTime = toUnixSeconds(a);
+    const bTime = toUnixSeconds(b);
+    if (aTime === bTime) return 0;
+    if (aTime === null) return 1;
+    if (bTime === null) return -1;
+    return bTime - aTime;
 }
 
 // & Build dynamic SQL query
@@ -402,7 +412,7 @@ async function getRecentFromDataset(db, config) {
     return result.results;
 }
 
-// & Figure out the 10 newest records across all datasets
+// & Figure out the 25 newest records across all datasets
 async function getRecentAdditions(db) {
     const entries = Object.entries(tables);
 
@@ -414,8 +424,8 @@ async function getRecentAdditions(db) {
 
     const allRecentRows = datasetResults.flat();
 
-    // Sort by Date_Added
-    allRecentRows.sort((a, b) => new Date(b.Date_Added).getTime() - new Date(a.Date_Added).getTime());
+    // Sort by Date_Added, then by sample date. Without the second key, rows added on the same day keep the order of the "tables" object (alphabetical by dataset)
+    allRecentRows.sort((a, b) => compareDatesDesc(a.Date_Added, b.Date_Added) || compareDatesDesc(a.Date, b.Date));
 
     // Return the 10 newest additions
     return allRecentRows.slice(0, 25).map(row => {
@@ -604,7 +614,7 @@ async function getRecentViewableSamples(env) {
         }
     }));
 
-    return newest.map(item => {
+    const rows = newest.map(item => {
         const lookupID = item.config.isNabts ? item.fileID.toLowerCase() : item.fileID;
         const row = lookups.get(`${item.key}:${lookupID}`);
 
@@ -625,6 +635,9 @@ async function getRecentViewableSamples(env) {
             Date_Viewable: item.uploaded.toLocaleDateString("en-CA", { timeZone: "America/New_York" })
         };
     });
+
+    // Sort by the day shown in "Date Available", then by sample date so same-day uploads aren't grouped by service
+    return rows.sort((a, b) => compareDatesDesc(a.Date_Viewable, b.Date_Viewable) || compareDatesDesc(a.Date, b.Date));
 }
 
 // ^ Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file

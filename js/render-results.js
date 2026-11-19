@@ -518,6 +518,10 @@ function appendRow(tbody, row, columns, dataset) {
     // if (row.isNew) (now - Number(firstSeen)) <= NEW_WINDOW_SECONDS;
     if (!rowHasDownload(row)) tr.classList.add('row-no-download-link');
 
+    // Only WST tables have a "Cleaned" column
+    const isNotCleaned = String(row.Cleaned ?? '').trim().toLowerCase() === 'no';
+    if (isNotCleaned) tr.classList.add('row-not-cleaned');
+
     const nonTeletextDirectory = `/files/${encodeURIComponent(row.Service_Name)}/${encodeURIComponent(row.Year)}/`;
     // EPG services (StarSight, Gemstar): which guide page to open and which R2 folder holds the JSON
     const epgGuide = EPG_GUIDES[String(dataset ?? '').toLowerCase()] ?? EPG_GUIDES.starsight;
@@ -675,6 +679,12 @@ function appendRow(tbody, row, columns, dataset) {
     }).join('');
 
     tbody.appendChild(tr);
+
+    // For screen readers
+    if (isNotCleaned) {
+        const firstSr = tr.querySelector('td .sr-only');
+        if (firstSr) firstSr.textContent = `Sample not yet cleaned. ${firstSr.textContent}`;
+    }
 
     tr.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
         new bootstrap.Tooltip(el);
