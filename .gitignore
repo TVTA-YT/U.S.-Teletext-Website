@@ -17,6 +17,8 @@ jtes-core.js
 jtes-render.js
 jtes-sound.js
 jtes-viewer.js
+silent-radio.html
+silent-radio-data.html
 image-gallery/migrate-gallery-to-r2.mjs
 depreciated/
 node_modules/
