@@ -45,7 +45,7 @@
             data-website-id="fca7fa5d-3d18-4e74-afe2-5b880ffc204c"
             data-domains="nateletext.com"
         ></script>
-        <title></title>
+        <title>Teletext Sample Image Gallery</title>
         <style>
             .heading-container {
                 padding-top: 120px;
@@ -171,12 +171,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -206,12 +208,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -266,8 +270,20 @@
             <div class="heading-container">
                 <h1>
                     <span class="visually-hidden" id="visually-hidden-service-name"></span>
-                    <img src="" alt="" class="mw-100 light-mode-image" id="light-image-banner" aria-hidden="true" />
-                    <img src="" alt="" class="mw-100 dark-mode-image" id="dark-image-banner" aria-hidden="true" />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        alt=""
+                        class="mw-100 light-mode-image"
+                        id="light-image-banner"
+                        aria-hidden="true"
+                    />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        alt=""
+                        class="mw-100 dark-mode-image"
+                        id="dark-image-banner"
+                        aria-hidden="true"
+                    />
                 </h1>
             </div>
             <div class="container">
@@ -295,7 +311,7 @@
                         <div class="position-relative mx-auto">
                             <figure class="figure mb-0">
                                 <img
-                                    src=""
+                                    src="../images/decoded-pages/Electra_1984-11-18_1.png"
                                     alt=""
                                     class="figure-img mw-100 border border-white rounded-2"
                                     id="teletext-image"
@@ -365,10 +381,11 @@
                         tabindex="-1"
                         id="themeOffcanvas"
                         aria-labelledby="themeOffcanvasLabel"
+                        role="dialog"
                         style="width: 260px"
                     >
                         <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                            <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
@@ -427,6 +444,5 @@
         </footer>
         <script src="../js/teletext-gallery.js"></script>
         <script src="../js/color-modes.js"></script>
-        <script src="../js/image-modal.js"></script>
     </body>
 </html>

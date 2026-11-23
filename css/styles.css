@@ -2,12 +2,16 @@
 body {
   background-color: var(--body-color) !important;
 }
-body:not(#site-title, .service-name, .letter-reveal-char, .logo) {
+body:not(.logo) {
   font-family: "Open Sans", sans-serif;
 }
 
 h1 {
   margin: 0;
+}
+
+#photo-collage-background {
+  background-color: var(--photo-collage-bg-color);
 }
 
 .copyright,
@@ -26,7 +30,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, #archive-count, .service-name, .table-result, .letter-reveal-char, .button-text, .station-name, .marquee-datetime, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles, .keep-text-white),
+span:not(#archive-count, .table-result, .button-text, .station-name, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles, .keep-text-white),
 li,
 label,
 dt,
@@ -48,72 +52,6 @@ strong {
   font-weight: bold;
 }
 
-hr {
-  border: 1px solid var(--horizontal-line) !important;
-}
-
-h1 .letter-reveal-char {
-  font-family: "TU 1000x Bold", sans-serif !important;
-  line-height: 30px !important;
-  font-size: 3em;
-  padding: 30px 0 30px 0;
-  color: var(--text-color);
-  display: inline-block;
-  opacity: 0;
-}
-h1 .letter-reveal-char.is-visible {
-  opacity: 1;
-}
-h1 .letter-reveal-char.is-space {
-  width: 0.28em;
-}
-h1 .type-cursor {
-  display: inline-block;
-  width: 1.57em;
-  height: 1.8em;
-  background: var(--text-color);
-  vertical-align: -0.08em;
-  animation: cursor-blink 0.85s steps(1) infinite;
-}
-
-.service-name-div .service-name .letter-reveal-char {
-  font-family: "TU 1000x Regular", sans-serif !important;
-  line-height: 30px !important;
-  font-size: 1em;
-  color: var(--text-color);
-  display: inline-block;
-  opacity: 0;
-}
-.service-name-div .service-name .letter-reveal-char.is-visible {
-  opacity: 1;
-}
-.service-name-div .service-name .letter-reveal-char.is-space {
-  width: 0.28em;
-}
-.service-name-div .service-name .type-cursor {
-  display: inline-block;
-  width: 0.77em;
-  height: 1em;
-  background: var(--text-color);
-  vertical-align: -0.08em;
-  animation: cursor-blink 0.85s steps(1) infinite;
-}
-
-.reveal-word {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-@keyframes cursor-blink {
-  50% {
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .type-cursor {
-    display: none;
-  }
-}
 .site-logo {
   padding: 10px 0 10px 20px;
   width: 190px;

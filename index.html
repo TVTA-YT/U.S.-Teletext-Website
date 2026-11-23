@@ -5,7 +5,6 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="google-site-verification" content="wi4HN60u3hdPL-o3ZH4nhoG5NlsCN4SOYIWhPvO_7lY" />
-        <!-- <meta name="description" content=""> -->
         <!-- Open Graph URLs -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content="North American Teletext Archive" />
@@ -124,13 +123,6 @@
                 background-color: #0022ff;
             }
 
-            #samples-text {
-                font-family: "TU 1000x Regular", sans-serif;
-                color: #f5f4f4 !important;
-                text-shadow: 2px 2px #000;
-                animation: blink 2s step-end infinite;
-            }
-
             .container:not(#secondary-container) {
                 margin-top: 20px !important;
             }
@@ -146,7 +138,6 @@
             .double-height {
                 display: block;
                 width: 200%;
-                font-size: 3em;
                 line-height: 1.2;
                 transform: scaleX(0.5);
                 transform-origin: left top;
@@ -269,12 +260,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="html/stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -304,12 +297,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="html/gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="html/starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="html/stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -441,176 +436,105 @@
                     </div>
                 </div>
             </section>
-            <section id="latest-updates" style="padding-top: 15%">
-                <h2>
-                    <span class="visually-hidden">Latest Updates</span>
-                    <img src="/images/banners/light/NATA-Updates_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
-                    <img src="/images/banners/dark/NATA-Updates.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
-                </h2>
+            <section id="nata-updates_nata-mission">
                 <div class="container-fluid">
-                    <p class="fs-4 fw-bold text-center pt-2 pb-2">Watch this space for quick updates.</p>
-                    <div id="quick-updates" style="font-family: &quot;Teletext50&quot;, sans-serif">
-                        <div id="quick-updates-container">
-                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
-                                <span class="keep-text-white">NATA Updates</span>
-                                <br />
-                                <span class="keep-text-white" id="quick-updates-last-updated">Last Updated: 10/25/2026</span>
-                            </div>
-                            <div class="p-5">
-                                <div id="quick-updates-sr" class="visually-hidden" aria-live="polite"></div>
-                                <dl id="quick-updates-list" aria-hidden="true">
-                                    <dt
-                                        class="text-uppercase pb-2 double-height"
-                                        id="quick-updates-update-title"
-                                        style="color: #fff800 !important"
-                                        data-field="title"
-                                    ></dt>
-                                    <dd class="text-uppercase">
-                                        <div class="double-height-wrap">
-                                            <span
-                                                class="keep-text-white double-height"
-                                                id="quick-updates-update-body"
-                                                data-field="body"
-                                            ></span>
-                                            <ul id="quick-updates-update-list" data-field="list" class="mb-0"></ul>
-                                            <span
-                                                class="d-block mt-4 keep-text-white double-height"
-                                                id="quick-updates-update-date"
-                                                data-field="date"
-                                            ></span>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <section id="latest-updates" style="padding-top: 15%">
+                                <h2>
+                                    <span class="visually-hidden">Latest Updates</span>
+                                    <img
+                                        src="/images/banners/light/NATA-Updates_light.png"
+                                        alt=""
+                                        class="mw-100 light-mode-image"
+                                        aria-hidden="true"
+                                    />
+                                    <img
+                                        src="/images/banners/dark/NATA-Updates.png"
+                                        alt=""
+                                        class="mw-100 dark-mode-image"
+                                        aria-hidden="true"
+                                    />
+                                </h2>
+                                <div class="container-fluid">
+                                    <p class="fs-4 fw-bold text-center pt-2 pb-2">Watch this space for quick updates.</p>
+                                    <div id="quick-updates" style="font-family: &quot;Teletext50&quot;, sans-serif">
+                                        <div id="quick-updates-container">
+                                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
+                                                <span class="keep-text-white">NATA Updates</span>
+                                                <br />
+                                                <span class="keep-text-white" id="quick-updates-last-updated"
+                                                    >Last Updated: 10/25/2026</span
+                                                >
+                                            </div>
+                                            <div class="p-5">
+                                                <div id="quick-updates-sr" class="visually-hidden" aria-live="polite"></div>
+                                                <dl id="quick-updates-list" aria-hidden="true">
+                                                    <dt
+                                                        class="text-uppercase pb-2 double-height"
+                                                        id="quick-updates-update-title"
+                                                        style="color: #fff800 !important"
+                                                        data-field="title"
+                                                    ></dt>
+                                                    <dd class="text-uppercase">
+                                                        <div class="double-height-wrap">
+                                                            <span
+                                                                class="keep-text-white double-height"
+                                                                id="quick-updates-update-body"
+                                                                data-field="body"
+                                                            ></span>
+                                                            <ul id="quick-updates-update-list" data-field="list" class="mb-0"></ul>
+                                                            <span
+                                                                class="d-block mt-4 keep-text-white double-height"
+                                                                id="quick-updates-update-date"
+                                                                data-field="date"
+                                                            ></span>
+                                                        </div>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                            <div class="text-center" id="next-update-timer" aria-hidden="true">
+                                                <span class="keep-text-white" id="next-update-timer-text">&nbsp;</span>
+                                            </div>
+                                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
+                                                <span class="keep-text-white" id="quick-updates-counter">Update 1 / 5</span>
+                                            </div>
                                         </div>
-                                    </dd>
-                                </dl>
-                            </div>
-                            <div class="text-center" id="next-update-timer" aria-hidden="true">
-                                <span class="keep-text-white" id="next-update-timer-text">&nbsp;</span>
-                            </div>
-                            <div class="p-1 text-center fs-4 text-uppercase" style="background-color: #ff0000">
-                                <span class="keep-text-white" id="quick-updates-counter">Update 1 / 5</span>
-                            </div>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
-                    </div>
-                </div>
-            </section>
-            <section id="nata-mission" style="padding-top: 15%">
-                <h2>
-                    <span class="visually-hidden">The website's mission</span>
-                    <img src="images/banners/light/NATA-Mission_light.png" alt="" class="mw-100 light-mode-image" />
-                    <img src="images/banners/dark/NATA-Mission.png" alt="" class="mw-100 dark-mode-image" />
-                </h2>
-                <div class="container-fluid">
-                    <div class="row" style="padding-top: 20px">
-                        <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12">
-                            <div id="site-introduction-paragraphs-column">
-                                <p class="site-introduction pb-4">
-                                    On this website is a collection of newly decoded pages from North American teletext from various
-                                    services such as the CBS's
-                                    <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Keyfax</i> and <i>Electra</i>, which were
-                                    broadcast on TBS (then SuperStation WTBS and SuperStation TBS). We're also now including samples from
-                                    various text-based (non-teletext) services, both national (such as ABC PLUS) and local (such as Kentucky
-                                    Educational Television's AgText).
-                                </p>
-                                <p class="site-introduction mb-0">
-                                    <strong class="text-decoration-underline">Until now</strong>, there had not been any clear, high-quality
-                                    examples of these services, specifically the teletext services. This site aims to change that by acting
-                                    as a repository, providing access to individual archives from these services, archives provided by those
-                                    who have the capacity to decode these services.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12">
-                            <div class="row justify-content-center">
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/decoded-pages/Acquire_1991-04-27.png"
-                                            alt="Acquire index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <section id="nata-mission" style="padding-top: 15%">
+                                <h2>
+                                    <span class="visually-hidden">The website's mission</span>
+                                    <img src="images/banners/light/NATA-Mission_light.png" alt="" class="mw-100 light-mode-image" />
+                                    <img src="images/banners/dark/NATA-Mission.png" alt="" class="mw-100 dark-mode-image" />
+                                </h2>
+                                <div class="container-fluid">
+                                    <div id="site-introduction-paragraphs-column">
+                                        <!-- TODO: If keeping "site-introduction" class font sizes in CSS, re-add class. 11/21/2026, 03:27 -->
+                                        <p class="mt-4 mb-4">
+                                            On this website is a collection of newly decoded pages from North American teletext from various
+                                            services such as the CBS's
+                                            <i>ExtraVision</i>, NBC's <i>NBC Teletext</i>, and <i>Keyfax</i> and <i>Electra</i>, which were
+                                            broadcast on TBS (then SuperStation WTBS and SuperStation TBS). We're also including samples
+                                            from various text-based (non-teletext) services, both national (such as ABC PLUS) and local
+                                            (such as Kentucky Educational Television's AgText), in addition to other VBI services, such as
+                                            EPG data from Gemstar and StarSight.
+                                        </p>
+                                        <p class="mb-0">
+                                            Previously, there had not been any clear, high-quality examples of these services, specifically
+                                            the teletext services. This site aims to change that by acting as a repository, providing access
+                                            to individual archives from these services, archives provided by those who have the capacity to
+                                            decode these services.
+                                        </p>
+                                    </div>
+                                    <div class="p-2 mt-4 rounded-2" id="photo-collage-background">
+                                        <img src="images/photo-collage.png" alt="" class="mw-100" />
+                                    </div>
                                 </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/decoded-pages/Edutel_1983-08-19.png"
-                                            alt="Edutel index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/Electra_1992-12-13_stretched.png"
-                                            alt="Electra index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/DaTaVizion-index_stretched.png"
-                                            alt="DaTaVizion index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/decoded-pages/ExtraVision_1985-05-12.png"
-                                            alt="ExtraVision index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/Keyfax-index_stretched.png"
-                                            alt="Keyfax index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/decoded-pages/NBC-Teletext_1983-10-29.png"
-                                            alt="NBC Teletext index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/SSS-Teletext-index_stretched.png"
-                                            alt="SSS Teletext index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/Virtext_stretched.png"
-                                            alt="Virtext index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                                <div class="col-xl-3 col-4">
-                                    <figure>
-                                        <img
-                                            src="images/decoded-pages/InfoText_1986-11-24.png"
-                                            alt="Wisconsin InfoText index page"
-                                            class="mw-100 border border-white rounded-2"
-                                        />
-                                    </figure>
-                                </div>
-                            </div>
+                            </section>
                         </div>
                     </div>
                 </div>
@@ -642,52 +566,107 @@
             </section>
             <section id="samples-wanted" style="padding-top: 15%">
                 <div id="samples-wanted-heading">
-                    <img src="" alt="" class="mw-100" id="samples-wanted-heading-image" aria-hidden="true" />
+                    <h2>
+                        <img
+                            src="images/banners/dark/Samples-Wanted_1.png"
+                            alt="Samples Wanted"
+                            class="mw-100"
+                            id="samples-wanted-heading-image"
+                            aria-hidden="true"
+                        />
+                    </h2>
                 </div>
                 <div class="container" id="secondary-container">
                     <div class="row">
-                        <div class="col-xl-6 pb-sm-4">
-                            <div class="text-center">
-                                <img src="images/station-logos/WGBH-2_light.png" alt="WGBH" class="mw-100 w-25 pb-3 light-mode-image" />
-                                <img src="images/station-logos/WGBH-2.png" alt="WGBH" class="mw-100 w-25 pb-3 dark-mode-image" />
-                                <h2 class="fs-2 fw-bold">EARLY WGBH SAMPLES WANTED</h2>
+                        <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12 d-flex">
+                            <div class="my-auto">
+                                <div class="text-center">
+                                    <img src="images/ExtraVision_1983.png" alt="1983 ExtraVision logo" class="mw-100 dark-mode-image" />
+                                    <img
+                                        src="images/ExtraVision_1983_light.png"
+                                        alt="1983 ExtraVision logo"
+                                        class="mw-100 light-mode-image"
+                                    />
+                                    <h2 class="fs-2 fw-bold mt-3">EARLY EXTRAVISION WANTED</h2>
+                                </div>
+                                <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
+                                <p>
+                                    Before and for a while after the national launch of ExtraVision, the service utilized a slightly
+                                    different variation of the NABTS standard using mosaic graphics instead of shapes. These graphics are
+                                    based off of the French Antiope standard, which itself was the basis for NABTS.
+                                </p>
+                                <p>
+                                    We don't know exactly when ExtraVision changed their graphics, but we do know it happened between May 1
+                                    and September 20, 1983. We'd love to find more examples of this early flavor of ExtraVision.
+                                </p>
+                                <p>
+                                    So far, we know that KNXT (currently KCBS; Los Angeles, CA) and WBBM (Chicago, IL) broadcast ExtraVision
+                                    pre-national launch. We assume other O&amp;Os did the same as well but that hasn't yet been confirmed.
+                                </p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <figure>
+                                            <img src="images/decoded-pages/ExtraVision_1983-03-16.png" alt="" class="mw-100" />
+                                            <figcaption class="text-center">Pre-national launch (Mar 16, 1983)</figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="col-6">
+                                        <figure>
+                                            <img src="images/decoded-pages/ExtraVision_1983-04-13.png" alt="" class="mw-100" />
+                                            <figcaption class="text-center">Shortly after launch (Apr 13, 1983)</figcaption>
+                                        </figure>
+                                    </div>
+                                </div>
                             </div>
-                            <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
-                            <p class="fs-5">
-                                If you've got any content from WGBH (Boston, MA) dating from the early 1980s to approximately 1983 or 1984,
-                                you've likely got something we've been trying hard to find.
-                            </p>
-                            <p class="fs-5">
-                                At that time, WGBH had a teletext service called "Scoop".
-                                <a
-                                    style="color: #3448ff"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-html="true"
-                                    title="<img src='images/WGBH-Scoop_1985.jpg' class='img-fluid'>"
-                                >
-                                    Here's
-                                </a>
-                                an image of the index page dated January 19, 1983. To view more images, check out
-                                <a href="https://text-mode.org/?p=8749" target="_blank">this</a> page. This is a service that's high on our
-                                wish list and one that we'd love to preserve.
-                            </p>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="text-center">
-                                <img src="images/station-logos/WKRC-12_light.png" alt="WKRC" class="mw-100 w-25 pb-3 light-mode-image" />
-                                <img src="images/station-logos/WKRC-12.png" alt="WKRC" class="mw-100 w-25 pb-3 dark-mode-image" />
-                                <h2 class="fs-2 fw-bold">WKRC SAMPLES WANTED</h2>
+                        <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12">
+                            <div id="wgbh-samples">
+                                <div class="text-center">
+                                    <img src="images/station-logos/WGBH-2_light.png" alt="WGBH" class="mw-100 w-25 pb-3 light-mode-image" />
+                                    <img src="images/station-logos/WGBH-2.png" alt="WGBH" class="mw-100 w-25 pb-3 dark-mode-image" />
+                                    <h2 class="fs-2 fw-bold">EARLY WGBH SAMPLES WANTED</h2>
+                                </div>
+                                <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
+                                <p>
+                                    If you've got any content from WGBH (Boston, MA) dating from the early 1980s to approximately 1983 or
+                                    1984, you've likely got something we've been trying hard to find.
+                                </p>
+                                <p>
+                                    At that time, WGBH had a teletext service called "Scoop".
+                                    <a
+                                        style="color: #3448ff"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-html="true"
+                                        title="<img src='images/WGBH-Scoop_1985.jpg' class='img-fluid'>"
+                                    >
+                                        Here's
+                                    </a>
+                                    an image of the index page dated January 19, 1983. To view more images, check out
+                                    <a href="https://text-mode.org/?p=8749" target="_blank">this</a> page. This is a service that's high on
+                                    our wish list and one that we'd love to preserve.
+                                </p>
                             </div>
-                            <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
-                            <p class="fs-5">
-                                We're looking for samples from WKRC (Cincinnati, OH) that date from approximately mid-1982 to approximately
-                                early 1985. Electra, the service broadcast by TBS beginning in 1985, got its start on WKRC in mid-1982
-                                before going national in 1985.
-                            </p>
-                            <p class="fs-5">
-                                If you've got content from WKRC from this time period, you've likely got some localized Electra. We'd love
-                                to add some local Electra samples to the site at some point.
-                            </p>
+                            <div id="wkrc-samples" style="margin-top: 40px">
+                                <div class="text-center">
+                                    <img
+                                        src="images/station-logos/WKRC-12_light.png"
+                                        alt="WKRC"
+                                        class="mw-100 w-25 pb-3 light-mode-image"
+                                    />
+                                    <img src="images/station-logos/WKRC-12.png" alt="WKRC" class="mw-100 w-25 pb-3 dark-mode-image" />
+                                    <h2 class="fs-2 fw-bold">WKRC SAMPLES WANTED</h2>
+                                </div>
+                                <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 1" />
+                                <p>
+                                    We're looking for samples from WKRC (Cincinnati, OH) that date from approximately mid-1982 to
+                                    approximately early 1985. Electra, the service broadcast by TBS beginning in 1985, got its start on WKRC
+                                    in mid-1982 before going national in 1985.
+                                </p>
+                                <p>
+                                    If you've got content from WKRC from this time period, you've likely got some localized Electra. We'd
+                                    love to add some local Electra samples to the site at some point.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <hr aria-hidden="true" style="border: 2px solid #152de3 !important; opacity: 0.4" />
@@ -783,10 +762,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
@@ -845,6 +825,7 @@
         <script src="js/color-modes.js"></script>
         <script src="js/recent-additions.js"></script>
         <script src="js/site-updates.js"></script>
+        <!-- WGBH Scoop photo tooltip -->
         <script>
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(
@@ -854,6 +835,7 @@
                     }),
             );
         </script>
+        <!-- Animated site logo -->
         <script>
             // ~ Animated site logo in the style of an NABTS page
             (() => {
@@ -1028,6 +1010,7 @@
                 }
             })();
         </script>
+        <!-- Current date/time -->
         <script>
             {
                 // ~ Current date/time clock
@@ -1066,6 +1049,7 @@
                 if (clock) updateClock();
             }
         </script>
+        <!-- "Samples Wanted" banner animation -->
         <script>
             // Heading banner animation
             const pageHeadingImage = document.getElementById("samples-wanted-heading-image");

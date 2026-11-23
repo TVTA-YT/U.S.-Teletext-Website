@@ -159,12 +159,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -194,12 +196,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -255,9 +259,6 @@
                     <span class="visually-hidden">ABC PLUS</span>
                     <img src="../images/banners/light/ABC-PLUS_light.png" alt="" class="mw-100 light-mode-image" aria-hidden="true" />
                     <img src="../images/banners/dark/ABC-PLUS.png" alt="" class="mw-100 dark-mode-image" aria-hidden="true" />
-                    <div id="text-top-padding">
-                        <span id="year-heading"></span>
-                    </div>
                 </h1>
             </div>
             <div class="container">
@@ -268,9 +269,9 @@
                 <form action="results.html" method="get">
                     <input type="hidden" name="service" value="abcplus" />
                     <div class="mb-3">
-                        <label for="year" class="form-label">Select a year (leave blank to view all)</label>
+                        <label for="year" class="form-label">Select a year or select "All" to view all samples.</label>
                         <select name="year" id="year" class="form-select">
-                            <option value=""></option>
+                            <option value="">All</option>
                             <option value="1980">1980</option>
                             <option value="1981">1981</option>
                             <option value="1982">1982</option>
@@ -313,10 +314,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

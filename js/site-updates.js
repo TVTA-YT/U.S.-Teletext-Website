@@ -137,7 +137,7 @@
 
         // Fill in the "Last Updated" line in the section's header
         if (headlines?.updatedAt && lastUpdated) {
-            lastUpdated.textContent = `Headlines Last Updated: ${formatShortDate(headlines.updatedAt)}`;
+            lastUpdated.textContent = `Headlines Updated: ${formatShortDate(headlines.updatedAt)}`;
         }
 
         // & Make a list item with the given text

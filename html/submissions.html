@@ -180,12 +180,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -215,12 +217,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -274,7 +278,7 @@
             <div class="heading-container">
                 <h1>
                     <span class="visually-hidden">Submissions</span>
-                    <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
+                    <img src="../images/banners/dark/Submissions_1.png" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
                 </h1>
             </div>
             <div class="container pb-3">
@@ -302,7 +306,7 @@
                         <div class="mb-3">
                             <label for="network" class="form-label">Select a network</label>
                             <select name="network" id="network" class="form-select network-select" required>
-                                <option value="" disabled selected hidden></option>
+                                <option value="" disabled selected hidden>Select a network</option>
                                 <option value="ABC">ABC</option>
                                 <option value="CBS">CBS</option>
                                 <option value="Discovery">Discovery Channel</option>
@@ -330,7 +334,7 @@
                         <div class="mb-3 service-select-options-input">
                             <label for="service" class="form-label">Text/Teletext/VBI service</label>
                             <select name="service" id="service" class="form-select service-select" disabled required>
-                                <option value="" disabled selected hidden></option>
+                                <option value="" disabled selected hidden>Select a service</option>
                                 <option value="ABCPLUS">ABC PLUS (Text)</option>
                                 <option value="DaTaVizion">DaTaVizion (Teletext)</option>
                                 <option value="Electra">Electra (Teletext)</option>
@@ -385,7 +389,7 @@
                             <label for="tapeSpeed" class="form-label">Select a tape speed</label>
                             <select name="tapeSpeed" id="tapeSpeed" class="form-control speed-select" required>
                                 <option value="" disabled selected hidden>
-                                    <span aria-hidden="true" aria-label="For example, SLP">e.g. SLP</span>
+                                    <span aria-hidden="true" aria-label="For example, SLP" role="none">e.g. SLP</span>
                                 </option>
                                 <optgroup label="Betamax">
                                     <option value="BI">B-1</option>
@@ -417,13 +421,6 @@
                                 Only ZIP or 7z are accepted. Up to 10 files (95 MB total) can be sent at once. If submitting more than this,
                                 submit in smaller batches.
                             </div>
-                            <!-- <textarea
-                                name="submissionLink"
-                                id="submissionLink"
-                                class="form-control"
-                                placeholder="Shareable links only"
-                                required
-                            ></textarea> -->
                         </div>
                         <div class="mb-3">
                             <label for="notes" class="form-label">Provide any additional information below (optional)</label>
@@ -445,7 +442,7 @@
                     <div class="mb-3">
                         <div class="alert alert-info text-center">
                             <div class="alert-heading">
-                                <h4 class="fw-bold fs-1">NOTE</h4>
+                                <h3 class="fw-bold fs-1">NOTE</h3>
                             </div>
                             <p class="mb-0">
                                 It is advised that you <em>only</em> submit samples that you have permission to submit. Samples that are
@@ -509,10 +506,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

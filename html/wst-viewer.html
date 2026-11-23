@@ -45,7 +45,7 @@
             data-website-id="fca7fa5d-3d18-4e74-afe2-5b880ffc204c"
             data-domains="nateletext.com"
         ></script>
-        <title></title>
+        <title>WST Viewer</title>
         <style>
             .heading-container {
                 padding-top: 120px;
@@ -270,12 +270,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -305,12 +307,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -364,8 +368,20 @@
             <div class="heading-container">
                 <h1>
                     <span class="visually-hidden" id="bannerTitle"></span>
-                    <img src="" alt="" class="mw-100 light-mode-image" id="lightImageBanner" aria-hidden="true" />
-                    <img src="" alt="" class="mw-100 dark-mode-image" id="darkImageBanner" aria-hidden="true" />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        alt=""
+                        class="mw-100 light-mode-image"
+                        id="lightImageBanner"
+                        aria-hidden="true"
+                    />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        alt=""
+                        class="mw-100 dark-mode-image"
+                        id="darkImageBanner"
+                        aria-hidden="true"
+                    />
                 </h1>
             </div>
             <div class="container">
@@ -595,55 +611,6 @@
                                 <label for="optAspect" class="form-check-label">Aspect ratio (4:3)</label>
                             </div>
                         </section>
-                        <section id="keyboard-shortcuts" aria-labelledby="keysHeading">
-                            <h2 class="h5" id="keysHeading">Keyboard Shortcuts</h2>
-                            <table class="table table-sm table-primary table-bordered mb-3 text-center align-middle">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Keys</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Num keys</td>
-                                        <td>Go to a specific page</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Period key</td>
-                                        <td>Hold current page</td>
-                                    </tr>
-                                    <tr>
-                                        <td>R</td>
-                                        <td>Reveal hidden text</td>
-                                    </tr>
-                                    <tr>
-                                        <td>X</td>
-                                        <td>Newsflash box only / full page</td>
-                                    </tr>
-                                    <tr>
-                                        <td>U</td>
-                                        <td>Unscramble/re-scramble subscription pages</td>
-                                    </tr>
-                                    <tr>
-                                        <td>+ / -</td>
-                                        <td>Next / previous page</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Up / Down arrow</td>
-                                        <td>Next / previous page (when viewer is focused)</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Left / Right arrow</td>
-                                        <td>View subpages (when viewer is focused)</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Escape / Delete (macOS)</td>
-                                        <td>Cancel page entry</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </section>
                     </div>
                 </div>
                 <div class="visually-hidden" id="announcer" aria-live="polite"></div>
@@ -670,10 +637,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

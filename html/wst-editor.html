@@ -160,12 +160,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -195,12 +197,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -270,6 +274,7 @@
                         id="editor-guide-button"
                         data-bs-toggle="modal"
                         data-bs-target="#teletextEditorGuide"
+                        role="dialog"
                         style="background-color: #fe3838; color: #fff"
                     >
                         T42 Teletext Editor Guide
@@ -646,7 +651,9 @@
                             <li>
                                 <button type="button" class="dropdown-item" data-action="export-t42">Export as T42 (PAL)</button>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li>
                                 <button type="button" class="dropdown-item" data-action="export-png">
                                     This page as PNG (960 &times; 1000)
@@ -803,7 +810,7 @@
                             </div>
                         </section>
                         <fieldset class="editor-panel editor-panel-blue border rounded-4 p-3 m-0">
-                            <h2 id="pagesHeading" class="h6 text-uppercase">Cursor</h2>
+                            <h2 id="cursorHeading" class="h6 text-uppercase">Cursor</h2>
                             <div class="small mb-2">
                                 Column <span class="cursor-position-text" id="curX">0</span>, row
                                 <span class="cursor-position-text" id="curY">0</span>
@@ -852,7 +859,7 @@
                                     Drag across the comparison viewer to select characters.
                                 </span>
                             </div>
-                            <div class="row" aria-label="Copy and paste">
+                            <div class="row" aria-label="Copy and paste" role="dialog">
                                 <div class="col-xl-6">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <h2 class="h6 text-uppercase m-0">Row comparison</h2>
@@ -981,10 +988,11 @@
                 tabindex="-1"
                 id="themeOffcanvas"
                 aria-labelledby="themeOffcanvasLabel"
+                role="dialog"
                 style="width: 260px"
             >
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                    <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">

@@ -71,10 +71,6 @@
                 background-color: transparent !important;
             }
 
-            .service-name {
-                font-family: "TU 1000x Regular", sans-serif;
-            }
-
             figure {
                 text-align: center;
             }
@@ -180,12 +176,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -215,12 +213,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -274,7 +274,13 @@
             <div class="heading-container">
                 <h1 class="page-title">
                     <span class="visually-hidden">Teletext Services</span>
-                    <img src="" alt="" class="mw-100" id="page-heading-image" aria-hidden="true" />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        alt=""
+                        class="mw-100"
+                        id="page-heading-image"
+                        aria-hidden="true"
+                    />
                 </h1>
             </div>
             <div class="container pb-3">
@@ -520,10 +526,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

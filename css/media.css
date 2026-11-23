@@ -1,4 +1,4 @@
-/* * NAVIGATION MENU MEDIA QUERIES * */
+/* * NAVIGATION MENU * */
 
 @media (min-width: 1356px) {
     .navbar-nav {
@@ -67,7 +67,7 @@
     }
 
     .double-height {
-        font-size: 2.5em !important;
+        font-size: 1.8em !important;
     }
 }
 
@@ -108,14 +108,6 @@
 /* * QUERY FOR LARGE AND EXTRA LARGE DEVICES * */
 
 @media (min-width: 1400px) {
-    #site-intro span#site-title {
-        font-size: 2.5em !important;
-    }
-
-    #site-logo-padding {
-        padding: 50px 0 50px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 341px !important;
@@ -143,12 +135,12 @@
         font-size: 1.4rem;
     }
 
-    .electra-images {
-        width: 50%;
+    .double-height {
+        font-size: 3em;
     }
 
-    .updates-marquee-text {
-        font-size: 3.5em;
+    .electra-images {
+        width: 50%;
     }
 
     .submission-count-table {
@@ -181,14 +173,6 @@
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
-    #site-intro span#site-title {
-        font-size: 2.5em !important;
-    }
-
-    #site-logo-padding {
-        padding: 50px 0 50px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 341px !important;
@@ -216,12 +200,12 @@
         font-size: 1.2rem;
     }
 
-    .electra-images {
-        width: 50%;
+    .double-height {
+        font-size: 2.5em;
     }
 
-    .updates-marquee-text {
-        font-size: 3.5em;
+    .electra-images {
+        width: 50%;
     }
 
     .submission-count-table {
@@ -252,14 +236,6 @@
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-    #site-intro span#site-title {
-        font-size: 2.2em !important;
-    }
-
-    #site-logo-padding {
-        padding: 40px 0 40px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 341px !important;
@@ -287,12 +263,12 @@
         font-size: 1.0rem;
     }
 
-    .electra-images {
-        width: 50%;
+    .double-height {
+        font-size: 2em;
     }
 
-    .updates-marquee-text {
-        font-size: 3.5em;
+    .electra-images {
+        width: 50%;
     }
 
     .submission-count-table {
@@ -318,14 +294,6 @@
 
 /* * QUERY FOR MEDIUM DEVICES * */
 @media (min-width: 768px) and (max-width: 991px) {
-    #site-intro span#site-title {
-        font-size: 1.6em !important;
-    }
-
-    #site-logo-padding {
-        padding: 40px 0 40px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 341px !important;
@@ -360,10 +328,6 @@
 
     .electra-images {
         width: 50%;
-    }
-
-    .updates-marquee-text {
-        font-size: 3.0em;
     }
 
     .submission-count-table {
@@ -428,17 +392,9 @@
 }
 
 @media (min-width: 500px) and (max-width: 767px) {
-    #site-intro span#site-title {
-        font-size: 1.2em !important;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 366px !important;
-    }
-
-    #site-logo-padding {
-        padding: 35px 0 35px 0;
     }
 
     #navbarNav .nav-item .nav-link {
@@ -472,10 +428,6 @@
 
     .electra-images {
         width: 70%;
-    }
-
-    .updates-marquee-text {
-        font-size: 2.0em;
     }
 
     .submission-count-table {
@@ -514,14 +466,6 @@
 }
 
 @media (min-width: 400px) and (max-width: 499px) {
-    #site-intro span#site-title {
-        font-size: 1.0em !important;
-    }
-
-    #site-logo-padding {
-        padding: 30px 0 30px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 390px !important;
@@ -564,10 +508,6 @@
         width: 70%;
     }
 
-    .updates-marquee-text {
-        font-size: 1.5em;
-    }
-
     .submission-count-table {
         font-size: 1em !important;
     }
@@ -599,21 +539,12 @@
     }
 
     svg {
-        /* width: 100px !important; */
         height: 25% !important;
         margin-left: -5px;
     }
 }
 
 @media (max-width: 399px) {
-    #site-intro span#site-title {
-        font-size: 0.8em !important;
-    }
-
-    #site-logo-padding {
-        padding: 25px 0 25px 0;
-    }
-
     #recent-additions-table,
     #recent-viewable-samples-table {
         max-height: 390px !important;
@@ -651,10 +582,6 @@
 
     .electra-images {
         width: 80%;
-    }
-
-    .updates-marquee-text {
-        font-size: 1.5em;
     }
 
     .navbar {

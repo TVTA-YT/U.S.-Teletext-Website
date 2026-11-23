@@ -186,12 +186,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -221,12 +223,14 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-header text-center text-muted">Other VBI Services</li>
                             <li class="dropdown-options">
-                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings *NEW*</a>
+                                <a href="gemstar.html" class="dropdown-item text-dropdown-option">Gemstar EPG Listings</a>
                             </li>
                             <li class="dropdown-options">
                                 <a href="starsight.html" class="dropdown-item text-dropdown-option">StarSight EPG Listings</a>
                             </li>
-                            <hr class="dropdown-divider" />
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
                             <li class="dropdown-header text-center text-muted">Other Pages</li>
                             <li class="dropdown-options">
                                 <a href="stations-altered-vbi.html" class="dropdown-item text-dropdown-option">
@@ -396,7 +400,7 @@
                     </p>
                     <div class="row justify-content-center text-center">
                         <div class="col-6">
-                            <h4 class="text-center"><span aria-hidden="true">NABTS</span><span class="sr-only">N A B T S</span></h4>
+                            <h3 class="text-center"><span aria-hidden="true">NABTS</span><span class="sr-only">N A B T S</span></h3>
                             <figure class="figure">
                                 <img
                                     src="../images/decoded-pages/Record-000-000-v1.png"
@@ -412,7 +416,7 @@
                             </figure>
                         </div>
                         <div class="col-6">
-                            <h4 class="text-center">WST</h4>
+                            <h3 class="text-center">WST</h3>
                             <figure class="figure">
                                 <img
                                     src="../images/Electra_1992-12-13_stretched.png"
@@ -505,7 +509,7 @@
                     </p>
                 </section>
                 <section>
-                    <h2 class="display-5 text-primary">Can the Data Be Viewed With an Old Decoder Box? <strong>*NEW*</strong></h2>
+                    <h2 class="display-5">Can the Data Be Viewed With an Old Decoder Box?</h2>
                     <p>
                         One of the compromises required to make domestic video formats such as VHS and Betamax affordable to consumers was
                         to design the systems to record less detail in the picture. For example, patterns of tight stripes or checks on
@@ -528,7 +532,7 @@
                     </p>
                     <div class="row justify-content-center text-center">
                         <div class="col-6">
-                            <h4 class="text-center"><span aria-hidden="true">CVBS</span><span class="sr-only">C V B S</span></h4>
+                            <h3 class="text-center"><span aria-hidden="true">CVBS</span><span class="sr-only">C V B S</span></h3>
                             <figure class="figure">
                                 <img
                                     src="../images/frame_ntsc_chroma_ar43_1_sweep_cvbs.png"
@@ -544,7 +548,7 @@
                             </figure>
                         </div>
                         <div class="col-6">
-                            <h4 class="text-center">VHS</h4>
+                            <h3 class="text-center">VHS</h3>
                             <figure class="figure">
                                 <img
                                     src="../images/frame_ntsc_chroma_ar43_1_sweep_fm_sp.png"
@@ -983,7 +987,12 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <img src alt class="img-fluid" id="modalImage" />
+                                <img
+                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                    alt=""
+                                    class="img-fluid"
+                                    id="modalImage"
+                                />
                                 <p id="modalCaption"></p>
                             </div>
                         </div>
@@ -1012,10 +1021,11 @@
                     tabindex="-1"
                     id="themeOffcanvas"
                     aria-labelledby="themeOffcanvasLabel"
+                    role="dialog"
                     style="width: 260px"
                 >
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="themeOffcanvasLabel">Theme</h5>
+                        <span class="offcanvas-title" id="themeOffcanvasLabel">Theme</span>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

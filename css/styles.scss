@@ -3,13 +3,17 @@
 body {
     background-color: var(--body-color) !important;
 
-    &:not(#site-title, .service-name, .letter-reveal-char, .logo) {
+    &:not(.logo) {
         font-family: 'Open Sans', sans-serif;
     }
 }
 
 h1 {
     margin: 0;
+}
+
+#photo-collage-background {
+    background-color: var(--photo-collage-bg-color);
 }
 
 .copyright,
@@ -28,7 +32,7 @@ h1 {
 .display-5,
 .display-6,
 p,
-span:not(#site-title, #archive-count, .service-name, .table-result, .letter-reveal-char, .button-text, .station-name, .marquee-datetime, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles, .keep-text-white),
+span:not(#archive-count, .table-result, .button-text, .station-name, .checked-count, .cursor-position-text, .page-section-text, .copyright-symbol, .my-submissions-multiple-titles, .keep-text-white),
 li,
 label,
 dt,
@@ -48,86 +52,6 @@ h6,
 th,
 strong {
     font-weight: bold;
-}
-
-hr {
-    border: 1px solid var(--horizontal-line) !important;
-}
-
-h1 {
-    .letter-reveal-char {
-        font-family: 'TU 1000x Bold', sans-serif !important;
-        line-height: 30px !important;
-        font-size: 3em;
-        padding: 30px 0 30px 0;
-        color: var(--text-color);
-        display: inline-block;
-        opacity: 0;
-
-        &.is-visible {
-            opacity: 1;
-        }
-
-        &.is-space {
-            width: 0.28em;
-        }
-    }
-
-    .type-cursor {
-        display: inline-block;
-        width: 1.57em;
-        height: 1.80em;
-        background: var(--text-color);
-        vertical-align: -0.08em;
-        animation: cursor-blink 0.85s steps(1) infinite;
-    }
-}
-
-.service-name-div {
-    .service-name {
-        .letter-reveal-char {
-            font-family: 'TU 1000x Regular', sans-serif !important;
-            line-height: 30px !important;
-            font-size: 1em;
-            color: var(--text-color);
-            display: inline-block;
-            opacity: 0;
-
-            &.is-visible {
-                opacity: 1;
-            }
-
-            &.is-space {
-                width: 0.28em;
-            }
-        }
-
-        .type-cursor {
-            display: inline-block;
-            width: 0.77em;
-            height: 1.00em;
-            background: var(--text-color);
-            vertical-align: -0.08em;
-            animation: cursor-blink 0.85s steps(1) infinite;
-        }
-    }
-}
-
-.reveal-word {
-    display: inline-block;
-    white-space: nowrap;
-}
-
-@keyframes cursor-blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .type-cursor {
-        display: none;
-    }
 }
 
 .site-logo {
@@ -166,7 +90,6 @@ h1 {
         .nav-item {
             .nav-link {
                 font-family: "Open Sans", sans-serif !important;
-                // color: #000;
                 color: var(--text-color);
 
 
@@ -195,11 +118,6 @@ h1 {
 .external-link {
     text-decoration: none;
 }
-
-// .logo {
-//     max-width: 100%;
-//     width: fit-content;
-// }
 
 .navbar-toggler {
     background-color: var(--bs-body-color);
@@ -302,8 +220,6 @@ h1 {
     white-space: normal;
     overflow-wrap: anywhere;
 }
-
-
 
 .end-footer {
     background: #000099;

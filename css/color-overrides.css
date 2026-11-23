@@ -12,6 +12,7 @@
     --site-logo-hover-color: #152de3;
     --horizontal-line: #000;
     --tooltip-body-text-color: #fff;
+    --photo-collage-bg-color: #019939;
 }
 
 [data-bs-theme="dark"] {
@@ -27,6 +28,7 @@
     --site-logo-hover-color: #fff;
     --horizontal-line: #fff;
     --tooltip-body-text-color: #000;
+    --photo-collage-bg-color: #0f0;
 }
 
 .table-custom-blue {
