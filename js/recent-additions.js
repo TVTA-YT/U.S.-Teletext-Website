@@ -133,7 +133,8 @@
                             ? `<a href="html/teletext-sample-image-gallery.html?stream=${encodeURIComponent(row.IA_ID)}" class="text-white fw-bold">${escHtml(row.Date)}</a>`
                             : escHtml(row.Date),
                 },
-                { header: "Date Added", cell: (row) => escHtml(row.Date_Added) },
+                // Show only the date part, since Date_Added may include a time
+                { header: "Date Added", cell: (row) => escHtml(String(row.Date_Added ?? "").slice(0, 10)) },
                 { header: "Contributor", cell: (row) => escHtml(row.Recovered_By) },
             ],
         });

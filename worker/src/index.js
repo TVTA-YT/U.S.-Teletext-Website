@@ -424,7 +424,8 @@ async function getRecentAdditions(db) {
 
     const allRecentRows = datasetResults.flat();
 
-    // Sort by Date_Added, then by sample date. Without the second key, rows added on the same day keep the order of the "tables" object (alphabetical by dataset)
+    // Sort by Date_Added (newest first), then by sample date as a tie-breaker
+    // ! Date_Added needs a time (e.g. "2026-11-19 12:05:00") for same-day additions to come out in the order they were added
     allRecentRows.sort((a, b) => compareDatesDesc(a.Date_Added, b.Date_Added) || compareDatesDesc(a.Date, b.Date));
 
     // Return the 10 newest additions
@@ -614,7 +615,8 @@ async function getRecentViewableSamples(env) {
         }
     }));
 
-    const rows = newest.map(item => {
+    // Keep the exact R2 upload order (newest first), since "Date_Viewable" alone can't tell same-day uploads apart
+    return newest.map(item => {
         const lookupID = item.config.isNabts ? item.fileID.toLowerCase() : item.fileID;
         const row = lookups.get(`${item.key}:${lookupID}`);
 
@@ -635,9 +637,6 @@ async function getRecentViewableSamples(env) {
             Date_Viewable: item.uploaded.toLocaleDateString("en-CA", { timeZone: "America/New_York" })
         };
     });
-
-    // Sort by the day shown in "Date Available", then by sample date so same-day uploads aren't grouped by service
-    return rows.sort((a, b) => compareDatesDesc(a.Date_Viewable, b.Date_Viewable) || compareDatesDesc(a.Date, b.Date));
 }
 
 // ^ Only these tables will have manifests. First regex is used to control acceptable images. Second regex looks for the ZIP file
