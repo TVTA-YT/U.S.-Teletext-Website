@@ -5,7 +5,7 @@ import { handleAuth, handleAdmin } from "../../js/auth.js";
 import { handleNews } from "./news.js";
 
 // Submission form proxy (/api/submit). This will check Cloudflare Turnstile and file types, then forward to Formspree
-import { handleSubmit } from "./submit.js";
+import { handleSubmit } from "../../js/submit.js";
 
 // ^ Show new records for 7 days
 const NEW_WINDOW_DAYS = 7;
