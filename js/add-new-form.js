@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hiddenFieldsContainer = document.getElementById('hidden-fields-container');
 
     const networkServices = {
-        'ABC': ['ABCPLUS'],
+        'ABC': ['ABCPLUS', "Gemstar"],
         'CBS': ['ExtraVision', 'Gemstar'],
         'Discovery': ['DaTaVizion'],
         'IPTV': ['IPTVAGIDS'],
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'PBS': ['Gemstar', 'SilentRadio', 'StarSight', 'WaveTop'],
         'TBS': ['Electra', 'Keyfax', 'SSSTeletext'],
         'WFLD': ['Keyfax'],
-        'WGN': ['Virtext'],
+        'WGN': ['Acquire', 'Virtext'],
         'WHA': ['WisInfotext-Text', 'WisInfotext-Teletext'],
         'WHYY': ['PENNTEXT'],
     };

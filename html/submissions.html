@@ -301,7 +301,7 @@
                 <!-- If someone is signed in, "Signed in as..." will appear. If not, there is a sign-in prompt -->
                 <div id="account-bar" class="mb-4" aria-live="polite"></div>
 
-                <form action="https://formspree.io/f/xoeawkye" method="post" id="submissionForm" enctype="multipart/form-data">
+                <form action="/api/submit" method="post" id="submissionForm" enctype="multipart/form-data">
                     <div id="sample-fields">
                         <div class="mb-3">
                             <label for="network" class="form-label">Select a network</label>
@@ -335,6 +335,7 @@
                             <label for="service" class="form-label">Text/Teletext/VBI service</label>
                             <select name="service" id="service" class="form-select service-select" disabled required>
                                 <option value="" disabled selected hidden>Select a service</option>
+                                <option value="Acquire">Acquire (Teletext)</option>
                                 <option value="ABCPLUS">ABC PLUS (Text)</option>
                                 <option value="DaTaVizion">DaTaVizion (Teletext)</option>
                                 <option value="Electra">Electra (Teletext)</option>
@@ -413,12 +414,12 @@
                                 name="submissionFile"
                                 id="submissionFile"
                                 class="form-control"
-                                accept=".zip, .7z"
+                                accept=".t33, .t34, .png, .html, .htm, .zip"
                                 aria-describedby="submissionFileHelp"
                                 required
                             />
                             <div id="submissionFileHelp" class="form-text">
-                                Only ZIP or 7z are accepted. Up to 10 files (95 MB total) can be sent at once. If submitting more than this,
+                                Accepted file types: T33, T34, PNG, HTML, or ZIP. Up to 10 files (95 MB total) can be sent at once. If submitting more than this,
                                 submit in smaller batches.
                             </div>
                         </div>
@@ -463,6 +464,11 @@
                         />
                         <div id="submissionNameHelp" class="form-text text-primary">You can use a moniker if you'd like</div>
                     </div>
+                    <!-- Honeypot that is hidden from users but filled in by bots -->
+                     <div aria-hidden="true" style="position: absolute; left: -10000px;">
+                        <label for="website">Leave this empty</label>
+                        <input type="text" name="_gotcha" id="website" tabindex="-1" autocomplete="off">
+                     </div>
                     <div class="mb-4">
                         <div class="cf-turnstile pb-2" data-sitekey="0x4AAAAAAFacw5QJpyc6MUab"></div>
                         <!-- Upload progress and the result of each submission (filled in by add-new-form.js) -->
@@ -585,7 +591,7 @@
                 });
 
             function getTheme() {
-                return document.documentElement.getAttribute("data-bs-theme" || "light");
+                return document.documentElement.getAttribute("data-bs-theme") || "light";
             }
 
             let i = 0;

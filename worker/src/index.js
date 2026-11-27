@@ -4,6 +4,9 @@ import { handleAuth, handleAdmin } from "../../js/auth.js";
 // Teletext News routes (/api/news, /api/admin/news*)
 import { handleNews } from "./news.js";
 
+// Submission form proxy (/api/submit). This will check Cloudflare Turnstile and file types, then forward to Formspree
+import { handleSubmit } from "./submit.js";
+
 // ^ Show new records for 7 days
 const NEW_WINDOW_DAYS = 7;
 const NEW_WINDOW_SECONDS = NEW_WINDOW_DAYS * 24 * 60 * 60;
@@ -1202,7 +1205,12 @@ export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
 
-        // Login routes are checked first, because handleApi() only accepts GET requests
+        // Submissions form (POST only. This goes before handleApi(), which only accepts GET)
+        if (url.pathname === "/api/submit") {
+            return handleSubmit(request, env);
+        }
+
+        // Login routes are checked first, because handleApi(), again, only accepts GET requests
         if (url.pathname.startsWith("/api/auth/")) {
             const response = await handleAuth(request, env, tables);
             return response ?? errorResponse("Not found", 404);
@@ -1268,6 +1276,12 @@ export default {
                 const response = new Response(object.body, { headers });
                 ctx.waitUntil(cache.put(request, response.clone()));
                 return response;
+            }
+
+            // Archived text-service pages are static HTML. Serve them sandboxed so any script inside can't run or act as the signed-in visitor if a script does happen to run
+            if (headers.get("content-type")?.startsWith("text/html")) {
+                headers.set("Content-Security-Policy", "sandbox; default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'");
+                headers.set("X-Content-Type-Options", "nosniff");
             }
 
             return new Response(object.body, { headers });
